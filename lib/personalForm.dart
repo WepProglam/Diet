@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'savedDiet.dart';
+import 'appBar.dart';
 
 class PersonalForm extends StatefulWidget {
   @override
@@ -39,17 +41,7 @@ class _PersonalForm extends State<PersonalForm> {
             title: "Personal Form",
             home: Scaffold(
               resizeToAvoidBottomPadding: false,
-              appBar: AppBar(
-                  backgroundColor: Colors.redAccent,
-                  title: ListTile(
-                      leading: Icon(Icons.person),
-                      title: Text(
-                        "Personal form",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ))),
+              appBar: basicAppBar('Personal Form'),
               body: Center(
                   child: Form(
                 key: _formKey,
@@ -227,6 +219,6 @@ class Saving extends StatelessWidget {
                     decoration: TextDecoration.none),
               ),
             )),
-        onTap: () => Navigator.pop(context));
+        onTap: () => Navigator.pushNamed(context, '/savedDiet'));
   }
 }
