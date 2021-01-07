@@ -36,3 +36,7 @@ __<프론트에서 백으로 전달하는 데이터 형식>__
 2. 음식
 3. 유저 정보
 4. 추천식단 달라는 신호
+
+__<UI 디자인>__
+
+<img src="https://github.com/WepProglam/Diet/blob/master/UI_design/UI_%EC%8B%9C%EC%95%88.jpg?raw=true">
