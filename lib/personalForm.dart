@@ -1,0 +1,232 @@
+import 'package:flutter/material.dart';
+
+class PersonalForm extends StatefulWidget {
+  @override
+  _PersonalForm createState() => _PersonalForm();
+}
+
+class _PersonalForm extends State<PersonalForm> {
+  final _heightController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _bmiController = TextEditingController();
+  final _strengthController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _purposeList = [
+    DropdownMenuItem(child: Center(child: Text('다이어트')), value: 1),
+    DropdownMenuItem(child: Center(child: Text('벌크업')), value: 2),
+    DropdownMenuItem(child: Center(child: Text('린매스업')), value: 3)
+  ];
+  int _selValue = 1;
+
+  @override
+  void dispose() {
+    _heightController.dispose();
+    _weightController.dispose();
+    _bmiController.dispose();
+    _strengthController.dispose();
+    //_purposeController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          currentFocus.unfocus();
+        },
+        child: MaterialApp(
+            title: "Personal Form",
+            home: Scaffold(
+              resizeToAvoidBottomPadding: false,
+              appBar: AppBar(
+                  backgroundColor: Colors.redAccent,
+                  title: ListTile(
+                      leading: Icon(Icons.person),
+                      title: Text(
+                        "Personal form",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
+                      ))),
+              body: Center(
+                  child: Form(
+                key: _formKey,
+                child: Column(
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  // mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+
+                  children: [
+                    // Spacer(
+                    //   flex: 1,
+                    // ),
+                    subBuilderQuestion("키", "CM",
+                        controller: _heightController,
+                        icon: Icon(Icons.accessibility)),
+                    subBuilderQuestion("몸무게", "KG",
+                        controller: _weightController,
+                        icon: Icon(Icons.accessibility)),
+                    subBuilderQuestion("체지방률", "%",
+                        controller: _bmiController,
+                        icon: Icon(Icons.directions_run)),
+                    subBuilderQuestion("골격근량", "KG/%",
+                        controller: _strengthController,
+                        icon: Icon(Icons.fitness_center)),
+                    subBuilderPurpose("목표", icon: Icon(Icons.accessibility)),
+                    Spacer(
+                      flex: 1,
+                    ),
+                    // Container(
+                    //   child: RaisedButton(
+                    //     shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(18.0),
+                    //         side: BorderSide(color: Colors.white)),
+                    //     color: Colors.blue[600],
+                    //     onPressed: () {
+                    //       if (_formKey.currentState.validate()) {
+                    //         //db 저장
+                    //         Navigator.pushNamed(context, '/saving');
+                    //       }
+                    //     },
+                    //     child: Text(
+                    //       "제출",
+                    //       style: TextStyle(color: Colors.white),
+                    //     ),
+                    //   ),
+                    // ),
+                    Spacer(
+                      flex: 3,
+                    ),
+                  ],
+                ),
+              )),
+              floatingActionButton: FloatingActionButton(
+                child: Icon(Icons.done),
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    Navigator.pushNamed(context, '/saving');
+                  }
+                  ;
+                  //print(_heightController.text);
+                },
+              ),
+            )));
+  }
+
+  Widget subBuilderQuestion(var question, var unit,
+      {var controller, var icon}) {
+    return Expanded(
+        flex: 1,
+        child: Center(
+            child: Row(
+          children: [
+            Spacer(
+              flex: 1,
+            ),
+            spacer_icon(icon: icon),
+            spacer_question(question),
+            Expanded(flex: 6, child: questionForm(controller)),
+            spacer_unit(unit),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        )));
+  }
+
+  Widget subBuilderPurpose(var question, {var icon}) {
+    return Expanded(
+        flex: 1,
+        child: Center(
+            child: Row(
+          children: [
+            Spacer(
+              flex: 1,
+            ),
+            spacer_icon(icon: icon),
+            spacer_question(question),
+            Expanded(flex: 8, child: pruposeForm()),
+            Spacer(
+              flex: 2,
+            ),
+          ],
+        )));
+  }
+
+  Widget questionForm(TextEditingController controller) {
+    return TextFormField(
+      autofocus: false,
+      controller: controller,
+      keyboardType: TextInputType.number,
+      decoration: const InputDecoration(hintText: ''),
+      textAlign: TextAlign.center,
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Please enter info';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget pruposeForm() {
+    return DropdownButtonFormField(
+      value: _selValue,
+      items: _purposeList,
+      decoration: InputDecoration(hintText: ""),
+      validator: (value) {
+        if (value > 3) {
+          return 'Select Number 1-3';
+        }
+        return null;
+      },
+      onChanged: (value) {
+        _selValue = value;
+      },
+      onSaved: (value) {
+        print(value);
+      },
+    );
+  }
+
+  Widget spacer_icon({var icon}) {
+    return Expanded(flex: 1, child: Center(child: icon));
+  }
+
+  Widget spacer_question(var question) {
+    return Expanded(
+        flex: 4,
+        child: Center(
+          child: Text(question),
+        ));
+  }
+
+  Widget spacer_unit(var unit) {
+    return Expanded(
+        flex: 3,
+        child: Center(
+          child: Text(unit),
+        ));
+  }
+}
+
+class Saving extends StatelessWidget {
+  @override
+  Widget build(context) {
+    return GestureDetector(
+        child: Container(
+            color: Colors.blue[300],
+            child: Center(
+              child: Text(
+                "saving...",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 50,
+                    decoration: TextDecoration.none),
+              ),
+            )),
+        onTap: () => Navigator.pop(context));
+  }
+}
