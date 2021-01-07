@@ -16,7 +16,13 @@ class _PersonalForm extends State<PersonalForm> {
   final _purposeList = [
     DropdownMenuItem(child: Center(child: Text('다이어트')), value: 1),
     DropdownMenuItem(child: Center(child: Text('벌크업')), value: 2),
-    DropdownMenuItem(child: Center(child: Text('린매스업')), value: 3)
+    DropdownMenuItem(child: Center(child: Text('린매스업')), value: 3),
+    DropdownMenuItem(child: Center(child: Text('빈둥빈둥')), value: 4),
+    DropdownMenuItem(child: Center(child: Text('좌식업무')), value: 5),
+    DropdownMenuItem(child: Center(child: Text('돌아다니는 업무')), value: 6),
+    DropdownMenuItem(child: Center(child: Text('활동적인 업무')), value: 7),
+    DropdownMenuItem(child: Center(child: Text('일반 직장인')), value: 8),
+    DropdownMenuItem(child: Center(child: Text('휴가 직장인')), value: 9)
   ];
   int _selValue = 1;
 
