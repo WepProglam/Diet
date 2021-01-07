@@ -33,19 +33,22 @@ class DietList extends StatelessWidget {
       'IJ'
     ];
 
-    return ListView.separated(
-      padding: const EdgeInsets.all(8),
-      itemCount: dietNameEX.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Container(
-          height: 50,
-          color: Colors.grey,
-
-          //이걸 수정해서 두 개로 나눌 수 있음
-          child: Center(child: Text('${dietNameEX[index]}')),
-        );
-      },
-      separatorBuilder: (context, index) => Divider(),
+    return GridView.count(
+      crossAxisCount: 2,
+      children: List.generate(
+        dietNameEX.length,
+        (index) {
+          return Card(
+            child: Center(
+              child: Text(
+                '${dietNameEX[index]}',
+                style: TextStyle(fontSize: 30),
+              ),
+            ),
+            color: Colors.white70,
+          );
+        },
+      ),
     );
   }
 }
