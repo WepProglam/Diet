@@ -28,6 +28,11 @@ dependencies:
   path_provider: ^1.2.0
   path: ^1.6.2
   kakao_flutter_sdk: ^0.5.2
+  dio:
+  json_annotation:
+  package_info:
+  platform:
+  shared_preferences:
 
 
 

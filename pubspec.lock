@@ -107,7 +107,7 @@ packages:
     source: hosted
     version: "1.0.0"
   dio:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: dio
       url: "https://pub.dartlang.org"
@@ -240,7 +240,7 @@ packages:
     source: hosted
     version: "0.6.3-nullsafety.2"
   json_annotation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: json_annotation
       url: "https://pub.dartlang.org"
@@ -310,7 +310,7 @@ packages:
     source: hosted
     version: "1.9.3"
   package_info:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: package_info
       url: "https://pub.dartlang.org"
@@ -366,7 +366,7 @@ packages:
     source: hosted
     version: "1.10.0-nullsafety.2"
   platform:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: platform
       url: "https://pub.dartlang.org"
@@ -408,7 +408,7 @@ packages:
     source: hosted
     version: "2.1.5"
   shared_preferences:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: shared_preferences
       url: "https://pub.dartlang.org"
