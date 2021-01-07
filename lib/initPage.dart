@@ -29,7 +29,6 @@ class _InitPage extends State<InitPage> {
               Navigator.pushNamed(context, '/personalForm');
               setState(() {
                 selected = false;
-                //selChild = false;
               });
             },
             width: selected ? 300.0 : 100.0,
