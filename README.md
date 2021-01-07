@@ -1,16 +1,38 @@
-# flutter_application_1
+__<DB 아키텍쳐>__
 
-A new Flutter project.
+USER
+* 번호, 나이, 목적, 성별, 이름, 아이디, 비번, (초기)몸무게, (초기)키, 식단 성취도, (초기)체지방률, (초기)골격근량
 
-## Getting Started
+DIET
+* 유저 아이디, 식단 이름, 음식 정보
 
-This project is a starting point for a Flutter application.
+DATE
+* 유저 아이디, 날짜, 몸무게, 체지방률, 골격근량, 식단 이름, 누적 영양성분량
 
-A few resources to get you started if this is your first Flutter project:
+FOOD
+* 유저 아이디, 음식, 영양성분, 칼로리
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+RECOMENDFOOD(닭가슴살, 계란, 바나나, 흑미밥, 등등)
+* 추천 음식, 영양성분, 칼로리
+	
+__<페이지 아키텍쳐>__
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+메인 페이지
+* 달력, 로그아웃, 아침 점심 저녁 간식 기입 칸(이전에 먹었던걸 기초해 식단 추천)
+
+마이 페이지
+* 식단 성취도, 다이어트 동기부여 한마디, 유저 정보(키 몸무게 목표 등등)
+
+음식 페이지(아침 점심 저녁 누르면 나오는 페이지)
+* 상세한 추천 식단, 직접 먹은 식단		
+
+커스터마이징 페이지 (음식 및 식단 등록 페이지)
+* 식단 저장, 음식 저장		
+	
+
+__<프론트에서 백으로 전달하는 데이터 형식>__
+
+1. 식단
+2. 음식
+3. 유저 정보
+4. 추천식단 달라는 신호
