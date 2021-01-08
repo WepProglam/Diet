@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'appBar.dart';
 
-void main() => runApp(AddFood());
-
 class AddFood extends StatefulWidget {
   @override
   _AddFood createState() => _AddFood();
@@ -13,6 +11,8 @@ class _AddFood extends State<AddFood> {
   final _proController = TextEditingController();
   final _fatController = TextEditingController();
   final _ulController = TextEditingController();
+  final _foodNameController = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -43,9 +43,10 @@ class _AddFood extends State<AddFood> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Spacer(
-                    //   flex: 1,
-                    // ),
+                    Spacer(
+                      flex: 2,
+                    ),
+                    searchBar(_foodNameController),
                     subBuilderQuestion("탄수화물", "g",
                         controller: _carboController,
                         icon: Icon(Icons.favorite)),
@@ -71,11 +72,46 @@ class _AddFood extends State<AddFood> {
                 child: Icon(Icons.done),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
+                    print(_carboController.value.text);
                     Navigator.pushNamed(context, '/saving');
                   }
                 },
               ),
             )));
+  }
+
+  Widget searchBar(var controller) {
+    return Expanded(
+        flex: 2,
+        child: Center(
+            child: Row(
+          children: [
+            Spacer(
+              flex: 1,
+            ),
+            // spacer_icon(icon: icon),
+            // spacer_question(question),
+            Expanded(
+                flex: 2,
+                child: TextFormField(
+                  autofocus: false,
+                  controller: controller,
+                  // keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(hintText: 'Type Food Name'),
+                  textAlign: TextAlign.center,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter info';
+                    }
+                    return null;
+                  },
+                )),
+            // spacer_unit(unit),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        )));
   }
 
   Widget subBuilderQuestion(var question, var unit,
@@ -88,7 +124,7 @@ class _AddFood extends State<AddFood> {
             Spacer(
               flex: 1,
             ),
-            spacer_icon(icon: icon),
+            // spacer_icon(icon: icon),
             spacer_question(question),
             Expanded(flex: 6, child: questionForm(controller)),
             spacer_unit(unit),

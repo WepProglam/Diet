@@ -9,7 +9,7 @@ import 'addFood.dart';
 void main() => runApp(MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => InitPage(),
+        '/': (context) => AddFood(),
         '/personalForm': (context) => PersonalForm(),
         '/saving': (context) => Saving(),
         '/savedDiet': (context) => SavedDiet(),
