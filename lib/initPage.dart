@@ -34,7 +34,7 @@ class _InitPage extends State<InitPage> {
               }
             : null,
         onDoubleTap: () {
-          Navigator.pushNamed(context, '/personalForm');
+          Navigator.pushNamed(context, '/main');
           setState(() {
             selected = false;
             changed = true;
@@ -46,7 +46,7 @@ class _InitPage extends State<InitPage> {
               child: AnimatedContainer(
                   onEnd: () {
                     if (changed == false) {
-                      Navigator.pushNamed(context, '/personalForm');
+                      Navigator.pushNamed(context, '/main');
                     }
                     setState(() {
                       selected = false;

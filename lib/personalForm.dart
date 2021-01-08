@@ -43,6 +43,9 @@ class _PersonalForm extends State<PersonalForm> {
           FocusScopeNode currentFocus = FocusScope.of(context);
           currentFocus.unfocus();
         },
+        onDoubleTap: () {
+          Navigator.pushNamed(context, '/saving');
+        },
         child: MaterialApp(
             title: "Personal Form",
             home: Scaffold(
@@ -76,26 +79,8 @@ class _PersonalForm extends State<PersonalForm> {
                     Spacer(
                       flex: 1,
                     ),
-                    // Container(
-                    //   child: RaisedButton(
-                    //     shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(18.0),
-                    //         side: BorderSide(color: Colors.white)),
-                    //     color: Colors.blue[600],
-                    //     onPressed: () {
-                    //       if (_formKey.currentState.validate()) {
-                    //         //db 저장
-                    //         Navigator.pushNamed(context, '/saving');
-                    //       }
-                    //     },
-                    //     child: Text(
-                    //       "제출",
-                    //       style: TextStyle(color: Colors.white),
-                    //     ),
-                    //   ),
-                    // ),
                     Spacer(
-                      flex: 3,
+                      flex: 2,
                     ),
                   ],
                 ),
@@ -197,7 +182,10 @@ class _PersonalForm extends State<PersonalForm> {
     return Expanded(
         flex: 4,
         child: Center(
-          child: Text(question),
+          child: Text(
+            question,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+          ),
         ));
   }
 
@@ -205,7 +193,10 @@ class _PersonalForm extends State<PersonalForm> {
     return Expanded(
         flex: 3,
         child: Center(
-          child: Text(unit),
+          child: Text(
+            unit,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+          ),
         ));
   }
 }
