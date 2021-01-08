@@ -18,7 +18,7 @@ class _InitPage extends State<InitPage> {
             ? () {
                 // making it false when onTap() is pressed and after 1 second we'll make it true
                 setState(() => _condition = false);
-                Future.delayed(Duration(seconds: 3),
+                Future.delayed(Duration(milliseconds: 2700),
                     () => setState(() => _condition = true));
                 setState(() {
                   selChild = !selChild;
@@ -34,7 +34,7 @@ class _InitPage extends State<InitPage> {
               }
             : null,
         onDoubleTap: () {
-          Navigator.pushNamed(context, '/main');
+          Navigator.pushNamed(context, '/addFood');
           setState(() {
             selected = false;
             changed = true;

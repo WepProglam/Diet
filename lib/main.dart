@@ -4,6 +4,7 @@ import 'personalForm.dart';
 import 'initPage.dart';
 import 'savedDiet.dart';
 import 'mainPage.dart';
+import 'addFood.dart';
 
 void main() => runApp(MaterialApp(
       initialRoute: '/',
@@ -13,6 +14,7 @@ void main() => runApp(MaterialApp(
         '/saving': (context) => Saving(),
         '/savedDiet': (context) => SavedDiet(),
         '/main': (context) => MainPage(),
+        '/addFood': (context) => AddFood(),
       },
     ));
 
