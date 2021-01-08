@@ -1,5 +1,6 @@
 //To_ToRo
 import 'package:flutter/material.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'appBar.dart';
 
 class SavedDiet extends StatelessWidget {
@@ -15,8 +16,10 @@ class SavedDiet extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
           child: Icon(
-            Icons.add,
+            Icons.expand_less,
+            size: 40,
           ),
+          backgroundColor: Colors.black45,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
@@ -44,7 +47,7 @@ class DietList extends StatelessWidget {
       padding: EdgeInsets.all(8),
       crossAxisCount: 2,
       //각 항목의 사이즈
-      childAspectRatio: 5 / 4,
+      childAspectRatio: 5 / 3,
       children: List.generate(
         dietNameEX.length,
         (index) {
