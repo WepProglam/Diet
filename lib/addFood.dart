@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-// import 'savedDiet.dart';
 import 'appBar.dart';
+
+void main() => runApp(AddFood());
 
 class AddFood extends StatefulWidget {
   @override
@@ -13,7 +14,6 @@ class _AddFood extends State<AddFood> {
   final _fatController = TextEditingController();
   final _ulController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  int _selValue = 1;
 
   @override
   void dispose() {
@@ -41,10 +41,7 @@ class _AddFood extends State<AddFood> {
                   child: Form(
                 key: _formKey,
                 child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  // mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
-
                   children: [
                     // Spacer(
                     //   flex: 1,
@@ -97,24 +94,6 @@ class _AddFood extends State<AddFood> {
             spacer_unit(unit),
             Spacer(
               flex: 1,
-            ),
-          ],
-        )));
-  }
-
-  Widget subBuilderPurpose(var question, {var icon}) {
-    return Expanded(
-        flex: 1,
-        child: Center(
-            child: Row(
-          children: [
-            Spacer(
-              flex: 1,
-            ),
-            spacer_icon(icon: icon),
-            spacer_question(question),
-            Spacer(
-              flex: 2,
             ),
           ],
         )));
