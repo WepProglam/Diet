@@ -12,6 +12,13 @@ class SavedDiet extends StatelessWidget {
         body: Center(
           child: DietList(),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: Icon(
+            Icons.add,
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }
