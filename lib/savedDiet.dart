@@ -8,7 +8,7 @@ class SavedDiet extends StatelessWidget {
     return MaterialApp(
       title: 'Diet_3',
       home: Scaffold(
-        appBar: basicAppBar('Diet List'),
+        appBar: basicAppBar('Diet List', context),
         body: Center(
           child: DietList(),
         ),

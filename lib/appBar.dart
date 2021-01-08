@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget basicAppBar(String title) {
+Widget basicAppBar(String title, BuildContext context) {
   return AppBar(
     //메뉴
     leading: IconButton(
@@ -15,7 +15,9 @@ Widget basicAppBar(String title) {
     actions: <Widget>[
       IconButton(
         icon: Icon(Icons.person),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/personalForm');
+        },
       ),
     ],
   );

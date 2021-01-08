@@ -47,7 +47,7 @@ class _PersonalForm extends State<PersonalForm> {
             title: "Personal Form",
             home: Scaffold(
               resizeToAvoidBottomPadding: false,
-              appBar: basicAppBar('Personal Form'),
+              appBar: basicAppBar('Personal Form', context),
               body: Center(
                   child: Form(
                 key: _formKey,

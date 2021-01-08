@@ -37,7 +37,7 @@ class _KakaoLoginState extends State<KaKaoLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: basicAppBar('kakao login'),
+      appBar: basicAppBar('kakao login', context),
       body: Center(
         child: InkWell(
           onTap: () => _isKakaoTalkInstalled ? _loginWithTalk : _loginWithKakao,
