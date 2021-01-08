@@ -8,33 +8,53 @@ class InitPage extends StatefulWidget {
 class _InitPage extends State<InitPage> {
   bool selected = false;
   bool selChild = false;
+  bool _condition = true;
+  bool changed = false;
+
   @override
   Widget build(context) {
     return GestureDetector(
-        onTap: () {
+        onTap: _condition
+            ? () {
+                // making it false when onTap() is pressed and after 1 second we'll make it true
+                setState(() => _condition = false);
+                Future.delayed(Duration(seconds: 3),
+                    () => setState(() => _condition = true));
+                setState(() {
+                  selChild = !selChild;
+                  selected = !selected;
+                  Future.delayed(const Duration(milliseconds: 1200), () {
+                    setState(() {
+                      selected = !selected;
+                      selChild = !selChild;
+                    });
+                  });
+                });
+                // your implementation
+              }
+            : null,
+        onDoubleTap: () {
+          Navigator.pushNamed(context, '/main');
           setState(() {
-            selChild = !selChild;
-            selected = !selected;
-            Future.delayed(const Duration(milliseconds: 1200), () {
-              setState(() {
-                selected = !selected;
-                selChild = !selChild;
-              });
-            });
+            selected = false;
+            changed = true;
+            //selChild = false;
           });
         },
         child: Container(
           child: Center(
               child: AnimatedContainer(
                   onEnd: () {
-                    Navigator.pushNamed(context, '/personalForm');
+                    if (changed == false) {
+                      Navigator.pushNamed(context, '/main');
+                    }
                     setState(() {
                       selected = false;
                       //selChild = false;
                     });
                   },
-                  width: selected ? 300.0 : 100.0,
-                  height: selected ? 100.0 : 300.0,
+                  width: selected ? 500.0 : 200.0,
+                  height: selected ? 200.0 : 500.0,
                   alignment:
                       selected ? Alignment.center : AlignmentDirectional.center,
                   duration: Duration(milliseconds: 1500),

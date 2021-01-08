@@ -33,6 +33,7 @@ dependencies:
   package_info:
   platform:
   shared_preferences:
+  flutter_calendar_carousel: ^1.5.2
 
   material_floating_search_bar: ^0.2.6
 
