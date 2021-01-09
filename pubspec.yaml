@@ -34,33 +34,16 @@ dependencies:
   platform:
   shared_preferences:
   flutter_calendar_carousel: ^1.5.2
-
+  intl: ^0.16.0
   material_floating_search_bar: ^0.2.6
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
-  english_words: ^3.1.0
-  flutter_web: any
-  flutter_web_ui: any
-  flutter_web_test : any
+
   
 
-dependency_overrides:
-  flutter_web:
-    git:
-      url: https://github.com/flutter/flutter_web
-      path: packages/flutter_web
-  flutter_web_ui:
-    git:
-      url: https://github.com/flutter/flutter_web
-      path: packages/flutter_web_ui
-
-  flutter_web_test:
-    git:
-      url: https://github.com/flutter/flutter_web
-      path: packages/flutter_web_test
 
 dev_dependencies:
   flutter_test:

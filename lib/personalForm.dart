@@ -1,6 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'savedDiet.dart';
 import 'appBar.dart';
+import 'package:intl/intl.dart';
+import 'model.dart';
+import 'db_helper.dart';
 
 class PersonalForm extends StatefulWidget {
   @override
@@ -25,6 +30,15 @@ class _PersonalForm extends State<PersonalForm> {
     DropdownMenuItem(child: Center(child: Text('휴가 직장인')), value: 9)
   ];
   int _selValue = 1;
+  int purpose_index = 1;
+  var dbHelper = DBHelper();
+  final hint = {};
+
+  @override
+  void initState() {
+    getHint();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -36,8 +50,22 @@ class _PersonalForm extends State<PersonalForm> {
     super.dispose();
   }
 
+  getHint() async {
+    final personList = await dbHelper.getAllPerson().then((value) {
+      hint['height'] = value.isNotEmpty ? value.last.height : null;
+      hint['weight'] = value.isNotEmpty ? value.last.weight : null;
+      hint['bmi'] = value.isNotEmpty ? value.last.bmi : null;
+      hint['time'] = value.isNotEmpty ? value.last.time : null;
+      hint['muscleMass'] = value.isNotEmpty ? value.last.muscleMass : null;
+      hint['purpose'] = value.isNotEmpty ? value.last.purpose : null;
+      print("hint : $hint");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    getHint();
+    // print(hint);
     return GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -64,17 +92,22 @@ class _PersonalForm extends State<PersonalForm> {
                 // ),
                 subBuilderQuestion("키", "CM",
                     controller: _heightController,
-                    icon: Icon(Icons.accessibility)),
+                    icon: Icon(Icons.accessibility),
+                    hint: hint['height']),
                 subBuilderQuestion("몸무게", "KG",
                     controller: _weightController,
-                    icon: Icon(Icons.accessibility)),
+                    icon: Icon(Icons.accessibility),
+                    hint: hint['weight']),
                 subBuilderQuestion("체지방률", "%",
                     controller: _bmiController,
-                    icon: Icon(Icons.directions_run)),
+                    icon: Icon(Icons.directions_run),
+                    hint: hint['bmi']),
                 subBuilderQuestion("골격근량", "KG/%",
                     controller: _strengthController,
-                    icon: Icon(Icons.fitness_center)),
-                subBuilderPurpose("목표", icon: Icon(Icons.accessibility)),
+                    icon: Icon(Icons.fitness_center),
+                    hint: hint['muscleMass']),
+                subBuilderPurpose("목표",
+                    icon: Icon(Icons.accessibility), hint: hint['purpose']),
                 Spacer(
                   flex: 1,
                 ),
@@ -88,9 +121,28 @@ class _PersonalForm extends State<PersonalForm> {
             child: Icon(Icons.done),
             onPressed: () {
               if (_formKey.currentState.validate()) {
-                Navigator.pushNamed(context, '/saving');
+                // dbHelper.deleteAllPerson();
+                String time = DateFormat('yyyy-MM-dd kk:mm')
+                    .format(DateTime.now())
+                    .toString();
+
+                var person = Person(
+                    height: _heightController.value.text,
+                    weight: _weightController.value.text,
+                    bmi: _bmiController.value.text,
+                    muscleMass: _strengthController.value.text,
+                    purpose: purpose_index - 1,
+                    time: time);
+
+                dbHelper.createHelper(person);
+
+                dbHelper.getAllPerson().then((value) {
+                  print('length : ${value.length}');
+
+                  print(value.last.time);
+                });
               }
-              ;
+
               //print(_heightController.text);
             },
           ),
@@ -98,7 +150,7 @@ class _PersonalForm extends State<PersonalForm> {
   }
 
   Widget subBuilderQuestion(var question, var unit,
-      {var controller, var icon}) {
+      {var controller, var icon, var hint}) {
     return Expanded(
         flex: 1,
         child: Center(
@@ -109,7 +161,7 @@ class _PersonalForm extends State<PersonalForm> {
             ),
             spacer_icon(icon: icon),
             spacer_question(question),
-            Expanded(flex: 6, child: questionForm(controller)),
+            Expanded(flex: 6, child: questionForm(controller, hint)),
             spacer_unit(unit),
             Spacer(
               flex: 1,
@@ -118,7 +170,7 @@ class _PersonalForm extends State<PersonalForm> {
         )));
   }
 
-  Widget subBuilderPurpose(var question, {var icon}) {
+  Widget subBuilderPurpose(var question, {var icon, var hint}) {
     return Expanded(
         flex: 1,
         child: Center(
@@ -129,7 +181,7 @@ class _PersonalForm extends State<PersonalForm> {
             ),
             spacer_icon(icon: icon),
             spacer_question(question),
-            Expanded(flex: 8, child: pruposeForm()),
+            Expanded(flex: 8, child: pruposeForm(hint)),
             Spacer(
               flex: 2,
             ),
@@ -137,12 +189,13 @@ class _PersonalForm extends State<PersonalForm> {
         )));
   }
 
-  Widget questionForm(TextEditingController controller) {
+  Widget questionForm(TextEditingController controller, var hint) {
+    var hintText = hint.toString();
     return TextFormField(
       autofocus: false,
       controller: controller,
       keyboardType: TextInputType.number,
-      decoration: const InputDecoration(hintText: ''),
+      decoration: InputDecoration(hintText: hint == null ? "" : hintText),
       textAlign: TextAlign.center,
       validator: (value) {
         if (value.isEmpty) {
@@ -153,22 +206,24 @@ class _PersonalForm extends State<PersonalForm> {
     );
   }
 
-  Widget pruposeForm() {
+  Widget pruposeForm(var hint) {
+    var _selValue = hint == null ? 1 : hint + 1;
     return DropdownButtonFormField(
       value: _selValue,
       items: _purposeList,
       decoration: InputDecoration(hintText: ""),
       validator: (value) {
-        if (value > 3) {
-          return 'Select Number 1-3';
+        if (value > 10) {
+          return 'Select Number 1-9';
         }
         return null;
       },
       onChanged: (value) {
+        purpose_index = value;
         _selValue = value;
       },
       onSaved: (value) {
-        print(value);
+        print(purpose_index);
       },
     );
   }
