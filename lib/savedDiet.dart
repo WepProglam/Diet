@@ -92,7 +92,7 @@ class _TransFABState extends State<TransFAB>
     _animateIcon =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
     _buttonColor = ColorTween(
-      //이유는 모르겠지만 핫리로딩이 안됨 다시 실행해야 적용됨.
+      //이유는 모르겠지만 핫리로딩이 안 됨 다시 실행해야 적용됨.
       begin: Colors.black45,
       end: Colors.orange[300],
     ).animate(CurvedAnimation(
@@ -136,7 +136,9 @@ class _TransFABState extends State<TransFAB>
     return Container(
       child: FloatingActionButton(
         heroTag: null,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/addFood');
+        },
         tooltip: 'Add',
         child: Icon(Icons.add, size: 30),
         backgroundColor: Colors.black45,
