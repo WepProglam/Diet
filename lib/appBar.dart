@@ -55,13 +55,16 @@ class NavDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.all(5),
         children: <Widget>[
-          DrawerHeader(
-            child: Text(
-              'Side menu',
-              style: TextStyle(color: Colors.white, fontSize: 25),
-            ),
-            decoration: BoxDecoration(
-              color: Colors.blue,
+          Container(
+            height: 150,
+            child: DrawerHeader(
+              child: Text(
+                'Side menu',
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
             ),
           ),
           ListTile(
