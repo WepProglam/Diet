@@ -32,52 +32,50 @@ class _AddFood extends State<AddFood> {
           FocusScopeNode currentFocus = FocusScope.of(context);
           currentFocus.unfocus();
         },
-        child: MaterialApp(
-            title: "Add Food",
-            home: Scaffold(
-              resizeToAvoidBottomPadding: false,
-              appBar: basicAppBar('Add Food', context),
-              body: Center(
-                  child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Spacer(
-                      flex: 2,
-                    ),
-                    searchBar(_foodNameController),
-                    subBuilderQuestion("탄수화물", "g",
-                        controller: _carboController,
-                        icon: Icon(Icons.favorite)),
-                    subBuilderQuestion("단백질", "g",
-                        controller: _proController,
-                        icon: Icon(Icons.restaurant_menu_outlined)),
-                    subBuilderQuestion("지방", "g",
-                        controller: _fatController,
-                        icon: Icon(Icons.restaurant_outlined)),
-                    subBuilderQuestion("열량?", "g",
-                        controller: _ulController,
-                        icon: Icon(Icons.restaurant_menu_sharp)),
-                    Spacer(
-                      flex: 1,
-                    ),
-                    Spacer(
-                      flex: 3,
-                    ),
-                  ],
+        child: Scaffold(
+          resizeToAvoidBottomPadding: false,
+          appBar: basicAppBar('Add Food', context),
+          drawer: NavDrawer(),
+          body: Center(
+              child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Spacer(
+                  flex: 2,
                 ),
-              )),
-              floatingActionButton: FloatingActionButton(
-                child: Icon(Icons.done),
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    print(_carboController.value.text);
-                    Navigator.pushNamed(context, '/saving');
-                  }
-                },
-              ),
-            )));
+                searchBar(_foodNameController),
+                subBuilderQuestion("탄수화물", "g",
+                    controller: _carboController, icon: Icon(Icons.favorite)),
+                subBuilderQuestion("단백질", "g",
+                    controller: _proController,
+                    icon: Icon(Icons.restaurant_menu_outlined)),
+                subBuilderQuestion("지방", "g",
+                    controller: _fatController,
+                    icon: Icon(Icons.restaurant_outlined)),
+                subBuilderQuestion("열량?", "g",
+                    controller: _ulController,
+                    icon: Icon(Icons.restaurant_menu_sharp)),
+                Spacer(
+                  flex: 1,
+                ),
+                Spacer(
+                  flex: 3,
+                ),
+              ],
+            ),
+          )),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.done),
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                print(_carboController.value.text);
+                Navigator.pushNamed(context, '/saving');
+              }
+            },
+          ),
+        ));
   }
 
   Widget searchBar(var controller) {

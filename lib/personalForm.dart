@@ -44,58 +44,57 @@ class _PersonalForm extends State<PersonalForm> {
           currentFocus.unfocus();
         },
         onDoubleTap: () {
-          Navigator.pushNamed(context, '/saving');
+          // Navigator.pushNamed(context, '/saving');
         },
-        child: MaterialApp(
-            title: "Personal Form",
-            home: Scaffold(
-              resizeToAvoidBottomPadding: false,
-              appBar: basicAppBar('Personal Form', context),
-              body: Center(
-                  child: Form(
-                key: _formKey,
-                child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  // mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
+        child: Scaffold(
+          resizeToAvoidBottomPadding: false,
+          appBar: basicAppBar('Personal Form', context),
+          drawer: NavDrawer(),
+          body: Center(
+              child: Form(
+            key: _formKey,
+            child: Column(
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              // mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
 
-                  children: [
-                    // Spacer(
-                    //   flex: 1,
-                    // ),
-                    subBuilderQuestion("키", "CM",
-                        controller: _heightController,
-                        icon: Icon(Icons.accessibility)),
-                    subBuilderQuestion("몸무게", "KG",
-                        controller: _weightController,
-                        icon: Icon(Icons.accessibility)),
-                    subBuilderQuestion("체지방률", "%",
-                        controller: _bmiController,
-                        icon: Icon(Icons.directions_run)),
-                    subBuilderQuestion("골격근량", "KG/%",
-                        controller: _strengthController,
-                        icon: Icon(Icons.fitness_center)),
-                    subBuilderPurpose("목표", icon: Icon(Icons.accessibility)),
-                    Spacer(
-                      flex: 1,
-                    ),
-                    Spacer(
-                      flex: 2,
-                    ),
-                  ],
+              children: [
+                // Spacer(
+                //   flex: 1,
+                // ),
+                subBuilderQuestion("키", "CM",
+                    controller: _heightController,
+                    icon: Icon(Icons.accessibility)),
+                subBuilderQuestion("몸무게", "KG",
+                    controller: _weightController,
+                    icon: Icon(Icons.accessibility)),
+                subBuilderQuestion("체지방률", "%",
+                    controller: _bmiController,
+                    icon: Icon(Icons.directions_run)),
+                subBuilderQuestion("골격근량", "KG/%",
+                    controller: _strengthController,
+                    icon: Icon(Icons.fitness_center)),
+                subBuilderPurpose("목표", icon: Icon(Icons.accessibility)),
+                Spacer(
+                  flex: 1,
                 ),
-              )),
-              floatingActionButton: FloatingActionButton(
-                child: Icon(Icons.done),
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    Navigator.pushNamed(context, '/saving');
-                  }
-                  ;
-                  //print(_heightController.text);
-                },
-              ),
-            )));
+                Spacer(
+                  flex: 2,
+                ),
+              ],
+            ),
+          )),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.done),
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                Navigator.pushNamed(context, '/saving');
+              }
+              ;
+              //print(_heightController.text);
+            },
+          ),
+        ));
   }
 
   Widget subBuilderQuestion(var question, var unit,

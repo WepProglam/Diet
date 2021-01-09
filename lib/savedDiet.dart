@@ -6,23 +6,21 @@ import 'appBar.dart';
 class SavedDiet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Diet_3',
-      home: Scaffold(
-        appBar: basicAppBar('Diet List', context),
-        body: Center(
-          child: DietList(),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: Icon(
-            Icons.expand_less,
-            size: 40,
-          ),
-          backgroundColor: Colors.black45,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    return Scaffold(
+      appBar: basicAppBar('Diet List', context),
+      drawer: NavDrawer(),
+      body: Center(
+        child: DietList(),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(
+          Icons.expand_less,
+          size: 40,
+        ),
+        backgroundColor: Colors.black45,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

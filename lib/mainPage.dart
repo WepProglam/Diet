@@ -5,11 +5,12 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'appBar.dart';
 
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MyHomePage(title: 'Flutter Calendar Carousel Example');
+    return MyHomePage(title: 'Main Page');
   }
 }
 
@@ -223,12 +224,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, '/personalForm'); //안찾아짐
+          // Navigator.pushNamed(context, '/personalForm');
         },
         child: Scaffold(
-            appBar: new AppBar(
-              title: new Text(widget.title),
-            ),
+            appBar: basicAppBar(widget.title, context),
+            drawer: NavDrawer(),
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
