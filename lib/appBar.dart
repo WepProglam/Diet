@@ -93,10 +93,10 @@ class NavDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.border_color),
-            title: Text('saving'),
+            title: Text('savedFood'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
-              Navigator.pushNamed(context, '/saving');
+              Navigator.pushNamed(context, '/savedFood');
               print(ModalRoute.of(context).settings.name);
             },
           ),

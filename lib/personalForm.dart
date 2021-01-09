@@ -199,22 +199,3 @@ class _PersonalForm extends State<PersonalForm> {
         ));
   }
 }
-
-class Saving extends StatelessWidget {
-  @override
-  Widget build(context) {
-    return GestureDetector(
-        child: Container(
-            color: Colors.blue[300],
-            child: Center(
-              child: Text(
-                "saving...",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 50,
-                    decoration: TextDecoration.none),
-              ),
-            )),
-        onTap: () => Navigator.pushNamed(context, '/savedDiet'));
-  }
-}

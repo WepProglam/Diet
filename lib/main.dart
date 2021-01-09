@@ -5,14 +5,15 @@ import 'initPage.dart';
 import 'savedDiet.dart';
 import 'mainPage.dart';
 import 'addFood.dart';
+import 'savedFood.dart';
 
 void main() => runApp(MaterialApp(
       initialRoute: '/',
       routes: {
         '/': (context) => InitPage(),
         '/personalForm': (context) => PersonalForm(),
-        '/saving': (context) => Saving(),
         '/savedDiet': (context) => SavedDiet(),
+        '/savedFood': (context) => SavedFood(),
         '/main': (context) => MainPage(),
         '/addFood': (context) => AddFood(),
       },
