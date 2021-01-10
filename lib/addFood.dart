@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'appBar.dart';
+import 'db_helper.dart';
+import 'model.dart';
+import 'package:excel/excel.dart';
+import 'package:flutter/services.dart' show ByteData, rootBundle;
 
 class AddFood extends StatefulWidget {
   @override
@@ -12,7 +16,7 @@ class _AddFood extends State<AddFood> {
   final _fatController = TextEditingController();
   final _ulController = TextEditingController();
   final _foodNameController = TextEditingController();
-
+  final dbHelper = DBHelperFood();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -32,6 +36,37 @@ class _AddFood extends State<AddFood> {
           FocusScopeNode currentFocus = FocusScope.of(context);
           currentFocus.unfocus();
         },
+        onDoubleTap: () async {
+          ByteData data = await rootBundle.load("assets/ex.xlsx");
+      List<int> bytes =
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      var excel = Excel.decodeBytes(bytes);
+      for (var table in excel.tables.keys) {
+        for (var row in excel.tables[table].rows) {
+          var food = Food(
+              code: row[0],
+              dbArmy: row[1],
+              foodName: row[2],
+              foodKinds: row[3],
+              kcal: row[4],
+              protein: row[5],
+              carbohydrate: row[6],
+              fat: row[7]);
+
+          dbHelper.createData(food);
+          dbHelper.getAllFood().then((value) {
+            for (var item in value) {
+              print("foodName : ${item.foodName}");
+            }
+          });
+        }
+      }
+
+      // final directory = await getApplicationDocumentsDirectory();
+      // String filePath = join(directory.toString(), "foodNutriData.xlsx");
+      // await File(filePath).writeAsBytes(bytes);
+    },
         child: Scaffold(
           resizeToAvoidBottomPadding: false,
           appBar: basicAppBar('Add Food', context),

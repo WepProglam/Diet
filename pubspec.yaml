@@ -36,6 +36,7 @@ dependencies:
   flutter_calendar_carousel: ^1.5.2
   intl: ^0.16.0
   material_floating_search_bar: ^0.2.6
+  excel: ^1.1.5
 
 
   # The following adds the Cupertino Icons font to your application.

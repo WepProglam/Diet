@@ -171,11 +171,11 @@ class DBHelperFood {
   // }
 
   //Create
-  createData(Person person) async {
+  createData(Food food) async {
     final db = await database;
     await db.insert(
       tableName,
-      person.toMap(),
+      food.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
@@ -198,10 +198,10 @@ class DBHelperFood {
   }
 
   //Read All
-  Future<List<Person>> getAllFood() async {
+  Future<List<Food>> getAllFood() async {
     final db = await database;
     var res = await db.rawQuery('SELECT * FROM $tableName');
-    List<Person> list = res.isNotEmpty
+    List<Food> list = res.isNotEmpty
         ? res
             .map(
               (c) => Food(
@@ -221,14 +221,14 @@ class DBHelperFood {
   }
 
   //Delete
-  deletePerson(int id) async {
+  deleteFood(int id) async {
     final db = await database;
     var res = db.rawDelete('DELETE FROM $tableName WHERE id = ?', [id]);
     return res;
   }
 
   //Delete All
-  deleteAllPerson() async {
+  deleteAllFood() async {
     final db = await database;
     db.rawDelete('DELETE FROM $tableName');
   }
