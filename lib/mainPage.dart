@@ -17,15 +17,6 @@ class MainPage extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -43,13 +34,13 @@ class _MyHomePageState extends State<MyHomePage> {
             Spacer(
               flex: 1,
             ),
-            calenderDayRow(),
-            calenderRow(1),
+            calenderDayRow(), //요일
+            calenderRow(1), //날짜 => 추후 정확한 정보 기입
             calenderRow(8),
             calenderRow(15),
             calenderRow(22),
             calenderRow(29),
-            calenderRow(36),
+            calenderRow(36), //익월 날짜 포함 가능위해 임시적으로 만든 자리(1월 달력에서 2월 날짜 보이는거)
             Spacer(
               flex: 6,
             ),
@@ -65,7 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
             Spacer(
               flex: 1,
             ),
-            calenderBlock(Text('sun'), true),
+            calenderBlock(
+                Text('sun'), true), //true면 border 없이, flase면 border 있이
             calenderBlock(Text('mon'), true),
             calenderBlock(Text('tue'), true),
             calenderBlock(Text('wed'), true),
@@ -114,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 }
-
+// 받아온 달력 주석 처리함
 // class _MyHomePageState extends State<MyHomePage> {
 //   DateTime _currentDate = DateTime(2021, 1, 8);
 //   DateTime _currentDate2 = DateTime(2021, 1, 8);
