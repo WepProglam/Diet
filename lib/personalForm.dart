@@ -32,40 +32,47 @@ class _PersonalForm extends State<PersonalForm> {
   int _selValue = 1;
   int purpose_index = 1;
   var dbHelper = DBHelper();
-  final hint = {};
+  var hint = {};
 
-  @override
-  void initState() {
-    getHint();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   getHint();
+  //   super.initState();
+  // }
 
-  @override
-  void dispose() {
-    _heightController.dispose();
-    _weightController.dispose();
-    _bmiController.dispose();
-    _strengthController.dispose();
-    //_purposeController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _heightController.dispose();
+  //   _weightController.dispose();
+  //   _bmiController.dispose();
+  //   _strengthController.dispose();
+  //   super.dispose();
+  // }
 
-  getHint() async {
-    final personList = await dbHelper.getAllPerson().then((value) {
-      hint['height'] = value.isNotEmpty ? value.last.height : null;
-      hint['weight'] = value.isNotEmpty ? value.last.weight : null;
-      hint['bmi'] = value.isNotEmpty ? value.last.bmi : null;
-      hint['time'] = value.isNotEmpty ? value.last.time : null;
-      hint['muscleMass'] = value.isNotEmpty ? value.last.muscleMass : null;
-      hint['purpose'] = value.isNotEmpty ? value.last.purpose : null;
-      print("hint : $hint");
+  Future<Map> getHint() async {
+    var hint1 = {};
+    await dbHelper.getAllPerson().then((value) {
+      hint1['height'] = value.isNotEmpty ? value.last.height : null;
+      hint1['weight'] = value.isNotEmpty ? value.last.weight : null;
+      hint1['bmi'] = value.isNotEmpty ? value.last.bmi : null;
+      hint1['time'] = value.isNotEmpty ? value.last.time : null;
+      hint1['muscleMass'] = value.isNotEmpty ? value.last.muscleMass : null;
+      hint1['purpose'] = value.isNotEmpty ? value.last.purpose : null;
     });
+    return hint1;
+  }
+
+  void getHintGet() async {
+    hint = await getHint();
+    if (hint.isNotEmpty) {
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    getHint();
-    // print(hint);
+    getHintGet();
+
     return GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -90,6 +97,7 @@ class _PersonalForm extends State<PersonalForm> {
                 // Spacer(
                 //   flex: 1,
                 // ),
+
                 subBuilderQuestion("키", "CM",
                     controller: _heightController,
                     icon: Icon(Icons.accessibility),

@@ -14,7 +14,7 @@ void main() => runApp(MaterialApp(
         '/personalForm': (context) => PersonalForm(),
         '/savedDiet': (context) => SavedDiet(),
         '/savedFood': (context) => SavedFood(),
-        '/main': (context) => MainPage(),
+        '/mainPage': (context) => MainPage(),
         '/addFood': (context) => AddFood(),
       },
     ));

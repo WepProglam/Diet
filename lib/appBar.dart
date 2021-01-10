@@ -69,6 +69,15 @@ class NavDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.input),
+            title: Text('mainPage'),
+            onTap: () {
+              // print(ModalRoute.of(context).settings.name);
+              Navigator.pushNamed(context, '/mainPage');
+              print(ModalRoute.of(context).settings.name);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.input),
             title: Text('addFood'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
