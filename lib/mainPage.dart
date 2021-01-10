@@ -169,13 +169,13 @@ class _MyHomePageState extends State<MyHomePage> {
               flex: 1,
             ),
             calenderBlock(
-                dateText('일'), true), //true면 border 없이, flase면 border 있이
-            calenderBlock(dateText('월'), true),
-            calenderBlock(dateText('화'), true),
-            calenderBlock(dateText('수'), true),
-            calenderBlock(dateText('목'), true),
-            calenderBlock(dateText('금'), true),
-            calenderBlock(dateText('토'), true),
+                dayText('일'), true), //true면 border 없이, flase면 border 있이
+            calenderBlock(dayText('월'), true),
+            calenderBlock(dayText('화'), true),
+            calenderBlock(dayText('수'), true),
+            calenderBlock(dayText('목'), true),
+            calenderBlock(dayText('금'), true),
+            calenderBlock(dayText('토'), true),
             Spacer(
               flex: 1,
             ),
@@ -183,11 +183,41 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  Widget dateText(String date) {
+  Widget dayText(String day) {
     return Text(
-      date,
+      day,
       style: TextStyle(fontSize: 15),
     );
+  }
+
+  Widget dateText(String date) {
+    var targetDay =
+        new DateTime(calender_year, calender_month, int.parse(date));
+    var day = DateFormat('EEEE').format(targetDay).toString();
+
+    if (date == DateTime.now().day.toString() &&
+        calender_month == DateTime.now().month) {
+      return Text(
+        date,
+        style: TextStyle(
+            fontSize: 15, color: Colors.green, fontWeight: FontWeight.w900),
+      );
+    } else if (day == "Sunday") {
+      return Text(
+        date,
+        style: TextStyle(fontSize: 15, color: Colors.red),
+      );
+    } else if (day == "Saturday") {
+      return Text(
+        date,
+        style: TextStyle(fontSize: 15, color: Colors.blue),
+      );
+    } else {
+      return Text(
+        date,
+        style: TextStyle(fontSize: 15),
+      );
+    }
   }
 
   Widget calenderRow(int date, {String tag = null}) {
