@@ -63,14 +63,13 @@ class _MyHomePageState extends State<MyHomePage> {
             Spacer(
               flex: 1,
             ),
-            calenderBlock(
-                Text('sun'), true), //true면 border 없이, flase면 border 있이
-            calenderBlock(Text('mon'), true),
-            calenderBlock(Text('tue'), true),
-            calenderBlock(Text('wed'), true),
-            calenderBlock(Text('thu'), true),
-            calenderBlock(Text('fri'), true),
-            calenderBlock(Text('sat'), true),
+            calenderBlock(Text('일'), true), //true면 border 없이, flase면 border 있이
+            calenderBlock(Text('월'), true),
+            calenderBlock(Text('화'), true),
+            calenderBlock(Text('수'), true),
+            calenderBlock(Text('목'), true),
+            calenderBlock(Text('금'), true),
+            calenderBlock(Text('토'), true),
             Spacer(
               flex: 1,
             ),
