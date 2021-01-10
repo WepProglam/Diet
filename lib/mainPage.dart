@@ -27,11 +27,30 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   var date = 1;
   var mealTime = "아침";
-  var calender_year = 2021;
-  var calender_month = 1;
-
+  var calender_year = DateTime.now().year;
+  var calender_month = DateTime.now().month;
+  var daysFirstWeek;
+  var daysLastWeek;
+  var lastDayDateTime;
   @override
   Widget build(BuildContext context) {
+    var dateTime = DateTime(calender_year, calender_month, 1);
+    var dayFirst =
+        DateFormat('EEEE').format(DateTime(calender_year, calender_month, 1));
+    lastDayDateTime = (dateTime.month < 12)
+        ? new DateTime(dateTime.year, dateTime.month + 1, 0)
+        : new DateTime(dateTime.year + 1, 1, 0);
+
+    var dayLast = DateFormat('EEEE').format(lastDayDateTime);
+
+    daysLastWeek = 7 - dayToDate(dayLast);
+    print(dayLast);
+    print(dayToDate(dayLast));
+    daysFirstWeek = 7 - dayToDate(dayFirst) + 1;
+    print("datsFirstWEEK $daysFirstWeek");
+
+    // var daysFirstWeek = 7 - dayToDate[dayFirst] + 1; //첫 주 요일 개수
+    print(daysFirstWeek);
     return Scaffold(
         appBar: basicAppBar('Main Page', context),
         drawer: NavDrawer(),
@@ -42,12 +61,13 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             calenderMonthChange(),
             calenderDayRow(), //요일
-            calenderRow(1), //날짜 => 추후 정확한 정보 기입
-            calenderRow(8),
-            calenderRow(15),
-            calenderRow(22),
-            calenderRow(29),
-            calenderRow(36), //익월 날짜 포함 가능위해 임시적으로 만든 자리(1월 달력에서 2월 날짜 보이는거)
+            calenderRow(1, tag: "first"), //날짜 => 추후 정확한 정보 기입
+            calenderRow(1 + daysFirstWeek),
+            calenderRow(8 + daysFirstWeek),
+            calenderRow(15 + daysFirstWeek),
+            calenderRow(22 + daysFirstWeek),
+            calenderRow(29 + daysFirstWeek, tag: "end"),
+            // calenderRow(36), //익월 날짜 포함 가능위해 임시적으로 만든 자리(1월 달력에서 2월 날짜 보이는거)
             dietDate(date.toString()),
             diet(date.toString()),
             dietBox(mealTime, date),
@@ -56,6 +76,34 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ));
+  }
+
+  int dayToDate(String day) {
+    int date;
+    switch (day) {
+      case 'Sunday':
+        date = 1;
+        break;
+      case 'Monday':
+        date = 2;
+        break;
+      case 'Tuesday':
+        date = 3;
+        break;
+      case 'Wednesday':
+        date = 4;
+        break;
+      case 'Thursday':
+        date = 5;
+        break;
+      case 'Friday':
+        date = 6;
+        break;
+      case 'Saturday':
+        date = 7;
+        break;
+    }
+    return date;
   }
 
   Widget calenderMonthChange() {
@@ -145,27 +193,80 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget calenderRow(int date) {
+  Widget calenderRow(int date, {String tag = null}) {
     //추후 year,month 받고 달력 달라지는 기능 추가
-    return Expanded(
+
+    var children;
+    int datesFirst = daysFirstWeek;
+    int datesEnd = daysLastWeek;
+    var totalDays = lastDayDateTime.day;
+    int weekTotalDays = 7;
+
+    if (date > totalDays) {
+      return Spacer(
         flex: 2,
-        child: Row(
-          children: [
-            Spacer(
-              flex: 1,
-            ),
-            calenderBlock(dateText(date.toString()), false),
-            calenderBlock(dateText((date + 1).toString()), false),
-            calenderBlock(dateText((date + 2).toString()), false),
-            calenderBlock(dateText((date + 3).toString()), false),
-            calenderBlock(dateText((date + 4).toString()), false),
-            calenderBlock(dateText((date + 5).toString()), false),
-            calenderBlock(dateText((date + 6).toString()), false),
-            Spacer(
-              flex: 1,
-            ),
-          ],
-        ));
+      );
+    } else if (date + 7 > totalDays) {
+      children = returnWeek(date, tag: "end");
+    } else {
+      children = returnWeek(date, tag: tag);
+    }
+
+    return Expanded(flex: 2, child: children);
+  }
+
+  Widget returnWeek(int date, {String tag = null}) {
+    var children = <Widget>[];
+
+    children.add(Spacer(
+      flex: 1,
+    ));
+    int datesFirst = daysFirstWeek;
+    int datesEnd = daysLastWeek;
+    var totalDays = lastDayDateTime.day;
+    print("daysLastweek $daysLastWeek");
+
+    int weekTotalDays = 7;
+
+    var dt = date;
+    if (tag == "first") {
+      for (var i = 0; i < weekTotalDays; i++) {
+        if (i >= weekTotalDays - datesFirst) {
+          children.add(calenderBlock(dateText(dt.toString()), false));
+          dt += 1;
+        } else {
+          children.add(Spacer(
+            flex: 3,
+          ));
+        }
+      }
+    } else if (tag == "end") {
+      for (var i = 0; i < weekTotalDays; i++) {
+        if (i < weekTotalDays - datesEnd) {
+          children.add(calenderBlock(dateText(dt.toString()), false));
+          dt += 1;
+        } else {
+          children.add(Spacer(
+            flex: 3,
+          ));
+        }
+      }
+    } else {
+      for (var i = 0; i < weekTotalDays; i++) {
+        var dt = date + i;
+        children.add(calenderBlock(dateText(dt.toString()), false));
+      }
+    }
+
+    children.add(Spacer(
+      flex: 1,
+    ));
+
+    // print(children);
+
+    return new Row(
+      children: children,
+    );
   }
 
   Widget calenderBlock(Text title, bool isitDay) {
