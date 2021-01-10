@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
@@ -141,10 +142,18 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
               flex: 1,
               child: FlatButton(
+                color: Colors.red,
                 child: Container(
-                  decoration: BoxDecoration(color: Colors.white10),
+                  // decoration: BoxDecoration(color: Colors.white10),
                   // border: Border(bottom: BorderSide(color: Colors.blue))),
-                  child: Center(child: Text('아침')),
+                  child: Center(
+                      child: Text(
+                    '아침',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18),
+                  )),
                 ),
                 onPressed: () {
                   setState(() {
@@ -155,10 +164,18 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
               flex: 1,
               child: FlatButton(
+                color: Colors.green,
                 child: Container(
-                  decoration: BoxDecoration(color: Colors.white10),
+                  // decoration: BoxDecoration(color: Colors.white10),
                   // border: Border(bottom: BorderSide(color: Colors.blue))),
-                  child: Center(child: Text('점심')),
+                  child: Center(
+                      child: Text(
+                    '점심',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18),
+                  )),
                 ),
                 onPressed: () {
                   setState(() {
@@ -169,10 +186,18 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
               flex: 1,
               child: FlatButton(
+                color: Colors.blue,
                 child: Container(
-                  decoration: BoxDecoration(color: Colors.white10),
+                  // decoration: BoxDecoration(color: Colors.white10),
                   // border: Border(bottom: BorderSide(color: Colors.blue))),
-                  child: Center(child: Text('저녁')),
+                  child: Center(
+                      child: Text(
+                    '저녁',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18),
+                  )),
                 ),
                 onPressed: () {
                   setState(() {
