@@ -6,9 +6,10 @@ import 'package:path/path.dart';
 
 import 'model.dart';
 
-final String dBName = 'Diet';
+
 
 class DBHelperPerson {
+  final String dBName = 'Diet';
   final String tableName = 'Person';
   DBHelperPerson._();
   static final DBHelperPerson _db = DBHelperPerson._();
@@ -119,6 +120,7 @@ class DBHelperPerson {
 }
 
 class DBHelperFood {
+  final String dBName = 'FoodDiet';
   final String tableName = 'Food';
   DBHelperFood._();
   static final DBHelperFood _db = DBHelperFood._();
@@ -135,7 +137,7 @@ class DBHelperFood {
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '$dBName.db');
+    String path = join(documentsDirectory.path, "$dBName.db");
 
     return await openDatabase(path, version: 1, onCreate: (db, version) async {
       await db.execute('''
@@ -152,23 +154,6 @@ class DBHelperFood {
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
   }
-
-  // createHelper(Food food) {
-  //   getAllFood().then((value) {
-  //     print(value.isNotEmpty);
-  //     if (value.isNotEmpty) {
-  //       if (value.last.time == person.time) {
-  //         return null;
-  //       } else {
-  //         createData(person);
-  //       }
-  //     } else {
-  //       createData(person);
-  //     }
-  //   }, onError: (e) {
-  //     createData(person);
-  //   });
-  // }
 
   //Create
   createData(Food food) async {

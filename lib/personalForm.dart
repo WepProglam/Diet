@@ -147,7 +147,7 @@ class _PersonalForm extends State<PersonalForm> {
                 dbHelper.getAllPerson().then((value) {
                   print('length : ${value.length}');
 
-                  print(value.last.time);
+                  //print(value.last.time);
                 });
               }
 

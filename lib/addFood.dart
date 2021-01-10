@@ -5,6 +5,8 @@ import 'model.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 
+
+
 class AddFood extends StatefulWidget {
   @override
   _AddFood createState() => _AddFood();
@@ -36,37 +38,7 @@ class _AddFood extends State<AddFood> {
           FocusScopeNode currentFocus = FocusScope.of(context);
           currentFocus.unfocus();
         },
-        onDoubleTap: () async {
-          ByteData data = await rootBundle.load("assets/ex.xlsx");
-      List<int> bytes =
-      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
-      var excel = Excel.decodeBytes(bytes);
-      for (var table in excel.tables.keys) {
-        for (var row in excel.tables[table].rows) {
-          var food = Food(
-              code: row[0],
-              dbArmy: row[1],
-              foodName: row[2],
-              foodKinds: row[3],
-              kcal: row[4],
-              protein: row[5],
-              carbohydrate: row[6],
-              fat: row[7]);
-
-          dbHelper.createData(food);
-          dbHelper.getAllFood().then((value) {
-            for (var item in value) {
-              print("foodName : ${item.foodName}");
-            }
-          });
-        }
-      }
-
-      // final directory = await getApplicationDocumentsDirectory();
-      // String filePath = join(directory.toString(), "foodNutriData.xlsx");
-      // await File(filePath).writeAsBytes(bytes);
-    },
         child: Scaffold(
           resizeToAvoidBottomPadding: false,
           appBar: basicAppBar('Add Food', context),
@@ -89,7 +61,7 @@ class _AddFood extends State<AddFood> {
                 subBuilderQuestion("지방", "g",
                     controller: _fatController,
                     icon: Icon(Icons.restaurant_outlined)),
-                subBuilderQuestion("열량?", "g",
+                subBuilderQuestion("열량", "g",
                     controller: _ulController,
                     icon: Icon(Icons.restaurant_menu_sharp)),
                 Spacer(
@@ -101,17 +73,10 @@ class _AddFood extends State<AddFood> {
               ],
             ),
           )),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.done),
-            onPressed: () {
-              if (_formKey.currentState.validate()) {
-                print(_carboController.value.text);
-                Navigator.pushNamed(context, '/saving');
-              }
-            },
-          ),
+          floatingActionButton: TransFAB()
         ));
   }
+
 
   Widget searchBar(var controller) {
     return Expanded(
@@ -202,5 +167,167 @@ class _AddFood extends State<AddFood> {
         child: Center(
           child: Text(unit),
         ));
+  }
+}
+class TransFAB extends StatefulWidget {
+  final Function() onPressed;
+  final String tooltip;
+  final IconData icon;
+
+  TransFAB({this.onPressed, this.tooltip, this.icon});
+
+  @override
+  _TransFABState createState() => _TransFABState();
+}
+
+class _TransFABState extends State<TransFAB>
+    with SingleTickerProviderStateMixin {
+  bool isOpened = false;
+  AnimationController _animationController;
+  Animation<Color> _buttonColor;
+  Animation<double> _animateIcon;
+  Animation<double> _translateButton;
+  Curve _curve = Curves.easeOut;
+  double _fabHeight = 56.0;
+
+  @override
+  initState() {
+    _animationController =
+    AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+      ..addListener(() {
+        setState(() {});
+      });
+    _animateIcon =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _buttonColor = ColorTween(
+      //이유는 모르겠지만 핫리로딩이 안됨 다시 실행해야 적용됨.
+      begin: Colors.black45,
+      end: Colors.orange[300],
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(
+        0.00,
+        1.00,
+        curve: Curves.linear,
+      ),
+    ));
+    _translateButton = Tween<double>(
+      begin: _fabHeight,
+      end: -14.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(
+        0.0,
+        0.75,
+        curve: _curve,
+      ),
+    ));
+    super.initState();
+  }
+
+  @override
+  dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  animate() {
+    if (!isOpened) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+    isOpened = !isOpened;
+  }
+
+  Widget add() {
+    return Container(
+      child: FloatingActionButton(
+        heroTag: null,
+        onPressed: () async {
+          final dbHelper=DBHelperFood();
+          ByteData data = await rootBundle.load("assets/foodNutriData.xlsx");
+          List<int> bytes =
+          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+          dbHelper.deleteAllFood();
+          print("start");
+          var excel = Excel.decodeBytes(bytes);
+          for (var table in excel.tables.keys) {
+            for (var row in excel.tables[table].rows) {
+              var food = Food(
+                  code: row[0],
+                  dbArmy: row[1],
+                  foodName: row[2],
+                  foodKinds: row[3],
+                  kcal: row[4],
+                  protein: row[5],
+                  carbohydrate: row[6],
+                  fat: row[7]);
+
+              await dbHelper.createData(food);
+            }
+          }
+          print("finish");
+
+        },
+        tooltip: 'Add',
+        child: Icon(Icons.add, size: 30),
+        backgroundColor: Colors.black45,
+      ),
+    );
+  }
+
+  Widget search() {
+    return Container(
+      child: FloatingActionButton(
+        heroTag: null,
+        onPressed: () {},
+        tooltip: 'Search',
+        child: Icon(Icons.search, size: 30),
+        backgroundColor: Colors.black45,
+      ),
+    );
+  }
+
+  Widget toggle() {
+    return Container(
+      child: FloatingActionButton(
+        heroTag: null,
+        backgroundColor: _buttonColor.value,
+        onPressed: animate,
+        tooltip: 'Toggle',
+        child: AnimatedIcon(
+          icon: AnimatedIcons.menu_close,
+          progress: _animateIcon,
+          size: 30,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Transform(
+          transform: Matrix4.translationValues(
+            0.0,
+            _translateButton.value * 2.0,
+            0.0,
+          ),
+          child: search(),
+        ),
+        Transform(
+          transform: Matrix4.translationValues(
+            0.0,
+            _translateButton.value,
+            0.0,
+          ),
+          child: add(),
+        ),
+        toggle(),
+      ],
+    );
   }
 }
