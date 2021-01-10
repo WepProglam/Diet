@@ -27,6 +27,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   var date = 1;
   var mealTime = "아침";
+  var calender_year = 2021;
+  var calender_month = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Spacer(
               flex: 1,
             ),
+            calenderMonthChange(),
             calenderDayRow(), //요일
             calenderRow(1), //날짜 => 추후 정확한 정보 기입
             calenderRow(8),
@@ -49,27 +52,85 @@ class _MyHomePageState extends State<MyHomePage> {
             diet(date.toString()),
             dietBox(mealTime, date),
             Spacer(
-              flex: 1,
+              flex: 2,
             ),
           ],
         ));
   }
 
+  Widget calenderMonthChange() {
+    return Expanded(
+      flex: 1,
+      child: Row(
+        children: [
+          Spacer(
+            flex: 1,
+          ),
+          // Expanded(flex: 5, child: Text("2021년 1월")),
+          Expanded(
+              flex: 20,
+              child: Row(
+                children: [
+                  FlatButton(
+                    onPressed: () {
+                      if (calender_month == 1) {
+                        setState(() {
+                          calender_year -= 1;
+                          calender_month = 12;
+                        });
+                      } else {
+                        setState(() {
+                          calender_month -= 1;
+                        });
+                      }
+                    },
+                    child: Icon(Icons.arrow_back_ios),
+                  ),
+                  Text(
+                    "$calender_year년 $calender_month월",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  FlatButton(
+                    onPressed: () {
+                      if (calender_month == 12) {
+                        setState(() {
+                          calender_year += 1;
+                          calender_month = 1;
+                        });
+                      } else {
+                        setState(() {
+                          calender_month += 1;
+                        });
+                      }
+                    },
+                    child: Icon(Icons.arrow_forward_ios),
+                  ),
+                ],
+              )),
+          Spacer(
+            flex: 1,
+          )
+        ],
+      ),
+    );
+  }
+
   Widget calenderDayRow() {
     return Expanded(
-        flex: 1,
+        flex: 2,
         child: Row(
           children: [
             Spacer(
               flex: 1,
             ),
-            calenderBlock(Text('일'), true), //true면 border 없이, flase면 border 있이
-            calenderBlock(Text('월'), true),
-            calenderBlock(Text('화'), true),
-            calenderBlock(Text('수'), true),
-            calenderBlock(Text('목'), true),
-            calenderBlock(Text('금'), true),
-            calenderBlock(Text('토'), true),
+            calenderBlock(
+                dateText('일'), true), //true면 border 없이, flase면 border 있이
+            calenderBlock(dateText('월'), true),
+            calenderBlock(dateText('화'), true),
+            calenderBlock(dateText('수'), true),
+            calenderBlock(dateText('목'), true),
+            calenderBlock(dateText('금'), true),
+            calenderBlock(dateText('토'), true),
             Spacer(
               flex: 1,
             ),
@@ -77,28 +138,29 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  Widget dateText(int date) {
+  Widget dateText(String date) {
     return Text(
-      '${date}',
+      date,
       style: TextStyle(fontSize: 15),
     );
   }
 
   Widget calenderRow(int date) {
+    //추후 year,month 받고 달력 달라지는 기능 추가
     return Expanded(
-        flex: 1,
+        flex: 2,
         child: Row(
           children: [
             Spacer(
               flex: 1,
             ),
-            calenderBlock(dateText(date), false),
-            calenderBlock(dateText(date + 1), false),
-            calenderBlock(dateText(date + 2), false),
-            calenderBlock(dateText(date + 3), false),
-            calenderBlock(dateText(date + 4), false),
-            calenderBlock(dateText(date + 5), false),
-            calenderBlock(dateText(date + 6), false),
+            calenderBlock(dateText(date.toString()), false),
+            calenderBlock(dateText((date + 1).toString()), false),
+            calenderBlock(dateText((date + 2).toString()), false),
+            calenderBlock(dateText((date + 3).toString()), false),
+            calenderBlock(dateText((date + 4).toString()), false),
+            calenderBlock(dateText((date + 5).toString()), false),
+            calenderBlock(dateText((date + 6).toString()), false),
             Spacer(
               flex: 1,
             ),
@@ -108,27 +170,32 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget calenderBlock(Text title, bool isitDay) {
     return Expanded(
-        flex: 2,
+        flex: 3,
         child: FlatButton(
+          shape: isitDay
+              ? null
+              : Border(top: BorderSide(color: Colors.blueAccent, width: 1)),
           child: Container(
-              decoration: BoxDecoration(
-                  // color: Colors.white,
-                  border: isitDay
-                      ? null
-                      : Border(
-                          top: BorderSide(color: Colors.blue),
-                        )),
-              child: Container(
-                // alignment: isitDay ? null : Alignment(-1.0, -1.0),
-                child: isitDay
-                    ? title
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                            title,
-                            Text('\n100%', style: TextStyle(fontSize: 10)) //성취도
-                          ]),
-              )),
+            alignment: isitDay ? null : Alignment(-1.0, -1.0),
+            margin: EdgeInsets.only(top: 5.0),
+            decoration: BoxDecoration(
+                // color: Colors.white,
+                // border: isitDay
+                //     ? null
+                //     : Border(
+                //         top: BorderSide(color: Colors.blue),
+                //       )
+                ),
+            child: isitDay
+                ? title
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                        title,
+                        Text('\n100%', style: TextStyle(fontSize: 10)) //성취도
+                      ]),
+          ),
           onPressed: () {
             if (!isitDay) {
               setState(() {
@@ -227,7 +294,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget dietBox(String day, int date) {
     //추후 아침 점심 저녁에 따라 표시 정보 달라질 예정 / 임시로 색깔만 바꿈
     return Expanded(
-        flex: 5,
+        flex: 7,
         child: Container(
           decoration: BoxDecoration(
               color: day == "아침"
