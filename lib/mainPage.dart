@@ -102,25 +102,26 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget calenderBlock(Text title, bool isitDay) {
     return Expanded(
         flex: 2,
-        child: GestureDetector(
-            child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: isitDay
-                        ? null
-                        : Border(
-                            top: BorderSide(color: Colors.blue),
-                          )),
-                child: Center(
-                  child: title,
-                )),
-            onTap: () {
-              if (!isitDay) {
-                setState(() {
-                  date = int.parse(title.data);
-                });
-              }
-            }));
+        child: FlatButton(
+          child: Container(
+              decoration: BoxDecoration(
+                  // color: Colors.white,
+                  border: isitDay
+                      ? null
+                      : Border(
+                          top: BorderSide(color: Colors.blue),
+                        )),
+              child: Center(
+                child: title,
+              )),
+          onPressed: () {
+            if (!isitDay) {
+              setState(() {
+                date = int.parse(title.data);
+              });
+            }
+          },
+        ));
   }
 
   Widget dietDate(String date) {
@@ -138,47 +139,47 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Row(
         children: [
           Expanded(
-            flex: 1,
-            child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    mealTime = "아침"; //tap하면 mealtime바꾸고 다시 로드 => 식단 색상 바뀜
-                  });
-                },
+              flex: 1,
+              child: FlatButton(
                 child: Container(
                   decoration: BoxDecoration(color: Colors.white10),
                   // border: Border(bottom: BorderSide(color: Colors.blue))),
                   child: Center(child: Text('아침')),
-                )),
-          ),
-          Expanded(
-            flex: 1,
-            child: GestureDetector(
-                onTap: () {
+                ),
+                onPressed: () {
                   setState(() {
-                    mealTime = "점심";
+                    mealTime = "아침";
                   });
                 },
+              )),
+          Expanded(
+              flex: 1,
+              child: FlatButton(
                 child: Container(
                   decoration: BoxDecoration(color: Colors.white10),
                   // border: Border(bottom: BorderSide(color: Colors.blue))),
                   child: Center(child: Text('점심')),
-                )),
-          ),
-          Expanded(
-            flex: 1,
-            child: GestureDetector(
-                onTap: () {
+                ),
+                onPressed: () {
                   setState(() {
-                    mealTime = "저녁";
+                    mealTime = '점심';
                   });
                 },
+              )),
+          Expanded(
+              flex: 1,
+              child: FlatButton(
                 child: Container(
                   decoration: BoxDecoration(color: Colors.white10),
                   // border: Border(bottom: BorderSide(color: Colors.blue))),
                   child: Center(child: Text('저녁')),
-                )),
-          )
+                ),
+                onPressed: () {
+                  setState(() {
+                    mealTime = "저녁";
+                  });
+                },
+              ))
         ],
       ),
     );
