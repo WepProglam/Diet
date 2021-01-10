@@ -24,6 +24,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var date = 1;
+  var mealTime = "아침";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +44,11 @@ class _MyHomePageState extends State<MyHomePage> {
             calenderRow(22),
             calenderRow(29),
             calenderRow(36), //익월 날짜 포함 가능위해 임시적으로 만든 자리(1월 달력에서 2월 날짜 보이는거)
+            dietDate(date.toString()),
+            diet(date.toString()),
+            dietBox(mealTime, date),
             Spacer(
-              flex: 6,
+              flex: 1,
             ),
           ],
         ));
@@ -96,13 +102,99 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget calenderBlock(Text title, bool isitDay) {
     return Expanded(
         flex: 2,
+        child: GestureDetector(
+            child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: isitDay
+                        ? null
+                        : Border(
+                            top: BorderSide(color: Colors.blue),
+                          )),
+                child: Center(
+                  child: title,
+                )),
+            onTap: () {
+              if (!isitDay) {
+                setState(() {
+                  date = int.parse(title.data);
+                });
+              }
+            }));
+  }
+
+  Widget dietDate(String date) {
+    return Expanded(
+        flex: 1,
+        child: Center(
+          child: Text("$date일"),
+        ));
+  }
+
+  Widget diet(String data) {
+    //아침 점심 저녁 표시
+    return Expanded(
+      flex: 1,
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    mealTime = "아침"; //tap하면 mealtime바꾸고 다시 로드 => 식단 색상 바뀜
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(color: Colors.white10),
+                  // border: Border(bottom: BorderSide(color: Colors.blue))),
+                  child: Center(child: Text('아침')),
+                )),
+          ),
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    mealTime = "점심";
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(color: Colors.white10),
+                  // border: Border(bottom: BorderSide(color: Colors.blue))),
+                  child: Center(child: Text('점심')),
+                )),
+          ),
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    mealTime = "저녁";
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(color: Colors.white10),
+                  // border: Border(bottom: BorderSide(color: Colors.blue))),
+                  child: Center(child: Text('저녁')),
+                )),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget dietBox(String day, int date) {
+    //추후 아침 점심 저녁에 따라 표시 정보 달라질 예정 / 임시로 색깔만 바꿈
+    return Expanded(
+        flex: 5,
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: isitDay ? null : Border.all(color: Colors.blue)),
-          child: Center(
-            child: title,
-          ),
+              color: day == "아침"
+                  ? Colors.red
+                  : day == "점심"
+                      ? Colors.green
+                      : Colors.blue),
         ));
   }
 }
