@@ -31,7 +31,7 @@ class _PersonalForm extends State<PersonalForm> {
   ];
   int _selValue = 1;
   int purpose_index = 1;
-  var dbHelper = DBHelper();
+  var dbHelper = DBHelperPerson();
   var hint = {};
 
   // @override

@@ -30,3 +30,37 @@ class Person {
     };
   }
 }
+
+class Food {
+  String code;
+  String dbArmy;
+  String foodName;
+  String foodKinds;
+  num kcal;
+  num protein;
+  num carbohydrate;
+  num fat;
+
+  Food(
+      {this.code,
+      this.dbArmy,
+      this.foodName,
+      this.foodKinds,
+      this.kcal,
+      this.protein,
+      this.carbohydrate,
+      this.fat});
+
+  Map<String, dynamic> toMap() {
+    return {
+      "code": code,
+      "dbArmy": dbArmy,
+      "foodName": foodName,
+      "foodKinds": foodKinds,
+      "kcal": kcal,
+      "protein": protein,
+      "carbohydrate": carbohydrate,
+      "fat": fat
+    };
+  }
+}
