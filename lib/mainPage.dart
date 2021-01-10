@@ -78,6 +78,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
+  Widget dateText(int date) {
+    return Text(
+      '${date}',
+      style: TextStyle(fontSize: 15),
+    );
+  }
+
   Widget calenderRow(int date) {
     return Expanded(
         flex: 1,
@@ -86,13 +93,13 @@ class _MyHomePageState extends State<MyHomePage> {
             Spacer(
               flex: 1,
             ),
-            calenderBlock(Text('${date}'), false),
-            calenderBlock(Text('${date + 1}'), false),
-            calenderBlock(Text('${date + 2}'), false),
-            calenderBlock(Text('${date + 3}'), false),
-            calenderBlock(Text('${date + 4}'), false),
-            calenderBlock(Text('${date + 5}'), false),
-            calenderBlock(Text('${date + 6}'), false),
+            calenderBlock(dateText(date), false),
+            calenderBlock(dateText(date + 1), false),
+            calenderBlock(dateText(date + 2), false),
+            calenderBlock(dateText(date + 3), false),
+            calenderBlock(dateText(date + 4), false),
+            calenderBlock(dateText(date + 5), false),
+            calenderBlock(dateText(date + 6), false),
             Spacer(
               flex: 1,
             ),
@@ -112,8 +119,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       : Border(
                           top: BorderSide(color: Colors.blue),
                         )),
-              child: Center(
-                child: title,
+              child: Container(
+                // alignment: isitDay ? null : Alignment(-1.0, -1.0),
+                child: isitDay
+                    ? title
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                            title,
+                            Text('\n100%', style: TextStyle(fontSize: 10)) //성취도
+                          ]),
               )),
           onPressed: () {
             if (!isitDay) {
