@@ -165,9 +165,9 @@ class _MyHomePageState extends State<MyHomePage> {
         flex: 2,
         child: Row(
           children: [
-            Spacer(
-              flex: 1,
-            ),
+            // Spacer(
+            //   flex: 1,
+            // ),
             calenderBlock(
                 dayText('일'), true), //true면 border 없이, flase면 border 있이
             calenderBlock(dayText('월'), true),
@@ -176,9 +176,9 @@ class _MyHomePageState extends State<MyHomePage> {
             calenderBlock(dayText('목'), true),
             calenderBlock(dayText('금'), true),
             calenderBlock(dayText('토'), true),
-            Spacer(
-              flex: 1,
-            ),
+            // Spacer(
+            //   flex: 1,
+            // ),
           ],
         ));
   }
@@ -200,22 +200,29 @@ class _MyHomePageState extends State<MyHomePage> {
       return Text(
         date,
         style: TextStyle(
-            fontSize: 15, color: Colors.green, fontWeight: FontWeight.w900),
+          fontSize: 12,
+          color: Colors.green,
+          fontWeight: FontWeight.w900,
+        ),
+        maxLines: 1,
       );
     } else if (day == "Sunday") {
       return Text(
         date,
-        style: TextStyle(fontSize: 15, color: Colors.red),
+        style: TextStyle(fontSize: 12, color: Colors.red),
+        maxLines: 1,
       );
     } else if (day == "Saturday") {
       return Text(
         date,
-        style: TextStyle(fontSize: 15, color: Colors.blue),
+        style: TextStyle(fontSize: 12, color: Colors.blue),
+        maxLines: 1,
       );
     } else {
       return Text(
         date,
-        style: TextStyle(fontSize: 15),
+        style: TextStyle(fontSize: 12),
+        maxLines: 1,
       );
     }
   }
@@ -249,9 +256,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget returnWeek(int date, {String tag = null}) {
     var children = <Widget>[];
 
-    children.add(Spacer(
-      flex: 1,
-    ));
+    // children.add(Spacer(
+    //   flex: 1,
+    // ));
     int datesFirst = daysFirstWeek;
     int datesEnd = daysLastWeek;
     var totalDays = lastDayDateTime.day; //해당 월의 최대 날짜(31일, 30일 등)
@@ -287,9 +294,9 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-    children.add(Spacer(
-      flex: 1,
-    ));
+    // children.add(Spacer(
+    //   flex: 1,
+    // ));
     return new Row(
       children: children,
     );
@@ -313,7 +320,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                         title,
-                        Text('\n100%', style: TextStyle(fontSize: 10)) //성취도
+                        Spacer(flex: 2),
+                        Text(
+                          '100%',
+                          style: TextStyle(fontSize: 7),
+                          maxLines: 1,
+                        ), //성취도
+                        Spacer(flex: 1),
                       ]),
           ),
           onPressed: () {
@@ -327,8 +340,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget dietDate(String date) {
-    return Expanded(
-        flex: 1,
+    return Container(
+        height: 50,
         child: Center(
           child: Text(
             "$date일",
