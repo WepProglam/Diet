@@ -111,46 +111,46 @@ class _MyHomePageState extends State<MyHomePage> {
           Spacer(
             flex: 1,
           ),
-          Expanded(
-              flex: 20,
-              child: Row(
-                children: [
-                  FlatButton(
-                    onPressed: () {
-                      if (calender_month == 1) {
-                        setState(() {
-                          calender_year -= 1;
-                          calender_month = 12;
-                        });
-                      } else {
-                        setState(() {
-                          calender_month -= 1;
-                        });
-                      }
-                    },
-                    child: Icon(Icons.arrow_back_ios),
-                  ),
-                  Text(
-                    "$calender_year년 $calender_month월",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  FlatButton(
-                    onPressed: () {
-                      if (calender_month == 12) {
-                        setState(() {
-                          calender_year += 1;
-                          calender_month = 1;
-                        });
-                      } else {
-                        setState(() {
-                          calender_month += 1;
-                        });
-                      }
-                    },
-                    child: Icon(Icons.arrow_forward_ios),
-                  ),
-                ],
-              )),
+          Center(
+            child: Row(
+              children: [
+                FlatButton(
+                  onPressed: () {
+                    if (calender_month == 1) {
+                      setState(() {
+                        calender_year -= 1;
+                        calender_month = 12;
+                      });
+                    } else {
+                      setState(() {
+                        calender_month -= 1;
+                      });
+                    }
+                  },
+                  child: Icon(Icons.arrow_back_ios),
+                ),
+                Text(
+                  "$calender_year년 $calender_month월",
+                  style: TextStyle(fontSize: 20),
+                ),
+                FlatButton(
+                  onPressed: () {
+                    if (calender_month == 12) {
+                      setState(() {
+                        calender_year += 1;
+                        calender_month = 1;
+                      });
+                    } else {
+                      setState(() {
+                        calender_month += 1;
+                      });
+                    }
+                  },
+                  child: Icon(Icons.arrow_forward_ios),
+                ),
+              ],
+            ),
+          ),
           Spacer(
             flex: 1,
           )
