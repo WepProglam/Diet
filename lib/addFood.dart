@@ -5,8 +5,6 @@ import 'model.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 
-
-
 class AddFood extends StatefulWidget {
   @override
   _AddFood createState() => _AddFood();
@@ -38,45 +36,45 @@ class _AddFood extends State<AddFood> {
           FocusScopeNode currentFocus = FocusScope.of(context);
           currentFocus.unfocus();
         },
-
         child: Scaffold(
-          resizeToAvoidBottomPadding: false,
-          appBar: basicAppBar('Add Food', context),
-          drawer: NavDrawer(),
-          body: Center(
-              child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Spacer(
-                  flex: 2,
-                ),
-                searchBar(_foodNameController),
-                subBuilderQuestion("탄수화물", "g",
-                    controller: _carboController, icon: Icon(Icons.favorite)),
-                subBuilderQuestion("단백질", "g",
-                    controller: _proController,
-                    icon: Icon(Icons.restaurant_menu_outlined)),
-                subBuilderQuestion("지방", "g",
-                    controller: _fatController,
-                    icon: Icon(Icons.restaurant_outlined)),
-                subBuilderQuestion("열량", "g",
-                    controller: _ulController,
-                    icon: Icon(Icons.restaurant_menu_sharp)),
-                Spacer(
-                  flex: 1,
-                ),
-                Spacer(
-                  flex: 3,
-                ),
-              ],
-            ),
-          )),
-          floatingActionButton: TransFAB()
-        ));
+            resizeToAvoidBottomPadding: false,
+            appBar: basicAppBar('Add Food', context),
+            drawer: NavDrawer(),
+            body: Center(
+                child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Spacer(
+                    flex: 2,
+                  ),
+                  searchBar(_foodNameController),
+                  subBuilderQuestion("총 무게", "g",
+                      controller: _ulController,
+                      icon: Icon(Icons.restaurant_menu_sharp)),
+                  subBuilderQuestion("탄수화물", "g",
+                      controller: _carboController, icon: Icon(Icons.favorite)),
+                  subBuilderQuestion("단백질", "g",
+                      controller: _proController,
+                      icon: Icon(Icons.restaurant_menu_outlined)),
+                  subBuilderQuestion("지방", "g",
+                      controller: _fatController,
+                      icon: Icon(Icons.restaurant_outlined)),
+                  subBuilderQuestion("열량", "g",
+                      controller: _ulController,
+                      icon: Icon(Icons.restaurant_menu_sharp)),
+                  Spacer(
+                    flex: 1,
+                  ),
+                  Spacer(
+                    flex: 3,
+                  ),
+                ],
+              ),
+            )),
+            floatingActionButton: TransFAB()));
   }
-
 
   Widget searchBar(var controller) {
     return Expanded(
@@ -105,13 +103,14 @@ class _AddFood extends State<AddFood> {
                     return null;
                   },
 
-                  onChanged: (text) async{
-                    if(text != ""){
-                      await dbHelper.filterFoods(text.toString()).then((value) async{
-                        var foodList="";
+                  onChanged: (text) async {
+                    if (text != "") {
+                      await dbHelper.filterFoods(text.toString()).then(
+                          (value) async {
+                        var foodList = "";
                         print("=======================");
-                        for (var item in value){
-                          foodList+="${item.foodName}\n";
+                        for (var item in value) {
+                          foodList += "${item.foodName}\n";
                           print(item.foodName); //연관 검색 띄우기
                         }
                         // showDialog(context: context,builder: (BuildContext context){
@@ -120,7 +119,9 @@ class _AddFood extends State<AddFood> {
                         //     content: Text(foodList),
                         //   );
                         // });
-                      },onError: (e){print(e);});
+                      }, onError: (e) {
+                        print(e);
+                      });
                     }
 
                     // dbHelper.getAllFood().then((value){
@@ -132,7 +133,6 @@ class _AddFood extends State<AddFood> {
 
                     print(text);
                   },
-
                 )),
             // spacer_unit(unit),
             Spacer(
@@ -199,6 +199,7 @@ class _AddFood extends State<AddFood> {
         ));
   }
 }
+
 class TransFAB extends StatefulWidget {
   final Function() onPressed;
   final String tooltip;
@@ -223,10 +224,10 @@ class _TransFABState extends State<TransFAB>
   @override
   initState() {
     _animationController =
-    AnimationController(vsync: this, duration: Duration(milliseconds: 500))
-      ..addListener(() {
-        setState(() {});
-      });
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+          ..addListener(() {
+            setState(() {});
+          });
     _animateIcon =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
     _buttonColor = ColorTween(
@@ -275,10 +276,10 @@ class _TransFABState extends State<TransFAB>
       child: FloatingActionButton(
         heroTag: null,
         onPressed: () async {
-          final dbHelper=DBHelperFood();
+          final dbHelper = DBHelperFood();
           ByteData data = await rootBundle.load("assets/ex.xlsx");
           List<int> bytes =
-          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+              data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
           dbHelper.deleteAllFood();
           print("start");
           var excel = Excel.decodeBytes(bytes);
@@ -298,7 +299,6 @@ class _TransFABState extends State<TransFAB>
             }
           }
           print("finish");
-
         },
         tooltip: 'Add',
         child: Icon(Icons.add, size: 30),
