@@ -96,6 +96,7 @@ class _AddFood extends State<AddFood> {
                   controller: controller,
                   // keyboardType: TextInputType.number,
                   decoration: const InputDecoration(hintText: 'Type Food Name'),
+
                   textAlign: TextAlign.center,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -103,6 +104,35 @@ class _AddFood extends State<AddFood> {
                     }
                     return null;
                   },
+
+                  onChanged: (text) async{
+                    if(text != ""){
+                      await dbHelper.filterFoods(text.toString()).then((value) async{
+                        var foodList="";
+                        print("=======================");
+                        for (var item in value){
+                          foodList+="${item.foodName}\n";
+                          print(item.foodName); //연관 검색 띄우기
+                        }
+                        // showDialog(context: context,builder: (BuildContext context){
+                        //   return AlertDialog(
+                        //     title: const Text("연관 검색어"),
+                        //     content: Text(foodList),
+                        //   );
+                        // });
+                      },onError: (e){print(e);});
+                    }
+
+                    // dbHelper.getAllFood().then((value){
+                    //   print(value.length);
+                    //   for (var item in value) {
+                    //     print(item.foodName);
+                    //   }
+                    // });
+
+                    print(text);
+                  },
+
                 )),
             // spacer_unit(unit),
             Spacer(
@@ -246,7 +276,7 @@ class _TransFABState extends State<TransFAB>
         heroTag: null,
         onPressed: () async {
           final dbHelper=DBHelperFood();
-          ByteData data = await rootBundle.load("assets/foodNutriData.xlsx");
+          ByteData data = await rootBundle.load("assets/ex.xlsx");
           List<int> bytes =
           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
           dbHelper.deleteAllFood();

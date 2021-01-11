@@ -7,7 +7,6 @@ import 'package:path/path.dart';
 import 'model.dart';
 
 
-
 class DBHelperPerson {
   final String dBName = 'Diet';
   final String tableName = 'Person';
@@ -136,9 +135,9 @@ class DBHelperFood {
   }
 
   initDB() async {
+
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "$dBName.db");
-
     return await openDatabase(path, version: 1, onCreate: (db, version) async {
       await db.execute('''
           CREATE TABLE $tableName(
@@ -166,9 +165,9 @@ class DBHelperFood {
   }
 
   //Read
-  getFood(int id) async {
+  getFood(String name) async {
     final db = await database;
-    var res = await db.rawQuery('SELECT * FROM $tableName WHERE id = $id');
+    var res = await db.rawQuery('SELECT * FROM $tableName WHERE code = $name;');
     return res.isNotEmpty
         ? Food(
             code: res.first['code'],
@@ -180,6 +179,29 @@ class DBHelperFood {
             carbohydrate: res.first['carbohydrate'],
             fat: res.first['fat'])
         : Null;
+  }
+
+  //Read All
+  Future<List<Food>> filterFoods(String value) async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM $tableName WHERE foodName LIKE '%$value%'");
+    List<Food> list = res.isNotEmpty
+        ? res
+        .map(
+          (c) => Food(
+          code: c['code'],
+          dbArmy: c['dbArmy'],
+          foodName: c['foodName'],
+          foodKinds: c['foodKinds'],
+          kcal: c['kcal'],
+          protein: c['protein'],
+          carbohydrate: c['carbohydrate'],
+          fat: c['fat']),
+    )
+        .toList()
+        : [];
+
+    return list;
   }
 
   //Read All
