@@ -137,6 +137,7 @@ class _TransFABState extends State<TransFAB>
       child: FloatingActionButton(
         heroTag: null,
         onPressed: () {
+          //이거 addDiet로 바꿔야 함
           Navigator.pushNamed(context, '/addFood');
         },
         tooltip: 'Add',
