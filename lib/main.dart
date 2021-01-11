@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'personalForm.dart';
 import 'initPage.dart';
 import 'savedDiet.dart';
@@ -7,6 +6,7 @@ import 'mainPage.dart';
 import 'addFood.dart';
 import 'savedFood.dart';
 import 'searchDiet.dart';
+import 'searchFood.dart';
 
 void main() => runApp(MaterialApp(
       initialRoute: '/',
@@ -18,6 +18,7 @@ void main() => runApp(MaterialApp(
         '/mainPage': (context) => MainPage(),
         '/addFood': (context) => AddFood(),
         '/searchDiet': (context) => SearchDiet(),
+        '/searchFood': (context) => SearchFood(),
       },
     ));
 

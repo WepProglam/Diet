@@ -1,7 +1,5 @@
 //To_ToRo
 import 'package:flutter/material.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:sqflite/sqflite.dart';
 import 'appBar.dart';
 
 class SavedFood extends StatelessWidget {
@@ -151,7 +149,9 @@ class _TransFABState extends State<TransFAB>
     return Container(
       child: FloatingActionButton(
         heroTag: null,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/searchFood');
+        },
         tooltip: 'Search',
         child: Icon(Icons.search, size: 30),
         backgroundColor: Colors.black45,

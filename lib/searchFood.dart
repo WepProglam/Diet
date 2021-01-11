@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SearchDiet extends StatelessWidget {
+class SearchFood extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SearchList();
@@ -9,10 +9,19 @@ class SearchDiet extends StatelessWidget {
 
 class Building {
   int id; //나중에 바꿔야 함
-  String dietName;
+  String foodName;
   int calories;
+  int carbohydrate;
+  int protein;
+  int fat;
 
-  Building({this.id, this.dietName, this.calories});
+  Building(
+      {this.id,
+      this.foodName,
+      this.calories,
+      this.carbohydrate,
+      this.protein,
+      this.fat});
 }
 
 class SearchList extends StatefulWidget {
@@ -55,7 +64,7 @@ class _SearchListState extends State<SearchList> {
     } else {
       _searchList = _list
           .where((element) => //여기다가 검색될 요소 추가 가능
-              element.dietName
+              element.foodName
                   .toLowerCase()
                   .contains(_searchText.toLowerCase()))
           .toList();
@@ -64,7 +73,7 @@ class _SearchListState extends State<SearchList> {
     }
   }
 
-  final List<String> dietNameEX = [
+  final List<String> foodNameEX = [
     'AB',
     'BC',
     'CD',
@@ -88,9 +97,9 @@ class _SearchListState extends State<SearchList> {
   void init() {
     _list = List();
     int i = 1;
-    for (var name in dietNameEX) {
+    for (var name in foodNameEX) {
       _list.add(
-        Building(id: i++, dietName: name, calories: 100),
+        Building(id: i++, foodName: name, calories: 100),
       );
     }
     _searchList = _list;
@@ -116,7 +125,7 @@ class _SearchListState extends State<SearchList> {
   }
 
   Widget appBarTitle = Text(
-    "Search Diet",
+    "Search Food",
     // style: TextStyle(color: Colors.white),
   );
   Icon actionIcon = Icon(
@@ -172,7 +181,7 @@ class _SearchListState extends State<SearchList> {
         // color: Colors.orange,
       );
       this.appBarTitle = Text(
-        "Search Diet",
+        "Search Food",
         // style: TextStyle(color: Colors.white),
       );
       _IsSearching = false;
@@ -203,7 +212,7 @@ class Uiitem extends StatelessWidget {
                 flex: 2,
               ),
               Text(
-                this.building.dietName,
+                this.building.foodName,
                 style: TextStyle(
                     // fontFamily: 'Raleway',
                     // fontWeight: FontWeight.bold,
