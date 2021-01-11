@@ -6,6 +6,7 @@ import 'savedDiet.dart';
 import 'mainPage.dart';
 import 'addFood.dart';
 import 'savedFood.dart';
+import 'searchDiet.dart';
 
 void main() => runApp(MaterialApp(
       initialRoute: '/',
@@ -16,6 +17,7 @@ void main() => runApp(MaterialApp(
         '/savedFood': (context) => SavedFood(),
         '/mainPage': (context) => MainPage(),
         '/addFood': (context) => AddFood(),
+        '/searchDiet': (context) => SearchDiet(),
       },
     ));
 

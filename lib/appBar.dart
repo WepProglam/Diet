@@ -35,6 +35,7 @@ Widget basicAppBar(String title, BuildContext context) {
     // ),
 
     //앱 이름
+    centerTitle: true,
     title: Text(title),
     //마이페이지
     actions: <Widget>[

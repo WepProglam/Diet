@@ -150,7 +150,9 @@ class _TransFABState extends State<TransFAB>
     return Container(
       child: FloatingActionButton(
         heroTag: null,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/searchDiet');
+        },
         tooltip: 'Search',
         child: Icon(Icons.search, size: 30),
         backgroundColor: Colors.black45,
