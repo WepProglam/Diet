@@ -200,7 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return Text(
         date,
         style: TextStyle(
-          fontSize: 12,
+          fontSize: 15,
           color: Colors.green,
           fontWeight: FontWeight.w900,
         ),
@@ -209,19 +209,19 @@ class _MyHomePageState extends State<MyHomePage> {
     } else if (day == "Sunday") {
       return Text(
         date,
-        style: TextStyle(fontSize: 12, color: Colors.red),
+        style: TextStyle(fontSize: 15, color: Colors.red),
         maxLines: 1,
       );
     } else if (day == "Saturday") {
       return Text(
         date,
-        style: TextStyle(fontSize: 12, color: Colors.blue),
+        style: TextStyle(fontSize: 15, color: Colors.blue),
         maxLines: 1,
       );
     } else {
       return Text(
         date,
-        style: TextStyle(fontSize: 12),
+        style: TextStyle(fontSize: 15),
         maxLines: 1,
       );
     }
