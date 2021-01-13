@@ -61,7 +61,7 @@ class _AddFood extends State<AddFood> {
                   subBuilderQuestion("지방", "g",
                       controller: _fatController,
                       icon: Icon(Icons.restaurant_outlined)),
-                  subBuilderQuestion("열량", "g",
+                  subBuilderQuestion("열량", "kcal",
                       controller: _ulController,
                       icon: Icon(Icons.restaurant_menu_sharp)),
                   Spacer(
