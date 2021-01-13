@@ -8,9 +8,9 @@ class SearchDiet extends StatelessWidget {
 }
 
 class Building {
-  int id; //나중에 바꿔야 함
+  num id; //나중에 바꿔야 함
   String dietName;
-  int calories;
+  num calories;
 
   Building({this.id, this.dietName, this.calories});
 }

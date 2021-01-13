@@ -138,7 +138,7 @@ class _TransFABState extends State<TransFAB>
         heroTag: null,
         onPressed: () {
           //이거 addDiet로 바꿔야 함
-          Navigator.pushNamed(context, '/addFood');
+          Navigator.pushNamed(context, '/addDiet');
         },
         tooltip: 'Add',
         child: Icon(Icons.add, size: 30),

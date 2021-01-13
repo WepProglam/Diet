@@ -13,6 +13,7 @@ class AddFood extends StatefulWidget {
 }
 
 class _AddFood extends State<AddFood> {
+  final _massController = TextEditingController();
   final _carboController = TextEditingController();
   final _proController = TextEditingController();
   final _fatController = TextEditingController();
@@ -72,7 +73,7 @@ class _AddFood extends State<AddFood> {
                   subBuilderQuestion("지방", "g",
                       controller: _fatController,
                       icon: Icon(Icons.restaurant_outlined)),
-                  subBuilderQuestion("열량", "g",
+                  subBuilderQuestion("열량", "kcal",
                       controller: _ulController,
                       icon: Icon(Icons.restaurant_menu_sharp)),
                   Spacer(
@@ -226,7 +227,7 @@ class _TransFABState extends State<TransFAB>
         heroTag: null,
         onPressed: () async {
           final dbHelper = DBHelperFood();
-          ByteData data = await rootBundle.load("assets/ex.xlsx");
+          ByteData data = await rootBundle.load("assets/foodNutriData.xlsx");
           List<int> bytes =
               data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
           dbHelper.deleteAllFood();
