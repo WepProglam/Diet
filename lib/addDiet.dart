@@ -14,6 +14,36 @@ class AddDiet extends StatelessWidget {
           children: [
             SearchFoodBar(),
             FoodList(),
+            Expanded(
+              flex: 1,
+              child: Row(
+                children: [
+                  Spacer(
+                    flex: 1,
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: TextField(
+                      decoration: InputDecoration(hintText: '식단명을 입력하세요'),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                        icon: Icon(Icons.add),
+                        color: Colors.blue,
+                        onPressed: null),
+                  ),
+                  Spacer(
+                    flex: 1,
+                  ),
+                ],
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
           ],
         ),
       ),
@@ -33,7 +63,7 @@ class _SearchFoodBarState extends State<SearchFoodBar> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      flex: 1,
+      flex: 2,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -99,7 +129,7 @@ class _FoodListState extends State<FoodList> {
             flex: 1,
           ),
           Expanded(
-            flex: 6,
+            flex: 4,
             child: Text('${food.foodName}'),
           ),
           Expanded(
@@ -122,13 +152,20 @@ class _FoodListState extends State<FoodList> {
   Widget build(BuildContext context) {
     return Expanded(
       flex: 2,
-      child: ListView.separated(
-        padding: EdgeInsets.all(8),
-        itemCount: foodList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return buildFood(foodList[index]);
-        },
-        separatorBuilder: (BuildContext context, int index) => const Divider(),
+      child: Container(
+        margin: EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blue),
+        ),
+        child: ListView.separated(
+          padding: EdgeInsets.all(8),
+          itemCount: foodList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return buildFood(foodList[index]);
+          },
+          separatorBuilder: (BuildContext context, int index) =>
+              const Divider(),
+        ),
       ),
     );
   }
