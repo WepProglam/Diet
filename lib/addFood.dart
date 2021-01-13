@@ -384,17 +384,9 @@ class _TypeFoodName extends State<TypeFoodName> {
               child: Material(
                 elevation: 4.0,
                 child: ListView(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  children: <Widget>[
-                    ListTile(
-                      title: Text('Syria'),
-                    ),
-                    ListTile(
-                      title: Text('Lebanon'),
-                    )
-                  ],
-                ),
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    children: foodList),
               ),
             ));
   }
@@ -416,11 +408,12 @@ class _TypeFoodName extends State<TypeFoodName> {
       onChanged: (text) async {
         if (text != "") {
           await dbHelper.filterFoods(text.toString()).then((value) async {
-            foodList = <Widget>[];
-            print("=======================");
             setState(() {
+              foodList = [];
               for (var item in value) {
-                foodList.add(Text(item.foodName));
+                foodList.add(ListTile(
+                  title: Text(item.foodName),
+                ));
               }
             });
           }, onError: (e) {
