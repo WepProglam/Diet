@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/savedFood.dart';
 import 'appBar.dart';
 import 'db_helper.dart';
 import 'model.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
+import 'package:overlay_container/overlay_container.dart';
 
 class AddFood extends StatefulWidget {
   @override
@@ -18,6 +20,9 @@ class _AddFood extends State<AddFood> {
   final _foodNameController = TextEditingController();
   final dbHelper = DBHelperFood();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  var foodList = <Widget>[];
+  final FocusNode _focusNode = FocusNode();
+  OverlayEntry _overLayEntry;
 
   @override
   void dispose() {
@@ -49,7 +54,13 @@ class _AddFood extends State<AddFood> {
                   Spacer(
                     flex: 2,
                   ),
-                  searchBar(_foodNameController),
+                  SearchBar(
+                    // focusNode: _focusNode,
+                    searchController: _foodNameController,
+                  ),
+                  Spacer(
+                    flex: 1,
+                  ),
                   subBuilderQuestion("총 무게", "g",
                       controller: _ulController,
                       icon: Icon(Icons.restaurant_menu_sharp)),
@@ -67,6 +78,9 @@ class _AddFood extends State<AddFood> {
                   Spacer(
                     flex: 1,
                   ),
+                  Row(
+                    children: foodList,
+                  ),
                   Spacer(
                     flex: 3,
                   ),
@@ -74,72 +88,6 @@ class _AddFood extends State<AddFood> {
               ),
             )),
             floatingActionButton: TransFAB()));
-  }
-
-  Widget searchBar(var controller) {
-    return Expanded(
-        flex: 2,
-        child: Center(
-            child: Row(
-          children: [
-            Spacer(
-              flex: 1,
-            ),
-            // spacer_icon(icon: icon),
-            // spacer_question(question),
-            Expanded(
-                flex: 2,
-                child: TextFormField(
-                  autofocus: false,
-                  controller: controller,
-                  // keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(hintText: 'Type Food Name'),
-
-                  textAlign: TextAlign.center,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter info';
-                    }
-                    return null;
-                  },
-
-                  onChanged: (text) async {
-                    if (text != "") {
-                      await dbHelper.filterFoods(text.toString()).then(
-                          (value) async {
-                        var foodList = "";
-                        print("=======================");
-                        for (var item in value) {
-                          foodList += "${item.foodName}\n";
-                          print(item.foodName); //연관 검색 띄우기
-                        }
-                        // showDialog(context: context,builder: (BuildContext context){
-                        //   return AlertDialog(
-                        //     title: const Text("연관 검색어"),
-                        //     content: Text(foodList),
-                        //   );
-                        // });
-                      }, onError: (e) {
-                        print(e);
-                      });
-                    }
-
-                    // dbHelper.getAllFood().then((value){
-                    //   print(value.length);
-                    //   for (var item in value) {
-                    //     print(item.foodName);
-                    //   }
-                    // });
-
-                    print(text);
-                  },
-                )),
-            // spacer_unit(unit),
-            Spacer(
-              flex: 1,
-            ),
-          ],
-        )));
   }
 
   Widget subBuilderQuestion(var question, var unit,
@@ -167,6 +115,7 @@ class _AddFood extends State<AddFood> {
     return TextFormField(
       autofocus: false,
       controller: controller,
+      // focusNode: _focusNode,
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(hintText: ''),
       textAlign: TextAlign.center,
@@ -358,6 +307,126 @@ class _TransFABState extends State<TransFAB>
         ),
         toggle(),
       ],
+    );
+  }
+}
+
+class SearchBar extends StatefulWidget {
+  var searchController;
+  SearchBar({this.searchController});
+  @override
+  _SearchBar createState() => _SearchBar(searchController: searchController);
+}
+
+class _SearchBar extends State<SearchBar> {
+  var searchController;
+
+  _SearchBar({this.searchController});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Row(
+      children: [
+        Spacer(
+          flex: 1,
+        ),
+        Expanded(
+            flex: 2,
+            child: TypeFoodName(
+              controller: searchController,
+            )),
+        Spacer(
+          flex: 1,
+        ),
+      ],
+    ));
+  }
+}
+
+class TypeFoodName extends StatefulWidget {
+  var controller;
+  TypeFoodName({this.controller});
+  @override
+  _TypeFoodName createState() => _TypeFoodName(controller: controller);
+}
+
+class _TypeFoodName extends State<TypeFoodName> {
+  final FocusNode _focusNode = FocusNode();
+  final dbHelper = DBHelperFood();
+  var foodList = <Widget>[];
+  var controller;
+  OverlayEntry _overlayEntry;
+  _TypeFoodName({this.controller});
+  @override
+  void initState() {
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        this._overlayEntry = this._createOverlayEntry();
+        Overlay.of(context).insert(this._overlayEntry);
+      } else {
+        this._overlayEntry.remove();
+      }
+    });
+  }
+
+  OverlayEntry _createOverlayEntry() {
+    RenderBox renderBox = context.findRenderObject();
+    var size = renderBox.size;
+    var offset = renderBox.localToGlobal(Offset.zero);
+
+    return OverlayEntry(
+        builder: (context) => Positioned(
+              left: offset.dx,
+              top: offset.dy + size.height + 5.0,
+              width: size.width,
+              child: Material(
+                elevation: 4.0,
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    ListTile(
+                      title: Text('Syria'),
+                    ),
+                    ListTile(
+                      title: Text('Lebanon'),
+                    )
+                  ],
+                ),
+              ),
+            ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      // autofocus: false,ss
+      controller: controller,
+      focusNode: this._focusNode,
+      decoration: const InputDecoration(hintText: 'Type Food Name'),
+      textAlign: TextAlign.center,
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Please enter info';
+        }
+        return null;
+      },
+      onChanged: (text) async {
+        if (text != "") {
+          await dbHelper.filterFoods(text.toString()).then((value) async {
+            foodList = <Widget>[];
+            print("=======================");
+            setState(() {
+              for (var item in value) {
+                foodList.add(Text(item.foodName));
+              }
+            });
+          }, onError: (e) {
+            print(e);
+          });
+        }
+      },
     );
   }
 }
