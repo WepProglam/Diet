@@ -342,17 +342,15 @@ class _TypeFoodName extends State<TypeFoodName> {
   var controller;
   OverlayEntry _overlayEntry;
   _TypeFoodName({this.controller});
-  @override
-  void initState() {
-    _focusNode.addListener(() {
-      if (_focusNode.hasFocus) {
-        this._overlayEntry = this._createOverlayEntry();
-        Overlay.of(context).insert(this._overlayEntry);
-      } else {
-        this._overlayEntry.remove();
-      }
-    });
-  }
+
+  // @override
+  // void initState() {
+  //   _focusNode.addListener(() {
+  //     if (!_focusNode.hasFocus) {
+  //       this._overlayEntry.remove();
+  //     }
+  //   });
+  // }
 
   OverlayEntry _createOverlayEntry() {
     RenderBox renderBox = context.findRenderObject();
@@ -365,7 +363,7 @@ class _TypeFoodName extends State<TypeFoodName> {
               top: offset.dy + size.height + 5.0,
               width: size.width,
               child: Material(
-                elevation: 4.0,
+                elevation: 1.0,
                 child: ListView(
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
@@ -391,14 +389,21 @@ class _TypeFoodName extends State<TypeFoodName> {
       onChanged: (text) async {
         if (text != "") {
           await dbHelper.filterFoods(text.toString()).then((value) async {
-            setState(() {
-              foodList = [];
-              for (var item in value) {
+            foodList = [];
+            var i = 0;
+            for (var item in value) {
+              if (i < 5) {
                 foodList.add(ListTile(
                   title: Text(item.foodName),
                 ));
+                print(item.foodName);
+                i += 1;
+              } else {
+                break;
               }
-            });
+              this._overlayEntry = this._createOverlayEntry();
+              Overlay.of(context).insert(this._overlayEntry);
+            }
           }, onError: (e) {
             print(e);
           });

@@ -183,7 +183,7 @@ class DBHelperFood {
   Future<List<Food>> filterFoods(String value) async {
     final db = await database;
     var res = await db
-        .rawQuery("SELECT * FROM $tableName WHERE foodName LIKE '%$value%'");
+        .rawQuery("SELECT * FROM $tableName WHERE foodName LIKE '$value%'");
     List<Food> list = res.isNotEmpty
         ? res
             .map(
