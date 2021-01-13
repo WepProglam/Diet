@@ -24,6 +24,7 @@ class _AddFood extends State<AddFood> {
   var foodList = <Widget>[];
   final FocusNode _focusNode = FocusNode();
   OverlayEntry _overLayEntry;
+  var foodInfo = {};
 
   @override
   void dispose() {
@@ -37,6 +38,7 @@ class _AddFood extends State<AddFood> {
 
   @override
   Widget build(BuildContext context) {
+    print("setstate");
     return GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -55,24 +57,26 @@ class _AddFood extends State<AddFood> {
                   Spacer(
                     flex: 2,
                   ),
-                  searchBar(),
+                  searchBar(foodInfo),
                   Spacer(
                     flex: 1,
                   ),
-                  subBuilderQuestion("총 무게", "g",
-                      controller: _ulController,
-                      icon: Icon(Icons.restaurant_menu_sharp)),
                   subBuilderQuestion("탄수화물", "g",
-                      controller: _carboController, icon: Icon(Icons.favorite)),
+                      controller: _carboController,
+                      icon: Icon(Icons.favorite),
+                      value: foodInfo['carbohydrate']),
                   subBuilderQuestion("단백질", "g",
                       controller: _proController,
-                      icon: Icon(Icons.restaurant_menu_outlined)),
+                      icon: Icon(Icons.restaurant_menu_outlined),
+                      value: foodInfo['protein']),
                   subBuilderQuestion("지방", "g",
                       controller: _fatController,
-                      icon: Icon(Icons.restaurant_outlined)),
+                      icon: Icon(Icons.restaurant_outlined),
+                      value: foodInfo['fat']),
                   subBuilderQuestion("열량", "kcal",
                       controller: _ulController,
-                      icon: Icon(Icons.restaurant_menu_sharp)),
+                      icon: Icon(Icons.restaurant_menu_sharp),
+                      value: foodInfo['kcal']),
                   Spacer(
                     flex: 1,
                   ),
@@ -88,7 +92,7 @@ class _AddFood extends State<AddFood> {
             floatingActionButton: TransFAB()));
   }
 
-  Widget searchBar() {
+  Widget searchBar(var foodInfo) {
     return Center(
         child: Row(
       children: [
@@ -98,8 +102,7 @@ class _AddFood extends State<AddFood> {
         Expanded(
             flex: 2,
             child: TypeFoodName(
-              controller: _foodNameController,
-            )),
+                controller: _foodNameController, foodInfo: foodInfo)),
         Spacer(
           flex: 1,
         ),
@@ -108,7 +111,8 @@ class _AddFood extends State<AddFood> {
   }
 
   Widget subBuilderQuestion(var question, var unit,
-      {var controller, var icon}) {
+      {var controller, var icon, num value}) {
+    print(value);
     return Expanded(
         flex: 1,
         child: Center(
@@ -119,7 +123,7 @@ class _AddFood extends State<AddFood> {
             ),
             // spacer_icon(icon: icon),
             spacer_question(question),
-            Expanded(flex: 6, child: questionForm(controller)),
+            Expanded(flex: 6, child: questionForm(controller, value)),
             spacer_unit(unit),
             Spacer(
               flex: 1,
@@ -128,13 +132,13 @@ class _AddFood extends State<AddFood> {
         )));
   }
 
-  Widget questionForm(TextEditingController controller) {
+  Widget questionForm(TextEditingController controller, num value) {
     return TextFormField(
       autofocus: false,
       controller: controller,
       // focusNode: _focusNode,
       keyboardType: TextInputType.number,
-      decoration: const InputDecoration(hintText: ''),
+      decoration: InputDecoration(hintText: "$value"),
       textAlign: TextAlign.center,
       validator: (value) {
         if (value.isEmpty) {
@@ -330,7 +334,8 @@ class _TransFABState extends State<TransFAB>
 
 class TypeFoodName extends StatefulWidget {
   var controller;
-  TypeFoodName({this.controller});
+  var foodInfo;
+  TypeFoodName({this.controller, this.foodInfo});
   @override
   _TypeFoodName createState() => _TypeFoodName(controller: controller);
 }
@@ -339,45 +344,58 @@ class _TypeFoodName extends State<TypeFoodName> {
   final FocusNode _focusNode = FocusNode();
   final dbHelper = DBHelperFood();
   var foodList = <Widget>[];
+  var foodInfo;
   var controller;
-  OverlayEntry _overlayEntry;
-  _TypeFoodName({this.controller});
 
-  // @override
-  // void initState() {
-  //   _focusNode.addListener(() {
-  //     if (!_focusNode.hasFocus) {
-  //       this._overlayEntry.remove();
-  //     }
-  //   });
-  // }
+  @override
+  void initState() {
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus && this._overlayEntry != null) {
+        this._overlayEntry.remove();
+      }
+    });
+  }
+
+  OverlayEntry _overlayEntry;
+  _TypeFoodName({this.controller, this.foodInfo});
 
   OverlayEntry _createOverlayEntry() {
     RenderBox renderBox = context.findRenderObject();
     var size = renderBox.size;
     var offset = renderBox.localToGlobal(Offset.zero);
-
-    return OverlayEntry(
-        builder: (context) => Positioned(
-              left: offset.dx,
-              top: offset.dy + size.height + 5.0,
-              width: size.width,
-              child: Material(
-                elevation: 1.0,
-                child: ListView(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    children: foodList),
-              ),
-            ));
+    print(foodList);
+    if (foodList.isNotEmpty) {
+      return OverlayEntry(
+          builder: (context) => Positioned(
+                left: offset.dx,
+                top: offset.dy + size.height + 5.0,
+                width: size.width,
+                child: Material(
+                  elevation: 1.0,
+                  child: ListView(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      children: foodList),
+                ),
+              ));
+    } else {
+      return OverlayEntry(
+          builder: (context) => Positioned(
+                left: offset.dx,
+                top: offset.dy + size.height + 5.0,
+                child: Material(
+                  elevation: 1.0,
+                ),
+              ));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      // autofocus: false,ss
+      autofocus: false,
       controller: controller,
-      focusNode: this._focusNode,
+      focusNode: _focusNode,
       decoration: const InputDecoration(hintText: 'Type Food Name'),
       textAlign: TextAlign.center,
       validator: (value) {
@@ -395,18 +413,30 @@ class _TypeFoodName extends State<TypeFoodName> {
               if (i < 5) {
                 foodList.add(ListTile(
                   title: Text(item.foodName),
+                  onTap: () {
+                    dbHelper.getFood(item.foodName).then((value) {
+                      Map foodInfo2 = {};
+                      foodInfo2["kcal"] = value.kcal;
+                      foodInfo2["carbohydrate"] = value.carbohydrate;
+                      foodInfo2["protein"] = value.protein;
+                      foodInfo2["fat"] = value.fat;
+                      setState(() {
+                        foodInfo = foodInfo2;
+                        print(foodInfo);
+                      });
+                    });
+                  },
                 ));
-                print(item.foodName);
                 i += 1;
               } else {
                 break;
               }
-              this._overlayEntry = this._createOverlayEntry();
-              Overlay.of(context).insert(this._overlayEntry);
             }
           }, onError: (e) {
             print(e);
           });
+          _overlayEntry = _createOverlayEntry();
+          Overlay.of(context).insert(_overlayEntry);
         }
       },
     );

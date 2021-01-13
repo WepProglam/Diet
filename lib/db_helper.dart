@@ -165,7 +165,8 @@ class DBHelperFood {
   //Read
   getFood(String name) async {
     final db = await database;
-    var res = await db.rawQuery('SELECT * FROM $tableName WHERE code = $name;');
+    var res =
+        await db.rawQuery("SELECT * FROM $tableName WHERE foodName = '$name'");
     return res.isNotEmpty
         ? Food(
             code: res.first['code'],
