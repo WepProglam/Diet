@@ -7,13 +7,14 @@ import 'package:excel/excel.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:overlay_container/overlay_container.dart';
 
+final foodInfo = {};
+
 class AddFood extends StatefulWidget {
   @override
   _AddFood createState() => _AddFood();
 }
 
 class _AddFood extends State<AddFood> {
-  final _massController = TextEditingController();
   final _carboController = TextEditingController();
   final _proController = TextEditingController();
   final _fatController = TextEditingController();
@@ -24,7 +25,6 @@ class _AddFood extends State<AddFood> {
   var foodList = <Widget>[];
   final FocusNode _focusNode = FocusNode();
   OverlayEntry _overLayEntry;
-  var foodInfo = {};
 
   @override
   void dispose() {
@@ -38,7 +38,6 @@ class _AddFood extends State<AddFood> {
 
   @override
   Widget build(BuildContext context) {
-    print("setstate");
     return GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -57,26 +56,21 @@ class _AddFood extends State<AddFood> {
                   Spacer(
                     flex: 2,
                   ),
-                  searchBar(foodInfo),
+                  searchBar(),
                   Spacer(
                     flex: 1,
                   ),
                   subBuilderQuestion("탄수화물", "g",
-                      controller: _carboController,
-                      icon: Icon(Icons.favorite),
-                      value: foodInfo['carbohydrate']),
+                      controller: _carboController, icon: Icon(Icons.favorite)),
                   subBuilderQuestion("단백질", "g",
                       controller: _proController,
-                      icon: Icon(Icons.restaurant_menu_outlined),
-                      value: foodInfo['protein']),
+                      icon: Icon(Icons.restaurant_menu_outlined)),
                   subBuilderQuestion("지방", "g",
                       controller: _fatController,
-                      icon: Icon(Icons.restaurant_outlined),
-                      value: foodInfo['fat']),
+                      icon: Icon(Icons.restaurant_outlined)),
                   subBuilderQuestion("열량", "kcal",
                       controller: _ulController,
-                      icon: Icon(Icons.restaurant_menu_sharp),
-                      value: foodInfo['kcal']),
+                      icon: Icon(Icons.restaurant_menu_sharp)),
                   Spacer(
                     flex: 1,
                   ),
@@ -92,27 +86,35 @@ class _AddFood extends State<AddFood> {
             floatingActionButton: TransFAB()));
   }
 
-  Widget searchBar(var foodInfo) {
+  Widget searchBar() {
     return Center(
         child: Row(
       children: [
         Spacer(
           flex: 1,
         ),
+        Expanded(flex: 2, child: TypeFoodName(controller: _foodNameController)),
         Expanded(
-            flex: 2,
-            child: TypeFoodName(
-                controller: _foodNameController, foodInfo: foodInfo)),
-        Spacer(
           flex: 1,
-        ),
+          child: FlatButton(
+            child: Icon(Icons.find_in_page),
+            onPressed: () {
+              print(foodInfo);
+              setState(() {
+                _carboController.text = foodInfo['carbohydrate'].toString();
+                _fatController.text = foodInfo['fat'].toString();
+                _proController.text = foodInfo['protein'].toString();
+                _ulController.text = foodInfo['kcal'].toString();
+              });
+            },
+          ),
+        )
       ],
     ));
   }
 
   Widget subBuilderQuestion(var question, var unit,
       {var controller, var icon, num value}) {
-    print(value);
     return Expanded(
         flex: 1,
         child: Center(
@@ -138,7 +140,7 @@ class _AddFood extends State<AddFood> {
       controller: controller,
       // focusNode: _focusNode,
       keyboardType: TextInputType.number,
-      decoration: InputDecoration(hintText: "$value"),
+      decoration: InputDecoration(hintText: ''),
       textAlign: TextAlign.center,
       validator: (value) {
         if (value.isEmpty) {
@@ -334,8 +336,8 @@ class _TransFABState extends State<TransFAB>
 
 class TypeFoodName extends StatefulWidget {
   var controller;
-  var foodInfo;
-  TypeFoodName({this.controller, this.foodInfo});
+
+  TypeFoodName({this.controller});
   @override
   _TypeFoodName createState() => _TypeFoodName(controller: controller);
 }
@@ -344,7 +346,6 @@ class _TypeFoodName extends State<TypeFoodName> {
   final FocusNode _focusNode = FocusNode();
   final dbHelper = DBHelperFood();
   var foodList = <Widget>[];
-  var foodInfo;
   var controller;
 
   @override
@@ -357,7 +358,7 @@ class _TypeFoodName extends State<TypeFoodName> {
   }
 
   OverlayEntry _overlayEntry;
-  _TypeFoodName({this.controller, this.foodInfo});
+  _TypeFoodName({this.controller});
 
   OverlayEntry _createOverlayEntry() {
     RenderBox renderBox = context.findRenderObject();
@@ -410,21 +411,19 @@ class _TypeFoodName extends State<TypeFoodName> {
             foodList = [];
             var i = 0;
             for (var item in value) {
-              if (i < 5) {
+              if (i < 10) {
                 foodList.add(ListTile(
                   title: Text(item.foodName),
+                  subtitle: Text("${item.kcal}Kcal"),
                   onTap: () {
-                    dbHelper.getFood(item.foodName).then((value) {
-                      Map foodInfo2 = {};
-                      foodInfo2["kcal"] = value.kcal;
-                      foodInfo2["carbohydrate"] = value.carbohydrate;
-                      foodInfo2["protein"] = value.protein;
-                      foodInfo2["fat"] = value.fat;
-                      setState(() {
-                        foodInfo = foodInfo2;
-                        print(foodInfo);
-                      });
-                    });
+                    controller.text = item.foodName;
+                    foodInfo['kcal'] = item.kcal;
+                    foodInfo['carbohydrate'] = item.carbohydrate;
+                    foodInfo['protein'] = item.protein;
+                    foodInfo['fat'] = item.fat;
+                    foodInfo['code'] = item.code;
+                    // _overlayEntry.remove();
+                    foodList = [];
                   },
                 ));
                 i += 1;
