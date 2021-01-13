@@ -6,15 +6,37 @@ import 'model.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:overlay_container/overlay_container.dart';
+import 'dart:async';
 
-final foodInfo = {};
+StreamController<Map> streamController = StreamController<Map>();
 
 class AddFood extends StatefulWidget {
+  final Stream<Map> stream;
+  AddFood({this.stream});
   @override
-  _AddFood createState() => _AddFood();
+  _AddFoodState createState() => _AddFoodState();
 }
 
-class _AddFood extends State<AddFood> {
+class _AddFoodState extends State<AddFood> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          currentFocus.unfocus();
+        },
+        child: AddFoodSub(stream: streamController.stream));
+  }
+}
+
+class AddFoodSub extends StatefulWidget {
+  final Stream<Map> stream;
+  AddFoodSub({this.stream});
+  @override
+  _AddFoodSub createState() => _AddFoodSub();
+}
+
+class _AddFoodSub extends State<AddFoodSub> {
   final _carboController = TextEditingController();
   final _proController = TextEditingController();
   final _fatController = TextEditingController();
@@ -38,52 +60,64 @@ class _AddFood extends State<AddFood> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
-          currentFocus.unfocus();
-        },
-        child: Scaffold(
-            resizeToAvoidBottomPadding: false,
-            appBar: basicAppBar('Add Food', context),
-            drawer: NavDrawer(),
-            body: Center(
-                child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Spacer(
-                    flex: 2,
-                  ),
-                  searchBar(),
-                  Spacer(
-                    flex: 1,
-                  ),
-                  subBuilderQuestion("탄수화물", "g",
-                      controller: _carboController, icon: Icon(Icons.favorite)),
-                  subBuilderQuestion("단백질", "g",
-                      controller: _proController,
-                      icon: Icon(Icons.restaurant_menu_outlined)),
-                  subBuilderQuestion("지방", "g",
-                      controller: _fatController,
-                      icon: Icon(Icons.restaurant_outlined)),
-                  subBuilderQuestion("열량", "kcal",
-                      controller: _ulController,
-                      icon: Icon(Icons.restaurant_menu_sharp)),
-                  Spacer(
-                    flex: 1,
-                  ),
-                  Row(
-                    children: foodList,
-                  ),
-                  Spacer(
-                    flex: 3,
-                  ),
-                ],
+    return Scaffold(
+        resizeToAvoidBottomPadding: false,
+        appBar: basicAppBar('Add Food', context),
+        drawer: NavDrawer(),
+        body: Center(
+            child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Spacer(
+                flex: 2,
               ),
-            )),
-            floatingActionButton: TransFAB()));
+              searchBar(),
+              Spacer(
+                flex: 1,
+              ),
+              subBuilderQuestion("탄수화물", "g",
+                  controller: _carboController, icon: Icon(Icons.favorite)),
+              subBuilderQuestion("단백질", "g",
+                  controller: _proController,
+                  icon: Icon(Icons.restaurant_menu_outlined)),
+              subBuilderQuestion("지방", "g",
+                  controller: _fatController,
+                  icon: Icon(Icons.restaurant_outlined)),
+              subBuilderQuestion("열량", "kcal",
+                  controller: _ulController,
+                  icon: Icon(Icons.restaurant_menu_sharp)),
+              Spacer(
+                flex: 1,
+              ),
+              Row(
+                children: foodList,
+              ),
+              Spacer(
+                flex: 3,
+              ),
+            ],
+          ),
+        )),
+        floatingActionButton: TransFAB());
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.stream.listen((foodInfo) {
+      mySetState(foodInfo);
+    });
+  }
+
+  void mySetState(Map foodInfo) {
+    setState(() {
+      _carboController.text = foodInfo['carbohydrate'].toString();
+      _fatController.text = foodInfo['fat'].toString();
+      _proController.text = foodInfo['protein'].toString();
+      _ulController.text = foodInfo['kcal'].toString();
+    });
   }
 
   Widget searchBar() {
@@ -94,20 +128,8 @@ class _AddFood extends State<AddFood> {
           flex: 1,
         ),
         Expanded(flex: 2, child: TypeFoodName(controller: _foodNameController)),
-        Expanded(
+        Spacer(
           flex: 1,
-          child: FlatButton(
-            child: Icon(Icons.find_in_page),
-            onPressed: () {
-              print(foodInfo);
-              setState(() {
-                _carboController.text = foodInfo['carbohydrate'].toString();
-                _fatController.text = foodInfo['fat'].toString();
-                _proController.text = foodInfo['protein'].toString();
-                _ulController.text = foodInfo['kcal'].toString();
-              });
-            },
-          ),
         )
       ],
     ));
@@ -416,13 +438,15 @@ class _TypeFoodName extends State<TypeFoodName> {
                   title: Text(item.foodName),
                   subtitle: Text("${item.kcal}Kcal"),
                   onTap: () {
+                    Map foodInfo = {};
                     controller.text = item.foodName;
                     foodInfo['kcal'] = item.kcal;
                     foodInfo['carbohydrate'] = item.carbohydrate;
                     foodInfo['protein'] = item.protein;
                     foodInfo['fat'] = item.fat;
                     foodInfo['code'] = item.code;
-                    // _overlayEntry.remove();
+                    streamController.add(foodInfo);
+                    _overlayEntry.remove();
                     foodList = [];
                   },
                 ));
