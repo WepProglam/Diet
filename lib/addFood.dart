@@ -8,7 +8,7 @@ import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:overlay_container/overlay_container.dart';
 import 'dart:async';
 
-StreamController<Map> streamController = StreamController<Map>();
+StreamController<Map> streamController = StreamController<Map>.broadcast();
 
 class AddFood extends StatefulWidget {
   final Stream<Map> stream;
@@ -63,7 +63,80 @@ class _AddFoodSub extends State<AddFoodSub> {
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: basicAppBar('Add Food', context),
-        drawer: NavDrawer(),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.all(5),
+            children: <Widget>[
+              Container(
+                height: 150,
+                child: DrawerHeader(
+                  child: Text(
+                    'Side menu',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.input),
+                title: Text('mainPage'),
+                onTap: () {
+                  // print(ModalRoute.of(context).settings.name);
+                  Navigator.pushNamed(context, '/mainPage');
+
+                  print(ModalRoute.of(context).settings.name);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.input),
+                title: Text('addFood'),
+                onTap: () {
+                  // print(ModalRoute.of(context).settings.name);
+                  Navigator.pushNamed(context, '/addFood');
+                  print(ModalRoute.of(context).settings.name);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.input),
+                title: Text('addDiet'),
+                onTap: () {
+                  // print(ModalRoute.of(context).settings.name);
+                  Navigator.pushNamed(context, '/addDiet');
+                  print(ModalRoute.of(context).settings.name);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.verified_user),
+                title: Text('personalForm'),
+                onTap: () {
+                  // print(ModalRoute.of(context).settings.name);
+                  Navigator.pushNamed(context, '/personalForm');
+                  print(ModalRoute.of(context).settings.name);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.settings),
+                title: Text('savedDiet'),
+                onTap: () {
+                  // print(ModalRoute.of(context).settings.name);
+                  Navigator.pushNamed(context, '/savedDiet');
+                  print(ModalRoute.of(context).settings.name);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.border_color),
+                title: Text('savedFood'),
+                onTap: () {
+                  // print(ModalRoute.of(context).settings.name);
+                  Navigator.pushNamed(context, '/savedFood');
+                  print(ModalRoute.of(context).settings.name);
+                },
+              ),
+            ],
+          ),
+        ),
         body: Center(
             child: Form(
           key: _formKey,
@@ -113,11 +186,17 @@ class _AddFoodSub extends State<AddFoodSub> {
 
   void mySetState(Map foodInfo) {
     setState(() {
-      _carboController.text = foodInfo['carbohydrate'].toString();
-      _fatController.text = foodInfo['fat'].toString();
-      _proController.text = foodInfo['protein'].toString();
-      _ulController.text = foodInfo['kcal'].toString();
+      _carboController.text = myRounder(foodInfo['carbohydrate']);
+      _fatController.text = myRounder(foodInfo['fat']);
+      _proController.text = myRounder(foodInfo['protein']);
+      _ulController.text = myRounder(foodInfo['kcal']);
     });
+  }
+
+  String myRounder(num a) {
+    return a.toString().length < 5
+        ? a.toString()
+        : a.toString().substring(0, 6);
   }
 
   Widget searchBar() {
