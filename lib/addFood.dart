@@ -55,10 +55,7 @@ class _AddFood extends State<AddFood> {
                   Spacer(
                     flex: 2,
                   ),
-                  SearchBar(
-                    // focusNode: _focusNode,
-                    searchController: _foodNameController,
-                  ),
+                  searchBar(),
                   Spacer(
                     flex: 1,
                   ),
@@ -89,6 +86,25 @@ class _AddFood extends State<AddFood> {
               ),
             )),
             floatingActionButton: TransFAB()));
+  }
+
+  Widget searchBar() {
+    return Center(
+        child: Row(
+      children: [
+        Spacer(
+          flex: 1,
+        ),
+        Expanded(
+            flex: 2,
+            child: TypeFoodName(
+              controller: _foodNameController,
+            )),
+        Spacer(
+          flex: 1,
+        ),
+      ],
+    ));
   }
 
   Widget subBuilderQuestion(var question, var unit,
@@ -309,39 +325,6 @@ class _TransFABState extends State<TransFAB>
         toggle(),
       ],
     );
-  }
-}
-
-class SearchBar extends StatefulWidget {
-  var searchController;
-  SearchBar({this.searchController});
-  @override
-  _SearchBar createState() => _SearchBar(searchController: searchController);
-}
-
-class _SearchBar extends State<SearchBar> {
-  var searchController;
-
-  _SearchBar({this.searchController});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-        child: Row(
-      children: [
-        Spacer(
-          flex: 1,
-        ),
-        Expanded(
-            flex: 2,
-            child: TypeFoodName(
-              controller: searchController,
-            )),
-        Spacer(
-          flex: 1,
-        ),
-      ],
-    ));
   }
 }
 
