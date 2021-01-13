@@ -8,12 +8,12 @@ class SearchFood extends StatelessWidget {
 }
 
 class Building {
-  int id; //나중에 바꿔야 함
+  num id; //나중에 바꿔야 함
   String foodName;
-  int calories;
-  int carbohydrate;
-  int protein;
-  int fat;
+  num calories;
+  num carbohydrate;
+  num protein;
+  num fat;
 
   Building(
       {this.id,
