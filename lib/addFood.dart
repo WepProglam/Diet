@@ -491,25 +491,59 @@ class _TransFoodFABState extends State<TransFoodFAB>
     return Container(
       child: FloatingActionButton(
         heroTag: null,
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState.validate()) {
-            dbHelperMyFood.createData(Food(
-                code: myFoodInfo['code'],
-                dbArmy: myFoodInfo['dbArmy'],
-                foodName: myFoodInfo['foodName'],
-                foodKinds: myFoodInfo['foodKinds'],
-                kcal: myFoodInfo['kcal'],
-                protein: myFoodInfo['protein'],
-                carbohydrate: myFoodInfo['carbohydrate'],
-                fat: myFoodInfo['fat']));
-            print(myFoodInfo);
-            streamControllerBool.add(isItCutom);
+            await dbHelperMyFood.getFood(myFoodInfo['code']).then((value) {
+              print(value == null);
+              if (value == null) {
+                dbHelperMyFood.createData(Food(
+                    code: myFoodInfo['code'],
+                    dbArmy: myFoodInfo['dbArmy'],
+                    foodName: myFoodInfo['foodName'],
+                    foodKinds: myFoodInfo['foodKinds'],
+                    kcal: myFoodInfo['kcal'],
+                    protein: myFoodInfo['protein'],
+                    carbohydrate: myFoodInfo['carbohydrate'],
+                    fat: myFoodInfo['fat']));
+                print(myFoodInfo);
+                streamControllerBool.add(isItCutom);
+              } else {
+                showAlertDialog(context);
+              }
+            });
           }
         },
         tooltip: 'Search',
         child: Icon(Icons.search, size: 30),
         backgroundColor: Colors.black45,
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Duplicated Food"),
+      content: Text("This food was already saved."),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 
