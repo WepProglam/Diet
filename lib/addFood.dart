@@ -8,7 +8,11 @@ import 'dart:async';
 
 import 'model.dart';
 
+final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
 StreamController<Map> streamController = StreamController<Map>.broadcast();
+StreamController<bool> streamControllerBool =
+    StreamController<bool>.broadcast();
 
 class AddFood extends StatefulWidget {
   final Stream<Map> stream;
@@ -25,13 +29,17 @@ class _AddFoodState extends State<AddFood> {
           FocusScopeNode currentFocus = FocusScope.of(context);
           currentFocus.unfocus();
         },
-        child: AddFoodSub(stream: streamController.stream));
+        child: AddFoodSub(
+          streamMap: streamController.stream,
+          streamBool: streamControllerBool.stream,
+        ));
   }
 }
 
 class AddFoodSub extends StatefulWidget {
-  final Stream<Map> stream;
-  AddFoodSub({this.stream});
+  final Stream<Map> streamMap;
+  final Stream<bool> streamBool;
+  AddFoodSub({this.streamMap, this.streamBool});
   @override
   _AddFoodSub createState() => _AddFoodSub();
 }
@@ -43,9 +51,9 @@ class _AddFoodSub extends State<AddFoodSub> {
   final _ulController = TextEditingController();
   final _foodNameController = TextEditingController();
   final dbHelper = DBHelperFood();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var foodList = <Widget>[];
   final FocusNode _focusNode = FocusNode();
+  var foodInfo = {};
   OverlayEntry _overLayEntry;
 
   @override
@@ -101,19 +109,23 @@ class _AddFoodSub extends State<AddFoodSub> {
           ),
         )),
         floatingActionButton: TransFoodFAB(
-          stream: widget.stream,
+          stream: widget.streamMap,
         ));
   }
 
   @override
   void initState() {
     super.initState();
-    widget.stream.listen((foodInfo) {
+    widget.streamMap.listen((foodInfo) {
       mySetState(foodInfo);
+    });
+    widget.streamBool.listen((isItCustom) {
+      streamController.add(foodInfo);
     });
   }
 
-  void mySetState(Map foodInfo) {
+  void mySetState(Map info) {
+    foodInfo = info;
     setState(() {
       _carboController.text = myRounder(foodInfo['carbohydrate']);
       _fatController.text = myRounder(foodInfo['fat']);
@@ -135,7 +147,12 @@ class _AddFoodSub extends State<AddFoodSub> {
         Spacer(
           flex: 1,
         ),
-        Expanded(flex: 2, child: TypeFoodName(controller: _foodNameController)),
+        Expanded(
+            flex: 2,
+            child: TypeFoodName(
+              controller: _foodNameController,
+              streamBool: widget.streamBool,
+            )),
         Spacer(
           flex: 1,
         )
@@ -155,7 +172,7 @@ class _AddFoodSub extends State<AddFoodSub> {
             ),
             // spacer_icon(icon: icon),
             spacer_question(question),
-            Expanded(flex: 6, child: questionForm(controller, value)),
+            Expanded(flex: 6, child: questionForm(controller, value, question)),
             spacer_unit(unit),
             Spacer(
               flex: 1,
@@ -164,7 +181,29 @@ class _AddFoodSub extends State<AddFoodSub> {
         )));
   }
 
-  Widget questionForm(TextEditingController controller, num value) {
+  String koreanQusetionToEnglish(String question) {
+    String returnValue;
+    switch (question) {
+      case "탄수화물":
+        returnValue = "carbohydrate";
+        break;
+      case "단백질":
+        returnValue = "protein";
+        break;
+      case "지방":
+        returnValue = "fat";
+        break;
+      case "열량":
+        returnValue = "kcal";
+        break;
+      default:
+    }
+    return returnValue;
+  }
+
+  Widget questionForm(
+      TextEditingController controller, num value, String question) {
+    String fieldName = koreanQusetionToEnglish(question);
     return TextFormField(
       autofocus: false,
       controller: controller,
@@ -177,6 +216,9 @@ class _AddFoodSub extends State<AddFoodSub> {
           return 'Please enter info';
         }
         return null;
+      },
+      onChanged: (text) {
+        foodInfo[fieldName] = double.parse(text);
       },
     );
   }
@@ -204,8 +246,9 @@ class _AddFoodSub extends State<AddFoodSub> {
 
 class TypeFoodName extends StatefulWidget {
   var controller;
+  final Stream<bool> streamBool;
 
-  TypeFoodName({this.controller});
+  TypeFoodName({this.controller, this.streamBool});
   @override
   _TypeFoodName createState() => _TypeFoodName(controller: controller);
 }
@@ -215,105 +258,117 @@ class _TypeFoodName extends State<TypeFoodName> {
   final dbHelper = DBHelperFood();
   var foodList = <Widget>[];
   var controller;
+  OverlayEntry _overlayEntry;
+  _TypeFoodName({this.controller});
+  bool isItCutom = false;
 
   @override
   void initState() {
     _focusNode.addListener(() {
-      if (!_focusNode.hasFocus && this._overlayEntry != null) {
-        this._overlayEntry?.remove();
+      if (!_focusNode.hasFocus) {
+        this._overlayEntry.remove();
       }
     });
-  }
+    widget.streamBool.listen((isItCustom) {
+      setState(() {
+        isItCutom = isItCustom;
+      });
+    });
 
-  OverlayEntry _overlayEntry;
-  _TypeFoodName({this.controller});
+    super.initState();
+  }
 
   OverlayEntry _createOverlayEntry() {
     RenderBox renderBox = context.findRenderObject();
     var size = renderBox.size;
     var offset = renderBox.localToGlobal(Offset.zero);
-    print(foodList);
-    if (foodList.isNotEmpty) {
-      return OverlayEntry(
-          builder: (context) => Positioned(
-                left: offset.dx,
-                top: offset.dy + size.height + 5.0,
-                width: size.width,
-                child: Material(
-                  elevation: 1.0,
-                  child: ListView(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      children: foodList),
-                ),
-              ));
-    } else {
-      return OverlayEntry(
-          builder: (context) => Positioned(
-                left: offset.dx,
-                top: offset.dy + size.height + 5.0,
-                child: Material(
-                  elevation: 1.0,
-                ),
-              ));
-    }
+
+    return OverlayEntry(
+        builder: (context) => Positioned(
+              left: offset.dx,
+              top: offset.dy + size.height + 5.0,
+              width: size.width,
+              child: Material(
+                elevation: 1.0,
+                child: ListView(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    children: foodList),
+              ),
+            ));
   }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      autofocus: false,
-      controller: controller,
-      focusNode: _focusNode,
-      decoration: const InputDecoration(hintText: 'Type Food Name'),
-      textAlign: TextAlign.center,
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Please enter info';
-        }
-        return null;
-      },
-      onChanged: (text) async {
-        //text = 바뀐 글
-        if (text != "") {
-          await dbHelper.filterFoods(text.toString()).then((value) async {
-            foodList = [];
-            var i = 0;
-            for (var item in value) {
-              if (i < 10) {
-                foodList.add(ListTile(
-                  title: Text(item.foodName),
-                  subtitle: Text("${item.kcal}Kcal"),
-                  onTap: () {
-                    Map foodInfo = {};
-                    controller.text = item.foodName;
-                    foodInfo['kcal'] = item.kcal;
-                    foodInfo['carbohydrate'] = item.carbohydrate;
-                    foodInfo['protein'] = item.protein;
-                    foodInfo['fat'] = item.fat;
-                    foodInfo['code'] = item.code;
-                    foodInfo['dbArmy'] = item.dbArmy;
-                    foodInfo['foodKinds'] = item.foodKinds;
-                    foodInfo['foodName'] = item.foodName;
-
-                    streamController.add(foodInfo);
-                    _overlayEntry.remove();
-                    foodList = [];
-                  },
-                ));
-                i += 1;
-              } else {
-                break;
-              }
+        // autofocus: false,
+        controller: controller,
+        focusNode: _focusNode,
+        decoration: const InputDecoration(hintText: 'Type Food Name'),
+        textAlign: TextAlign.center,
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Please enter info';
+          }
+          return null;
+        },
+        onChanged: (text) async {
+          if (isItCutom) {
+            //작동 X
+          } else {
+            if (this._overlayEntry != null) {
+              this._overlayEntry = null;
             }
-          }, onError: (e) {
-            print(e);
-          });
-          _overlayEntry = _createOverlayEntry();
-          Overlay.of(context).insert(_overlayEntry);
-        }
-      },
-    );
+            //text = 바뀐 글
+            if (text != "") {
+              await dbHelper.filterFoods(text.toString()).then((value) async {
+                foodList = [];
+                var i = 0;
+                for (var item in value) {
+                  if (i < 5) {
+                    foodList.add(ListTile(
+                      title: Text(item.foodName),
+                      subtitle: Text("${item.kcal}Kcal"),
+                      onTap: () {
+                        Map foodInfo = {};
+                        controller.text = item.foodName;
+                        foodInfo['kcal'] = item.kcal;
+                        foodInfo['carbohydrate'] = item.carbohydrate;
+                        foodInfo['protein'] = item.protein;
+                        foodInfo['fat'] = item.fat;
+                        foodInfo['code'] = item.code;
+                        foodInfo['dbArmy'] = item.dbArmy;
+                        foodInfo['foodKinds'] = item.foodKinds;
+                        foodInfo['foodName'] = item.foodName;
+
+                        streamController.add(foodInfo);
+                        _focusNode.unfocus();
+                        foodList = [];
+                      },
+                    ));
+                    i += 1;
+                  } else {
+                    break;
+                  }
+                }
+              }, onError: (e) {
+                print(e);
+              });
+              foodList.add(ListTile(
+                title: Text("나만의 음식 추가"),
+                onTap: () {
+                  _focusNode.unfocus();
+                  foodList = [];
+                  setState(() {
+                    isItCutom = true;
+                  });
+                },
+              ));
+              this._overlayEntry = _createOverlayEntry();
+              Overlay.of(context).insert(this._overlayEntry);
+            }
+          }
+        });
   }
 }
 
@@ -340,6 +395,7 @@ class _TransFoodFABState extends State<TransFoodFAB>
   double _fabHeight = 56.0;
   Map myFoodInfo = {};
   final dbHelperMyFood = DBHelperMyFood();
+  bool isItCutom = false;
 
   @override
   initState() {
@@ -436,16 +492,19 @@ class _TransFoodFABState extends State<TransFoodFAB>
       child: FloatingActionButton(
         heroTag: null,
         onPressed: () {
-          dbHelperMyFood.createData(Food(
-              code: myFoodInfo['code'],
-              dbArmy: myFoodInfo['dbArmy'],
-              foodName: myFoodInfo['foodName'],
-              foodKinds: myFoodInfo['foodKinds'],
-              kcal: myFoodInfo['kcal'],
-              protein: myFoodInfo['protein'],
-              carbohydrate: myFoodInfo['carbohydrate'],
-              fat: myFoodInfo['fat']));
-          print(myFoodInfo);
+          if (_formKey.currentState.validate()) {
+            dbHelperMyFood.createData(Food(
+                code: myFoodInfo['code'],
+                dbArmy: myFoodInfo['dbArmy'],
+                foodName: myFoodInfo['foodName'],
+                foodKinds: myFoodInfo['foodKinds'],
+                kcal: myFoodInfo['kcal'],
+                protein: myFoodInfo['protein'],
+                carbohydrate: myFoodInfo['carbohydrate'],
+                fat: myFoodInfo['fat']));
+            print(myFoodInfo);
+            streamControllerBool.add(isItCutom);
+          }
         },
         tooltip: 'Search',
         child: Icon(Icons.search, size: 30),
