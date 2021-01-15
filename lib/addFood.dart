@@ -116,8 +116,15 @@ class _AddFoodSub extends State<AddFoodSub> {
   @override
   void initState() {
     super.initState();
-    widget.streamMap.listen((foodInfo) {
-      mySetState(foodInfo);
+    widget.streamMap.listen((info) {
+      print(info.containsKey('fat'));
+      if (info.containsKey('fat') == false) {
+        info['carbohydrate'] = 0.0;
+        info['fat'] = 0.0;
+        info['protein'] = 0.0;
+        info['kcal'] = 0.0;
+      }
+      mySetState(info);
     });
     widget.streamBool.listen((isItCustom) {
       streamController.add(foodInfo);
@@ -125,13 +132,13 @@ class _AddFoodSub extends State<AddFoodSub> {
   }
 
   void mySetState(Map info) {
-    foodInfo = info;
     setState(() {
-      _carboController.text = myRounder(foodInfo['carbohydrate']);
-      _fatController.text = myRounder(foodInfo['fat']);
-      _proController.text = myRounder(foodInfo['protein']);
-      _ulController.text = myRounder(foodInfo['kcal']);
+      _carboController.text = myRounder(info['carbohydrate']);
+      _fatController.text = myRounder(info['fat']);
+      _proController.text = myRounder(info['protein']);
+      _ulController.text = myRounder(info['kcal']);
     });
+    foodInfo = info;
   }
 
   String myRounder(num a) {
@@ -203,6 +210,7 @@ class _AddFoodSub extends State<AddFoodSub> {
 
   Widget questionForm(
       TextEditingController controller, num value, String question) {
+    print(foodInfo);
     String fieldName = koreanQusetionToEnglish(question);
     return TextFormField(
       autofocus: false,
@@ -261,6 +269,7 @@ class _TypeFoodName extends State<TypeFoodName> {
   OverlayEntry _overlayEntry;
   _TypeFoodName({this.controller});
   bool isItCutom = false;
+  bool isItSelected = false;
 
   @override
   void initState() {
@@ -272,6 +281,7 @@ class _TypeFoodName extends State<TypeFoodName> {
     widget.streamBool.listen((isItCustom) {
       setState(() {
         isItCutom = isItCustom;
+        isItSelected = false;
       });
     });
 
@@ -302,6 +312,7 @@ class _TypeFoodName extends State<TypeFoodName> {
   Widget build(BuildContext context) {
     return TextFormField(
         // autofocus: false,
+        enabled: !isItSelected,
         controller: controller,
         focusNode: _focusNode,
         decoration: const InputDecoration(hintText: 'Type Food Name'),
@@ -340,6 +351,9 @@ class _TypeFoodName extends State<TypeFoodName> {
                         foodInfo['dbArmy'] = item.dbArmy;
                         foodInfo['foodKinds'] = item.foodKinds;
                         foodInfo['foodName'] = item.foodName;
+                        setState(() {
+                          isItSelected = true;
+                        });
 
                         streamController.add(foodInfo);
                         _focusNode.unfocus();
@@ -359,8 +373,12 @@ class _TypeFoodName extends State<TypeFoodName> {
                 onTap: () {
                   _focusNode.unfocus();
                   foodList = [];
+                  Map foodInfo = {};
+                  foodInfo['foodName'] = controller.text;
+                  streamController.add(foodInfo);
                   setState(() {
                     isItCutom = true;
+                    isItSelected = true;
                   });
                 },
               ));
@@ -492,8 +510,9 @@ class _TransFoodFABState extends State<TransFoodFAB>
       child: FloatingActionButton(
         heroTag: null,
         onPressed: () async {
+          print("myfoodinfo = $myFoodInfo");
           if (_formKey.currentState.validate()) {
-            await dbHelperMyFood.getFood(myFoodInfo['code']).then((value) {
+            await dbHelperMyFood.getFood(myFoodInfo['foodName']).then((value) {
               print(value == null);
               if (value == null) {
                 dbHelperMyFood.createData(Food(

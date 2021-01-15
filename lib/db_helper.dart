@@ -290,7 +290,7 @@ class DBHelperMyFood {
   getFood(String value) async {
     final db = await database;
     var res =
-        await db.rawQuery("SELECT * FROM $tableName WHERE code = '$value'");
+        await db.rawQuery("SELECT * FROM $tableName WHERE foodName = '$value'");
     return res.isNotEmpty
         ? Food(
             code: res.first['code'],
