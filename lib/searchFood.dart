@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/model.dart';
+
+import 'db_helper.dart';
 
 class SearchFood extends StatelessWidget {
   @override
@@ -36,9 +39,12 @@ class _SearchListState extends State<SearchList> {
   final _searchQuery = TextEditingController();
   List<Building> _list;
   List<Building> _searchList = List();
-
   bool _IsSearching = false;
   String _searchText = "";
+
+  final dbHelperMyFood = DBHelperMyFood();
+  List<Food> foodNameEX = [];
+  final dBHelperMyTempoFood = DBHelperMyTempoFood();
 
   _SearchListState() {
     _searchQuery.addListener(() {
@@ -73,33 +79,32 @@ class _SearchListState extends State<SearchList> {
     }
   }
 
-  final List<String> foodNameEX = [
-    'AB',
-    'BC',
-    'CD',
-    'DE',
-    'EF',
-    'FG',
-    'GH',
-    'HI',
-    'IJ'
-  ];
+  void getInfo() async {
+    await dbHelperMyFood.getAllFood().then((val) {
+      for (var item in val) {
+        foodNameEX.add(item);
+      }
+    });
+    setState(() {});
+  }
 
   //init
   @override
-  void initState() {
-    super.initState();
+  initState() {
     _IsSearching = false;
     init();
+    super.initState();
   }
 
   //이 함수에서 list 만듦
-  void init() {
+  void init() async {
     _list = List();
     int i = 1;
-    for (var name in foodNameEX) {
+    await getInfo();
+    for (var item in foodNameEX) {
+      print(item);
       _list.add(
-        Building(id: i++, foodName: name, calories: 100),
+        Building(id: i++, foodName: item.foodName, calories: item.kcal),
       );
     }
     _searchList = _list;

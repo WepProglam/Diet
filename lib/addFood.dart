@@ -6,12 +6,15 @@ import 'db_helper.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:async';
 import 'model.dart';
+import 'mainStream.dart' as mainStream;
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-StreamController<Map> streamController = StreamController<Map>.broadcast();
-StreamController<bool> streamControllerBool =
-    StreamController<bool>.broadcast();
+// StreamController<Map> streamController = StreamController<Map>.broadcast();
+// StreamController<bool> streamControllerBool =
+//     StreamController<bool>.broadcast();
+StreamController<Map> streamController = mainStream.streamController;
+StreamController<bool> streamControllerBool = mainStream.streamControllerBool;
 
 class AddFood extends StatefulWidget {
   final Stream<Map> stream;
@@ -50,10 +53,14 @@ class _AddFoodSub extends State<AddFoodSub> {
   final _ulController = TextEditingController();
   final _foodNameController = TextEditingController();
   final dbHelper = DBHelperFood();
+  final dBHelperMyTempoFood = DBHelperMyTempoFood();
   var foodList = <Widget>[];
   final FocusNode _focusNode = FocusNode();
   var foodInfo = {};
   OverlayEntry _overLayEntry;
+  bool isDisposed = true;
+  Map foodTempInfo = {};
+  bool tempo = false;
 
   @override
   void dispose() {
@@ -63,10 +70,12 @@ class _AddFoodSub extends State<AddFoodSub> {
     _ulController.dispose();
     //_purposeController.dispose();
     super.dispose();
+    isDisposed = true;
   }
 
   @override
   Widget build(BuildContext context) {
+    getInfo();
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: basicAppBar('Add Food', context),
@@ -112,9 +121,29 @@ class _AddFoodSub extends State<AddFoodSub> {
         ));
   }
 
+  void getInfo() async {
+    await dBHelperMyTempoFood.getAllFood().then((value) {
+      print("get info");
+      print(value.length > 0);
+      if (value.length > 0) {
+        foodInfo = value[0].toMap();
+        tempo = true;
+        dBHelperMyTempoFood.deleteAllFood();
+        setState(() {
+          _carboController.text = myRounder(foodInfo['carbohydrate']);
+          _fatController.text = myRounder(foodInfo['fat']);
+          _proController.text = myRounder(foodInfo['protein']);
+          _ulController.text = myRounder(foodInfo['kcal']);
+          _foodNameController.text = foodInfo['foodName'];
+        });
+      } else {
+        tempo = false;
+      }
+    });
+  }
+
   @override
   void initState() {
-    super.initState();
     widget.streamMap.listen((info) {
       print(info.containsKey('fat'));
       if (info.containsKey('fat') == false) {
@@ -123,11 +152,13 @@ class _AddFoodSub extends State<AddFoodSub> {
         info['protein'] = 0.0;
         info['kcal'] = 0.0;
       }
+      foodInfo = info;
       mySetState(info);
     });
     widget.streamBool.listen((isItCustom) {
       streamController.add(foodInfo);
     });
+    super.initState();
   }
 
   void mySetState(Map info) {
@@ -544,16 +575,31 @@ class _TransFoodFABState extends State<TransFoodFAB>
       child: Text("OK"),
       onPressed: () {
         Navigator.pop(context);
+        dbHelperMyFood.deleteFood(myFoodInfo['foodName']);
+        dbHelperMyFood.createData(Food(
+            code: myFoodInfo['code'],
+            dbArmy: myFoodInfo['dbArmy'],
+            foodName: myFoodInfo['foodName'],
+            foodKinds: myFoodInfo['foodKinds'],
+            kcal: myFoodInfo['kcal'],
+            protein: myFoodInfo['protein'],
+            carbohydrate: myFoodInfo['carbohydrate'],
+            fat: myFoodInfo['fat']));
+      },
+    );
+
+    Widget noButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
       },
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Duplicated Food"),
-      content: Text("This food was already saved."),
-      actions: [
-        okButton,
-      ],
+      content: Text("중복 음식 발견. 변경?"),
+      actions: [okButton, noButton],
     );
 
     // show the dialog

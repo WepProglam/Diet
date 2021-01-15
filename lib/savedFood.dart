@@ -1,8 +1,14 @@
 //To_ToRo
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/db_helper.dart';
 import 'package:flutter_application_1/model.dart';
 import 'appBar.dart';
+import 'mainStream.dart' as mainStream;
+
+// StreamController<Map> streamController = StreamController<Map>.broadcast();
+StreamController<Map> streamController = mainStream.streamController;
 
 class SavedFood extends StatelessWidget {
   @override
@@ -27,6 +33,7 @@ class FoodList extends StatefulWidget {
 class _FoodListState extends State<FoodList> {
   final dbHelperMyFood = DBHelperMyFood();
   List<Food> foodNameEX = [];
+  final dBHelperMyTempoFood = DBHelperMyTempoFood();
 
   void getInfo() async {
     await dbHelperMyFood.getAllFood().then((val) {
@@ -54,12 +61,20 @@ class _FoodListState extends State<FoodList> {
             margin: EdgeInsets.all(8),
             child: FlatButton(
               //onPressed에 식단 설정 페이지로 이동하는 함수 넣기
-              onPressed: () {},
+              onPressed: () async {
+                await dBHelperMyTempoFood.createData(foodNameEX[index]);
+                Navigator.pushNamed(context, '/addFood');
+                // print(foodNameEX[index].toMap());
+              },
 
-              child: Text(
-                '${foodNameEX[index].foodName}',
-                style: TextStyle(fontSize: 30),
+              child: ListTile(
+                title: Text(foodNameEX[index].foodName.toString()),
+                subtitle: Text(foodNameEX[index].kcal.toString() + "kcal"),
               ),
+              // Text(
+              //   '${foodNameEX[index].foodName}',
+              //   style: TextStyle(fontSize: 30),
+              // ),
             ),
             color: Colors.white70,
           );
@@ -125,11 +140,11 @@ class _TransFABState extends State<TransFAB>
     super.initState();
   }
 
-  @override
-  dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
+  // @override
+  // dispose() {
+  //   _animationController.dispose();
+  //   super.dispose();
+  // }
 
   animate() {
     if (!isOpened) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'personalForm.dart';
 import 'initPage.dart';
@@ -8,6 +10,10 @@ import 'savedFood.dart';
 import 'searchDiet.dart';
 import 'searchFood.dart';
 import 'addDiet.dart';
+
+StreamController<Map> streamController = StreamController<Map>.broadcast();
+StreamController<bool> streamControllerBool =
+    StreamController<bool>.broadcast();
 
 void main() => runApp(MaterialApp(
       initialRoute: '/',

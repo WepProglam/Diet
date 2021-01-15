@@ -352,10 +352,85 @@ class DBHelperMyFood {
   }
 
   //Delete
-  deleteFood(int id) async {
+  deleteFood(String name) async {
     final db = await database;
-    var res = db.rawDelete('DELETE FROM $tableName WHERE id = ?', [id]);
+    var res = db.rawDelete("DELETE FROM $tableName WHERE foodName = '$name'");
     return res;
+  }
+
+  //Delete All
+  deleteAllFood() async {
+    final db = await database;
+    db.rawDelete('DELETE FROM $tableName');
+  }
+}
+
+class DBHelperMyTempoFood {
+  final String dBName = 'MyFoodTempoDiet';
+  final String tableName = 'Food';
+  DBHelperMyTempoFood._();
+  static final DBHelperMyTempoFood _db = DBHelperMyTempoFood._();
+  factory DBHelperMyTempoFood() => _db;
+
+  static Database _database;
+
+  Future<Database> get database async {
+    if (_database != null) return _database;
+
+    _database = await initDB();
+    return _database;
+  }
+
+  initDB() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, "$dBName.db");
+    return await openDatabase(path, version: 1, onCreate: (db, version) async {
+      await db.execute('''
+          CREATE TABLE $tableName(
+            code TEXT,
+            dbArmy TEXT,
+            foodName TEXT,
+            foodKinds TEXT,
+            kcal REAL,
+            protein REAL,
+            carbohydrate REAL,
+            fat REAL
+            )
+        ''');
+    }, onUpgrade: (db, oldVersion, newVersion) {});
+  }
+
+  //Create
+  createData(Food food) async {
+    final db = await database;
+    await db.insert(
+      tableName,
+      food.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  //Read All
+  Future<List<Food>> getAllFood() async {
+    final db = await database;
+    var res = await db.rawQuery('SELECT * FROM $tableName');
+    List<Food> list = res.isNotEmpty
+        ? res
+            .map(
+              (c) => Food(
+                  code: c['code'],
+                  dbArmy: c['dbArmy'],
+                  foodName: c['foodName'],
+                  foodKinds: c['foodKinds'],
+                  kcal: c['kcal'],
+                  protein: c['protein'],
+                  carbohydrate: c['carbohydrate'],
+                  fat: c['fat']),
+            )
+            .toList()
+        : [];
+
+    return list;
   }
 
   //Delete All
