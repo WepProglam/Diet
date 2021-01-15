@@ -294,6 +294,7 @@ class TypeFoodName extends StatefulWidget {
 class _TypeFoodName extends State<TypeFoodName> {
   final FocusNode _focusNode = FocusNode();
   final dbHelper = DBHelperFood();
+  final dbHelperMyFood = DBHelperMyFood();
   var foodList = <Widget>[];
   var controller;
   OverlayEntry _overlayEntry;
@@ -373,14 +374,7 @@ class _TypeFoodName extends State<TypeFoodName> {
                       onTap: () {
                         Map foodInfo = {};
                         controller.text = item.foodName;
-                        foodInfo['kcal'] = item.kcal;
-                        foodInfo['carbohydrate'] = item.carbohydrate;
-                        foodInfo['protein'] = item.protein;
-                        foodInfo['fat'] = item.fat;
-                        foodInfo['code'] = item.code;
-                        foodInfo['dbArmy'] = item.dbArmy;
-                        foodInfo['foodKinds'] = item.foodKinds;
-                        foodInfo['foodName'] = item.foodName;
+                        foodInfo = item.toMap();
                         setState(() {
                           isItSelected = true;
                         });
@@ -398,6 +392,7 @@ class _TypeFoodName extends State<TypeFoodName> {
               }, onError: (e) {
                 print(e);
               });
+
               foodList.add(ListTile(
                 title: Text("나만의 음식 추가"),
                 onTap: () {
@@ -543,7 +538,6 @@ class _TransFoodFABState extends State<TransFoodFAB>
           print("myfoodinfo = $myFoodInfo");
           if (_formKey.currentState.validate()) {
             await dbHelperMyFood.getFood(myFoodInfo['foodName']).then((value) {
-              print(value == null);
               if (value == null) {
                 dbHelperMyFood.createData(Food(
                     code: myFoodInfo['code'],
