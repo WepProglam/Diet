@@ -36,10 +36,13 @@ class Food {
   String dbArmy;
   String foodName;
   String foodKinds;
+  String isItMine;
+
   num kcal;
   num protein;
   num carbohydrate;
   num fat;
+  num selected;
 
   Food(
       {this.code,
@@ -49,7 +52,9 @@ class Food {
       this.kcal,
       this.protein,
       this.carbohydrate,
-      this.fat});
+      this.fat,
+      this.isItMine,
+      this.selected});
 
   Map<String, dynamic> toMap() {
     return {
@@ -60,7 +65,9 @@ class Food {
       "kcal": kcal,
       "protein": protein,
       "carbohydrate": carbohydrate,
-      "fat": fat
+      "fat": fat,
+      "isItMine": isItMine,
+      "selected": selected
     };
   }
 }

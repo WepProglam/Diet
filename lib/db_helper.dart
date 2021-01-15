@@ -146,7 +146,9 @@ class DBHelperFood {
             kcal REAL,
             protein REAL,
             carbohydrate REAL,
-            fat REAL
+            fat REAL,
+            isItMine TEXT DEFAULT F,
+            selected INTEGER DEFAULT 0
             )
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
@@ -160,6 +162,13 @@ class DBHelperFood {
       food.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  getLast() async {
+    final db = await database;
+    var res = await db
+        .rawQuery("SELECT * FROM TableName ORDER BY rowid DESC LIMIT 1;");
+    return res.isNotEmpty ? res.first['code'] : Null;
   }
 
   //Read
@@ -176,7 +185,9 @@ class DBHelperFood {
             kcal: res.first['kcal'],
             protein: res.first['protein'],
             carbohydrate: res.first['carbohydrate'],
-            fat: res.first['fat'])
+            fat: res.first['fat'],
+            isItMine: res.first['isItMine'],
+            selected: res.first['selected'])
         : Null;
   }
 
@@ -196,7 +207,9 @@ class DBHelperFood {
                   kcal: c['kcal'],
                   protein: c['protein'],
                   carbohydrate: c['carbohydrate'],
-                  fat: c['fat']),
+                  fat: c['fat'],
+                  isItMine: c['isItMine'],
+                  selected: c['selected']),
             )
             .toList()
         : [];
@@ -219,7 +232,9 @@ class DBHelperFood {
                   kcal: c['kcal'],
                   protein: c['protein'],
                   carbohydrate: c['carbohydrate'],
-                  fat: c['fat']),
+                  fat: c['fat'],
+                  isItMine: c['isItMine'],
+                  selected: c['selected']),
             )
             .toList()
         : [];

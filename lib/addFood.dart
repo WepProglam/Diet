@@ -503,11 +503,12 @@ class _TransFoodFABState extends State<TransFoodFAB>
           ByteData data = await rootBundle.load("assets/foodNutriData.xlsx");
           List<int> bytes =
               data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-          dbHelper.deleteAllFood();
-          print("start");
+          await dbHelper.deleteAllFood();
           var excel = Excel.decodeBytes(bytes);
+          print("start");
           for (var table in excel.tables.keys) {
             for (var row in excel.tables[table].rows) {
+              // print(row);
               var food = Food(
                   code: row[0],
                   dbArmy: row[1],
@@ -516,7 +517,9 @@ class _TransFoodFABState extends State<TransFoodFAB>
                   kcal: row[4],
                   protein: row[5],
                   carbohydrate: row[6],
-                  fat: row[7]);
+                  fat: row[7],
+                  isItMine: 'F',
+                  selected: 0);
 
               await dbHelper.createData(food);
             }
