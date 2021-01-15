@@ -196,6 +196,7 @@ class Uiitem extends StatelessWidget {
   Uiitem(this.building);
 
   Widget build(BuildContext context) {
+    final Map<String, String> args = ModalRoute.of(context).settings.arguments;
     return Card(
       margin: EdgeInsets.all(8),
       color: Colors.white70,
@@ -203,7 +204,15 @@ class Uiitem extends StatelessWidget {
         // splashColor: Colors.orange,
         //여기다 눌렀을 때 기능 넣기
         onTap: () {
-          print(building.id);
+          //add Diet 페이지에서 넘어왔을 경우
+          // 이거 수정해서 음식 데이터 보낼 거임
+          if (args['pre'] == 'addDiet') {
+            Navigator.pop(context);
+          }
+          // 그 외 일반적인 경우
+          else {
+            print(building.id);
+          }
         },
         child: Center(
           child: Column(
