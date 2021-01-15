@@ -1,5 +1,7 @@
 //To_ToRo
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/db_helper.dart';
+import 'package:flutter_application_1/model.dart';
 import 'appBar.dart';
 
 class SavedFood extends StatelessWidget {
@@ -17,21 +19,28 @@ class SavedFood extends StatelessWidget {
   }
 }
 
-class FoodList extends StatelessWidget {
+class FoodList extends StatefulWidget {
+  @override
+  _FoodListState createState() => _FoodListState();
+}
+
+class _FoodListState extends State<FoodList> {
+  final dbHelperMyFood = DBHelperMyFood();
+  List<Food> foodNameEX = [];
+
+  void getInfo() async {
+    await dbHelperMyFood.getAllFood().then((val) {
+      for (var item in val) {
+        foodNameEX.add(item);
+      }
+    });
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     //실제로는 db에서 얻어와야 함
-    final List<String> foodNameEX = [
-      'AB',
-      'BC',
-      'CD',
-      'DE',
-      'EF',
-      'FG',
-      'GH',
-      'HI',
-      'IJ'
-    ];
+    getInfo();
 
     return GridView.count(
       padding: EdgeInsets.all(8),
@@ -48,7 +57,7 @@ class FoodList extends StatelessWidget {
               onPressed: () {},
 
               child: Text(
-                '${foodNameEX[index]}',
+                '${foodNameEX[index].foodName}',
                 style: TextStyle(fontSize: 30),
               ),
             ),

@@ -5,7 +5,6 @@ import 'appBar.dart';
 import 'db_helper.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:async';
-
 import 'model.dart';
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
