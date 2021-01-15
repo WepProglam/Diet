@@ -12,10 +12,10 @@ class AddDiet extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            SearchFoodBar(),
+            SearchFoodButton(),
             FoodList(),
             Expanded(
-              flex: 1,
+              flex: 2,
               child: Row(
                 children: [
                   Spacer(
@@ -51,53 +51,107 @@ class AddDiet extends StatelessWidget {
   }
 }
 
-//search Bar만 만들어놓음. drop down 구현 가능하면 하고 아님 버튼으로 바꾸고
-class SearchFoodBar extends StatefulWidget {
-  SearchFoodBar({Key key}) : super(key: key);
+class SearchFoodButton extends StatelessWidget {
+  const SearchFoodButton({Key key}) : super(key: key);
 
-  @override
-  _SearchFoodBarState createState() => _SearchFoodBarState();
-}
-
-class _SearchFoodBarState extends State<SearchFoodBar> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      flex: 2,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          //Spacer 조절로 위치 조절하셈
-          Spacer(
-            flex: 1,
-          ),
-          Row(
-            children: [
-              Spacer(
-                flex: 1,
-              ),
-              Expanded(
-                flex: 3,
-                child: TextField(
-                  controller: null,
-                  decoration: InputDecoration(hintText: 'search food'),
-                  textAlign: TextAlign.center,
+        flex: 2,
+        child: Column(
+          children: [
+            Spacer(
+              flex: 1,
+            ),
+            Row(
+              children: [
+                Spacer(
+                  flex: 1,
                 ),
-              ),
-              Spacer(
-                flex: 1,
-              ),
-            ],
-          ),
-
-          Spacer(
-            flex: 1,
-          ),
-        ],
-      ),
-    );
+                Expanded(
+                  flex: 4,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/searchFood',
+                        arguments: <String, String>{
+                          'pre': 'addDiet',
+                        },
+                      );
+                    },
+                    child: Container(
+                      height: 80,
+                      decoration: BoxDecoration(border: Border.all()),
+                      child: Center(
+                        child: Text(
+                          '음식 추가',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Spacer(
+                  flex: 1,
+                ),
+              ],
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        ));
   }
 }
+
+//search Bar만 만들어놓음. drop down 구현 가능하면 하고 아님 버튼으로 바꾸고
+// class SearchFoodBar extends StatefulWidget {
+//   SearchFoodBar({Key key}) : super(key: key);
+
+//   @override
+//   _SearchFoodBarState createState() => _SearchFoodBarState();
+// }
+
+// class _SearchFoodBarState extends State<SearchFoodBar> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Expanded(
+//       flex: 2,
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           //Spacer 조절로 위치 조절하셈
+//           Spacer(
+//             flex: 1,
+//           ),
+//           Row(
+//             children: [
+//               Spacer(
+//                 flex: 1,
+//               ),
+//               Expanded(
+//                 flex: 3,
+//                 child: TextField(
+//                   controller: null,
+//                   decoration: InputDecoration(hintText: 'search food'),
+//                   textAlign: TextAlign.center,
+//                 ),
+//               ),
+//               Spacer(
+//                 flex: 1,
+//               ),
+//             ],
+//           ),
+
+//           Spacer(
+//             flex: 1,
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class ListContents {
   String foodName;
@@ -114,7 +168,7 @@ class FoodList extends StatefulWidget {
 }
 
 class _FoodListState extends State<FoodList> {
-  //이건 Search Food에서 onPressed로 하나씩 추가할거임 List.add로 추가할거임
+  //이건 Search Food에서 onPressed해서 List.add로 추가할거임
   List<ListContents> foodList = [
     ListContents(foodName: '현미밥', mass: 150),
     ListContents(foodName: '닭가슴살', mass: 120),
@@ -134,8 +188,10 @@ class _FoodListState extends State<FoodList> {
           ),
           Expanded(
             flex: 2,
-            child: TextField(
-              decoration: InputDecoration(hintText: '${food.mass}'),
+            child: TextFormField(
+              initialValue: '${food.mass}',
+              decoration: InputDecoration(hintText: 'mass'),
+              keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
             ),
           ),
@@ -151,7 +207,7 @@ class _FoodListState extends State<FoodList> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      flex: 2,
+      flex: 4,
       child: Container(
         margin: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
@@ -163,8 +219,7 @@ class _FoodListState extends State<FoodList> {
           itemBuilder: (BuildContext context, int index) {
             return buildFood(foodList[index]);
           },
-          separatorBuilder: (BuildContext context, int index) =>
-              const Divider(),
+          separatorBuilder: (BuildContext context, int index) => Divider(),
         ),
       ),
     );
