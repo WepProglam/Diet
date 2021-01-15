@@ -42,7 +42,7 @@ class _SearchListState extends State<SearchList> {
   bool _IsSearching = false;
   String _searchText = "";
 
-  final dbHelperMyFood = DBHelperMyFood();
+  final dbHelperFood = DBHelperFood();
   List<Food> foodNameEX = [];
   final dBHelperMyTempoFood = DBHelperMyTempoFood();
 
@@ -80,7 +80,7 @@ class _SearchListState extends State<SearchList> {
   }
 
   void getInfo() async {
-    await dbHelperMyFood.getAllFood().then((val) {
+    await dbHelperFood.getAllMyFood().then((val) {
       for (var item in val) {
         foodNameEX.add(item);
       }

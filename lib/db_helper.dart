@@ -164,18 +164,11 @@ class DBHelperFood {
     );
   }
 
-  getLast() async {
-    final db = await database;
-    var res = await db
-        .rawQuery("SELECT * FROM TableName ORDER BY rowid DESC LIMIT 1;");
-    return res.isNotEmpty ? res.first['code'] : Null;
-  }
-
   //Read
-  getFood(String value) async {
+  getFood(String code) async {
     final db = await database;
     var res =
-        await db.rawQuery("SELECT * FROM $tableName WHERE foodName = '$value'");
+        await db.rawQuery("SELECT * FROM $tableName WHERE code = '$code'");
     return res.isNotEmpty
         ? Food(
             code: res.first['code'],
@@ -218,9 +211,10 @@ class DBHelperFood {
   }
 
   //Read All
-  Future<List<Food>> getAllFood() async {
+  Future<List<Food>> getAllMyFood() async {
     final db = await database;
-    var res = await db.rawQuery('SELECT * FROM $tableName');
+    var res =
+        await db.rawQuery("SELECT * FROM $tableName WHERE isItMine = 'T'");
     List<Food> list = res.isNotEmpty
         ? res
             .map(
@@ -243,133 +237,9 @@ class DBHelperFood {
   }
 
   //Delete
-  deleteFood(int id) async {
+  deleteFood(String code) async {
     final db = await database;
-    var res = db.rawDelete('DELETE FROM $tableName WHERE id = ?', [id]);
-    return res;
-  }
-
-  //Delete All
-  deleteAllFood() async {
-    final db = await database;
-    db.rawDelete('DELETE FROM $tableName');
-  }
-}
-
-class DBHelperMyFood {
-  final String dBName = 'MyFoodDiet';
-  final String tableName = 'Food';
-  DBHelperMyFood._();
-  static final DBHelperMyFood _db = DBHelperMyFood._();
-  factory DBHelperMyFood() => _db;
-
-  static Database _database;
-
-  Future<Database> get database async {
-    if (_database != null) return _database;
-
-    _database = await initDB();
-    return _database;
-  }
-
-  initDB() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "$dBName.db");
-    return await openDatabase(path, version: 1, onCreate: (db, version) async {
-      await db.execute('''
-          CREATE TABLE $tableName(
-            code TEXT,
-            dbArmy TEXT,
-            foodName TEXT,
-            foodKinds TEXT,
-            kcal REAL,
-            protein REAL,
-            carbohydrate REAL,
-            fat REAL
-            )
-        ''');
-    }, onUpgrade: (db, oldVersion, newVersion) {});
-  }
-
-  //Create
-  createData(Food food) async {
-    final db = await database;
-    await db.insert(
-      tableName,
-      food.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  //Read
-  getFood(String value) async {
-    final db = await database;
-    var res =
-        await db.rawQuery("SELECT * FROM $tableName WHERE foodName = '$value'");
-    return res.isNotEmpty
-        ? Food(
-            code: res.first['code'],
-            dbArmy: res.first['dbArmy'],
-            foodName: res.first['foodName'],
-            foodKinds: res.first['foodKinds'],
-            kcal: res.first['kcal'],
-            protein: res.first['protein'],
-            carbohydrate: res.first['carbohydrate'],
-            fat: res.first['fat'])
-        : null;
-  }
-
-  //Read All
-  Future<List<Food>> filterFoods(String value) async {
-    final db = await database;
-    var res = await db
-        .rawQuery("SELECT * FROM $tableName WHERE foodName LIKE '%$value%'");
-    List<Food> list = res.isNotEmpty
-        ? res
-            .map(
-              (c) => Food(
-                  code: c['code'],
-                  dbArmy: c['dbArmy'],
-                  foodName: c['foodName'],
-                  foodKinds: c['foodKinds'],
-                  kcal: c['kcal'],
-                  protein: c['protein'],
-                  carbohydrate: c['carbohydrate'],
-                  fat: c['fat']),
-            )
-            .toList()
-        : [];
-
-    return list;
-  }
-
-  //Read All
-  Future<List<Food>> getAllFood() async {
-    final db = await database;
-    var res = await db.rawQuery('SELECT * FROM $tableName');
-    List<Food> list = res.isNotEmpty
-        ? res
-            .map(
-              (c) => Food(
-                  code: c['code'],
-                  dbArmy: c['dbArmy'],
-                  foodName: c['foodName'],
-                  foodKinds: c['foodKinds'],
-                  kcal: c['kcal'],
-                  protein: c['protein'],
-                  carbohydrate: c['carbohydrate'],
-                  fat: c['fat']),
-            )
-            .toList()
-        : [];
-
-    return list;
-  }
-
-  //Delete
-  deleteFood(String name) async {
-    final db = await database;
-    var res = db.rawDelete("DELETE FROM $tableName WHERE foodName = '$name'");
+    var res = db.rawDelete("DELETE FROM $tableName WHERE code = '$code'");
     return res;
   }
 
@@ -409,7 +279,9 @@ class DBHelperMyTempoFood {
             kcal REAL,
             protein REAL,
             carbohydrate REAL,
-            fat REAL
+            fat REAL,
+            isItMine TEXT DEFAULT F,
+            selected INTEGER DEFAULT 0
             )
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
@@ -440,7 +312,9 @@ class DBHelperMyTempoFood {
                   kcal: c['kcal'],
                   protein: c['protein'],
                   carbohydrate: c['carbohydrate'],
-                  fat: c['fat']),
+                  fat: c['fat'],
+                  isItMine: c['isItMine'],
+                  selected: c['selected']),
             )
             .toList()
         : [];

@@ -7,6 +7,9 @@ import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:async';
 import 'model.dart';
 import 'mainStream.dart' as mainStream;
+import 'package:crypto/crypto.dart';
+import 'package:convert/convert.dart';
+import 'dart:convert';
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -122,6 +125,7 @@ class _AddFoodSub extends State<AddFoodSub> {
   }
 
   void getInfo() async {
+    //여기 문제 있음
     await dBHelperMyTempoFood.getAllFood().then((value) {
       print("get info");
       print(value.length > 0);
@@ -294,7 +298,6 @@ class TypeFoodName extends StatefulWidget {
 class _TypeFoodName extends State<TypeFoodName> {
   final FocusNode _focusNode = FocusNode();
   final dbHelper = DBHelperFood();
-  final dbHelperMyFood = DBHelperMyFood();
   var foodList = <Widget>[];
   var controller;
   OverlayEntry _overlayEntry;
@@ -370,7 +373,7 @@ class _TypeFoodName extends State<TypeFoodName> {
                   if (i < 5) {
                     foodList.add(ListTile(
                       title: Text(item.foodName),
-                      subtitle: Text("${item.kcal}Kcal"),
+                      subtitle: Text("${item.kcal}Kcal  ${item.isItMine}"),
                       onTap: () {
                         Map foodInfo = {};
                         controller.text = item.foodName;
@@ -435,9 +438,9 @@ class _TransFoodFABState extends State<TransFoodFAB>
   Animation<double> _animateIcon;
   Animation<double> _translateButton;
   Curve _curve = Curves.easeOut;
+  final dbHelperFood = DBHelperFood();
   double _fabHeight = 56.0;
   Map myFoodInfo = {};
-  final dbHelperMyFood = DBHelperMyFood();
   bool isItCutom = false;
 
   @override
@@ -540,23 +543,7 @@ class _TransFoodFABState extends State<TransFoodFAB>
         onPressed: () async {
           print("myfoodinfo = $myFoodInfo");
           if (_formKey.currentState.validate()) {
-            await dbHelperMyFood.getFood(myFoodInfo['foodName']).then((value) {
-              if (value == null) {
-                dbHelperMyFood.createData(Food(
-                    code: myFoodInfo['code'],
-                    dbArmy: myFoodInfo['dbArmy'],
-                    foodName: myFoodInfo['foodName'],
-                    foodKinds: myFoodInfo['foodKinds'],
-                    kcal: myFoodInfo['kcal'],
-                    protein: myFoodInfo['protein'],
-                    carbohydrate: myFoodInfo['carbohydrate'],
-                    fat: myFoodInfo['fat']));
-                print(myFoodInfo);
-                streamControllerBool.add(isItCutom);
-              } else {
-                showAlertDialog(context);
-              }
-            });
+            showAlertDialog(context);
           }
         },
         tooltip: 'Search',
@@ -566,24 +553,76 @@ class _TransFoodFABState extends State<TransFoodFAB>
     );
   }
 
+  duplicateAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.pop(context);
+        });
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("음식 수정 시에는 저장된 음식을 수정해주세요"),
+      content: Text(""),
+      actions: [okButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   showAlertDialog(BuildContext context) {
     // set up the button
     Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.pop(context);
-        dbHelperMyFood.deleteFood(myFoodInfo['foodName']);
-        dbHelperMyFood.createData(Food(
-            code: myFoodInfo['code'],
-            dbArmy: myFoodInfo['dbArmy'],
-            foodName: myFoodInfo['foodName'],
-            foodKinds: myFoodInfo['foodKinds'],
-            kcal: myFoodInfo['kcal'],
-            protein: myFoodInfo['protein'],
-            carbohydrate: myFoodInfo['carbohydrate'],
-            fat: myFoodInfo['fat']));
-      },
-    );
+        child: Text("OK"),
+        onPressed: () async {
+          await dbHelperFood.getFood(myFoodInfo['code']).then((value) async {
+            Food dbFoodClass = value;
+            dbFoodClass.selected += 1;
+            Food foodClass = Food(
+                code: myFoodInfo['code'],
+                dbArmy: myFoodInfo['dbArmy'],
+                foodName: myFoodInfo['foodName'],
+                foodKinds: myFoodInfo['foodKinds'],
+                kcal: myFoodInfo['kcal'],
+                protein: myFoodInfo['protein'],
+                carbohydrate: myFoodInfo['carbohydrate'],
+                fat: myFoodInfo['fat'],
+                isItMine: 'T',
+                selected: myFoodInfo['selected'] + 1); //select 1회 증가
+
+            dbHelperFood.deleteFood(myFoodInfo['code']);
+
+            if (myFoodInfo['isItMine'] == 'T') {
+              await dbHelperFood
+                  .createData(foodClass); //myFoodInfo에 저장된 데이터로 새로 저장
+              Navigator.pop(context);
+            } else {
+              var bytes = utf8.encode(myFoodInfo['foodName']);
+              String codeName = "MY" + md5.convert(bytes).toString();
+              print(codeName); //코드네임 암호화
+              await dbHelperFood
+                  .createData(dbFoodClass); //기존 db 데이터 저장(선택횟수만 변경)
+              await dbHelperFood.getFood(codeName).then((value) async {
+                if (value is Food) {
+                  Navigator.pop(context);
+                  duplicateAlertDialog(context);
+                } else {
+                  foodClass.code = codeName;
+                  dbHelperFood.createData(foodClass); //새로 저장하는 myfood 데이터
+                  Navigator.pop(context);
+                }
+              });
+            }
+            streamControllerBool.add(isItCutom);
+          });
+        });
 
     Widget noButton = FlatButton(
       child: Text("Cancel"),
@@ -594,8 +633,8 @@ class _TransFoodFABState extends State<TransFoodFAB>
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Duplicated Food"),
-      content: Text("중복 음식 발견. 변경?"),
+      title: Text("음식 저장"),
+      content: Text("저장하시겠습니까?"),
       actions: [okButton, noButton],
     );
 

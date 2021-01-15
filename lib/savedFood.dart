@@ -31,12 +31,12 @@ class FoodList extends StatefulWidget {
 }
 
 class _FoodListState extends State<FoodList> {
-  final dbHelperMyFood = DBHelperMyFood();
+  final dbHelperFood = DBHelperFood();
   List<Food> foodNameEX = [];
   final dBHelperMyTempoFood = DBHelperMyTempoFood();
 
   void getInfo() async {
-    await dbHelperMyFood.getAllFood().then((val) {
+    await dbHelperFood.getAllMyFood().then((val) {
       print(val.length);
       for (var item in val) {
         foodNameEX.add(item);
@@ -72,7 +72,7 @@ class _FoodListState extends State<FoodList> {
               onPressed: () async {
                 await dBHelperMyTempoFood.createData(foodNameEX[index]);
                 Navigator.pushNamed(context, '/addFood');
-                // print(foodNameEX[index].toMap());
+                print(foodNameEX[index].toMap());
               },
 
               child: ListTile(
@@ -81,8 +81,9 @@ class _FoodListState extends State<FoodList> {
                 trailing: FlatButton(
                   child: Icon(Icons.delete),
                   onPressed: () {
+                    print(foodNameEX[index].code);
                     setState(() {
-                      dbHelperMyFood.deleteFood(foodNameEX[index].foodName);
+                      dbHelperFood.deleteFood(foodNameEX[index].code);
                       foodNameEX.removeAt(index);
                     });
                   },
