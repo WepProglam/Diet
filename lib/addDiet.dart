@@ -191,6 +191,7 @@ class _FoodListState extends State<FoodList> {
             child: TextFormField(
               initialValue: '${food.mass}',
               decoration: InputDecoration(hintText: 'mass'),
+              keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
             ),
           ),
