@@ -37,17 +37,25 @@ class _FoodListState extends State<FoodList> {
 
   void getInfo() async {
     await dbHelperMyFood.getAllFood().then((val) {
+      print(val.length);
       for (var item in val) {
         foodNameEX.add(item);
       }
+      print(foodNameEX.length);
     });
     setState(() {});
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getInfo();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //실제로는 db에서 얻어와야 함
-    getInfo();
 
     return GridView.count(
       padding: EdgeInsets.all(8),
@@ -70,6 +78,15 @@ class _FoodListState extends State<FoodList> {
               child: ListTile(
                 title: Text(foodNameEX[index].foodName.toString()),
                 subtitle: Text(foodNameEX[index].kcal.toString() + "kcal"),
+                trailing: FlatButton(
+                  child: Icon(Icons.delete),
+                  onPressed: () {
+                    setState(() {
+                      dbHelperMyFood.deleteFood(foodNameEX[index].foodName);
+                      foodNameEX.removeAt(index);
+                    });
+                  },
+                ),
               ),
               // Text(
               //   '${foodNameEX[index].foodName}',
