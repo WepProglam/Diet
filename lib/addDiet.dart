@@ -114,7 +114,7 @@ class FoodList extends StatefulWidget {
 }
 
 class _FoodListState extends State<FoodList> {
-  //이건 Search Food에서 onPressed로 하나씩 추가할거임 List.add로 추가할거임
+  //이건 Search Food에서 onPressed해서 List.add로 추가할거임
   List<ListContents> foodList = [
     ListContents(foodName: '현미밥', mass: 150),
     ListContents(foodName: '닭가슴살', mass: 120),
@@ -134,8 +134,9 @@ class _FoodListState extends State<FoodList> {
           ),
           Expanded(
             flex: 2,
-            child: TextField(
-              decoration: InputDecoration(hintText: '${food.mass}'),
+            child: TextFormField(
+              initialValue: '${food.mass}',
+              decoration: InputDecoration(hintText: 'mass'),
               textAlign: TextAlign.center,
             ),
           ),
@@ -163,8 +164,7 @@ class _FoodListState extends State<FoodList> {
           itemBuilder: (BuildContext context, int index) {
             return buildFood(foodList[index]);
           },
-          separatorBuilder: (BuildContext context, int index) =>
-              const Divider(),
+          separatorBuilder: (BuildContext context, int index) => Divider(),
         ),
       ),
     );
