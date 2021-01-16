@@ -17,9 +17,9 @@ StreamController<bool> streamControllerBool =
 
 void main() => runApp(MaterialApp(
       theme: ThemeData(
-        primaryColor: Colors.purple[300],
+        backgroundColor: Color(0xFFFFFEF5),
+        primaryColor: Color(0xFF69C2B0),
       ),
-      color: Colors.purple[300],
       initialRoute: '/',
       routes: {
         '/': (context) => InitPage(),

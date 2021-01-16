@@ -113,6 +113,7 @@ class _SearchListState extends State<SearchList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFFFFEF5),
       key: key,
       appBar: buildBar(context),
       body: GridView.builder(

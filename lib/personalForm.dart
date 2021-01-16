@@ -82,6 +82,7 @@ class _PersonalForm extends State<PersonalForm> {
           // Navigator.pushNamed(context, '/saving');
         },
         child: Scaffold(
+          backgroundColor: Color(0xFFFFFEF5),
           resizeToAvoidBottomPadding: false,
           appBar: basicAppBar('Personal Form', context),
           drawer: NavDrawer(),

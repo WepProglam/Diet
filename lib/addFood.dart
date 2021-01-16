@@ -80,6 +80,7 @@ class _AddFoodSub extends State<AddFoodSub> {
   Widget build(BuildContext context) {
     getInfo();
     return Scaffold(
+        backgroundColor: Color(0xFFFFFEF5),
         resizeToAvoidBottomPadding: false,
         appBar: basicAppBar('Add Food', context),
         drawer: NavDrawer(),

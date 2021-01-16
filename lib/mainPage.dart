@@ -48,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
     daysFirstWeek = 7 - dayToDate(dayFirst) + 1; //첫 주에 몇일 있는지
 
     return Scaffold(
+        backgroundColor: Color(0xFFFFFEF5),
         appBar: basicAppBar('Main Page', context),
         drawer: NavDrawer(),
         body: Column(

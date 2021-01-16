@@ -7,6 +7,7 @@ class SavedDiet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFFFFEF5),
       appBar: basicAppBar('Diet List', context),
       drawer: NavDrawer(),
       body: Center(

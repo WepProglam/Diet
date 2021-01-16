@@ -29,14 +29,17 @@ Widget basicAppBar(String title, BuildContext context) {
   return AppBar(
     //color
     backgroundColor: Color(0xFF69C2B0),
+    iconTheme: IconThemeData(color: Colors.white),
 
     //앱 이름
     centerTitle: true,
-    title: Text(title),
+    title: Text(title, style: TextStyle(color: Colors.white)),
     //마이페이지
     actions: <Widget>[
       IconButton(
-        icon: Icon(Icons.person),
+        icon: Icon(
+          Icons.person,
+        ),
         onPressed: () {
           Navigator.pushNamed(context, '/personalForm');
         },

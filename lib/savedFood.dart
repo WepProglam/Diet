@@ -14,6 +14,7 @@ class SavedFood extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFFFFEF5),
       appBar: basicAppBar('Food List', context),
       drawer: NavDrawer(),
       body: Center(
