@@ -32,7 +32,7 @@ class AddDiet extends StatelessWidget {
                     flex: 1,
                     child: IconButton(
                         icon: Icon(Icons.add),
-                        color: Colors.blue,
+                        color: Color(0xFF69C2B0),
                         onPressed: null),
                   ),
                   Spacer(
@@ -84,7 +84,7 @@ class SearchFoodButton extends StatelessWidget {
                       height: 80,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: Colors.purple[300],
+                          color: Color(0xFF69C2B0),
                         ),
                       ),
                       child: Center(
@@ -215,7 +215,7 @@ class _FoodListState extends State<FoodList> {
       child: Container(
         margin: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.purple[300]),
+          border: Border.all(color: Color(0xFF69C2B0)),
         ),
         child: ListView.separated(
           padding: EdgeInsets.all(8),

@@ -129,7 +129,7 @@ class _SearchListState extends State<SearchList> {
         centerTitle: true,
         title: appBarTitle,
         // iconTheme: IconThemeData(color: Colors.orange),
-        backgroundColor: Colors.purple[300],
+        backgroundColor: Color(0xFF69C2B0),
         actions: <Widget>[
           IconButton(
             icon: actionIcon,

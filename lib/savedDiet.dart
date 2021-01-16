@@ -93,8 +93,8 @@ class _TransFABState extends State<TransFAB>
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
     _buttonColor = ColorTween(
       //이유는 모르겠지만 핫리로딩이 안 됨 다시 실행해야 적용됨.
-      begin: Colors.purple[400],
-      end: Colors.purple[300],
+      begin: Color(0xFF69C2B0),
+      end: Color(0xFF7EE0CC),
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Interval(
@@ -142,7 +142,7 @@ class _TransFABState extends State<TransFAB>
         },
         tooltip: 'Add',
         child: Icon(Icons.add, size: 30),
-        backgroundColor: Colors.purple[200],
+        backgroundColor: Color(0xFF7EE0CC),
       ),
     );
   }
@@ -156,7 +156,7 @@ class _TransFABState extends State<TransFAB>
         },
         tooltip: 'Search',
         child: Icon(Icons.search, size: 30),
-        backgroundColor: Colors.purple[200],
+        backgroundColor: Color(0xFF7EE0CC),
       ),
     );
   }

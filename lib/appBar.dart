@@ -28,7 +28,7 @@ import 'package:flutter/material.dart';
 Widget basicAppBar(String title, BuildContext context) {
   return AppBar(
     //color
-    backgroundColor: Colors.purple[300],
+    backgroundColor: Color(0xFF69C2B0),
 
     //앱 이름
     centerTitle: true,
@@ -60,7 +60,7 @@ class NavDrawer extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 25),
               ),
               decoration: BoxDecoration(
-                color: Colors.purple[300],
+                color: Color(0xFF69C2B0),
               ),
             ),
           ),
