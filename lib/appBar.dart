@@ -27,12 +27,8 @@ import 'package:flutter/material.dart';
 
 Widget basicAppBar(String title, BuildContext context) {
   return AppBar(
-    //메뉴
-    // leading: IconButton(
-    //   icon: Icon(Icons.menu),
-    //   //눌렀을 때 기능 추후에 추가
-    //   onPressed: () {},
-    // ),
+    //color
+    backgroundColor: Colors.purple[300],
 
     //앱 이름
     centerTitle: true,
@@ -64,7 +60,7 @@ class NavDrawer extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 25),
               ),
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.purple[300],
               ),
             ),
           ),

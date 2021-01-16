@@ -16,6 +16,10 @@ StreamController<bool> streamControllerBool =
     StreamController<bool>.broadcast();
 
 void main() => runApp(MaterialApp(
+      theme: ThemeData(
+        primaryColor: Colors.purple[300],
+      ),
+      color: Colors.purple[300],
       initialRoute: '/',
       routes: {
         '/': (context) => InitPage(),

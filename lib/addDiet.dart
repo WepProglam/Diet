@@ -82,7 +82,11 @@ class SearchFoodButton extends StatelessWidget {
                     },
                     child: Container(
                       height: 80,
-                      decoration: BoxDecoration(border: Border.all()),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.purple[300],
+                        ),
+                      ),
                       child: Center(
                         child: Text(
                           '음식 추가',
@@ -211,7 +215,7 @@ class _FoodListState extends State<FoodList> {
       child: Container(
         margin: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue),
+          border: Border.all(color: Colors.purple[300]),
         ),
         child: ListView.separated(
           padding: EdgeInsets.all(8),

@@ -125,9 +125,11 @@ class _SearchListState extends State<SearchList> {
   );
 
   Widget buildBar(BuildContext context) {
-    return AppBar(centerTitle: true, title: appBarTitle,
+    return AppBar(
+        centerTitle: true,
+        title: appBarTitle,
         // iconTheme: IconThemeData(color: Colors.orange),
-        // backgroundColor: Colors.black,
+        backgroundColor: Colors.purple[300],
         actions: <Widget>[
           IconButton(
             icon: actionIcon,

@@ -126,6 +126,8 @@ class _PersonalForm extends State<PersonalForm> {
             ),
           )),
           floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.purple[300],
+            focusColor: Colors.purple[50],
             child: Icon(Icons.done),
             onPressed: () {
               if (_formKey.currentState.validate()) {
