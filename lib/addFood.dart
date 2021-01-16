@@ -80,7 +80,6 @@ class _AddFoodSub extends State<AddFoodSub> {
   Widget build(BuildContext context) {
     getInfo();
     return Scaffold(
-        backgroundColor: Color(0xFFFFFEF5),
         resizeToAvoidBottomPadding: false,
         appBar: basicAppBar('Add Food', context),
         drawer: NavDrawer(),
@@ -167,12 +166,14 @@ class _AddFoodSub extends State<AddFoodSub> {
   }
 
   void mySetState(Map info) {
-    setState(() {
-      _carboController.text = myRounder(info['carbohydrate']);
-      _fatController.text = myRounder(info['fat']);
-      _proController.text = myRounder(info['protein']);
-      _ulController.text = myRounder(info['kcal']);
-    });
+    if(this.mounted){
+      setState(() {
+        _carboController.text = myRounder(info['carbohydrate']);
+        _fatController.text = myRounder(info['fat']);
+        _proController.text = myRounder(info['protein']);
+        _ulController.text = myRounder(info['kcal']);
+      });
+    }
     foodInfo = info;
   }
 
@@ -454,8 +455,8 @@ class _TransFoodFABState extends State<TransFoodFAB>
     _animateIcon =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
     _buttonColor = ColorTween(
-      begin: Color(0xFF69C2B0),
-      end: Color(0xFF7EE0CC),
+      begin: Colors.black45,
+      end: Colors.orange[300],
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Interval(
@@ -532,7 +533,7 @@ class _TransFoodFABState extends State<TransFoodFAB>
         },
         tooltip: 'Add',
         child: Icon(Icons.add, size: 30),
-        backgroundColor: Color(0xFF7EE0CC),
+        backgroundColor: Colors.black45,
       ),
     );
   }
@@ -549,7 +550,7 @@ class _TransFoodFABState extends State<TransFoodFAB>
         },
         tooltip: 'Search',
         child: Icon(Icons.search, size: 30),
-        backgroundColor: Color(0xFF7EE0CC),
+        backgroundColor: Colors.black45,
       ),
     );
   }

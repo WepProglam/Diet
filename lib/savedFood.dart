@@ -71,6 +71,7 @@ class _FoodListState extends State<FoodList> {
             child: FlatButton(
               //onPressed에 식단 설정 페이지로 이동하는 함수 넣기
               onPressed: () async {
+                print(foodNameEX[index].toMap());
                 await dBHelperMyTempoFood.createData(foodNameEX[index]);
                 Navigator.pushNamed(context, '/addFood');
                 print(foodNameEX[index].toMap());

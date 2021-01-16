@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-
 import 'model.dart';
 
 class DBHelperPerson {
@@ -232,7 +230,6 @@ class DBHelperFood {
             )
             .toList()
         : [];
-
     return list;
   }
 
@@ -252,7 +249,7 @@ class DBHelperFood {
 
 class DBHelperMyTempoFood {
   final String dBName = 'MyFoodTempoDiet';
-  final String tableName = 'Food';
+  final String tableName = 'FoodTempo';
   DBHelperMyTempoFood._();
   static final DBHelperMyTempoFood _db = DBHelperMyTempoFood._();
   factory DBHelperMyTempoFood() => _db;
@@ -293,7 +290,7 @@ class DBHelperMyTempoFood {
     await db.insert(
       tableName,
       food.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      // conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 

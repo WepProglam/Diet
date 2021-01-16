@@ -10,6 +10,7 @@ import 'savedFood.dart';
 import 'searchDiet.dart';
 import 'searchFood.dart';
 import 'addDiet.dart';
+import 'calcDiet.dart';
 
 StreamController<Map> streamController = StreamController<Map>.broadcast();
 StreamController<bool> streamControllerBool =
@@ -31,6 +32,7 @@ void main() => runApp(MaterialApp(
         '/searchDiet': (context) => SearchDiet(),
         '/searchFood': (context) => SearchFood(),
         '/addDiet': (context) => AddDiet(),
+        '/calcDiet': (context) => CalcDiet(),
       },
     ));
 
