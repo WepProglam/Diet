@@ -54,9 +54,15 @@ class _CalcDietState extends State<CalcDiet> {
   }
 
   Widget addDiet(int index) {
-    return Visibility(
-        visible: isItVisible[index],
+    return AnimatedOpacity(
+        // If the widget is visible, animate to 0.0 (invisible).
+        // If the widget is hidden, animate to 1.0 (fully visible).
+        opacity: isItVisible[index] ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 300),
+        // The green box must be a child of the AnimatedOpacity widget.
         child: Container(
+          width: 300,
+          height: 200,
           decoration: BoxDecoration(
             border: Border.all(color: Colors.black),
           ),
