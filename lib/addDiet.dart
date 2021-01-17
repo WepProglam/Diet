@@ -36,9 +36,9 @@ class FoodList extends StatefulWidget {
 class _FoodListState extends State<FoodList> {
   List<ListContents> foodList = [];
 
-  void addItem(ListContents food) {
+  void addItem(List<ListContents> food) {
     setState(() {
-      foodList.add(food);
+      foodList += food;
     });
   }
 
@@ -83,6 +83,7 @@ class _FoodListState extends State<FoodList> {
   _navigateAndDisplaySelection(BuildContext context) async {
     // Navigator.push는 Future를 반환합니다. Future는 선택 창에서
     // Navigator.pop이 호출된 이후 완료될 것입니다.
+    List<ListContents> foods = [];
     final result = await Navigator.pushNamed(
       context,
       '/searchFood',
@@ -90,11 +91,13 @@ class _FoodListState extends State<FoodList> {
         'pre': 'addDiet',
       },
     );
-
-    Food food = await DBHelperFood().getFood(result);
-    ListContents foodCopy =
-        ListContents(foodName: food.foodName, code: food.code);
-    addItem(foodCopy);
+    for (var code in result) {
+      Food food = await DBHelperFood().getFood(code);
+      ListContents foodCopy =
+          ListContents(foodName: food.foodName, code: food.code);
+      foods.add(foodCopy);
+    }
+    addItem(foods);
   }
 
   @override

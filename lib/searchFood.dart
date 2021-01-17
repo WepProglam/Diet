@@ -1,12 +1,22 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model.dart';
 
 import 'db_helper.dart';
+import 'mainStream.dart' as mainStream;
+
+StreamController<String> streamControllerString =
+    mainStream.streamControllerString;
 
 class SearchFood extends StatelessWidget {
+  final Stream<List> stream;
+  SearchFood({this.stream});
   @override
   Widget build(BuildContext context) {
-    return SearchList();
+    return SearchList(
+      streamString: streamControllerString.stream,
+    );
   }
 }
 
@@ -28,7 +38,8 @@ class Building {
 }
 
 class SearchList extends StatefulWidget {
-  SearchList({Key key}) : super(key: key);
+  final Stream<String> streamString;
+  SearchList({Key key, this.streamString}) : super(key: key);
 
   @override
   _SearchListState createState() => _SearchListState();
@@ -41,6 +52,8 @@ class _SearchListState extends State<SearchList> {
   List<Building> _searchList = List();
   bool _IsSearching = false;
   String _searchText = "";
+  List<String> codeList = [];
+  bool fromAddDiet = false;
 
   final dbHelperFood = DBHelperFood();
   List<Food> foodNameEX = [];
@@ -92,6 +105,14 @@ class _SearchListState extends State<SearchList> {
   initState() {
     _IsSearching = false;
     init();
+    widget.streamString.listen((code) {
+      fromAddDiet = true;
+      if (codeList.contains(code)) {
+        codeList.removeWhere((item) => item == code);
+      } else {
+        codeList.add(code);
+      }
+    });
     super.initState();
   }
 
@@ -126,6 +147,21 @@ class _SearchListState extends State<SearchList> {
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, childAspectRatio: 5 / 3),
       ),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: Color(0xFF69C2B0),
+          focusColor: Color(0xFF69C2B0),
+          child: Icon(Icons.done),
+          onPressed: () {
+            print(codeList);
+            if (fromAddDiet) {
+              Navigator.pop(context, codeList);
+            } else {
+              Navigator.pop(context);
+            }
+          }
+
+          //print(_heightController.text);
+          ),
     );
   }
 
@@ -197,16 +233,24 @@ class _SearchListState extends State<SearchList> {
   }
 }
 
-//
-class Uiitem extends StatelessWidget {
+class Uiitem extends StatefulWidget {
   final Building building;
   Uiitem(this.building);
+  @override
+  _UiitemState createState() => _UiitemState(building);
+}
 
+class _UiitemState extends State<Uiitem> {
+  final Building building;
+  _UiitemState(this.building);
+  bool isItSelected = false;
+
+  @override
   Widget build(BuildContext context) {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
     return Card(
       margin: EdgeInsets.all(8),
-      color: Colors.white70,
+      color: isItSelected ? Colors.green : Colors.white70,
       child: InkWell(
         // splashColor: Colors.orange,
         //여기다 눌렀을 때 기능 넣기
@@ -214,7 +258,10 @@ class Uiitem extends StatelessWidget {
           //add Diet 페이지에서 넘어왔을 경우
           // 이거 수정해서 음식 데이터 보낼 거임
           if (args['pre'] == 'addDiet') {
-            Navigator.pop(context, this.building.code);
+            streamControllerString.add(building.code);
+            setState(() {
+              isItSelected = !isItSelected;
+            });
           }
           // 그 외 일반적인 경우
           else {
@@ -249,3 +296,4 @@ class Uiitem extends StatelessWidget {
     );
   }
 }
+//
