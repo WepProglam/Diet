@@ -118,7 +118,7 @@ class _SearchListState extends State<SearchList> {
 
   Widget appBarTitle = Text(
     "Search Diet",
-    // style: TextStyle(color: Colors.white),
+    style: TextStyle(color: Colors.white),
   );
   Icon actionIcon = Icon(
     Icons.search,
@@ -129,7 +129,7 @@ class _SearchListState extends State<SearchList> {
     return AppBar(
         centerTitle: true,
         title: appBarTitle,
-        // iconTheme: IconThemeData(color: Colors.orange),
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Color(0xFF69C2B0),
         actions: <Widget>[
           IconButton(
@@ -139,13 +139,13 @@ class _SearchListState extends State<SearchList> {
                 if (this.actionIcon.icon == Icons.search) {
                   this.actionIcon = Icon(
                     Icons.close,
-                    // color: Colors.orange,
+                    color: Colors.white,
                   );
                   this.appBarTitle = TextField(
                     controller: _searchQuery,
-                    // style: TextStyle(
-                    //   color: Colors.orange,
-                    // ),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                     decoration: InputDecoration(
                         hintText: "Search here..",
                         hintStyle: TextStyle(color: Colors.white)),
@@ -172,11 +172,11 @@ class _SearchListState extends State<SearchList> {
     setState(() {
       this.actionIcon = Icon(
         Icons.search,
-        // color: Colors.orange,
+        color: Colors.white,
       );
       this.appBarTitle = Text(
         "Search Diet",
-        // style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.white),
       );
       _IsSearching = false;
       _searchQuery.clear();

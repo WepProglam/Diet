@@ -11,7 +11,7 @@ class SearchFood extends StatelessWidget {
 }
 
 class Building {
-  num id; //나중에 바꿔야 함
+  String code; //나중에 바꿔야 함
   String foodName;
   num calories;
   num carbohydrate;
@@ -19,7 +19,7 @@ class Building {
   num fat;
 
   Building(
-      {this.id,
+      {this.code,
       this.foodName,
       this.calories,
       this.carbohydrate,
@@ -104,7 +104,7 @@ class _SearchListState extends State<SearchList> {
     for (var item in foodNameEX) {
       print(item);
       _list.add(
-        Building(id: i++, foodName: item.foodName, calories: item.kcal),
+        Building(code: item.code, foodName: item.foodName, calories: item.kcal),
       );
     }
     _searchList = _list;
@@ -132,7 +132,7 @@ class _SearchListState extends State<SearchList> {
 
   Widget appBarTitle = Text(
     "Search Food",
-    // style: TextStyle(color: Colors.white),
+    style: TextStyle(color: Colors.white),
   );
   Icon actionIcon = Icon(
     Icons.search,
@@ -141,9 +141,9 @@ class _SearchListState extends State<SearchList> {
 
   Widget buildBar(BuildContext context) {
     return AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         centerTitle: true,
         title: appBarTitle,
-        // iconTheme: IconThemeData(color: Colors.orange),
         backgroundColor: Color(0xFF69C2B0),
         actions: <Widget>[
           IconButton(
@@ -157,9 +157,9 @@ class _SearchListState extends State<SearchList> {
                   );
                   this.appBarTitle = TextField(
                     controller: _searchQuery,
-                    // style: TextStyle(
-                    //   color: Colors.orange,
-                    // ),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                     decoration: InputDecoration(
                         hintText: "Search here..",
                         hintStyle: TextStyle(color: Colors.white)),
@@ -186,11 +186,11 @@ class _SearchListState extends State<SearchList> {
     setState(() {
       this.actionIcon = Icon(
         Icons.search,
-        // color: Colors.orange,
+        color: Colors.white,
       );
       this.appBarTitle = Text(
         "Search Food",
-        // style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.white),
       );
       _IsSearching = false;
       _searchQuery.clear();
@@ -215,11 +215,11 @@ class Uiitem extends StatelessWidget {
           //add Diet 페이지에서 넘어왔을 경우
           // 이거 수정해서 음식 데이터 보낼 거임
           if (args['pre'] == 'addDiet') {
-            Navigator.pop(context);
+            Navigator.pop(context, this.building.code);
           }
           // 그 외 일반적인 경우
           else {
-            print(building.id);
+            print(building.code);
           }
         },
         child: Center(
