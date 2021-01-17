@@ -50,7 +50,8 @@ class _FoodListState extends State<FoodList> {
     }
   }
 
-  Widget buildFood(ListContents food) {
+  Widget buildFood(ListContents food, int index) {
+    //받는 매게변수 index 추가
     return Center(
       child: Row(
         children: [
@@ -71,9 +72,17 @@ class _FoodListState extends State<FoodList> {
             ),
           ),
           Text('g'),
-          Spacer(
+          Expanded(
             flex: 1,
-          ),
+            child: FlatButton(
+              child: Icon(Icons.cancel),
+              onPressed: () {
+                setState(() {
+                  foodList.removeAt(index);
+                });
+              },
+            ),
+          )
         ],
       ),
     );
@@ -167,7 +176,7 @@ class _FoodListState extends State<FoodList> {
                       padding: EdgeInsets.all(8),
                       itemCount: foodList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return buildFood(foodList[index]);
+                        return buildFood(foodList[index], index);
                       },
                       separatorBuilder: (BuildContext context, int index) =>
                           Divider(),
