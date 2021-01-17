@@ -92,9 +92,10 @@ class _CalcDietState extends State<CalcDiet> {
                       for (var i in foods)
                         Container(
                           child: Center(child: Text(" " + i + "  249 Kcal\n")),
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black)),
-                        ),
+                          //   decoration: BoxDecoration(
+                          //       border: Border.all(color: Colors.black)),
+                          // ),
+                        )
                     ],
                   ))),
           Spacer(
