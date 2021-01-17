@@ -51,7 +51,9 @@ class _PersonalForm extends State<PersonalForm> {
 
   Future<Map> getHint() async {
     var hint1 = {};
+
     await dbHelper.getAllPerson().then((value) {
+      print(value.last.toMap());
       hint1['height'] = value.isNotEmpty ? value.last.height : null;
       hint1['weight'] = value.isNotEmpty ? value.last.weight : null;
       hint1['bmi'] = value.isNotEmpty ? value.last.bmi : null;
@@ -65,14 +67,26 @@ class _PersonalForm extends State<PersonalForm> {
   void getHintGet() async {
     hint = await getHint();
     if (hint.isNotEmpty) {
-      setState(() {});
+      setState(() {
+        _bmiController.text = hint['bmi'] == null ? "" : hint['bmi'].toString();
+        _weightController.text =
+            hint['weight'] == null ? "" : hint['weight'].toString();
+        _heightController.text =
+            hint['height'] == null ? "" : hint['height'].toString();
+        _strengthController.text =
+            hint['muscleMass'] == null ? "" : hint['muscleMass'].toString();
+      });
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
     getHintGet();
+    super.didChangeDependencies();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -137,21 +151,18 @@ class _PersonalForm extends State<PersonalForm> {
                     .format(DateTime.now())
                     .toString();
 
+                print(_heightController.value.text);
+
                 var person = Person(
                     height: _heightController.value.text,
                     weight: _weightController.value.text,
                     bmi: _bmiController.value.text,
                     muscleMass: _strengthController.value.text,
                     purpose: purpose_index - 1,
-                    time: time);
+                    time: time,
+                    achieve: 0);
 
                 dbHelper.createHelper(person);
-
-                dbHelper.getAllPerson().then((value) {
-                  print('length : ${value.length}');
-
-                  //print(value.last.time);
-                });
               }
 
               //print(_heightController.text);

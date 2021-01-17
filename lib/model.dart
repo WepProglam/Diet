@@ -10,6 +10,7 @@ class Person {
   var muscleMass;
   var purpose;
   String time;
+  num achieve;
 
   Person(
       {this.height,
@@ -17,7 +18,8 @@ class Person {
       this.bmi,
       this.muscleMass,
       this.purpose,
-      this.time});
+      this.time,
+      this.achieve});
 
   Map<String, dynamic> toMap() {
     return {
@@ -26,7 +28,8 @@ class Person {
       'bmi': bmi,
       'muscleMass': muscleMass,
       'purpose': purpose,
-      'time': time
+      'time': time,
+      'achieve': achieve
     };
   }
 }

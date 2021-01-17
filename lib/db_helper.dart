@@ -32,7 +32,8 @@ class DBHelperPerson {
             bmi REAL,
             muscleMass REAL,
             purpose INTEGER,
-            time TEXT
+            time TEXT,
+            achieve REAL
             )
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
@@ -76,7 +77,8 @@ class DBHelperPerson {
             bmi: res.first['bmi'],
             muscleMass: res.first['muscleMass'],
             purpose: res.first['purpose'],
-            time: res.first['time'])
+            time: res.first['time'],
+        achieve: res.first['achieve'])
         : Null;
   }
 
@@ -93,7 +95,8 @@ class DBHelperPerson {
                   bmi: c['bmi'],
                   muscleMass: c['muscleMass'],
                   purpose: c['purpose'],
-                  time: c['time']),
+                  time: c['time'],
+                  achieve: c['achieve']),
             )
             .toList()
         : [];
