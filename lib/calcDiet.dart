@@ -143,20 +143,25 @@ class _CalcDietState extends State<CalcDiet> {
   Widget addOrFix(String key) {
     if (visibleMeal[key]['added']) {
       return FlatButton(
-          child: Column(
-            children: [
-              for (var i in foods)
-                Container(
-                  child: Center(
-                      child: Text(
-                    " " + i + "  249 Kcal\n",
-                    style: TextStyle(
-                        color: Color(0xff285943), fontWeight: FontWeight.w600),
-                  )),
-                  //   decoration: BoxDecoration(
-                  //       border: Border.all(color: Colors.black)),
-                )
-            ],
+          child: Container(
+            height: 300,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (var i in foods)
+                  Container(
+                    child: Center(
+                        child: Text(
+                      " " + i + "  249 Kcal\n",
+                      style: TextStyle(
+                          color: Color(0xff285943),
+                          fontWeight: FontWeight.w600),
+                    )),
+                    //   decoration: BoxDecoration(
+                    //       border: Border.all(color: Colors.black)),
+                  )
+              ],
+            ),
           ),
           onPressed: () {
             setState(() {
@@ -167,12 +172,13 @@ class _CalcDietState extends State<CalcDiet> {
     } else {
       return FlatButton(
           child: Container(
-              alignment: Alignment(0, 0),
+              height: 300,
               child: Center(
                   child: Container(
-                alignment: Alignment(1.0, -1.0),
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: Icon(Icons.add_circle_outline),
+                child: Icon(
+                  Icons.add_circle_outline,
+                  size: 25,
+                ),
                 decoration: BoxDecoration(color: Color(0xff9DC8C8)),
               ))),
           onPressed: () {
