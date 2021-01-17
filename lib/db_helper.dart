@@ -348,13 +348,9 @@ class DBHelperDiet {
     return await openDatabase(path, version: 1, onCreate: (db, version) async {
       await db.execute('''
           CREATE TABLE $tableName(
-            dietName Text
-            foodCode1 TEXT
-            foodCode2 TEXT
-            foodCode3 TEXT  
-            foodCode4 TEXT  
-            foodCode5 TEXT  
-            foodCode6 TEXT
+            dietName TEXT
+            foodCodes TEXT
+            foodMasses TEXT
             )
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
@@ -369,19 +365,15 @@ class DBHelperDiet {
     );
   }
 
-  getFood(String dietName) async {
+  getDiet(String dietName) async {
     final db = await database;
     var res = await db
         .rawQuery("SELECT * FROM $tableName WHERE dietName = '$dietName'");
     return res.isNotEmpty
         ? Diet(
             dietName: res.first['dietName'],
-            foodCode1: res.first['foodCode1'],
-            foodCode2: res.first['foodCode2'],
-            foodCode3: res.first['foodCode3'],
-            foodCode4: res.first['foodCode4'],
-            foodCode5: res.first['foodCode5'],
-            foodCode6: res.first['foodCode6'],
+            foodCodes: res.first['foodCodes'],
+            foodMasses: res.first['foodMasses'],
           )
         : Null;
   }
@@ -394,12 +386,8 @@ class DBHelperDiet {
             .map(
               (c) => Diet(
                 dietName: c['dietName'],
-                foodCode1: c['foodCode1'],
-                foodCode2: c['foodCode2'],
-                foodCode3: c['foodCode3'],
-                foodCode4: c['foodCode4'],
-                foodCode5: c['foodCode5'],
-                foodCode6: c['foodCode6'],
+                foodCodes: c['foodCodes'],
+                foodMasses: c['foodMasses'],
               ),
             )
             .toList()
