@@ -378,25 +378,28 @@ class _TypeFoodName extends State<TypeFoodName> {
             if (text != "") {
               await dbHelper.filterFoods(text.toString()).then((value) async {
                 foodList = [];
+
                 var i = 0;
                 for (var item in value) {
                   if (i < 5) {
-                    foodList.add(ListTile(
-                      title: Text(item.foodName),
-                      subtitle: Text("${item.kcal}Kcal  ${item.isItMine}"),
-                      onTap: () {
-                        Map foodInfo = {};
-                        controller.text = item.foodName;
-                        foodInfo = item.toMap();
-                        setState(() {
-                          isItSelected = true;
-                        });
+                    foodList.insert(
+                        0,
+                        ListTile(
+                          title: Text(item.foodName),
+                          subtitle: Text("${item.kcal}Kcal  ${item.isItMine}"),
+                          onTap: () {
+                            Map foodInfo = {};
+                            controller.text = item.foodName;
+                            foodInfo = item.toMap();
+                            setState(() {
+                              isItSelected = true;
+                            });
 
-                        streamController.add(foodInfo);
-                        _focusNode.unfocus();
-                        foodList = [];
-                      },
-                    ));
+                            streamController.add(foodInfo);
+                            _focusNode.unfocus();
+                            foodList = [];
+                          },
+                        ));
                     i += 1;
                   } else {
                     break;
