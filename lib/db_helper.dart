@@ -325,3 +325,97 @@ class DBHelperMyTempoFood {
     db.rawDelete('DELETE FROM $tableName');
   }
 }
+
+class DBHelperDiet {
+  final String dBName = 'Diet';
+  final String tableName = 'Diet';
+  DBHelperDiet._();
+  static final DBHelperDiet _db = DBHelperDiet._();
+  factory DBHelperDiet() => _db;
+
+  static Database _database;
+
+  Future<Database> get database async {
+    if (_database != null) return _database;
+
+    _database = await initDB();
+    return _database;
+  }
+
+  initDB() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, "$dBName.db");
+    return await openDatabase(path, version: 1, onCreate: (db, version) async {
+      await db.execute('''
+          CREATE TABLE $tableName(
+            dietName Text
+            foodCode1 TEXT
+            foodCode2 TEXT
+            foodCode3 TEXT  
+            foodCode4 TEXT  
+            foodCode5 TEXT  
+            foodCode6 TEXT
+            )
+        ''');
+    }, onUpgrade: (db, oldVersion, newVersion) {});
+  }
+
+  createData(Diet diet) async {
+    final db = await database;
+    await db.insert(
+      tableName,
+      diet.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  getFood(String dietName) async {
+    final db = await database;
+    var res = await db
+        .rawQuery("SELECT * FROM $tableName WHERE dietName = '$dietName'");
+    return res.isNotEmpty
+        ? Diet(
+            dietName: res.first['dietName'],
+            foodCode1: res.first['foodCode1'],
+            foodCode2: res.first['foodCode2'],
+            foodCode3: res.first['foodCode3'],
+            foodCode4: res.first['foodCode4'],
+            foodCode5: res.first['foodCode5'],
+            foodCode6: res.first['foodCode6'],
+          )
+        : Null;
+  }
+
+  Future<List<Food>> getAllMyDiet() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM $tableName");
+    List<Food> list = res.isNotEmpty
+        ? res
+            .map(
+              (c) => Diet(
+                dietName: c['dietName'],
+                foodCode1: c['foodCode1'],
+                foodCode2: c['foodCode2'],
+                foodCode3: c['foodCode3'],
+                foodCode4: c['foodCode4'],
+                foodCode5: c['foodCode5'],
+                foodCode6: c['foodCode6'],
+              ),
+            )
+            .toList()
+        : [];
+    return list;
+  }
+
+  deleteDiet(String dietName) async {
+    final db = await database;
+    var res =
+        db.rawDelete("DELETE FROM $tableName WHERE dietName = '$dietName'");
+    return res;
+  }
+
+  deleteAllDiet() async {
+    final db = await database;
+    db.rawDelete('DELETE FROM $tableName');
+  }
+}

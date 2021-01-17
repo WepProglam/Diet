@@ -71,3 +71,34 @@ class Food {
     };
   }
 }
+
+class Diet {
+  String dietName;
+  String foodCode1;
+  String foodCode2;
+  String foodCode3;
+  String foodCode4;
+  String foodCode5;
+  String foodCode6;
+
+  Diet(
+      {this.dietName,
+      this.foodCode1,
+      this.foodCode2,
+      this.foodCode3,
+      this.foodCode4,
+      this.foodCode5,
+      this.foodCode6});
+
+  Map<String, dynamic> toMap() {
+    return {
+      "dietName": dietName,
+      "foodCode1": foodCode1,
+      "foodCode2": foodCode2,
+      "foodCode3": foodCode3,
+      "foodCode4": foodCode4,
+      "foodCode5": foodCode5,
+      "foodCode6": foodCode6,
+    };
+  }
+}
