@@ -26,10 +26,8 @@ class _CalcDietState extends State<CalcDiet> {
               Spacer(
                 flex: 1,
               ),
-              addDiet("아침"),
-              addDiet("점심"),
-              addDiet("저녁"),
-              addDiet("간식"),
+              addDiet("아침", "점심"),
+              addDiet("저녁", "간식"),
               Spacer(
                 flex: 1,
               ),
@@ -58,49 +56,134 @@ class _CalcDietState extends State<CalcDiet> {
             )));
   }
 
-  Widget addDiet(String key) {
+  Widget addDiet(String key1, String key2) {
     return Expanded(
-        flex: 3,
+        flex: 4,
         child: Row(children: [
           Spacer(
-            flex: 1,
+            flex: 2,
           ),
           Expanded(
-              flex: 8,
+              flex: 12,
               child: Container(
                   margin: EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blueAccent)),
+                  decoration: BoxDecoration(color: Color(0xff9DC8C8)
+                      // border: Border.all(color: Colors.blueAccent)
+                      ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      FlatButton(
-                        child: ListTile(
-                            leading: Text(key),
-                            trailing: Text(
-                              visibleMeal[key]["added"] ? "수정하기" : "추가하기",
-                            )),
-                        onPressed: () {
-                          setState(() {
-                            visibleMeal[key]["added"] = true;
-                          });
-
-                          Navigator.pushNamed(context, '/savedDiet');
-                        },
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.fromLTRB(8, 10, 0, 0),
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            child: Text(
+                              key1,
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                            decoration: BoxDecoration(color: Color(0xFF69C2B0)),
+                          ),
+                        ],
                       ),
-                      for (var i in foods)
-                        Container(
-                          child: Center(child: Text(" " + i + "  249 Kcal\n")),
-                          //   decoration: BoxDecoration(
-                          //       border: Border.all(color: Colors.black)),
-                          // ),
-                        )
+                      Divider(
+                        color: Color(0xffD7FFF1),
+                      ),
+                      Container(
+                        child: addOrFix(key1),
+                      )
                     ],
                   ))),
           Spacer(
             flex: 1,
+          ),
+          Expanded(
+              flex: 12,
+              child: Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(color: Color(0xff9DC8C8)
+                      // border: Border.all(color: Colors.blueAccent)
+                      ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.fromLTRB(8, 10, 0, 0),
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            child: Text(
+                              key2,
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                            decoration: BoxDecoration(color: Color(0xFF69C2B0)),
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        color: Color(0xffD7FFF1),
+                      ),
+                      Container(
+                        child: addOrFix(key2),
+                      )
+                    ],
+                  ))),
+          Spacer(
+            flex: 2,
           )
         ]));
+  }
+
+  Widget addOrFix(String key) {
+    if (visibleMeal[key]['added']) {
+      return FlatButton(
+          child: Column(
+            children: [
+              for (var i in foods)
+                Container(
+                  child: Center(
+                      child: Text(
+                    " " + i + "  249 Kcal\n",
+                    style: TextStyle(
+                        color: Color(0xff285943), fontWeight: FontWeight.w600),
+                  )),
+                  //   decoration: BoxDecoration(
+                  //       border: Border.all(color: Colors.black)),
+                )
+            ],
+          ),
+          onPressed: () {
+            setState(() {
+              visibleMeal[key]["added"] = false;
+              Navigator.pushNamed(context, '/savedDiet');
+            });
+          });
+    } else {
+      return FlatButton(
+          child: Container(
+              alignment: Alignment(0, 0),
+              child: Center(
+                  child: Container(
+                alignment: Alignment(1.0, -1.0),
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Icon(Icons.add_circle_outline),
+                decoration: BoxDecoration(color: Color(0xff9DC8C8)),
+              ))),
+          onPressed: () {
+            setState(() {
+              visibleMeal[key]["added"] = true;
+              Navigator.pushNamed(context, '/savedDiet');
+            });
+          });
+      //   decoration: BoxDecoration(
+      //       border: Border.all(color: Colors.black)),
+
+    }
   }
 }
