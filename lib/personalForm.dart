@@ -53,6 +53,7 @@ class _PersonalForm extends State<PersonalForm> {
     var hint1 = {};
 
     await dbHelper.getAllPerson().then((value) {
+      print(value);
       print(value.last.toMap());
       hint1['height'] = value.isNotEmpty ? value.last.height : null;
       hint1['weight'] = value.isNotEmpty ? value.last.weight : null;
@@ -91,9 +92,6 @@ class _PersonalForm extends State<PersonalForm> {
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
           currentFocus.unfocus();
-        },
-        onDoubleTap: () {
-          // Navigator.pushNamed(context, '/saving');
         },
         child: Scaffold(
           backgroundColor: Color(0xFFFFFEF5),
@@ -147,9 +145,8 @@ class _PersonalForm extends State<PersonalForm> {
             onPressed: () {
               if (_formKey.currentState.validate()) {
                 // dbHelper.deleteAllPerson();
-                String time = DateFormat('yyyy-MM-dd kk:mm')
-                    .format(DateTime.now())
-                    .toString();
+                String time =
+                    DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
 
                 print(_heightController.value.text);
 

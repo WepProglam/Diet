@@ -40,11 +40,11 @@ class DBHelperPerson {
   }
 
   createHelper(Person person) {
-    getAllPerson().then((value) {
-      print(value.isNotEmpty);
+    getAllPerson().then((value) async {
       if (value.isNotEmpty) {
         if (value.last.time == person.time) {
-          return null;
+          await deletePerson(value.last.time);
+          createData(person);
         } else {
           createData(person);
         }
@@ -78,7 +78,7 @@ class DBHelperPerson {
             muscleMass: res.first['muscleMass'],
             purpose: res.first['purpose'],
             time: res.first['time'],
-        achieve: res.first['achieve'])
+            achieve: res.first['achieve'])
         : Null;
   }
 
@@ -105,9 +105,9 @@ class DBHelperPerson {
   }
 
   //Delete
-  deletePerson(int id) async {
+  deletePerson(String time) async {
     final db = await database;
-    var res = db.rawDelete('DELETE FROM $tableName WHERE id = ?', [id]);
+    var res = db.rawDelete("DELETE FROM $tableName WHERE time = '$time'");
     return res;
   }
 
