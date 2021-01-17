@@ -21,7 +21,9 @@ StreamController<bool> streamControllerBool = mainStream.streamControllerBool;
 
 class AddFood extends StatefulWidget {
   final Stream<Map> stream;
+  Map myTempoFood;
   AddFood({this.stream});
+
   @override
   _AddFoodState createState() => _AddFoodState();
 }
@@ -56,7 +58,6 @@ class _AddFoodSub extends State<AddFoodSub> {
   final _ulController = TextEditingController();
   final _foodNameController = TextEditingController();
   final dbHelper = DBHelperFood();
-  final dBHelperMyTempoFood = DBHelperMyTempoFood();
   var foodList = <Widget>[];
   final FocusNode _focusNode = FocusNode();
   var foodInfo = {};
@@ -78,7 +79,7 @@ class _AddFoodSub extends State<AddFoodSub> {
 
   @override
   Widget build(BuildContext context) {
-    getInfo();
+    // getInfo();
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: basicAppBar('Add Food', context),
@@ -125,48 +126,55 @@ class _AddFoodSub extends State<AddFoodSub> {
   }
 
   void getInfo() async {
-    //여기 문제 있음
-    await dBHelperMyTempoFood.getAllFood().then((value) {
-      print("get info");
-      print(value.length > 0);
-      if (value.length > 0) {
-        foodInfo = value[0].toMap();
-        tempo = true;
-        dBHelperMyTempoFood.deleteAllFood();
-        setState(() {
-          _carboController.text = myRounder(foodInfo['carbohydrate']);
-          _fatController.text = myRounder(foodInfo['fat']);
-          _proController.text = myRounder(foodInfo['protein']);
-          _ulController.text = myRounder(foodInfo['kcal']);
-          _foodNameController.text = foodInfo['foodName'];
-        });
-      } else {
-        tempo = false;
-      }
-    });
+    final Map<String, Map> args = ModalRoute.of(context).settings.arguments;
+    if (args != null) {
+      //savedFood에서 넘겼을때
+      foodInfo = args["myTempoFood"];
+      tempo = true;
+      setState(() {
+        _carboController.text = myRounder(foodInfo['carbohydrate']);
+        _fatController.text = myRounder(foodInfo['fat']);
+        _proController.text = myRounder(foodInfo['protein']);
+        _ulController.text = myRounder(foodInfo['kcal']);
+        _foodNameController.text = foodInfo['foodName'];
+      });
+      // print("this is args $args");
+      // streamController.add(foodInfo);
+    } else {
+      //일반적인 상황
+      tempo = false;
+    }
   }
 
   @override
   void initState() {
     widget.streamMap.listen((info) {
-      print(info.containsKey('fat'));
-      if (info.containsKey('fat') == false) {
-        info['carbohydrate'] = 0.0;
-        info['fat'] = 0.0;
-        info['protein'] = 0.0;
-        info['kcal'] = 0.0;
+      if (tempo == false) {
+        if (info.containsKey('fat') == false) {
+          info['carbohydrate'] = 0.0;
+          info['fat'] = 0.0;
+          info['protein'] = 0.0;
+          info['kcal'] = 0.0;
+        }
+        foodInfo = info;
+        mySetState(info);
       }
-      foodInfo = info;
-      mySetState(info);
     });
     widget.streamBool.listen((isItCustom) {
+      print("listen cutom $foodInfo");
       streamController.add(foodInfo);
     });
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    getInfo();
+    super.didChangeDependencies();
+  }
+
   void mySetState(Map info) {
-    if(this.mounted){
+    if (this.mounted) {
       setState(() {
         _carboController.text = myRounder(info['carbohydrate']);
         _fatController.text = myRounder(info['fat']);
@@ -478,7 +486,10 @@ class _TransFoodFABState extends State<TransFoodFAB>
     ));
 
     widget.stream.listen((foodInfo) {
+      print("==========================");
+      print(foodInfo);
       myFoodInfo = foodInfo;
+      print("this is myFoodinfo1 $myFoodInfo");
     });
 
     super.initState();
@@ -543,7 +554,8 @@ class _TransFoodFABState extends State<TransFoodFAB>
       child: FloatingActionButton(
         heroTag: null,
         onPressed: () async {
-          print("myfoodinfo = $myFoodInfo");
+          await streamControllerBool.add(isItCutom);
+          print("myfoodinfoasdf = $myFoodInfo");
           if (_formKey.currentState.validate()) {
             showAlertDialog(context);
           }
@@ -584,6 +596,7 @@ class _TransFoodFABState extends State<TransFoodFAB>
     Widget okButton = FlatButton(
         child: Text("OK"),
         onPressed: () async {
+          print("this is myFoodinfo2 $myFoodInfo");
           await dbHelperFood.getFood(myFoodInfo['code']).then((value) async {
             Food dbFoodClass = value;
             dbFoodClass.selected += 1;
@@ -600,10 +613,13 @@ class _TransFoodFABState extends State<TransFoodFAB>
                 selected: myFoodInfo['selected'] + 1); //select 1회 증가
 
             dbHelperFood.deleteFood(myFoodInfo['code']);
+            print("++++++++++++++++++");
+            print(myFoodInfo['isItMine']);
 
             if (myFoodInfo['isItMine'] == 'T') {
               await dbHelperFood
                   .createData(foodClass); //myFoodInfo에 저장된 데이터로 새로 저장
+              print("new food ${foodClass.toMap()}");
               Navigator.pop(context);
             } else {
               var bytes = utf8.encode(myFoodInfo['foodName']);
@@ -622,7 +638,6 @@ class _TransFoodFABState extends State<TransFoodFAB>
                 }
               });
             }
-            streamControllerBool.add(isItCutom);
           });
         });
 

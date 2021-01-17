@@ -34,11 +34,10 @@ class FoodList extends StatefulWidget {
 class _FoodListState extends State<FoodList> {
   final dbHelperFood = DBHelperFood();
   List<Food> foodNameEX = [];
-  final dBHelperMyTempoFood = DBHelperMyTempoFood();
 
   void getInfo() async {
     await dbHelperFood.getAllMyFood().then((val) {
-      print(val.length);
+      foodNameEX = [];
       for (var item in val) {
         foodNameEX.add(item);
       }
@@ -49,14 +48,14 @@ class _FoodListState extends State<FoodList> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     getInfo();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     //실제로는 db에서 얻어와야 함
+    // getInfo();
 
     return GridView.count(
       padding: EdgeInsets.all(8),
@@ -71,10 +70,12 @@ class _FoodListState extends State<FoodList> {
             child: FlatButton(
               //onPressed에 식단 설정 페이지로 이동하는 함수 넣기
               onPressed: () async {
-                print(foodNameEX[index].toMap());
-                await dBHelperMyTempoFood.createData(foodNameEX[index]);
-                Navigator.pushNamed(context, '/addFood');
-                print(foodNameEX[index].toMap());
+                Navigator.pushNamed(context, '/addFood',
+                    arguments: <String, Map>{
+                      "myTempoFood": foodNameEX[index].toMap()
+                    }).then((_) {
+                  getInfo();
+                });
               },
 
               child: ListTile(

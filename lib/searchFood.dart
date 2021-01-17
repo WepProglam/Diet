@@ -44,7 +44,6 @@ class _SearchListState extends State<SearchList> {
 
   final dbHelperFood = DBHelperFood();
   List<Food> foodNameEX = [];
-  final dBHelperMyTempoFood = DBHelperMyTempoFood();
 
   _SearchListState() {
     _searchQuery.addListener(() {

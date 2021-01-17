@@ -42,37 +42,36 @@ class _CalcDietState extends State<CalcDiet> {
   }
 
   Widget diet(String key) {
-    return FlatButton(
-        onPressed: () {
-          setState(() {
-            visibleMeal[key]["visiblity"] = !visibleMeal[key]["visiblity"];
-          });
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              // border: Border.all(color: Colors.black),
+    return Expanded(
+        flex: 1,
+        child: FlatButton(
+            onPressed: () {
+              setState(() {
+                visibleMeal[key]["visiblity"] = !visibleMeal[key]["visiblity"];
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  // border: Border.all(color: Colors.black),
+                  ),
+              child: Text(
+                key,
+                style: TextStyle(fontSize: 30),
               ),
-          child: Text(
-            key,
-            style: TextStyle(fontSize: 50),
-          ),
-        ));
+            )));
   }
 
   Widget addDiet(String key) {
-    return AnimatedOpacity(
-        // If the widget is visible, animate to 0.0 (invisible).
-        // If the widget is hidden, animate to 1.0 (fully visible).
-        opacity: visibleMeal[key]["visiblity"] ? 1.0 : 0.0,
-        duration: Duration(milliseconds: 300),
-        // The green box must be a child of the AnimatedOpacity widget.
-        child: Container(
-            width: 300,
-            height: 200,
-            decoration: BoxDecoration(
-                // border: Border.all(color: Colors.black),
-                ),
-            child: Column(
+    return Expanded(
+        flex: 4,
+        child: AnimatedOpacity(
+            // If the widget is visible, animate to 0.0 (invisible).
+            // If the widget is hidden, animate to 1.0 (fully visible).
+            opacity: visibleMeal[key]["visiblity"] ? 1.0 : 0.0,
+            duration: Duration(milliseconds: 300),
+            // The green box must be a child of the AnimatedOpacity widget.
+            child: Container(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -85,12 +84,20 @@ class _CalcDietState extends State<CalcDiet> {
                     ),
                   ),
                   onPressed: () {
-                    visibleMeal[key]["added"] = true;
+                    setState(() {
+                      visibleMeal[key]["added"] = true;
+                    });
+
                     Navigator.pushNamed(context, '/savedDiet');
                   },
                 ),
-                for (var i in foods) Text(i + "  249 Kcal\n"),
+                for (var i in foods)
+                  Container(
+                    child: Center(child: Text(" " + i + "  249 Kcal\n")),
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.black)),
+                  ),
               ],
-            )));
+            ))));
   }
 }
