@@ -76,7 +76,6 @@ class _FoodListState extends State<FoodList> {
               onChanged: (text) {
                 setState(() {
                   foodList[index].mass = num.parse(text);
-                  print(text);
                 });
               },
             ),
@@ -151,6 +150,12 @@ class _FoodListState extends State<FoodList> {
         return true;
       }
     }
+    return false;
+  }
+
+  String makeFoodInfo(List<ListContents> list) {
+    String str;
+    for (var item in list) {}
   }
 
   @override
@@ -277,10 +282,12 @@ class _FoodListState extends State<FoodList> {
                           Scaffold.of(context).showSnackBar(snackBar);
                         } else {
                           //db에 저장
+                          var diet = Diet(
+                            dietName: dietNameController.text,
+                            foodInfo: null,
+                          );
+                          dbHelperDiet.createData(diet);
                         }
-
-                        //var diet = Diet(dietName: dietName, foodInfo: foodInfo);
-                        //dbHelperDiet.createData(diet);
                       }),
                 ),
                 Spacer(
