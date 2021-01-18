@@ -58,14 +58,34 @@ class _DietListState extends State<DietList> {
         (index) {
           return Card(
             margin: EdgeInsets.all(8),
-            child: FlatButton(
-              //onPressed에 식단 설정 페이지로 이동하는 함수 넣기
-              onPressed: () {},
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: FlatButton(
+                    //onPressed에 식단 설정 페이지로 이동하는 함수 넣기
+                    onPressed: () {},
 
-              child: Text(
-                '${dietNameEX[index].dietName}',
-                style: TextStyle(fontSize: 30),
-              ),
+                    child: Text(
+                      '${dietNameEX[index].dietName}',
+                      style: TextStyle(fontSize: 40),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    iconSize: 20,
+                    onPressed: () {
+                      setState(() {
+                        dbHelperDiet.deleteDiet(dietNameEX[index].dietName);
+                        dietNameEX.removeAt(index);
+                      });
+                    },
+                    icon: Icon(Icons.delete),
+                  ),
+                ),
+              ],
             ),
             color: Colors.white70,
           );
