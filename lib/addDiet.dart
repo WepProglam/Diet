@@ -6,6 +6,8 @@ import 'appBar.dart';
 
 import 'db_helper.dart';
 
+final dbHelperFood = DBHelperFood();
+
 class AddDiet extends StatelessWidget {
   const AddDiet({Key key}) : super(key: key);
 
@@ -39,6 +41,7 @@ class _FoodListState extends State<FoodList> {
   List<ListContents> foodList = [];
   final dbHelperDiet = DBHelperDiet();
   TextEditingController dietNameController = TextEditingController();
+  List<TextEditingController> foodMassController = [];
 
   void addItem(List<ListContents> food) {
     setState(() {
@@ -55,6 +58,9 @@ class _FoodListState extends State<FoodList> {
   }
 
   Widget buildFood(ListContents food, int index) {
+    TextEditingController _controller = TextEditingController();
+    _controller.text = initialVal(food.mass);
+    foodMassController.add(_controller);
     //받는 매게변수 index 추가
     return Center(
       child: Row(
@@ -69,7 +75,8 @@ class _FoodListState extends State<FoodList> {
           Expanded(
             flex: 2,
             child: TextFormField(
-              initialValue: initialVal(food.mass),
+              // initialValue: initialVal(food.mass),
+              controller: foodMassController[index],
               decoration: InputDecoration(hintText: 'mass'),
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
@@ -88,6 +95,9 @@ class _FoodListState extends State<FoodList> {
               onPressed: () {
                 setState(() {
                   foodList.removeAt(index);
+                  for (var item in foodMassController) {
+                    item.text = "";
+                  }
                 });
               },
             ),
@@ -248,7 +258,15 @@ class _FoodListState extends State<FoodList> {
                           var snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');
                           Scaffold.of(context).showSnackBar(snackBar);
                         } else if (numOfMass(foodList) == 3) {
-                          print('correct!');
+                          calculate(foodList).then((value) {
+                            setState(() {
+                              for (var i = 0; i < 3; i++) {
+                                print(value[i].toString());
+                                foodMassController[i].text =
+                                    value[i].toString();
+                              }
+                            });
+                          });
                         } else {
                           print(numOfMass(foodList));
                           var snackBar =
@@ -307,5 +325,81 @@ class _FoodListState extends State<FoodList> {
         ],
       ),
     );
+  }
+
+  double detDouble(List<List<double>> matrix, int row, int col) {
+    List<double> mat = [];
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        if (i != row && j != col) {
+          mat.add(matrix[i][j]);
+        }
+      }
+    }
+    return mat[0] * mat[3] - mat[1] * mat[2];
+  }
+
+  double detTriple(List<List<double>> matrix) {
+    return (matrix[0][0] * detDouble(matrix, 0, 0) -
+        matrix[0][1] * detDouble(matrix, 0, 1) +
+        matrix[0][2] * detDouble(matrix, 0, 2));
+  }
+
+  Future<List<double>> calculate(List<ListContents> foodList) async {
+    List<Map> foods = [];
+    double determinant, x_det, y_det, z_det;
+    List<List<double>> matrix = [];
+    List<List<double>> matrixTemp = [];
+    List<double> carbohydrate = [];
+    List<double> protein = [];
+    List<double> fat = [];
+    double totalCalorie = 600; //일단 가정
+    List<double> ratio = [5, 3, 2]; //탄 단 지 순서 (가정)
+    double x, y, z; //각 음식별 무게
+
+    for (var item in foodList) {
+      Food food = await dbHelperFood.getFood(item.code);
+      foods.add(food.toMap());
+      carbohydrate.add(food.carbohydrate);
+      protein.add(food.protein);
+      fat.add(food.fat);
+    }
+    carbohydrate.add(totalCalorie / ratio[0]);
+    protein.add(totalCalorie / ratio[1]);
+    fat.add(totalCalorie / ratio[2]);
+
+    matrix = [carbohydrate, protein, fat];
+
+    //디터미넌트
+    matrixTemp = selectRow(matrix, 0, 1, 2);
+    determinant = detTriple(matrixTemp);
+
+    //x_디터미넌트
+    matrixTemp = selectRow(matrix, 3, 1, 2);
+    x_det = detTriple(matrixTemp);
+
+    //y_디터미넌트
+    matrixTemp = selectRow(matrix, 0, 3, 2);
+    y_det = detTriple(matrixTemp);
+
+    //z_디터미넌트
+    matrixTemp = selectRow(matrix, 0, 1, 3);
+    z_det = detTriple(matrixTemp);
+
+    //x,y,z 계산
+    x = x_det / determinant;
+    y = y_det / determinant;
+    z = z_det / determinant;
+
+    return [x, y, z];
+  }
+
+  List<List<double>> selectRow(List<List<double>> matrix, int x, int y, int z) {
+    var temp = [
+      [matrix[0][x], matrix[0][y], matrix[0][z]],
+      [matrix[1][x], matrix[1][y], matrix[1][z]],
+      [matrix[2][x], matrix[2][y], matrix[2][z]]
+    ];
+    return temp;
   }
 }
