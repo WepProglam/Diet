@@ -75,7 +75,7 @@ class _FoodListState extends State<FoodList> {
               textAlign: TextAlign.center,
               onChanged: (text) {
                 setState(() {
-                  foodList[index].mass = num.parse('42');
+                  foodList[index].mass = num.parse(text);
                 });
               },
             ),
@@ -263,26 +263,12 @@ class _FoodListState extends State<FoodList> {
                   child: IconButton(
                       icon: Icon(Icons.add, color: Color(0xFF69C2B0)),
                       onPressed: () {
-                        //이거 계산 버튼에 넣어야 되지 않을까?
-                        if (foodList.length < 3) {
+                        if () {
                           //최소 3개 선택하라는 경고창
                           final snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');
                           Scaffold.of(context).showSnackBar(snackBar);
-                        } else if (foodList.length == 3) {
-                          String dietName = dietNameController.value.text;
-                          Map foodInfo = {dietName: {}};
-                          for (var item in foodList) {
-                            foodInfo[dietName][item.code] = {
-                              "foodName": item.foodName,
-                              "foodMass": item.mass
-                            };
-                          }
-                          String foodInfoString = jsonEncode(foodInfo);
-                          print(foodInfoString);
-                        } else {
-                          //전체 음식 - 3개는 고정시켜야한다는 경고창
-                          final snackBar = buildSnackBar('');
-                          Scaffold.of(context).showSnackBar(snackBar);
+                        } else{
+                          //db에 저장
                         }
 
                         //var diet = Diet(dietName: dietName, foodInfo: foodInfo);
