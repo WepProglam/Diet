@@ -286,6 +286,7 @@ class _FoodListState extends State<FoodList> {
                             };
                           }
                           String foodInfoString = jsonEncode(foodInfo);
+                          print(foodInfoString);
                           var diet = Diet(
                             dietName: dietName,
                             foodInfo: foodInfoString,
