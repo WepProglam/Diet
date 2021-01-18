@@ -1,6 +1,7 @@
 //To_ToRo
 import 'package:flutter/material.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:flutter_application_1/db_helper.dart';
+import 'model.dart';
 import 'appBar.dart';
 
 class SavedDiet extends StatelessWidget {
@@ -19,22 +20,34 @@ class SavedDiet extends StatelessWidget {
   }
 }
 
-class DietList extends StatelessWidget {
+class DietList extends StatefulWidget {
+  @override
+  _DietListState createState() => _DietListState();
+}
+
+class _DietListState extends State<DietList> {
+  final dbHelperDiet = DBHelperDiet();
+  List<Diet> dietNameEX = [];
+
+  void getInfo() async {
+    await dbHelperDiet.getAllMyDiet().then((val) {
+      dietNameEX = [];
+      for (var item in val) {
+        dietNameEX.add(item);
+      }
+      print(dietNameEX.length);
+    });
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getInfo();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    //실제로는 db에서 얻어와야 함
-    final List<String> dietNameEX = [
-      'AB',
-      'BC',
-      'CD',
-      'DE',
-      'EF',
-      'FG',
-      'GH',
-      'HI',
-      'IJ'
-    ];
-
     return GridView.count(
       padding: EdgeInsets.all(8),
       crossAxisCount: 2,
@@ -50,7 +63,7 @@ class DietList extends StatelessWidget {
               onPressed: () {},
 
               child: Text(
-                '${dietNameEX[index]}',
+                '${dietNameEX[index].dietName}',
                 style: TextStyle(fontSize: 30),
               ),
             ),

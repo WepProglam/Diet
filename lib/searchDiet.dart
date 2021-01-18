@@ -1,22 +1,36 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/model.dart';
+
+import 'db_helper.dart';
+import 'mainStream.dart' as mainStream;
+
+StreamController<String> streamControllerString =
+    mainStream.streamControllerString;
 
 class SearchDiet extends StatelessWidget {
+  final Stream<List> stream;
+  SearchDiet({this.stream});
   @override
   Widget build(BuildContext context) {
-    return SearchList();
+    return SearchList(
+      streamString: streamControllerString.stream,
+    );
   }
 }
 
 class Building {
-  num id; //나중에 바꿔야 함
+  //나중에 바꿔야 함
   String dietName;
   num calories;
 
-  Building({this.id, this.dietName, this.calories});
+  Building({this.dietName, this.calories});
 }
 
 class SearchList extends StatefulWidget {
-  SearchList({Key key}) : super(key: key);
+  final Stream<String> streamString;
+  SearchList({Key key, this.streamString}) : super(key: key);
 
   @override
   _SearchListState createState() => _SearchListState();
@@ -30,6 +44,9 @@ class _SearchListState extends State<SearchList> {
 
   bool _IsSearching = false;
   String _searchText = "";
+
+  final dbHelperDiet = DBHelperDiet();
+  List<Diet> dietNameEX = [];
 
   _SearchListState() {
     _searchQuery.addListener(() {
@@ -64,17 +81,14 @@ class _SearchListState extends State<SearchList> {
     }
   }
 
-  final List<String> dietNameEX = [
-    'AB',
-    'BC',
-    'CD',
-    'DE',
-    'EF',
-    'FG',
-    'GH',
-    'HI',
-    'IJ'
-  ];
+  void getInfo() async {
+    await dbHelperDiet.getAllMyDiet().then((val) {
+      for (var item in val) {
+        dietNameEX.add(item);
+      }
+    });
+    setState(() {});
+  }
 
   //init
   @override
@@ -85,12 +99,13 @@ class _SearchListState extends State<SearchList> {
   }
 
   //이 함수에서 list 만듦
-  void init() {
+  void init() async {
     _list = List();
     int i = 1;
-    for (var name in dietNameEX) {
+    await getInfo();
+    for (var item in dietNameEX) {
       _list.add(
-        Building(id: i++, dietName: name, calories: 100),
+        Building(dietName: item.dietName),
       );
     }
     _searchList = _list;
@@ -197,7 +212,7 @@ class Uiitem extends StatelessWidget {
         // splashColor: Colors.orange,
         //여기다 눌렀을 때 기능 넣기
         onTap: () {
-          print(building.id);
+          print(building.dietName);
         },
         child: Center(
           child: Column(
@@ -214,7 +229,8 @@ class Uiitem extends StatelessWidget {
               ),
               SizedBox(height: 5.0),
               Text(
-                '${this.building.calories}',
+                // '${this.building.calories}',
+                '',
                 // style: TextStyle(fontFamily: 'Roboto'),
               ),
               Spacer(

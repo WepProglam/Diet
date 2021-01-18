@@ -301,16 +301,13 @@ class DBHelperDiet {
         : Null;
   }
 
-  Future<List<Food>> getAllMyDiet() async {
+  Future<List<Diet>> getAllMyDiet() async {
     final db = await database;
     var res = await db.rawQuery("SELECT * FROM $tableName");
-    List<Food> list = res.isNotEmpty
+    List<Diet> list = res.isNotEmpty
         ? res
             .map(
-              (c) => Diet(
-                dietName: c['dietName'],
-                foodInfo: c['foodInfo'],
-              ),
+              (c) => Diet(dietName: c['dietName'], foodInfo: c['foodInfo']),
             )
             .toList()
         : [];
