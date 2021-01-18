@@ -68,7 +68,8 @@ class _MyScreenState extends State<MyScreen> {
     }
     final size = MediaQuery.of(context).size;
 
-    return Column(
+    return Expanded(
+        child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -96,7 +97,7 @@ class _MyScreenState extends State<MyScreen> {
           height: 50,
         )
       ],
-    );
+    ));
   }
 }
 
