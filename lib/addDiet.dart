@@ -153,11 +153,6 @@ class _FoodListState extends State<FoodList> {
     return false;
   }
 
-  String makeFoodInfo(List<ListContents> list) {
-    String str;
-    for (var item in list) {}
-  }
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -282,9 +277,18 @@ class _FoodListState extends State<FoodList> {
                           Scaffold.of(context).showSnackBar(snackBar);
                         } else {
                           //db에 저장
+                          String dietName = dietNameController.value.text;
+                          Map foodInfo = {dietName: {}};
+                          for (var item in foodList) {
+                            foodInfo[dietName][item.code] = {
+                              "foodName": item.foodName,
+                              "foodMass": item.mass
+                            };
+                          }
+                          String foodInfoString = jsonEncode(foodInfo);
                           var diet = Diet(
-                            dietName: dietNameController.text,
-                            foodInfo: null,
+                            dietName: dietName,
+                            foodInfo: foodInfoString,
                           );
                           dbHelperDiet.createData(diet);
                         }
