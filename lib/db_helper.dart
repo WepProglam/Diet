@@ -277,7 +277,7 @@ class DBHelperDiet {
       await db.execute('''
           CREATE TABLE $tableName(
             dietName TEXT,
-            foodInfo TEXT,
+            foodInfo TEXT
             )
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
