@@ -1,12 +1,104 @@
+import 'package:draw_graph/models/feature.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
-import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
-    show CalendarCarousel;
-import 'package:flutter_calendar_carousel/classes/event.dart';
-import 'package:flutter_calendar_carousel/classes/event_list.dart';
+
 import 'package:intl/intl.dart' show DateFormat;
 import 'appBar.dart';
+import 'package:draw_graph/draw_graph.dart';
+import 'db_helper.dart';
+import 'model.dart';
+
+final dbHelperPerson = DBHelperPerson();
+
+class MyScreen extends StatefulWidget {
+  @override
+  _MyScreenState createState() => _MyScreenState();
+}
+
+class _MyScreenState extends State<MyScreen> {
+  Map listHistory = {"체중": <double>[], "체지방량": <double>[], "근육량": <double>[]};
+  List<String> labelX = [];
+  List<String> labelY = [];
+  List<Feature> features = [];
+
+  @override
+  void didChangeDependencies() {
+    getInfo();
+    super.didChangeDependencies();
+  }
+
+  void getInfo() async {
+    listHistory["체중"] = [];
+    listHistory["체지방량"] = [];
+    listHistory["근육량"] = [];
+    await dbHelperPerson.getAllPerson().then((value) {
+      for (var item in value) {
+        listHistory["체중"].add(item.weight);
+        listHistory["체지방량"].add(item.bmi);
+        listHistory["근육량"].add(item.muscleMass);
+        labelX.add(item.time);
+        labelY.add("!");
+      }
+      features = [
+        Feature(
+          title: "체중",
+          color: Colors.blue,
+          data: listHistory["체중"],
+        ),
+        Feature(
+          title: "체지방량",
+          color: Colors.pink,
+          data: listHistory["체지방량"],
+        ),
+        Feature(
+          title: "근육량",
+          color: Colors.cyan,
+          data: listHistory["근육량"],
+        ),
+      ];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    for (var item in features) {
+      print(item.title);
+      print(item.color);
+      print(item.data);
+    }
+    final size = MediaQuery.of(context).size;
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 64.0),
+          child: Text(
+            "Tasks Track",
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2,
+            ),
+          ),
+        ),
+        LineGraph(
+          features: features,
+          size: Size(size.width, size.height / 3.3),
+          labelX: labelX,
+          labelY: labelY,
+          showDescription: true,
+          graphColor: Colors.white30,
+        ),
+        SizedBox(
+          height: 50,
+        )
+      ],
+    );
+  }
+}
 
 class MainPage extends StatelessWidget {
   @override
@@ -32,6 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var daysFirstWeek;
   var daysLastWeek;
   var lastDayDateTime;
+  bool isItCalender = true;
 
   @override
   Widget build(BuildContext context) {
@@ -51,27 +144,43 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Color(0xFFFFFEF5),
         appBar: basicAppBar('Main Page', context),
         drawer: NavDrawer(),
-        body: Column(
-          children: [
-            Spacer(
-              flex: 1,
-            ),
-            calenderMonthChange(),
-            calenderDayRow(), //요일
-            calenderRow(1, tag: "first"),
-            calenderRow(1 + daysFirstWeek), //첫주 다 채우고 새로운 주의 첫 일 ( ex) 1월 3일)
-            calenderRow(8 + daysFirstWeek),
-            calenderRow(15 + daysFirstWeek),
-            calenderRow(22 + daysFirstWeek),
-            calenderRow(29 + daysFirstWeek, tag: "end"),
-            dietDate(date.toString()),
-            diet(date.toString()),
-            dietBox(mealTime, date),
-            Spacer(
-              flex: 2,
-            ),
-          ],
-        ));
+        body: isItCalender
+            ? Column(
+                children: [
+                  Spacer(
+                    flex: 1,
+                  ),
+                  calenderMonthChange(),
+                  calenderDayRow(), //요일
+                  calenderRow(1, tag: "first"),
+                  calenderRow(
+                      1 + daysFirstWeek), //첫주 다 채우고 새로운 주의 첫 일 ( ex) 1월 3일)
+                  calenderRow(8 + daysFirstWeek),
+                  calenderRow(15 + daysFirstWeek),
+                  calenderRow(22 + daysFirstWeek),
+                  calenderRow(29 + daysFirstWeek, tag: "end"),
+                  dietDate(date.toString()),
+                  diet(date.toString()),
+                  dietBox(mealTime, date),
+                  Spacer(
+                    flex: 2,
+                  ),
+                ],
+              )
+            : Column(
+                children: [
+                  Spacer(
+                    flex: 1,
+                  ),
+                  calenderMonthChange(),
+                  MyScreen(),
+                  diet(date.toString()),
+                  dietBox(mealTime, date),
+                  Spacer(
+                    flex: 2,
+                  ),
+                ],
+              ));
   }
 
   int dayToDate(String day) {
@@ -105,59 +214,116 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget calenderMonthChange() {
     //월 이동 함수
-    return Expanded(
-      flex: 1,
-      child: Row(
-        children: [
-          Spacer(
-            flex: 1,
-          ),
-          Center(
-            child: Row(
-              children: [
-                FlatButton(
-                  onPressed: () {
-                    if (calender_month == 1) {
-                      setState(() {
-                        calender_year -= 1;
-                        calender_month = 12;
-                      });
-                    } else {
-                      setState(() {
-                        calender_month -= 1;
-                      });
-                    }
-                  },
-                  child: Icon(Icons.arrow_back_ios),
+    return Expanded(flex: 1, child: calender());
+  }
+
+  Widget calender() {
+    return isItCalender
+        ? Row(
+            children: [
+              Spacer(
+                flex: 1,
+              ),
+              Center(
+                child: Row(
+                  children: [
+                    FlatButton(
+                      onPressed: () {
+                        if (calender_month == 1) {
+                          setState(() {
+                            calender_year -= 1;
+                            calender_month = 12;
+                          });
+                        } else {
+                          setState(() {
+                            calender_month -= 1;
+                          });
+                        }
+                      },
+                      child: Icon(Icons.arrow_back_ios),
+                    ),
+                    Text(
+                      "$calender_year년 $calender_month월",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    FlatButton(
+                      onPressed: () {
+                        if (calender_month == 12) {
+                          setState(() {
+                            calender_year += 1;
+                            calender_month = 1;
+                          });
+                        } else {
+                          setState(() {
+                            calender_month += 1;
+                          });
+                        }
+                      },
+                      child: Icon(Icons.arrow_forward_ios),
+                    ),
+                  ],
                 ),
-                Text(
-                  "$calender_year년 $calender_month월",
-                  style: TextStyle(fontSize: 20),
-                ),
-                FlatButton(
-                  onPressed: () {
-                    if (calender_month == 12) {
+              ),
+              Spacer(
+                flex: 1,
+              ),
+              Expanded(
+                  flex: 1,
+                  child: FlatButton(
+                    child: isItCalender
+                        ? Icon(Icons.gps_fixed)
+                        : Icon(Icons.gps_not_fixed),
+                    onPressed: () {
                       setState(() {
-                        calender_year += 1;
-                        calender_month = 1;
+                        isItCalender = true;
                       });
-                    } else {
+                    },
+                  )),
+              Expanded(
+                  flex: 1,
+                  child: FlatButton(
+                    child: isItCalender
+                        ? Icon(Icons.gps_not_fixed)
+                        : Icon(Icons.gps_fixed),
+                    onPressed: () {
                       setState(() {
-                        calender_month += 1;
+                        isItCalender = false;
                       });
-                    }
-                  },
-                  child: Icon(Icons.arrow_forward_ios),
-                ),
-              ],
-            ),
-          ),
-          Spacer(
-            flex: 1,
+                    },
+                  )),
+            ],
           )
-        ],
-      ),
-    );
+        : Row(
+            children: [
+              Spacer(
+                flex: 7,
+              ),
+              Expanded(
+                  flex: 1,
+                  child: FlatButton(
+                    child: isItCalender
+                        ? Icon(Icons.gps_fixed)
+                        : Icon(Icons.gps_not_fixed),
+                    onPressed: () {
+                      setState(() {
+                        isItCalender = true;
+                      });
+                    },
+                  )),
+              Expanded(
+                  flex: 1,
+                  child: FlatButton(
+                    child: isItCalender
+                        ? Icon(Icons.gps_not_fixed)
+                        : Icon(Icons.gps_fixed),
+                    onPressed: () {
+                      setState(() {
+                        isItCalender = false;
+                      });
+                    },
+                  )),
+            ],
+          );
   }
 
   Widget calenderDayRow() {
