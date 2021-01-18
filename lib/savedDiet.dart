@@ -68,7 +68,7 @@ class _DietListState extends State<DietList> {
 
                     child: Text(
                       '${dietNameEX[index].dietName}',
-                      style: TextStyle(fontSize: 40),
+                      style: TextStyle(fontSize: 30),
                     ),
                   ),
                 ),
