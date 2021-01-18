@@ -76,6 +76,7 @@ class _FoodListState extends State<FoodList> {
               onChanged: (text) {
                 setState(() {
                   foodList[index].mass = num.parse(text);
+                  print(text);
                 });
               },
             ),
@@ -137,11 +138,19 @@ class _FoodListState extends State<FoodList> {
   int numOfMass(List<ListContents> list) {
     int n = 0;
     for (var item in list) {
-      if (item.mass == 0) {
+      if (item.mass == 0 || item.mass == null) {
         n++;
       }
     }
     return n;
+  }
+
+  bool isThereBlank(List<ListContents> list) {
+    for (var item in list) {
+      if (item.mass == 0 || item.mass == null) {
+        return true;
+      }
+    }
   }
 
   @override
@@ -263,11 +272,10 @@ class _FoodListState extends State<FoodList> {
                   child: IconButton(
                       icon: Icon(Icons.add, color: Color(0xFF69C2B0)),
                       onPressed: () {
-                        if () {
-                          //최소 3개 선택하라는 경고창
-                          final snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');
+                        if (isThereBlank(foodList)) {
+                          var snackBar = buildSnackBar('빈칸이 있습니다.');
                           Scaffold.of(context).showSnackBar(snackBar);
-                        } else{
+                        } else {
                           //db에 저장
                         }
 
