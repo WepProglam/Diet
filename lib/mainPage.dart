@@ -54,8 +54,9 @@ class _MyScreenState extends State<MyScreen> {
         listHistory["체중"].add(item.weight / 5);
         listHistory["체지방량"].add(item.bmi / 5);
         listHistory["근육량"].add(item.muscleMass / 5);
-        labelX.add(item.time);
-        labelY.add("!");
+        String time = item.time.split("-")[1] + "/" + item.time.split("-")[2];
+        labelX.add(time);
+        labelY.add("");
       }
       print(listHistory);
       features = [
@@ -108,7 +109,7 @@ class _MyScreenState extends State<MyScreen> {
           labelX: labelX,
           labelY: labelY,
           showDescription: true,
-          graphColor: Colors.white30,
+          graphColor: Colors.black,
         ),
         SizedBox(
           height: 50,
