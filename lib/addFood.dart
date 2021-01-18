@@ -53,6 +53,7 @@ class AddFoodSub extends StatefulWidget {
 
 class _AddFoodSub extends State<AddFoodSub> {
   final _carboController = TextEditingController();
+  final _servingController = TextEditingController();
   final _proController = TextEditingController();
   final _fatController = TextEditingController();
   final _ulController = TextEditingController();
@@ -72,6 +73,7 @@ class _AddFoodSub extends State<AddFoodSub> {
     _proController.dispose();
     _fatController.dispose();
     _ulController.dispose();
+    _servingController.dispose();
     //_purposeController.dispose();
     super.dispose();
     isDisposed = true;
@@ -97,6 +99,8 @@ class _AddFoodSub extends State<AddFoodSub> {
               Spacer(
                 flex: 1,
               ),
+              subBuilderQuestion("1회 제공량", "g",
+                  controller: _servingController, icon: Icon(Icons.favorite)),
               subBuilderQuestion("탄수화물", "g",
                   controller: _carboController, icon: Icon(Icons.favorite)),
               subBuilderQuestion("단백질", "g",
@@ -132,11 +136,12 @@ class _AddFoodSub extends State<AddFoodSub> {
       foodInfo = args["myTempoFood"];
       tempo = true;
       setState(() {
-        _carboController.text = myRounder(foodInfo['carbohydrate']);
-        _fatController.text = myRounder(foodInfo['fat']);
-        _proController.text = myRounder(foodInfo['protein']);
-        _ulController.text = myRounder(foodInfo['kcal']);
-        _foodNameController.text = foodInfo['foodName'];
+        _carboController.text = myRounder(foodInfo['servingSize'] *foodInfo['carbohydrate']);
+        _fatController.text = myRounder(foodInfo['servingSize'] *foodInfo['fat']);
+        _proController.text = myRounder(foodInfo['servingSize'] *foodInfo['protein']);
+        _ulController.text = myRounder(foodInfo['servingSize'] *foodInfo['kcal']);
+        _servingController.text=myRounder(foodInfo['servingSize']);
+        _foodNameController.text = myRounder(foodInfo['foodName']);
       });
       // print("this is args $args");
       // streamController.add(foodInfo);
@@ -176,10 +181,13 @@ class _AddFoodSub extends State<AddFoodSub> {
   void mySetState(Map info) {
     if (this.mounted) {
       setState(() {
-        _carboController.text = myRounder(info['carbohydrate']);
-        _fatController.text = myRounder(info['fat']);
-        _proController.text = myRounder(info['protein']);
-        _ulController.text = myRounder(info['kcal']);
+        _carboController.text = myRounder(foodInfo['servingSize'] * info['carbohydrate']);
+        _fatController.text = myRounder(foodInfo['servingSize'] *info['fat']);
+        _proController.text = myRounder(foodInfo['servingSize'] *info['protein']);
+        _ulController.text = myRounder(foodInfo['servingSize'] *info['kcal']);
+        _servingController.text=myRounder(foodInfo['servingSize']);
+
+        _foodNameController.text = foodInfo['foodName'];
       });
     }
     foodInfo = info;
@@ -247,6 +255,9 @@ class _AddFoodSub extends State<AddFoodSub> {
       case "열량":
         returnValue = "kcal";
         break;
+      case "1회 제공량":
+        returnValue = "servingSize";
+        break;
       default:
     }
     return returnValue;
@@ -256,10 +267,12 @@ class _AddFoodSub extends State<AddFoodSub> {
       TextEditingController controller, num value, String question) {
     print(foodInfo);
     String fieldName = koreanQusetionToEnglish(question);
+
     return TextFormField(
       autofocus: false,
       controller: controller,
       // focusNode: _focusNode,
+      enabled: fieldName == "servingSize" ? false : true,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(hintText: ''),
       textAlign: TextAlign.center,
@@ -538,7 +551,8 @@ class _TransFoodFABState extends State<TransFoodFAB>
                   carbohydrate: row[6],
                   fat: row[7],
                   isItMine: 'F',
-                  selected: 0);
+                  selected: 0,
+                  servingSize: row[8]);
 
               await dbHelper.createData(food);
             }

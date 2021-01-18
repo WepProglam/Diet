@@ -46,6 +46,7 @@ class Food {
   num carbohydrate;
   num fat;
   num selected;
+  num servingSize;
 
   Food(
       {this.code,
@@ -57,7 +58,8 @@ class Food {
       this.carbohydrate,
       this.fat,
       this.isItMine,
-      this.selected});
+      this.selected,
+      this.servingSize});
 
   Map<String, dynamic> toMap() {
     return {
@@ -70,7 +72,8 @@ class Food {
       "carbohydrate": carbohydrate,
       "fat": fat,
       "isItMine": isItMine,
-      "selected": selected
+      "selected": selected,
+      "servingSize": servingSize
     };
   }
 }

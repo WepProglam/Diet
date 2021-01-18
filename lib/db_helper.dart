@@ -149,7 +149,8 @@ class DBHelperFood {
             carbohydrate REAL,
             fat REAL,
             isItMine TEXT DEFAULT F,
-            selected INTEGER DEFAULT 0
+            selected INTEGER DEFAULT 0,
+            servingSize REAL
             )
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
@@ -181,7 +182,8 @@ class DBHelperFood {
             carbohydrate: res.first['carbohydrate'],
             fat: res.first['fat'],
             isItMine: res.first['isItMine'],
-            selected: res.first['selected'])
+            selected: res.first['selected'],
+            servingSize: res.first['servingSize'])
         : Null;
   }
 
@@ -203,7 +205,8 @@ class DBHelperFood {
                   carbohydrate: c['carbohydrate'],
                   fat: c['fat'],
                   isItMine: c['isItMine'],
-                  selected: c['selected']),
+                  selected: c['selected'],
+                  servingSize: c['servingSize']),
             )
             .toList()
         : [];
@@ -229,7 +232,8 @@ class DBHelperFood {
                   carbohydrate: c['carbohydrate'],
                   fat: c['fat'],
                   isItMine: c['isItMine'],
-                  selected: c['selected']),
+                  selected: c['selected'],
+                  servingSize: c['servingSize']),
             )
             .toList()
         : [];
