@@ -47,7 +47,7 @@ class _FoodListState extends State<FoodList> {
   }
 
   String initialVal(num mass) {
-    if (mass == null) {
+    if (mass == null || mass == 0) {
       return '';
     } else {
       return '$mass';
@@ -73,6 +73,11 @@ class _FoodListState extends State<FoodList> {
               decoration: InputDecoration(hintText: 'mass'),
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
+              onChanged: (text) {
+                setState(() {
+                  foodList[index].mass = num.parse('42');
+                });
+              },
             ),
           ),
           Text('g'),
@@ -106,11 +111,37 @@ class _FoodListState extends State<FoodList> {
     );
     for (var code in result) {
       Food food = await DBHelperFood().getFood(code);
-      ListContents foodCopy =
-          ListContents(foodName: food.foodName, code: food.code);
+      ListContents foodCopy = ListContents(
+        foodName: food.foodName,
+        code: food.code,
+        mass: 0,
+      );
       foods.add(foodCopy);
     }
     addItem(foods);
+  }
+
+  //경고창
+  Widget buildSnackBar(String str) {
+    return SnackBar(
+      content: Text(str),
+      // action: SnackBarAction(
+      //   label: 'Undo',
+      //   onPressed: () {
+      //     // Some code to undo the change.
+      //   },
+      // ),
+    );
+  }
+
+  int numOfMass(List<ListContents> list) {
+    int n = 0;
+    for (var item in list) {
+      if (item.mass == 0) {
+        n++;
+      }
+    }
+    return n;
   }
 
   @override
@@ -197,6 +228,27 @@ class _FoodListState extends State<FoodList> {
                 Spacer(
                   flex: 1,
                 ),
+                // calculate button
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                      icon: Icon(Icons.calculate, color: Color(0xFF69C2B0)),
+                      onPressed: () {
+                        if (foodList.length < 3) {
+                          //최소 3개 선택하라는 경고창
+                          var snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');
+                          Scaffold.of(context).showSnackBar(snackBar);
+                        } else if (numOfMass(foodList) == 3) {
+                          print('correct!');
+                        } else {
+                          print(numOfMass(foodList));
+                          var snackBar =
+                              buildSnackBar('빈칸이 3개일 경우에만 계산 가능합니다.');
+                          Scaffold.of(context).showSnackBar(snackBar);
+                        }
+                      }),
+                ),
+                // enter diet textfield
                 Expanded(
                   flex: 4,
                   child: TextField(
@@ -205,13 +257,17 @@ class _FoodListState extends State<FoodList> {
                     textAlign: TextAlign.center,
                   ),
                 ),
+                // add button
                 Expanded(
                   flex: 1,
                   child: IconButton(
                       icon: Icon(Icons.add, color: Color(0xFF69C2B0)),
                       onPressed: () {
+                        //이거 계산 버튼에 넣어야 되지 않을까?
                         if (foodList.length < 3) {
                           //최소 3개 선택하라는 경고창
+                          final snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');
+                          Scaffold.of(context).showSnackBar(snackBar);
                         } else if (foodList.length == 3) {
                           String dietName = dietNameController.value.text;
                           Map foodInfo = {dietName: {}};
@@ -225,6 +281,8 @@ class _FoodListState extends State<FoodList> {
                           print(foodInfoString);
                         } else {
                           //전체 음식 - 3개는 고정시켜야한다는 경고창
+                          final snackBar = buildSnackBar('');
+                          Scaffold.of(context).showSnackBar(snackBar);
                         }
 
                         //var diet = Diet(dietName: dietName, foodInfo: foodInfo);
