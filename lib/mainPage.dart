@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:draw_graph/models/feature.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -7,10 +9,15 @@ import 'appBar.dart';
 import 'package:draw_graph/draw_graph.dart';
 import 'db_helper.dart';
 import 'model.dart';
+import 'mainStream.dart' as mainStream;
 
 final dbHelperPerson = DBHelperPerson();
 
+StreamController<bool> streamControllerMainPage =
+    mainStream.streamControllerMainPage;
+
 class MyScreen extends StatefulWidget {
+  final Stream<bool> stream = streamControllerMainPage.stream;
   @override
   _MyScreenState createState() => _MyScreenState();
 }
@@ -27,18 +34,30 @@ class _MyScreenState extends State<MyScreen> {
     super.didChangeDependencies();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    // widget.stream.listen((isItCalender) {
+    //   if (!isItCalender) {
+    //       getInfo();
+    //   }
+    // });
+  }
+
   void getInfo() async {
-    listHistory["체중"] = [];
-    listHistory["체지방량"] = [];
-    listHistory["근육량"] = [];
+    listHistory["체중"] = <double>[];
+    listHistory["체지방량"] = <double>[];
+    listHistory["근육량"] = <double>[];
     await dbHelperPerson.getAllPerson().then((value) {
+      print(value);
       for (var item in value) {
-        listHistory["체중"].add(item.weight);
-        listHistory["체지방량"].add(item.bmi);
-        listHistory["근육량"].add(item.muscleMass);
+        listHistory["체중"].add(item.weight / 5);
+        listHistory["체지방량"].add(item.bmi / 5);
+        listHistory["근육량"].add(item.muscleMass / 5);
         labelX.add(item.time);
         labelY.add("!");
       }
+      print(listHistory);
       features = [
         Feature(
           title: "체중",
@@ -57,18 +76,16 @@ class _MyScreenState extends State<MyScreen> {
         ),
       ];
     });
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    for (var item in features) {
-      print(item.title);
-      print(item.color);
-      print(item.data);
-    }
     final size = MediaQuery.of(context).size;
 
-    return Expanded(
+    return SingleChildScrollView(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,7 +94,7 @@ class _MyScreenState extends State<MyScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 64.0),
           child: Text(
-            "Tasks Track",
+            "신체 기록",
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -87,7 +104,7 @@ class _MyScreenState extends State<MyScreen> {
         ),
         LineGraph(
           features: features,
-          size: Size(size.width, size.height / 3.3),
+          size: Size(size.width, size.height / 3.5),
           labelX: labelX,
           labelY: labelY,
           showDescription: true,
@@ -277,6 +294,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       setState(() {
                         isItCalender = true;
+                        streamControllerMainPage.add(isItCalender);
                       });
                     },
                   )),
@@ -289,6 +307,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       setState(() {
                         isItCalender = false;
+                        streamControllerMainPage.add(isItCalender);
                       });
                     },
                   )),

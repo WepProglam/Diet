@@ -9,3 +9,6 @@ StreamController<bool> streamControllerBool =
 
 StreamController<String> streamControllerString =
     StreamController<String>.broadcast();
+
+StreamController<bool> streamControllerMainPage =
+    StreamController<bool>.broadcast();
