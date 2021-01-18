@@ -136,12 +136,16 @@ class _AddFoodSub extends State<AddFoodSub> {
       foodInfo = args["myTempoFood"];
       tempo = true;
       setState(() {
-        _carboController.text = myRounder(foodInfo['servingSize'] *foodInfo['carbohydrate']);
-        _fatController.text = myRounder(foodInfo['servingSize'] *foodInfo['fat']);
-        _proController.text = myRounder(foodInfo['servingSize'] *foodInfo['protein']);
-        _ulController.text = myRounder(foodInfo['servingSize'] *foodInfo['kcal']);
-        _servingController.text=myRounder(foodInfo['servingSize']);
-        _foodNameController.text = myRounder(foodInfo['foodName']);
+        _carboController.text =
+            myRounder(foodInfo['servingSize'] * foodInfo['carbohydrate']);
+        _fatController.text =
+            myRounder(foodInfo['servingSize'] * foodInfo['fat']);
+        _proController.text =
+            myRounder(foodInfo['servingSize'] * foodInfo['protein']);
+        _ulController.text =
+            myRounder(foodInfo['servingSize'] * foodInfo['kcal']);
+        _servingController.text = myRounder(foodInfo['servingSize']);
+        _foodNameController.text = foodInfo['foodName'];
       });
       // print("this is args $args");
       // streamController.add(foodInfo);
@@ -181,11 +185,13 @@ class _AddFoodSub extends State<AddFoodSub> {
   void mySetState(Map info) {
     if (this.mounted) {
       setState(() {
-        _carboController.text = myRounder(foodInfo['servingSize'] * info['carbohydrate']);
-        _fatController.text = myRounder(foodInfo['servingSize'] *info['fat']);
-        _proController.text = myRounder(foodInfo['servingSize'] *info['protein']);
-        _ulController.text = myRounder(foodInfo['servingSize'] *info['kcal']);
-        _servingController.text=myRounder(foodInfo['servingSize']);
+        _carboController.text =
+            myRounder(foodInfo['servingSize'] * info['carbohydrate']);
+        _fatController.text = myRounder(foodInfo['servingSize'] * info['fat']);
+        _proController.text =
+            myRounder(foodInfo['servingSize'] * info['protein']);
+        _ulController.text = myRounder(foodInfo['servingSize'] * info['kcal']);
+        _servingController.text = myRounder(foodInfo['servingSize']);
 
         _foodNameController.text = foodInfo['foodName'];
       });
@@ -394,12 +400,13 @@ class _TypeFoodName extends State<TypeFoodName> {
 
                 var i = 0;
                 for (var item in value) {
-                  if (i < 5) {
+                  if (i < 10) {
                     foodList.insert(
                         0,
                         ListTile(
                           title: Text(item.foodName),
-                          subtitle: Text("${item.kcal}Kcal  ${item.isItMine}"),
+                          subtitle: Text(
+                              "${item.kcal * item.servingSize} Kcal  ${item.isItMine}"),
                           onTap: () {
                             Map foodInfo = {};
                             controller.text = item.foodName;
@@ -627,11 +634,10 @@ class _TransFoodFABState extends State<TransFoodFAB>
                 carbohydrate: myFoodInfo['carbohydrate'],
                 fat: myFoodInfo['fat'],
                 isItMine: 'T',
-                selected: myFoodInfo['selected'] + 1); //select 1회 증가
+                selected: myFoodInfo['selected'] + 1,
+                servingSize: myFoodInfo['servingSize']); //select 1회 증가
 
             dbHelperFood.deleteFood(myFoodInfo['code']);
-            print("++++++++++++++++++");
-            print(myFoodInfo['isItMine']);
 
             if (myFoodInfo['isItMine'] == 'T') {
               await dbHelperFood

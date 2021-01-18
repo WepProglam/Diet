@@ -80,20 +80,32 @@ class Food {
 
 class Diet {
   String dietName;
-  String foodCodes; //'code1, code2, code3 ...'
-  String foodMasses; //'mass1, mass2, mass3 ...'
+  String foodInfo;
+  /*
+  {
+    "식단 이름" : {
+      "음식 코드1" : {
+        "foodName" :"음식 이름1",
+        "foodMass" : "음식 무게1"
+        },
+        "음식 코드2" : {
+        "foodName" :"음식 이름2",
+        "foodMass" : "음식 무게2"
+        },
+        "음식 코드3" : {
+        "foodName" :"음식 이름3",
+        "foodMass" : "음식 무게3"
+        }
+    }
+  }
+  */
 
   Diet({
     this.dietName,
-    this.foodCodes,
-    this.foodMasses,
+    this.foodInfo,
   });
 
   Map<String, dynamic> toMap() {
-    return {
-      "dietName": dietName,
-      "foodCodes": foodCodes,
-      "foodMasses": foodMasses,
-    };
+    return {"dietName": dietName, "foodInfo": foodInfo};
   }
 }

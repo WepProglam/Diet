@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model.dart';
 import 'appBar.dart';
@@ -35,6 +37,8 @@ class FoodList extends StatefulWidget {
 
 class _FoodListState extends State<FoodList> {
   List<ListContents> foodList = [];
+  final dbHelperDiet = DBHelperDiet();
+  TextEditingController dietNameController = TextEditingController();
 
   void addItem(List<ListContents> food) {
     setState(() {
@@ -197,6 +201,7 @@ class _FoodListState extends State<FoodList> {
                   flex: 4,
                   child: TextField(
                     decoration: InputDecoration(hintText: '식단명을 입력하세요'),
+                    controller: dietNameController,
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -204,7 +209,27 @@ class _FoodListState extends State<FoodList> {
                   flex: 1,
                   child: IconButton(
                       icon: Icon(Icons.add, color: Color(0xFF69C2B0)),
-                      onPressed: null),
+                      onPressed: () {
+                        if (foodList.length < 3) {
+                          //최소 3개 선택하라는 경고창
+                        } else if (foodList.length == 3) {
+                          String dietName = dietNameController.value.text;
+                          Map foodInfo = {dietName: {}};
+                          for (var item in foodList) {
+                            foodInfo[dietName][item.code] = {
+                              "foodName": item.foodName,
+                              "foodMass": item.mass
+                            };
+                          }
+                          String foodInfoString = jsonEncode(foodInfo);
+                          print(foodInfoString);
+                        } else {
+                          //전체 음식 - 3개는 고정시켜야한다는 경고창
+                        }
+
+                        //var diet = Diet(dietName: dietName, foodInfo: foodInfo);
+                        //dbHelperDiet.createData(diet);
+                      }),
                 ),
                 Spacer(
                   flex: 1,

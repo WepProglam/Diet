@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 import 'model.dart';
 
 class DBHelperPerson {
-  final String dBName = 'Diet';
+  final String dBName = 'Person';
   final String tableName = 'Person';
   DBHelperPerson._();
   static final DBHelperPerson _db = DBHelperPerson._();
@@ -276,9 +276,8 @@ class DBHelperDiet {
     return await openDatabase(path, version: 1, onCreate: (db, version) async {
       await db.execute('''
           CREATE TABLE $tableName(
-            dietName TEXT
-            foodCodes TEXT
-            foodMasses TEXT
+            dietName TEXT,
+            foodInfo TEXT,
             )
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
@@ -298,11 +297,7 @@ class DBHelperDiet {
     var res = await db
         .rawQuery("SELECT * FROM $tableName WHERE dietName = '$dietName'");
     return res.isNotEmpty
-        ? Diet(
-            dietName: res.first['dietName'],
-            foodCodes: res.first['foodCodes'],
-            foodMasses: res.first['foodMasses'],
-          )
+        ? Diet(dietName: res.first['dietName'], foodInfo: res.first['foodInfo'])
         : Null;
   }
 
@@ -314,8 +309,7 @@ class DBHelperDiet {
             .map(
               (c) => Diet(
                 dietName: c['dietName'],
-                foodCodes: c['foodCodes'],
-                foodMasses: c['foodMasses'],
+                foodInfo: c['foodInfo'],
               ),
             )
             .toList()
