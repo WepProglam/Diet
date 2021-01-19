@@ -20,6 +20,13 @@ class SavedDiet extends StatelessWidget {
   }
 }
 
+class DietArguments {
+  final String dietName;
+  final String foodInfo;
+
+  DietArguments(this.dietName, this.foodInfo);
+}
+
 class DietList extends StatefulWidget {
   @override
   _DietListState createState() => _DietListState();
@@ -64,7 +71,14 @@ class _DietListState extends State<DietList> {
                   flex: 2,
                   child: FlatButton(
                     //onPressed에 식단 설정 페이지로 이동하는 함수 넣기
-                    onPressed: () {},
+                    onPressed: () async {
+                      Navigator.pushNamed(context, '/addDiet',
+                          arguments: <String, Map>{
+                            "myTempoDiet": dietNameEX[index].toMap()
+                          }).then((_) {
+                        getInfo();
+                      });
+                    },
 
                     child: Text(
                       '${dietNameEX[index].dietName}',
