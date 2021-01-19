@@ -101,6 +101,7 @@ class _FoodListState extends State<FoodList> {
                   for (var item in foodMassController) {
                     item.text = "";
                   }
+                  isGraphShowed = false;
                   carbohydrateMass = 0.0;
                   fatMass = 0.0;
                   proteinMass = 0.0;
@@ -207,6 +208,7 @@ class _FoodListState extends State<FoodList> {
                             child: GestureDetector(
                               onTap: () {
                                 _navigateAndDisplaySelection(context);
+                                isGraphShowed = false;
                               },
                               child: Container(
                                 height: 80,
@@ -275,7 +277,7 @@ class _FoodListState extends State<FoodList> {
                           //최소 3개 선택하라는 경고창
                           var snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');
                           Scaffold.of(context).showSnackBar(snackBar);
-                        } else if (numOfMass(foodList) == 3) {
+                        } else if (changeNumOfMass(foodList) == 3) {
                           if (!isGraphShowed) {
                             calculate(foodList).then((value) {
                               justCalNutri(foodList, value).then((val) {
