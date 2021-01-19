@@ -42,7 +42,7 @@ class _FoodListState extends State<FoodList> {
   final dbHelperDiet = DBHelperDiet();
   TextEditingController dietNameController = TextEditingController();
   List<TextEditingController> foodMassController = [];
-  double carbohydrateMass, proteinMass, fatMass = 0;
+  double carbohydrateMass, proteinMass, fatMass = 0.0;
   bool isGraphShowed = false;
 
   void addItem(List<ListContents> food) {
@@ -141,6 +141,7 @@ class _FoodListState extends State<FoodList> {
   Widget buildSnackBar(String str) {
     return SnackBar(
       content: Text(str),
+      duration: const Duration(milliseconds: 800),
       // action: SnackBarAction(
       //   label: 'Undo',
       //   onPressed: () {
@@ -269,12 +270,13 @@ class _FoodListState extends State<FoodList> {
                   child: IconButton(
                       icon: Icon(Icons.calculate, color: Color(0xFF69C2B0)),
                       onPressed: () {
-                        if (!isGraphShowed) {
-                          if (foodList.length < 3) {
-                            //최소 3개 선택하라는 경고창
-                            var snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');
-                            Scaffold.of(context).showSnackBar(snackBar);
-                          } else if (numOfMass(foodList) == 3) {
+                        print(foodList.length);
+                        if (foodList.length < 3) {
+                          //최소 3개 선택하라는 경고창
+                          var snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');
+                          Scaffold.of(context).showSnackBar(snackBar);
+                        } else if (numOfMass(foodList) == 3) {
+                          if (!isGraphShowed) {
                             calculate(foodList).then((value) {
                               justCalNutri(foodList, value).then((val) {
                                 print(val);
@@ -298,34 +300,34 @@ class _FoodListState extends State<FoodList> {
                               isGraphShowed = true;
                             });
                           } else {
-                            print(numOfMass(foodList));
-                            var snackBar =
-                                buildSnackBar('빈칸이 3개일 경우에만 계산 가능합니다.');
-                            Scaffold.of(context).showSnackBar(snackBar);
+                            if (changeNumOfMass(foodList) == 3) {
+                              print("hello");
+                              var massList = <double>[];
+                              for (var i = 0; i < 3; i++) {
+                                massList.add(num.parse(
+                                    foodMassController[i].value.text));
+                              }
+                              print(massList);
+                              justCalNutri(foodList, massList).then((value) {
+                                setState(() {
+                                  carbohydrateMass = value[0] *
+                                      100 /
+                                      (value[0] + value[1] + value[2]);
+                                  proteinMass = value[1] *
+                                      100 /
+                                      (value[0] + value[1] + value[2]);
+                                  fatMass = value[2] *
+                                      100 /
+                                      (value[0] + value[1] + value[2]);
+                                });
+                              });
+                            }
                           }
                         } else {
-                          if (changeNumOfMass(foodList) == 3) {
-                            print("hello");
-                            var massList = <double>[];
-                            for (var i = 0; i < 3; i++) {
-                              massList.add(
-                                  num.parse(foodMassController[i].value.text));
-                            }
-                            print(massList);
-                            justCalNutri(foodList, massList).then((value) {
-                              setState(() {
-                                carbohydrateMass = value[0] *
-                                    100 /
-                                    (value[0] + value[1] + value[2]);
-                                proteinMass = value[1] *
-                                    100 /
-                                    (value[0] + value[1] + value[2]);
-                                fatMass = value[2] *
-                                    100 /
-                                    (value[0] + value[1] + value[2]);
-                              });
-                            });
-                          }
+                          print(numOfMass(foodList));
+                          var snackBar =
+                              buildSnackBar('빈칸이 3개일 경우에만 계산 가능합니다.');
+                          Scaffold.of(context).showSnackBar(snackBar);
                         }
                       }),
                 ),
@@ -377,9 +379,9 @@ class _FoodListState extends State<FoodList> {
             fat: fatMass,
             protein: proteinMass,
           ),
-          // Spacer(
-          //   flex: 1,
-          // ),
+          Spacer(
+            flex: 1,
+          ),
         ],
       ),
     );

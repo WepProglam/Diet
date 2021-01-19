@@ -4,14 +4,10 @@ import 'package:flutter_application_1/initPage.dart';
 
 import 'indicator.dart';
 
-double myCarbohydrate, myProtein, myFat;
+double myCarbohydrate, myProtein, myFat = 0.0;
 
 class PieChartSample2 extends StatefulWidget {
-  PieChartSample2({carbohydrate, protein, fat}) {
-    // print("==========================");
-    // print("$carbohydrate $protein $fat");
-    // print("==========================");
-
+  PieChartSample2({double carbohydrate, double protein, double fat}) {
     myCarbohydrate = carbohydrate;
     myProtein = protein;
     myFat = fat;
@@ -34,7 +30,7 @@ class PieChart2State extends State {
             color: Color(0xFFFFFEF5),
             child: Row(
               children: <Widget>[
-                const SizedBox(
+                SizedBox(
                   height: 18,
                 ),
                 Expanded(
