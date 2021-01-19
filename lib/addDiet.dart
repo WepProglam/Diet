@@ -85,11 +85,9 @@ class _FoodListState extends State<FoodList> {
               onChanged: (text) {
                 setState(() {
                   foodList[index].mass = num.parse(text);
-                  foodMassController[index].text = text;
                   print(foodMassController[index].value.text);
                 });
               },
-              onEditingComplete: () {},
             ),
           ),
           Text('g'),
@@ -313,16 +311,19 @@ class _FoodListState extends State<FoodList> {
                               massList.add(
                                   num.parse(foodMassController[i].value.text));
                             }
+                            print(massList);
                             justCalNutri(foodList, massList).then((value) {
-                              carbohydrateMass = value[0] *
-                                  100 /
-                                  (value[0] + value[1] + value[2]);
-                              proteinMass = value[1] *
-                                  100 /
-                                  (value[0] + value[1] + value[2]);
-                              fatMass = value[2] *
-                                  100 /
-                                  (value[0] + value[1] + value[2]);
+                              setState(() {
+                                carbohydrateMass = value[0] *
+                                    100 /
+                                    (value[0] + value[1] + value[2]);
+                                proteinMass = value[1] *
+                                    100 /
+                                    (value[0] + value[1] + value[2]);
+                                fatMass = value[2] *
+                                    100 /
+                                    (value[0] + value[1] + value[2]);
+                              });
                             });
                           }
                         }
