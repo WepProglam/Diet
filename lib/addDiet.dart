@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model.dart';
 import 'appBar.dart';
-
 import 'db_helper.dart';
+import 'piChart.dart';
 
 final dbHelperFood = DBHelperFood();
 
@@ -42,6 +42,7 @@ class _FoodListState extends State<FoodList> {
   final dbHelperDiet = DBHelperDiet();
   TextEditingController dietNameController = TextEditingController();
   List<TextEditingController> foodMassController = [];
+  double carbohydrateMass, proteinMass, fatMass = 0;
 
   void addItem(List<ListContents> food) {
     setState(() {
@@ -98,6 +99,9 @@ class _FoodListState extends State<FoodList> {
                   for (var item in foodMassController) {
                     item.text = "";
                   }
+                  carbohydrateMass = 0.0;
+                  fatMass = 0.0;
+                  proteinMass = 0.0;
                 });
               },
             ),
@@ -260,8 +264,16 @@ class _FoodListState extends State<FoodList> {
                         } else if (numOfMass(foodList) == 3) {
                           calculate(foodList).then((value) {
                             setState(() {
+                              carbohydrateMass = value[0] *
+                                  100 /
+                                  (value[0] + value[1] + value[2]);
+                              proteinMass = value[1] *
+                                  100 /
+                                  (value[0] + value[1] + value[2]);
+                              fatMass = value[2] *
+                                  100 /
+                                  (value[0] + value[1] + value[2]);
                               for (var i = 0; i < 3; i++) {
-                                print(value[i].toString());
                                 foodMassController[i].text =
                                     value[i].toString();
                               }
@@ -318,6 +330,11 @@ class _FoodListState extends State<FoodList> {
                 ),
               ],
             ),
+          ),
+          PieChartSample2(
+            carbohydrate: carbohydrateMass,
+            fat: fatMass,
+            protein: proteinMass,
           ),
           Spacer(
             flex: 1,
