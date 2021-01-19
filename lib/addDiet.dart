@@ -377,9 +377,9 @@ class _FoodListState extends State<FoodList> {
             fat: fatMass,
             protein: proteinMass,
           ),
-          Spacer(
-            flex: 1,
-          ),
+          // Spacer(
+          //   flex: 1,
+          // ),
         ],
       ),
     );
