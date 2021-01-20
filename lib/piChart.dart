@@ -9,10 +9,17 @@ double myCarbohydrate, myProtein, myFat, myTotalCalroie = 0.0;
 class PieChartSample2 extends StatefulWidget {
   PieChartSample2(
       {double carbohydrate, double protein, double fat, double totalCalorie}) {
-    myCarbohydrate = carbohydrate * 100 / (carbohydrate + protein + fat);
-    myProtein = protein * 100 / (carbohydrate + protein + fat);
-    myFat = fat * 100 / (carbohydrate + protein + fat);
-    myTotalCalroie = totalCalorie;
+    if ((carbohydrate != 0.0 || protein != 0.0 || fat != 0.0)) {
+      myCarbohydrate = carbohydrate * 100 / (carbohydrate + protein + fat);
+      myProtein = protein * 100 / (carbohydrate + protein + fat);
+      myFat = fat * 100 / (carbohydrate + protein + fat);
+      myTotalCalroie = totalCalorie;
+    } else {
+      myCarbohydrate = 33;
+      myProtein = 33;
+      myFat = 34;
+      myTotalCalroie = 0.0;
+    }
   }
 
   @override
