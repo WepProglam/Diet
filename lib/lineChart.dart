@@ -21,11 +21,11 @@ class LineChartSample1State extends State<LineChartSample1> {
       aspectRatio: 1.23,
       child: Container(
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(18)),
+          // borderRadius: BorderRadius.all(Radius.circular(18)),
           gradient: LinearGradient(
             colors: [
-              Color(0xff2c274c),
-              Color(0xff46426c),
+              Color(0xff77AAAD),
+              Color(0xff77AAAD),
             ],
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
@@ -377,8 +377,8 @@ class LineChartSample1State extends State<LineChartSample1> {
         dotData: FlDotData(
           show: false,
         ),
-        belowBarData: BarAreaData(show: true, colors: [
-          const Color(0x33aa4cfc), //색상 보여주기
+        belowBarData: BarAreaData(show: false, colors: [
+          // const Color(0x33aa4cfc), //색상 보여주기
         ]),
       ),
       LineChartBarData(

@@ -141,6 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var mealTime = "false";
   var calender_year = DateTime.now().year; //달력 상 표기 되는 달력
   var calender_month = DateTime.now().month;
+  var calender_date = DateTime.now().day;
   var daysFirstWeek;
   var daysLastWeek;
   var lastDayDateTime;
@@ -161,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
     daysFirstWeek = 7 - dayToDate(dayFirst) + 1; //첫 주에 몇일 있는지
 
     return Scaffold(
-        backgroundColor: Color(0xFFFFFEF5),
+        backgroundColor: Color(0xFFD7FFF1),
         appBar: basicAppBar('Main Page', context),
         drawer: NavDrawer(),
         body: Column(
@@ -179,8 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Expanded(
                     flex: 20,
                     child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black)),
+                        decoration: BoxDecoration(color: Color(0x7077AAAD)),
                         child: isItCalender ? returnCalender() : returnGraph()),
                   ),
                   Spacer(
@@ -190,7 +190,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               flex: 10,
             ),
-            dietDate(date.toString()),
+            Spacer(
+              flex: 1,
+            ),
             diet(date.toString()),
             dietBox(mealTime, date),
             Spacer(
@@ -288,7 +290,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Icon(Icons.arrow_back_ios),
                     ),
                     Text(
-                      "$calender_year년 $calender_month월",
+                      "$calender_year년 $calender_month월 $calender_date일",
                       style: TextStyle(fontSize: 20),
                     ),
                     FlatButton(
@@ -547,6 +549,7 @@ class _MyHomePageState extends State<MyHomePage> {
             if (!isitDay) {
               setState(() {
                 date = int.parse(title.data);
+                calender_date = date;
               });
             }
           },
@@ -573,7 +576,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
               flex: 1,
               child: FlatButton(
-                color: Colors.red,
+                color: Color(0xff58C9B9),
                 child: Container(
                   child: Center(
                       child: Text(
@@ -593,7 +596,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
               flex: 1,
               child: FlatButton(
-                color: Colors.green,
+                color: Color(0xff58C9B9),
                 child: Container(
                   // decoration: BoxDecoration(color: Colors.white10),
                   // border: Border(bottom: BorderSide(color: Colors.blue))),
@@ -615,7 +618,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
               flex: 1,
               child: FlatButton(
-                color: Colors.blue,
+                color: Color(0xff58C9B9),
                 child: Container(
                   child: Center(
                       child: Text(
@@ -646,10 +649,10 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Container(
               decoration: BoxDecoration(
                   color: day == "아침"
-                      ? Colors.red
+                      ? Color(0xff58C9B9) //Colors.red
                       : day == "점심"
-                          ? Colors.green
-                          : Colors.blue),
+                          ? Color(0xff58C9B9)
+                          : Color(0xff58C9B9)),
             ))
         : Spacer(
             flex: 7,
