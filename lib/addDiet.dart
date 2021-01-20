@@ -25,7 +25,7 @@ class AddDiet extends StatelessWidget {
 class ListContents {
   String foodName;
   String code;
-  num mass;
+  dynamic mass;
 
   ListContents({this.foodName, this.code, this.mass});
 }
@@ -160,6 +160,7 @@ class _FoodListState extends State<FoodList> {
         n++;
       }
     }
+
     return n;
   }
 
@@ -170,6 +171,19 @@ class _FoodListState extends State<FoodList> {
         n++;
       }
     }
+    return n;
+  }
+
+  int otherNumOfMass(List<TextEditingController> foodMassController) {
+    int n = 0;
+    for (var item in foodMassController) {
+      var text = item.value.text;
+      num value = num.tryParse(text);
+      if (value == null) {
+        n += 1;
+      }
+    }
+
     return n;
   }
 
@@ -284,59 +298,32 @@ class _FoodListState extends State<FoodList> {
                   child: IconButton(
                       icon: Icon(Icons.calculate, color: Color(0xFF69C2B0)),
                       onPressed: () {
-                        print(foodList.length);
+                        print(numOfMass(foodList));
                         if (foodList.length < 3) {
                           //최소 3개 선택하라는 경고창
                           var snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');
                           Scaffold.of(context).showSnackBar(snackBar);
                         } else if (changeNumOfMass(foodList) == 3) {
-                          if (!isGraphShowed) {
-                            calculate(foodList).then((value) {
-                              justCalNutri(foodList, value).then((val) {
-                                print(val);
-                                setState(() {
-                                  carbohydrateMass =
-                                      val[0] * 100 / (val[0] + val[1] + val[2]);
-                                  proteinMass =
-                                      val[1] * 100 / (val[0] + val[1] + val[2]);
-                                  fatMass =
-                                      val[2] * 100 / (val[0] + val[1] + val[2]);
-                                });
-
-                                for (var i = 0; i < 3; i++) {
-                                  foodMassController[i].text =
-                                      value[i].toString();
-                                  foodList[i].mass = double.parse(
-                                      foodMassController[i].value.text);
-                                }
+                          calculate(foodList).then((value) {
+                            justCalNutri(foodList, value).then((val) {
+                              print(val);
+                              setState(() {
+                                carbohydrateMass =
+                                    val[0] * 100 / (val[0] + val[1] + val[2]);
+                                proteinMass =
+                                    val[1] * 100 / (val[0] + val[1] + val[2]);
+                                fatMass =
+                                    val[2] * 100 / (val[0] + val[1] + val[2]);
                               });
 
-                              isGraphShowed = true;
-                            });
-                          } else {
-                            if (changeNumOfMass(foodList) == 3) {
-                              print("hello");
-                              var massList = <double>[];
                               for (var i = 0; i < 3; i++) {
-                                massList.add(num.parse(
-                                    foodMassController[i].value.text));
+                                foodMassController[i].text =
+                                    value[i].toString();
+                                foodList[i].mass = double.parse(
+                                    foodMassController[i].value.text);
                               }
-                              print(massList);
-                              justCalNutri(foodList, massList).then((value) {
-                                setState(() {
-                                  carbohydrateMass = value[0] *
-                                      100 /
-                                      (value[0] + value[1] + value[2]);
-                                  proteinMass = value[1] *
-                                      100 /
-                                      (value[0] + value[1] + value[2]);
-                                  fatMass = value[2] *
-                                      100 /
-                                      (value[0] + value[1] + value[2]);
-                                });
-                              });
-                            }
-                          }
+                            });
+                          });
                         } else {
                           print(numOfMass(foodList));
                           var snackBar =
@@ -344,6 +331,38 @@ class _FoodListState extends State<FoodList> {
                           Scaffold.of(context).showSnackBar(snackBar);
                         }
                       }),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    icon: Icon(Icons.palette),
+                    color: Color(0xFF69C2B0),
+                    onPressed: () {
+                      if (changeNumOfMass(foodList) == 3 &&
+                          foodList.length == 3) {
+                        print("hello");
+                        var massList = <double>[];
+                        for (var i = 0; i < 3; i++) {
+                          massList
+                              .add(num.parse(foodMassController[i].value.text));
+                        }
+                        print(massList);
+                        justCalNutri(foodList, massList).then((value) {
+                          setState(() {
+                            carbohydrateMass = value[0] *
+                                100 /
+                                (value[0] + value[1] + value[2]);
+                            proteinMass = value[1] *
+                                100 /
+                                (value[0] + value[1] + value[2]);
+                            fatMass = value[2] *
+                                100 /
+                                (value[0] + value[1] + value[2]);
+                          });
+                        });
+                      }
+                    },
+                  ),
                 ),
                 // enter diet textfield
                 Expanded(
@@ -383,7 +402,7 @@ class _FoodListState extends State<FoodList> {
                       }),
                 ),
                 Spacer(
-                  flex: 1,
+                  flex: 2,
                 ),
               ],
             ),
