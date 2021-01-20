@@ -220,13 +220,15 @@ class _FoodListState extends State<FoodList> {
   @override
   Widget build(BuildContext context) {
     final Map<String, Map> args = ModalRoute.of(context).settings.arguments;
-    print(args);
 
     if (args != null) {
       dietInfo = args["myTempoDiet"];
       Map foodInfo = jsonDecode(dietInfo['foodInfo']);
-      Map foods = jsonDecode(foodInfo['test1']);
-      print(foods['MYbf47a246401c71011287f201da0adca4']);
+      Map foods = Map<String, dynamic>.from(foodInfo[dietInfo['dietName']]);
+      print(foods);
+      // print(dietName);
+      // Map foods = jsonDecode(foodInfo[dietName]);
+      // print(foods['MYbf47a246401c71011287f201da0adca4']);
 
       setState(() {
         dietNameController.text = dietInfo['dietName'];
@@ -262,17 +264,20 @@ class _FoodListState extends State<FoodList> {
                                 _navigateAndDisplaySelection(context);
                                 isGraphShowed = false;
                               },
-                              child: Container(
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Color(0xFF69C2B0),
+                              child: Expanded(
+                                child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height / 14,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Color(0xFF69C2B0),
+                                    ),
                                   ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '음식 추가',
-                                    textAlign: TextAlign.center,
+                                  child: Center(
+                                    child: Text(
+                                      '음식 추가',
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
                                 ),
                               ),
