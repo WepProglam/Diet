@@ -43,7 +43,7 @@ class _DietListState extends State<DietList> {
       for (var item in val) {
         dietNameEX.add(item);
       }
-      print(dietNameEX.length);
+      // print(dietNameEX.length);
     });
     setState(() {});
   }
@@ -55,7 +55,7 @@ class _DietListState extends State<DietList> {
   }
 
   void reactWhenCalc(int index) {
-    print(dietNameEX[index].toMap());
+    // print(dietNameEX[index].toMap());
     Navigator.pop(context, <String, Map>{"myDiet": dietNameEX[index].toMap()});
   }
 
@@ -68,7 +68,7 @@ class _DietListState extends State<DietList> {
   }
 
   void react(int index, bool flag) {
-    print(flag);
+    // print(flag);
     if (flag) {
       reactWhenCalc(index);
     } else {
