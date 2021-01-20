@@ -42,7 +42,8 @@ class _FoodListState extends State<FoodList> {
   final dbHelperDiet = DBHelperDiet();
   TextEditingController dietNameController = TextEditingController();
   List<TextEditingController> foodMassController = [];
-  num carbohydrateMass, proteinMass, fatMass, totalCalorie = 0.0;
+  num carbohydrateMass, proteinMass, fatMass = 0.0;
+  num totalCalorie;
   bool isGraphShowed = false;
   var dietInfo = {};
 
