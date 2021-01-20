@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'appBar.dart';
+import 'db_helper.dart';
+
+final dbHelperDiet = DBHelperDiet();
 
 class CalcDiet extends StatefulWidget {
   @override
@@ -8,13 +13,12 @@ class CalcDiet extends StatefulWidget {
 
 class _CalcDietState extends State<CalcDiet> {
   Map visibleMeal = {
-    "아침": {"visiblity": true, "added": false},
-    "점심": {"visiblity": true, "added": false},
-    "저녁": {"visiblity": true, "added": false},
-    "간식": {"visiblity": true, "added": false}
+    "아침": {"visiblity": true, "added": false, "diet": [], "dietName": ""},
+    "점심": {"visiblity": true, "added": false, "diet": [], "dietName": ""},
+    "저녁": {"visiblity": true, "added": false, "diet": [], "dietName": ""},
+    "간식": {"visiblity": true, "added": false, "diet": [], "dietName": ""}
   };
 
-  List<String> foods = ["현미밥", "닭가슴살", "감자"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,7 +152,7 @@ class _CalcDietState extends State<CalcDiet> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                for (var i in foods)
+                for (var i in visibleMeal[key]['diet'])
                   Container(
                     child: Center(
                         child: Text(
@@ -165,8 +169,7 @@ class _CalcDietState extends State<CalcDiet> {
           ),
           onPressed: () {
             setState(() {
-              visibleMeal[key]["added"] = false;
-              Navigator.pushNamed(context, '/savedDiet');
+              fetchDiet(key);
             });
           });
     } else {
@@ -183,13 +186,34 @@ class _CalcDietState extends State<CalcDiet> {
               ))),
           onPressed: () {
             setState(() {
-              visibleMeal[key]["added"] = true;
-              Navigator.pushNamed(context, '/savedDiet');
+              //리로딩 해야지 읽힘 왜 이런지 모르겠음
+              fetchDiet(key);
             });
           });
-      //   decoration: BoxDecoration(
-      //       border: Border.all(color: Colors.black)),
-
     }
+  }
+
+  void fetchDiet(String key) {
+    visibleMeal[key]["added"] = true;
+    Navigator.pushNamed(context, '/savedDiet',
+        arguments: <String, bool>{"fromCalcDiet": true}).then((value) {
+      var val = value as Map;
+      String dietName = val['myDiet']['dietName'];
+
+      Map foodInfo = jsonDecode(val['myDiet']['foodInfo']);
+      foodInfo = foodInfo[dietName];
+      var foodNames = [];
+
+      foodInfo.forEach((key, value) {
+        //value안에 foodName, foodMass 존재 key안에는 코드 존재
+        foodNames.add(value['foodName']);
+      });
+
+      visibleMeal[key]['diet'] = foodNames;
+      visibleMeal[key]['dietName'] = dietName;
+      print(visibleMeal);
+
+      // print(val['myDiet']['dietName//']);
+    });
   }
 }

@@ -35,6 +35,7 @@ class DietList extends StatefulWidget {
 class _DietListState extends State<DietList> {
   final dbHelperDiet = DBHelperDiet();
   List<Diet> dietNameEX = [];
+  bool fromCalcDiet = false;
 
   void getInfo() async {
     await dbHelperDiet.getAllMyDiet().then((val) {
@@ -53,58 +54,73 @@ class _DietListState extends State<DietList> {
     super.initState();
   }
 
+  void reactWhenCalc(int index) {
+    print(dietNameEX[index].toMap());
+    Navigator.pop(context, {"myDiet": dietNameEX[index].toMap()});
+  }
+
+  void reactWhenAdd(int index) {
+    Navigator.pushNamed(context, '/addDiet',
+            arguments: <String, Map>{"myTempoDiet": dietNameEX[index].toMap()})
+        .then((_) {
+      getInfo();
+    });
+  }
+
+  void react(int index, bool flag) {
+    print(flag);
+    if (flag) {
+      reactWhenCalc(index);
+    } else {
+      reactWhenAdd(index);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Map<String, bool> args = ModalRoute.of(context).settings.arguments;
+    if (args['fromCalcDiet']) {
+      fromCalcDiet = true;
+    }
+
     return GridView.count(
       padding: EdgeInsets.all(8),
       crossAxisCount: 2,
       //각 항목의 사이즈
       childAspectRatio: 5 / 3,
-      children: List.generate(
-        dietNameEX.length,
-        (index) {
-          return Card(
-            margin: EdgeInsets.all(8),
-            child: Column(
-              children: [
-                Expanded(
+      children: List.generate(dietNameEX.length, (index) {
+        return Card(
+          margin: EdgeInsets.all(8),
+          child: Column(
+            children: [
+              Expanded(
                   flex: 2,
                   child: FlatButton(
                     //onPressed에 식단 설정 페이지로 이동하는 함수 넣기
-                    onPressed: () async {
-                      Navigator.pushNamed(context, '/addDiet',
-                          arguments: <String, Map>{
-                            "myTempoDiet": dietNameEX[index].toMap()
-                          }).then((_) {
-                        getInfo();
-                      });
-                    },
-
+                    onPressed: () => react(index, fromCalcDiet),
                     child: Text(
                       '${dietNameEX[index].dietName}',
                       style: TextStyle(fontSize: 30),
                     ),
-                  ),
+                  )),
+              Expanded(
+                flex: 1,
+                child: IconButton(
+                  iconSize: 20,
+                  onPressed: () {
+                    setState(() {
+                      dbHelperDiet.deleteDiet(dietNameEX[index].dietName);
+                      dietNameEX.removeAt(index);
+                    });
+                  },
+                  icon: Icon(Icons.delete),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    iconSize: 20,
-                    onPressed: () {
-                      setState(() {
-                        dbHelperDiet.deleteDiet(dietNameEX[index].dietName);
-                        dietNameEX.removeAt(index);
-                      });
-                    },
-                    icon: Icon(Icons.delete),
-                  ),
-                ),
-              ],
-            ),
-            color: Colors.white70,
-          );
-        },
-      ),
+              ),
+            ],
+          ),
+          color: Colors.white70,
+        );
+      }),
     );
   }
 }
