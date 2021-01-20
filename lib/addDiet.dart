@@ -226,9 +226,14 @@ class _FoodListState extends State<FoodList> {
       Map foodInfo = jsonDecode(dietInfo['foodInfo']);
       Map foods = Map<String, dynamic>.from(foodInfo[dietInfo['dietName']]);
       print(foods);
-      // print(dietName);
-      // Map foods = jsonDecode(foodInfo[dietName]);
-      // print(foods['MYbf47a246401c71011287f201da0adca4']);
+      var foodCodes = foods.keys;
+      print(foodCodes);
+      for (var item in foodCodes) {
+        foodList.add(ListContents(
+            foodName: foods[item]['foodName'],
+            code: item,
+            mass: foods[item]['foodMass']));
+      }
 
       setState(() {
         dietNameController.text = dietInfo['dietName'];
@@ -264,20 +269,17 @@ class _FoodListState extends State<FoodList> {
                                 _navigateAndDisplaySelection(context);
                                 isGraphShowed = false;
                               },
-                              child: Expanded(
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 14,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Color(0xFF69C2B0),
-                                    ),
+                              child: Container(
+                                height: MediaQuery.of(context).size.height / 14,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(0xFF69C2B0),
                                   ),
-                                  child: Center(
-                                    child: Text(
-                                      '음식 추가',
-                                      textAlign: TextAlign.center,
-                                    ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '음식 추가',
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               ),
