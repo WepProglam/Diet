@@ -206,15 +206,6 @@ class _FoodListState extends State<FoodList> {
     return n;
   }
 
-  bool isThereBlank(List<ListContents> list) {
-    for (var item in list) {
-      if (item.mass == 0 || item.mass == null) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     final Map<String, Map> args = ModalRoute.of(context).settings.arguments;
@@ -427,17 +418,20 @@ class _FoodListState extends State<FoodList> {
                   child: IconButton(
                       icon: Icon(Icons.add, color: Color(0xFF69C2B0)),
                       onPressed: () {
-                        if (isThereBlank(foodList)) {
+                        if (changeNumOfMass() != foodList.length) {
                           var snackBar = buildSnackBar('빈칸이 있습니다.');
                           Scaffold.of(context).showSnackBar(snackBar);
                         } else {
                           //db에 저장
                           String dietName = dietNameController.value.text;
                           Map foodInfo = {dietName: {}};
-                          for (var item in foodList) {
-                            foodInfo[dietName][item.code] = {
-                              "foodName": item.foodName,
-                              "foodMass": item.mass
+                          for (var i = 0; i < foodList.length; i++) {
+                            var foodMass =
+                                num.parse(foodMassController[i].value.text);
+
+                            foodInfo[dietName][foodList[i].code] = {
+                              "foodName": foodList[i].foodName,
+                              "foodMass": foodMass
                             };
                           }
                           String foodInfoString = jsonEncode(foodInfo);
@@ -445,7 +439,7 @@ class _FoodListState extends State<FoodList> {
                             dietName: dietName,
                             foodInfo: foodInfoString,
                           );
-                          dbHelperDiet.createData(diet);
+                          showAlertDialog(context, diet);
                         }
                       }),
                 ),
@@ -466,6 +460,38 @@ class _FoodListState extends State<FoodList> {
           ),
         ],
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context, Diet diet) {
+    // set up the button
+    Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          dbHelperDiet.createData(diet);
+          Navigator.pop(context);
+        });
+
+    Widget noButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("음식 저장"),
+      content: Text("저장하시겠습니까?"),
+      actions: [okButton, noButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 
