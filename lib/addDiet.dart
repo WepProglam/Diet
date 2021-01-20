@@ -42,9 +42,19 @@ class _FoodListState extends State<FoodList> {
   final dbHelperDiet = DBHelperDiet();
   TextEditingController dietNameController = TextEditingController();
   List<TextEditingController> foodMassController = [];
-  num carbohydrateMass, proteinMass, fatMass = 0.0;
+  num carbohydrateMass, proteinMass, fatMass, totalCalorie = 0.0;
   bool isGraphShowed = false;
   var dietInfo = {};
+
+  @override
+  void initState() {
+    carbohydrateMass = 0.0;
+    proteinMass = 0.0;
+    fatMass = 0.0;
+    totalCalorie = 0.0;
+
+    super.initState();
+  }
 
   void addItem(List<ListContents> food) {
     setState(() {
@@ -209,6 +219,7 @@ class _FoodListState extends State<FoodList> {
   @override
   Widget build(BuildContext context) {
     final Map<String, Map> args = ModalRoute.of(context).settings.arguments;
+    print(args);
 
     if (args != null) {
       dietInfo = args["myTempoDiet"];
