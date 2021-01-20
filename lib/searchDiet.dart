@@ -20,13 +20,13 @@ class SearchDiet extends StatelessWidget {
   }
 }
 
-class Building {
-  //나중에 바꿔야 함
-  String dietName;
-  num calories;
+// class Building {
+//   //나중에 바꿔야 함
+//   String dietName;
+//   String foodInfo;
 
-  Building({this.dietName, this.calories});
-}
+//   Building({this.dietName, this.foodInfo});
+// }
 
 class SearchList extends StatefulWidget {
   final Stream<String> streamString;
@@ -39,8 +39,8 @@ class SearchList extends StatefulWidget {
 class _SearchListState extends State<SearchList> {
   final key = GlobalKey<ScaffoldState>();
   final _searchQuery = TextEditingController();
-  List<Building> _list;
-  List<Building> _searchList = List();
+  List<Diet> _list;
+  List<Diet> _searchList = List();
 
   bool _IsSearching = false;
   String _searchText = "";
@@ -66,7 +66,7 @@ class _SearchListState extends State<SearchList> {
     });
   }
 
-  List<Building> _buildSearchList() {
+  List<Diet> _buildSearchList() {
     if (_searchText.isEmpty) {
       return _searchList = _list;
     } else {
@@ -76,7 +76,7 @@ class _SearchListState extends State<SearchList> {
                   .toLowerCase()
                   .contains(_searchText.toLowerCase()))
           .toList();
-      print('${_searchList.length}');
+      // print('${_searchList.length}');
       return _searchList;
     }
   }
@@ -105,7 +105,7 @@ class _SearchListState extends State<SearchList> {
     await getInfo();
     for (var item in dietNameEX) {
       _list.add(
-        Building(dietName: item.dietName),
+        Diet(dietName: item.dietName, foodInfo: item.foodInfo),
       );
     }
     _searchList = _list;
@@ -200,19 +200,54 @@ class _SearchListState extends State<SearchList> {
 }
 
 //
-class Uiitem extends StatelessWidget {
-  final Building building;
-  Uiitem(this.building);
+class Uiitem extends StatefulWidget {
+  final Diet diet;
+  Uiitem(this.diet);
+
+  @override
+  _UiitemState createState() => _UiitemState();
+}
+
+class _UiitemState extends State<Uiitem> {
+  void reactWhenCalc() {
+    // print(widget.diet.toMap());
+    Navigator.pop(context, <String, Map>{"myDiet": widget.diet.toMap()});
+  }
+
+  void reactWhenAdd() {
+    // print(widget.diet.toMap());
+    Navigator.pushNamed(context, '/addDiet',
+        arguments: <String, Map>{"myTempoDiet": widget.diet.toMap()});
+  }
+
+  void react(bool flag) {
+    // print(flag);
+    if (flag) {
+      reactWhenCalc();
+    } else {
+      reactWhenAdd();
+    }
+  }
 
   Widget build(BuildContext context) {
+    bool fromCalcDiet = false;
+
+    final Map<String, bool> args = ModalRoute.of(context).settings.arguments;
+
+    if (args != null && args['fromCalcDiet']) {
+      fromCalcDiet = true;
+    } else {
+      fromCalcDiet = false;
+    }
+
     return Card(
       margin: EdgeInsets.all(8),
       color: Colors.white70,
       child: InkWell(
         // splashColor: Colors.orange,
         //여기다 눌렀을 때 기능 넣기
-        onTap: () {
-          print(building.dietName);
+        onTap: () async {
+          react(fromCalcDiet);
         },
         child: Center(
           child: Column(
@@ -221,7 +256,7 @@ class Uiitem extends StatelessWidget {
                 flex: 2,
               ),
               Text(
-                this.building.dietName,
+                widget.diet.dietName,
                 style: TextStyle(
                     // fontFamily: 'Raleway',
                     // fontWeight: FontWeight.bold,
