@@ -56,7 +56,7 @@ class _DietListState extends State<DietList> {
 
   void reactWhenCalc(int index) {
     print(dietNameEX[index].toMap());
-    Navigator.pop(context, {"myDiet": dietNameEX[index].toMap()});
+    Navigator.pop(context, <String, Map>{"myDiet": dietNameEX[index].toMap()});
   }
 
   void reactWhenAdd(int index) {
@@ -79,8 +79,11 @@ class _DietListState extends State<DietList> {
   @override
   Widget build(BuildContext context) {
     final Map<String, bool> args = ModalRoute.of(context).settings.arguments;
-    if (args['fromCalcDiet']) {
+    //null일 경우를 안해놓냐 슈발
+    if (args != null && args['fromCalcDiet']) {
       fromCalcDiet = true;
+    } else {
+      fromCalcDiet = false;
     }
 
     return GridView.count(
@@ -97,7 +100,9 @@ class _DietListState extends State<DietList> {
                   flex: 2,
                   child: FlatButton(
                     //onPressed에 식단 설정 페이지로 이동하는 함수 넣기
-                    onPressed: () => react(index, fromCalcDiet),
+                    onPressed: () async {
+                      react(index, fromCalcDiet);
+                    },
                     child: Text(
                       '${dietNameEX[index].dietName}',
                       style: TextStyle(fontSize: 30),
