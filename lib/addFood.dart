@@ -397,16 +397,21 @@ class _TypeFoodName extends State<TypeFoodName> {
             if (text != "") {
               await dbHelper.filterFoods(text.toString()).then((value) async {
                 foodList = [];
+                List<int> foodListIndex = [];
 
                 var i = 0;
                 for (var item in value) {
                   if (i < 10) {
+                    foodListIndex.add(item.selected);
+                    foodListIndex.sort((b, a) => a.compareTo(b));
+                    var index = foodListIndex.indexOf(item.selected);
+
                     foodList.insert(
-                        0,
+                        index,
                         ListTile(
                           title: Text(item.foodName),
                           subtitle: Text(
-                              "${item.kcal * item.servingSize} Kcal  ${item.isItMine}"),
+                              "${item.kcal * item.servingSize} Kcal  ${item.isItMine} selected : ${item.selected}"),
                           onTap: () {
                             Map foodInfo = {};
                             controller.text = item.foodName;
