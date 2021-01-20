@@ -284,7 +284,7 @@ class _FoodListState extends State<FoodList> {
                 ),
                 //listview
                 Expanded(
-                  flex: 4,
+                  flex: 8,
                   child: Container(
                     margin: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
@@ -305,7 +305,7 @@ class _FoodListState extends State<FoodList> {
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: 1,
             child: Row(
               children: [
                 Spacer(
@@ -327,12 +327,9 @@ class _FoodListState extends State<FoodList> {
                             justCalNutri(foodList, value).then((val) {
                               print(val);
                               setState(() {
-                                carbohydrateMass =
-                                    val[0] * 100 / (val[0] + val[1] + val[2]);
-                                proteinMass =
-                                    val[1] * 100 / (val[0] + val[1] + val[2]);
-                                fatMass =
-                                    val[2] * 100 / (val[0] + val[1] + val[2]);
+                                carbohydrateMass = val[0];
+                                proteinMass = val[1];
+                                fatMass = val[2];
                               });
 
                               for (var i = 0; i < 3; i++) {
@@ -345,7 +342,9 @@ class _FoodListState extends State<FoodList> {
                           if (foodList.length - changeNumOfMass() == 3) {
                             //should add change calorie
                             List<int> index = getIndex();
-                            calculate(foodList).then((value) {
+
+                            calculate(foodList, defaultMass: index)
+                                .then((value) {
                               for (var i = 0; i < 3; i++) {
                                 print(value[i]);
                               }
@@ -362,12 +361,9 @@ class _FoodListState extends State<FoodList> {
                               justCalNutri(foodList, massList).then((val) {
                                 print(val);
                                 setState(() {
-                                  carbohydrateMass =
-                                      val[0] * 100 / (val[0] + val[1] + val[2]);
-                                  proteinMass =
-                                      val[1] * 100 / (val[0] + val[1] + val[2]);
-                                  fatMass =
-                                      val[2] * 100 / (val[0] + val[1] + val[2]);
+                                  carbohydrateMass = val[0];
+                                  proteinMass = val[1];
+                                  fatMass = val[2];
                                 });
                                 var controllerIndex = 0;
 
@@ -404,15 +400,9 @@ class _FoodListState extends State<FoodList> {
                         print(massList);
                         justCalNutri(foodList, massList).then((value) {
                           setState(() {
-                            carbohydrateMass = value[0] *
-                                100 /
-                                (value[0] + value[1] + value[2]);
-                            proteinMass = value[1] *
-                                100 /
-                                (value[0] + value[1] + value[2]);
-                            fatMass = value[2] *
-                                100 /
-                                (value[0] + value[1] + value[2]);
+                            carbohydrateMass = value[0];
+                            proteinMass = value[1];
+                            fatMass = value[2];
                           });
                         });
                       } else {
@@ -469,6 +459,7 @@ class _FoodListState extends State<FoodList> {
             carbohydrate: carbohydrateMass,
             fat: fatMass,
             protein: proteinMass,
+            totalCalorie: carbohydrateMass * 4 + fatMass * 9 + proteinMass * 4,
           ),
           Spacer(
             flex: 1,
@@ -496,7 +487,8 @@ class _FoodListState extends State<FoodList> {
         matrix[0][2] * detnum(matrix, 0, 2));
   }
 
-  Future<List<num>> calculate(List<ListContents> foodList) async {
+  Future<List<num>> calculate(List<ListContents> foodList,
+      {List<int> defaultMass = null}) async {
     List<Map> foods = [];
     num determinant, x_det, y_det, z_det;
     List<List<num>> matrix = [];
@@ -504,21 +496,49 @@ class _FoodListState extends State<FoodList> {
     List<num> carbohydrate = [];
     List<num> protein = [];
     List<num> fat = [];
-    num totalCalorie = 600; //일단 가정
-    List<num> ratio = [5, 3, 2]; //탄 단 지 순서 (가정)
+    num totalCalorie = 600; //일단 가정(kcal)
+    // List<num> ratio = [5, 3, 2]; //탄 단 지 순서 (가정) 5:3:2라 가정
+    num unit;
     num x, y, z; //각 음식별 무게
-
-    for (var item in foodList) {
-      Food food = await dbHelperFood.getFood(item.code);
-      foods.add(food.toMap());
-      carbohydrate.add(food.carbohydrate);
-      protein.add(food.protein);
-      fat.add(food.fat);
+    for (var i = 0; i < foodList.length; i++) {
+      Food food = await dbHelperFood.getFood(foodList[i].code);
+      print(foodList[i].code);
+      if (defaultMass != null) {
+        if (defaultMass.contains(i)) {
+          totalCalorie -=
+              food.kcal * num.parse(foodMassController[i].value.text);
+        } else {
+          foods.add(food.toMap());
+          carbohydrate.add(food.carbohydrate);
+          protein.add(food.protein);
+          fat.add(food.fat);
+        }
+      } else {
+        foods.add(food.toMap());
+        carbohydrate.add(food.carbohydrate);
+        protein.add(food.protein);
+        fat.add(food.fat);
+      }
     }
-    carbohydrate
-        .add(totalCalorie * ratio[0] / (ratio[0] + ratio[1] + ratio[2]));
-    protein.add(totalCalorie * ratio[1] / (ratio[0] + ratio[1] + ratio[2]));
-    fat.add(totalCalorie * ratio[2] / (ratio[0] + ratio[1] + ratio[2]));
+    print(carbohydrate);
+    print(protein);
+    print(fat);
+    print("totalcalorie $totalCalorie");
+    unit = totalCalorie / 50;
+    /*
+    탄수화물  단백질     지방
+    4cal/g    4cal/g    9cal/g
+
+    탄수화물  단백질      지방
+    5k(g)     3k(g)      2k(g)
+
+    20k(cal)  12k(cal)   18k(cal)   => 합하면 50k
+
+    unit은 k
+    */
+    carbohydrate.add(unit * 5);
+    protein.add(unit * 3);
+    fat.add(unit * 2);
 
     matrix = [carbohydrate, protein, fat];
 

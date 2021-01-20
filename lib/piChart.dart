@@ -4,13 +4,15 @@ import 'package:flutter_application_1/initPage.dart';
 
 import 'indicator.dart';
 
-double myCarbohydrate, myProtein, myFat = 0.0;
+double myCarbohydrate, myProtein, myFat, myTotalCalroie = 0.0;
 
 class PieChartSample2 extends StatefulWidget {
-  PieChartSample2({double carbohydrate, double protein, double fat}) {
-    myCarbohydrate = carbohydrate;
-    myProtein = protein;
-    myFat = fat;
+  PieChartSample2(
+      {double carbohydrate, double protein, double fat, double totalCalorie}) {
+    myCarbohydrate = carbohydrate * 100 / (carbohydrate + protein + fat);
+    myProtein = protein * 100 / (carbohydrate + protein + fat);
+    myFat = fat * 100 / (carbohydrate + protein + fat);
+    myTotalCalroie = totalCalorie;
   }
 
   @override
@@ -64,10 +66,11 @@ class PieChart2State extends State {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Indicator(
                       color: Color(0xff0293ee),
                       text: '탄수화물',
+                      fontSize: 12,
                       isSquare: true,
                     ),
                     SizedBox(
@@ -76,6 +79,7 @@ class PieChart2State extends State {
                     Indicator(
                       color: Color(0xfff8b250),
                       text: '단백질',
+                      fontSize: 12,
                       isSquare: true,
                     ),
                     SizedBox(
@@ -85,6 +89,16 @@ class PieChart2State extends State {
                       color: Color(0xff845bef),
                       text: '지방',
                       isSquare: true,
+                      fontSize: 12,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Indicator(
+                      color: Colors.black,
+                      text: "${myRounder(myTotalCalroie)}Kcal",
+                      isSquare: true,
+                      fontSize: 12,
                     ),
                     SizedBox(
                       height: 18,
