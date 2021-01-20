@@ -346,11 +346,18 @@ class _FoodListState extends State<FoodList> {
                             //should add change calorie
                             List<int> index = getIndex();
                             calculate(foodList).then((value) {
-                              var massList = value;
-                              for (var item in index) {
-                                massList.add(num.parse(
-                                    foodMassController[item].value.text));
+                              for (var i = 0; i < 3; i++) {
+                                print(value[i]);
                               }
+                              var massList = value;
+                              print(massList);
+                              for (var item in index) {
+                                massList.insert(
+                                    item,
+                                    num.parse(
+                                        foodMassController[item].value.text));
+                              }
+                              print(massList);
 
                               justCalNutri(foodList, massList).then((val) {
                                 print(val);
