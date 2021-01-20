@@ -10,6 +10,7 @@ import 'package:draw_graph/draw_graph.dart';
 import 'db_helper.dart';
 import 'model.dart';
 import 'mainStream.dart' as mainStream;
+import 'lineChart.dart';
 
 final dbHelperPerson = DBHelperPerson();
 
@@ -163,43 +164,68 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Color(0xFFFFFEF5),
         appBar: basicAppBar('Main Page', context),
         drawer: NavDrawer(),
-        body: isItCalender
-            ? Column(
+        body: Column(
+          children: [
+            Spacer(
+              flex: 1,
+            ),
+            calenderMonthChange(),
+            Expanded(
+              child: Row(
                 children: [
                   Spacer(
                     flex: 1,
                   ),
-                  calenderMonthChange(),
-                  calenderDayRow(), //요일
-                  calenderRow(1, tag: "first"),
-                  calenderRow(
-                      1 + daysFirstWeek), //첫주 다 채우고 새로운 주의 첫 일 ( ex) 1월 3일)
-                  calenderRow(8 + daysFirstWeek),
-                  calenderRow(15 + daysFirstWeek),
-                  calenderRow(22 + daysFirstWeek),
-                  calenderRow(29 + daysFirstWeek, tag: "end"),
-                  dietDate(date.toString()),
-                  diet(date.toString()),
-                  dietBox(mealTime, date),
-                  Spacer(
-                    flex: 2,
+                  Expanded(
+                    flex: 20,
+                    child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black)),
+                        child: isItCalender ? returnCalender() : returnGraph()),
                   ),
-                ],
-              )
-            : Column(
-                children: [
                   Spacer(
                     flex: 1,
-                  ),
-                  calenderMonthChange(),
-                  MyScreen(),
-                  diet(date.toString()),
-                  dietBox(mealTime, date),
-                  Spacer(
-                    flex: 2,
-                  ),
+                  )
                 ],
-              ));
+              ),
+              flex: 10,
+            ),
+            dietDate(date.toString()),
+            diet(date.toString()),
+            dietBox(mealTime, date),
+            Spacer(
+              flex: 2,
+            ),
+          ],
+        ));
+  }
+
+  Widget returnCalender() {
+    return Column(
+      children: [
+        calenderDayRow(), //요일
+        calenderRow(1, tag: "first"),
+        calenderRow(1 + daysFirstWeek), //첫주 다 채우고 새로운 주의 첫 일 ( ex) 1월 3일)
+        calenderRow(8 + daysFirstWeek),
+        calenderRow(15 + daysFirstWeek),
+        calenderRow(22 + daysFirstWeek),
+        calenderRow(29 + daysFirstWeek, tag: "end"),
+      ],
+    );
+  }
+
+  Widget returnGraph() {
+    return Column(
+      children: [
+        Spacer(
+          flex: 1,
+        ),
+        LineChartSample1(),
+        Spacer(
+          flex: 2,
+        ),
+      ],
+    );
   }
 
   int dayToDate(String day) {
