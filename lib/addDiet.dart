@@ -223,6 +223,10 @@ class _FoodListState extends State<FoodList> {
 
     if (args != null) {
       dietInfo = args["myTempoDiet"];
+      Map foodInfo = jsonDecode(dietInfo['foodInfo']);
+      Map foods = jsonDecode(foodInfo['test1']);
+      print(foods['MYbf47a246401c71011287f201da0adca4']);
+
       setState(() {
         dietNameController.text = dietInfo['dietName'];
       });
