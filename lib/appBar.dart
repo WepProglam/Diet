@@ -130,11 +130,22 @@ class NavDrawer extends StatelessWidget {
               print(ModalRoute.of(context).settings.name);
             },
           ),
+          ListTile(
+            leading: Icon(Icons.border_color),
+            title: Text('Calculate'),
+            onTap: () {
+              // print(ModalRoute.of(context).settings.name);
+              Navigator.pushNamed(context, '/calculate');
+              print(ModalRoute.of(context).settings.name);
+            },
+          ),
         ],
       ),
     );
   }
 }
+
+
 // ListTile(
 //             leading: Icon(Icons.input),
 //             title: Text('addFood'),
