@@ -67,9 +67,9 @@ class DBHelperPerson {
   }
 
   //Read
-  getPerson(int id) async {
+  getPerson(String time) async {
     final db = await database;
-    var res = await db.rawQuery('SELECT * FROM $tableName WHERE id = $id');
+    var res = await db.rawQuery('SELECT * FROM $tableName WHERE time = $time');
     return res.isNotEmpty
         ? Person(
             height: res.first['height'],

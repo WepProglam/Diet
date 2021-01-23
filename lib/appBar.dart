@@ -139,12 +139,20 @@ class NavDrawer extends StatelessWidget {
               print(ModalRoute.of(context).settings.name);
             },
           ),
+          ListTile(
+            leading: Icon(Icons.border_color),
+            title: Text('Activity Page'),
+            onTap: () {
+              // print(ModalRoute.of(context).settings.name);
+              Navigator.pushNamed(context, '/activityPage');
+              print(ModalRoute.of(context).settings.name);
+            },
+          ),
         ],
       ),
     );
   }
 }
-
 
 // ListTile(
 //             leading: Icon(Icons.input),
