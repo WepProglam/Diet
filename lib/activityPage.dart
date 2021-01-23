@@ -27,13 +27,14 @@ class ActivityPage extends StatefulWidget {
 class _ActivityPageState extends State<ActivityPage> {
   var dbHelperPerson = DBHelperPerson();
 
+  TextEditingController bmrText = TextEditingController();
   TextEditingController carbohydrateText = TextEditingController();
 
   var hint = {};
 
   num bmr;
 
-  void getHint() async {
+  Future<Map> getHint() async {
     var hint1 = {};
     await dbHelperPerson.getAllPerson().then((value) {
       hint1['height'] = value.isNotEmpty ? value.last.height : null;
@@ -43,7 +44,35 @@ class _ActivityPageState extends State<ActivityPage> {
       hint1['muscleMass'] = value.isNotEmpty ? value.last.muscleMass : null;
       hint1['purpose'] = value.isNotEmpty ? value.last.purpose : null;
     });
-    hint = hint1;
+    return hint1;
+  }
+
+  void bmrVal() async {
+    hint = await getHint();
+    //조건: 성별 + hint에 값이 있는지
+    if (hint.isNotEmpty) {
+      if (true) {
+        bmr = (66.5 +
+            (13.8 * hint['weight']) +
+            (5 * hint['height']) -
+            (6.8 * 22)); //23 -> person['age'] - 1 (만나이)
+        bmrText.text = bmr.toStringAsFixed(1);
+      } else {
+        bmr = (655.1 +
+            (9.6 * hint['weight']) +
+            (1.8 * hint['height']) -
+            (4.7 * 22));
+        bmrText.text = bmr.toStringAsFixed(1);
+      }
+    } else {
+      bmrText.text = '신체 정보가 비어있습니다.';
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    bmrVal();
+    super.didChangeDependencies();
   }
 
   Widget carbohydrateRate(TextEditingController controller) {
@@ -73,21 +102,6 @@ class _ActivityPageState extends State<ActivityPage> {
 
   @override
   Widget build(BuildContext context) {
-    getHint();
-
-    //조건: 성별 + hint에 값이 있는지
-    if (true) {
-      bmr = (66.5 +
-          (13.8 * hint['weight']) +
-          (5 * hint['height']) -
-          (6.8 * 22)); //23 -> person['age'] - 1 (만나이)
-    } else {
-      bmr = (655.1 +
-          (9.6 * hint['weight']) +
-          (1.8 * hint['height']) -
-          (4.7 * 22));
-    }
-
     return Container(
         child: Center(
       child: Column(
@@ -104,7 +118,14 @@ class _ActivityPageState extends State<ActivityPage> {
                   '기초대사량(BMR)',
                   style: TextStyle(fontSize: 15),
                 ),
-                Text(bmr.toStringAsFixed(1), style: TextStyle(fontSize: 40)),
+                TextFormField(
+                  controller: bmrText,
+                  style: TextStyle(
+                    fontSize: 40,
+                  ),
+                  textAlign: TextAlign.center,
+                  enableInteractiveSelection: false,
+                ),
                 Text(
                   'kcal',
                   style: TextStyle(fontSize: 15),
