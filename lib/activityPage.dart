@@ -26,7 +26,11 @@ class ActivityPage extends StatefulWidget {
 
 class _ActivityPageState extends State<ActivityPage> {
   var dbHelperPerson = DBHelperPerson();
+
+  TextEditingController carbohydrateText = TextEditingController();
+
   var hint = {};
+
   num bmr;
 
   void getHint() async {
@@ -42,6 +46,31 @@ class _ActivityPageState extends State<ActivityPage> {
     hint = hint1;
   }
 
+  Widget carbohydrateRate(TextEditingController controller) {
+    return Center(
+      child: Row(
+        children: [
+          Spacer(
+            flex: 1,
+          ),
+          Expanded(flex: 4, child: Text('탄수화물 비율:')),
+          Expanded(
+            flex: 8,
+            child: TextFormField(
+                autofocus: false,
+                controller: controller,
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center),
+          ),
+          Text('%'),
+          Spacer(
+            flex: 1,
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     getHint();
@@ -51,12 +80,12 @@ class _ActivityPageState extends State<ActivityPage> {
       bmr = (66.5 +
           (13.8 * hint['weight']) +
           (5 * hint['height']) -
-          (6.8 * 23)); //23 -> person['age']
+          (6.8 * 22)); //23 -> person['age'] - 1 (만나이)
     } else {
       bmr = (655.1 +
           (9.6 * hint['weight']) +
           (1.8 * hint['height']) -
-          (4.7 * 23));
+          (4.7 * 22));
     }
 
     return Container(
@@ -72,13 +101,21 @@ class _ActivityPageState extends State<ActivityPage> {
             child: Column(
               children: [
                 Text(
-                  '기초대사량(kcal)',
+                  '기초대사량(BMR)',
                   style: TextStyle(fontSize: 15),
                 ),
-                Text('$bmr', style: TextStyle(fontSize: 40)),
+                Text(bmr.toStringAsFixed(1), style: TextStyle(fontSize: 40)),
+                Text(
+                  'kcal',
+                  style: TextStyle(fontSize: 15),
+                ),
               ],
             ),
           ),
+          Spacer(
+            flex: 1,
+          ),
+          carbohydrateRate(carbohydrateText),
           Spacer(
             flex: 1,
           ),
