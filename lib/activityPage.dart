@@ -124,7 +124,7 @@ class _ActivityPageState extends State<ActivityPage> {
                     fontSize: 40,
                   ),
                   textAlign: TextAlign.center,
-                  enableInteractiveSelection: false,
+                  readOnly: true,
                 ),
                 Text(
                   'kcal',
