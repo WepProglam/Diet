@@ -147,7 +147,7 @@ class _AddFoodSub extends State<AddFoodSub> {
         _servingController.text = myRounder(foodInfo['servingSize']);
         _foodNameController.text = foodInfo['foodName'];
       });
-      // print("this is args $args");
+      // //print("this is args $args");
       // streamController.add(foodInfo);
     } else {
       //일반적인 상황
@@ -170,7 +170,7 @@ class _AddFoodSub extends State<AddFoodSub> {
       }
     });
     widget.streamBool.listen((isItCustom) {
-      print("listen cutom $foodInfo");
+      //print("listen cutom $foodInfo");
       streamController.add(foodInfo);
     });
     super.initState();
@@ -271,7 +271,7 @@ class _AddFoodSub extends State<AddFoodSub> {
 
   Widget questionForm(
       TextEditingController controller, num value, String question) {
-    print(foodInfo);
+    //print(foodInfo);
     String fieldName = koreanQusetionToEnglish(question);
 
     return TextFormField(
@@ -289,7 +289,7 @@ class _AddFoodSub extends State<AddFoodSub> {
         return null;
       },
       onChanged: (text) {
-        foodInfo[fieldName] = double.parse(text);
+        foodInfo[fieldName] = double.parse(text) / foodInfo['servingSize'];
       },
     );
   }
@@ -431,7 +431,7 @@ class _TypeFoodName extends State<TypeFoodName> {
                   }
                 }
               }, onError: (e) {
-                print(e);
+                //print(e);
               });
 
               foodList.add(ListTile(
@@ -514,10 +514,10 @@ class _TransFoodFABState extends State<TransFoodFAB>
     ));
 
     widget.stream.listen((foodInfo) {
-      print("==========================");
-      print(foodInfo);
+      //print("==========================");
+      //print(foodInfo);
       myFoodInfo = foodInfo;
-      print("this is myFoodinfo1 $myFoodInfo");
+      //print("this is myFoodinfo1 $myFoodInfo");
     });
 
     super.initState();
@@ -543,6 +543,8 @@ class _TransFoodFABState extends State<TransFoodFAB>
       child: FloatingActionButton(
         heroTag: null,
         onPressed: () async {
+          print("start");
+
           final dbHelper = DBHelperFood();
           ByteData data = await rootBundle.load("assets/foodNutriData.xlsx");
           List<int> bytes =
@@ -552,15 +554,15 @@ class _TransFoodFABState extends State<TransFoodFAB>
           print("start");
           for (var table in excel.tables.keys) {
             for (var row in excel.tables[table].rows) {
-              // print(row);
+              // //print(row);
               var food = Food(
                   code: row[0],
                   dbArmy: row[1],
                   foodName: row[2],
                   foodKinds: row[3],
                   kcal: row[4],
-                  protein: row[5],
-                  carbohydrate: row[6],
+                  carbohydrate: row[5],
+                  protein: row[6],
                   fat: row[7],
                   isItMine: 'F',
                   selected: 0,
@@ -584,7 +586,7 @@ class _TransFoodFABState extends State<TransFoodFAB>
         heroTag: null,
         onPressed: () async {
           await streamControllerBool.add(isItCutom);
-          print("myfoodinfoasdf = $myFoodInfo");
+          //print("myfoodinfoasdf = $myFoodInfo");
           if (_formKey.currentState.validate()) {
             showAlertDialog(context);
           }
@@ -625,7 +627,7 @@ class _TransFoodFABState extends State<TransFoodFAB>
     Widget okButton = FlatButton(
         child: Text("OK"),
         onPressed: () async {
-          print("this is myFoodinfo2 $myFoodInfo");
+          //print("this is myFoodinfo2 $myFoodInfo");
           await dbHelperFood.getFood(myFoodInfo['code']).then((value) async {
             Food dbFoodClass = value;
             dbFoodClass.selected += 1;
@@ -647,12 +649,12 @@ class _TransFoodFABState extends State<TransFoodFAB>
             if (myFoodInfo['isItMine'] == 'T') {
               await dbHelperFood
                   .createData(foodClass); //myFoodInfo에 저장된 데이터로 새로 저장
-              print("new food ${foodClass.toMap()}");
+              //print("new food ${foodClass.toMap()}");
               Navigator.pop(context);
             } else {
               var bytes = utf8.encode(myFoodInfo['foodName']);
               String codeName = "MY" + md5.convert(bytes).toString();
-              print(codeName); //코드네임 암호화
+              //print(codeName); //코드네임 암호화
               await dbHelperFood
                   .createData(dbFoodClass); //기존 db 데이터 저장(선택횟수만 변경)
               await dbHelperFood.getFood(codeName).then((value) async {

@@ -5,6 +5,7 @@ import 'package:flutter_application_1/model.dart';
 import 'appBar.dart';
 import 'db_helper.dart';
 import 'piChart.dart';
+import 'calculate.dart';
 
 final dbHelperFood = DBHelperFood();
 
@@ -44,6 +45,7 @@ class _FoodListState extends State<FoodList> {
   List<TextEditingController> foodMassController = [];
   num carbohydrateMass, proteinMass, fatMass = 0.0;
   num totalCalorie;
+  num correct = 0.0;
   bool isGraphShowed = false;
   var dietInfo = {};
 
@@ -53,6 +55,7 @@ class _FoodListState extends State<FoodList> {
     proteinMass = 0.0;
     fatMass = 0.0;
     totalCalorie = 0.0;
+    correct = 0.0;
 
     super.initState();
   }
@@ -330,31 +333,42 @@ class _FoodListState extends State<FoodList> {
                   flex: 1,
                   child: IconButton(
                       icon: Icon(Icons.calculate, color: Color(0xFF69C2B0)),
-                      onPressed: () {
+                      onPressed: () async {
                         print(numOfMass(foodList));
                         if (foodList.length < 3) {
                           //최소 3개 선택하라는 경고창
                           var snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');
                           Scaffold.of(context).showSnackBar(snackBar);
                         } else if (foodList.length == 3) {
-                          calculate(foodList).then((value) {
-                            justCalNutri(foodList, value).then((val) {
-                              print(val);
-                              setState(() {
-                                carbohydrateMass = val[0];
-                                proteinMass = val[1];
-                                fatMass = val[2];
-                              });
-
-                              for (var i = 0; i < 3; i++) {
-                                foodMassController[i].text =
-                                    value[i].toString();
+                          await getFoodInfo(foodList).then((value) {
+                            makeCsvFile(nutri: value).then((val) {
+                              List<num> sendData = [];
+                              sendData.addAll(value);
+                              sendData.addAll(val);
+                              try {
+                                List<dynamic> carProFat =
+                                    justCalculateNutri(sendData);
+                                setState(() {
+                                  carbohydrateMass = carProFat[5];
+                                  proteinMass = carProFat[6];
+                                  fatMass = carProFat[7];
+                                  correct = carProFat[3];
+                                });
+                                for (var i = 0; i < 3; i++) {
+                                  foodMassController[i].text =
+                                      val[i].toString();
+                                }
+                              } catch (e) {
+                                var snackBar =
+                                    buildSnackBar('음식 조합이 매우 부적합합니다.');
+                                Scaffold.of(context).showSnackBar(snackBar);
                               }
                             });
                           });
                         } else {
                           if (foodList.length - changeNumOfMass() == 3) {
                             //should add change calorie
+
                             List<int> index = getIndex();
 
                             calculate(foodList, defaultMass: index)
@@ -392,8 +406,8 @@ class _FoodListState extends State<FoodList> {
                               });
                             });
                           } else {
-                            var snackBar =
-                                buildSnackBar('빈칸이 3개일 경우에만 계산 가능합니다.');
+                            var snackBar = buildSnackBar(
+                                '빈칸이 3개일 경우에만 계산 가능합니다.\n 0인 값이 4개 이상입니다.');
                             Scaffold.of(context).showSnackBar(snackBar);
                           }
                         }
@@ -477,6 +491,7 @@ class _FoodListState extends State<FoodList> {
             fat: fatMass,
             protein: proteinMass,
             totalCalorie: carbohydrateMass * 4 + fatMass * 9 + proteinMass * 4,
+            correct: correct,
           ),
           Spacer(
             flex: 1,
@@ -622,6 +637,23 @@ class _FoodListState extends State<FoodList> {
       [matrix[2][x], matrix[2][y], matrix[2][z]]
     ];
     return temp;
+  }
+
+  Future<List<num>> getFoodInfo(List<ListContents> foodList) async {
+    List<num> carbohydrateList = [];
+    List<num> proteinList = [];
+    List<num> fatList = [];
+    for (var i = 0; i < foodList.length; i++) {
+      Food food = await dbHelperFood.getFood(foodList[i].code);
+      carbohydrateList.add(food.carbohydrate);
+      proteinList.add(food.protein);
+      fatList.add(food.fat);
+    }
+    print("탄수화물 : $carbohydrateList");
+
+    print(carbohydrateList + proteinList + fatList);
+
+    return carbohydrateList + proteinList + fatList;
   }
 
   Future<List<num>> justCalNutri(

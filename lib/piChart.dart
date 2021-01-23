@@ -5,20 +5,27 @@ import 'package:flutter_application_1/initPage.dart';
 import 'indicator.dart';
 
 double myCarbohydrate, myProtein, myFat, myTotalCalroie = 0.0;
+double myCorrect = 0.0;
 
 class PieChartSample2 extends StatefulWidget {
   PieChartSample2(
-      {double carbohydrate, double protein, double fat, double totalCalorie}) {
+      {double carbohydrate,
+      double protein,
+      double fat,
+      double totalCalorie,
+      double correct}) {
     if ((carbohydrate != 0.0 || protein != 0.0 || fat != 0.0)) {
       myCarbohydrate = carbohydrate * 100 / (carbohydrate + protein + fat);
       myProtein = protein * 100 / (carbohydrate + protein + fat);
       myFat = fat * 100 / (carbohydrate + protein + fat);
       myTotalCalroie = totalCalorie;
+      myCorrect = correct;
     } else {
       myCarbohydrate = 33;
       myProtein = 33;
       myFat = 34;
       myTotalCalroie = 0.0;
+      myCorrect = 0.0;
     }
   }
 
@@ -108,6 +115,15 @@ class PieChart2State extends State {
                       fontSize: 12,
                     ),
                     SizedBox(
+                      height: 4,
+                    ),
+                    Indicator(
+                      color: Colors.black,
+                      text: "${myRounder(myCorrect)}% 일치",
+                      isSquare: true,
+                      fontSize: 12,
+                    ),
+                    SizedBox(
                       height: 18,
                     ),
                   ],
@@ -167,7 +183,7 @@ class PieChart2State extends State {
     });
   }
 
-  String myRounder(num a) {
+  String myRounder(double a) {
     return a.toString().length < 5
         ? a.toString()
         : a.toString().substring(0, 5);
