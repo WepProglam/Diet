@@ -1,14 +1,11 @@
 import 'dart:async';
 
-import 'package:draw_graph/models/feature.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
 import 'package:intl/intl.dart' show DateFormat;
 import 'appBar.dart';
-import 'package:draw_graph/draw_graph.dart';
 import 'db_helper.dart';
-import 'model.dart';
 import 'mainStream.dart' as mainStream;
 import 'lineChart.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -20,110 +17,6 @@ final int calenderWidthFlex = 20;
 
 StreamController<bool> streamControllerMainPage =
     mainStream.streamControllerMainPage;
-
-// class MyScreen extends StatefulWidget {
-//   final Stream<bool> stream = streamControllerMainPage.stream;
-//   @override
-//   _MyScreenState createState() => _MyScreenState();
-// }
-
-// class _MyScreenState extends State<MyScreen> {
-//   Map listHistory = {"체중": <double>[], "체지방량": <double>[], "근육량": <double>[]};
-//   List<String> labelX = [];
-//   List<String> labelY = [];
-//   List<Feature> features = [];
-
-//   @override
-//   void didChangeDependencies() {
-//     getInfo();
-//     super.didChangeDependencies();
-//   }
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     // widget.stream.listen((isItCalender) {
-//     //   if (!isItCalender) {
-//     //       getInfo();
-//     //   }
-//     // });
-//   }
-
-//   void getInfo() async {
-//     listHistory["체중"] = <double>[];
-//     listHistory["체지방량"] = <double>[];
-//     listHistory["근육량"] = <double>[];
-//     await dbHelperPerson.getAllPerson().then((value) {
-//       print(value);
-//       for (var item in value) {
-//         listHistory["체중"].add(item.weight / 5);
-//         listHistory["체지방량"].add(item.bmi / 5);
-//         listHistory["근육량"].add(item.muscleMass / 5);
-//         String time = item.time.split("-")[1] + "/" + item.time.split("-")[2];
-//         labelX.add(time);
-//         labelY.add("");
-//       }
-//       print(listHistory);
-//       features = [
-//         Feature(
-//           title: "체중",
-//           color: Colors.blue,
-//           data: listHistory["체중"],
-//         ),
-//         Feature(
-//           title: "체지방량",
-//           color: Colors.pink,
-//           data: listHistory["체지방량"],
-//         ),
-//         Feature(
-//           title: "근육량",
-//           color: Colors.cyan,
-//           data: listHistory["근육량"],
-//         ),
-//       ];
-//     });
-//     if (this.mounted) {
-//       setState(() {});
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final size = MediaQuery.of(context).size;
-
-//     return Expanded(
-//         flex: 1,
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.spaceAround,
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: <Widget>[
-//             Container(),
-//             Padding(
-//               padding: const EdgeInsets.symmetric(vertical: 64.0),
-//               child: Text(
-//                 "신체 기록",
-//                 style: TextStyle(
-//                   fontSize: 28,
-//                   fontWeight: FontWeight.bold,
-//                   letterSpacing: 2,
-//                 ),
-//               ),
-//             ),
-//             LineGraph(
-//               features: features,
-//               size: Size(size.width, size.height / 3.5),
-//               labelX: labelX,
-//               labelY: labelY,
-//               showDescription: true,
-//               graphColor: Colors.black,
-//             ),
-//             SizedBox(
-//               height: 50,
-//             )
-//           ],
-//         ));
-//   }
-// }
 
 class MainPage extends StatelessWidget {
   @override
