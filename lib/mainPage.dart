@@ -151,16 +151,28 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget returnGraph() {
-    return Column(
-      children: [
-        Spacer(
-          flex: 1,
-        ),
-        LineChartSample1(),
-        Spacer(
-          flex: 2,
-        ),
-      ],
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Swiper(
+        itemBuilder: (BuildContext context, int index) {
+          return Column(
+            children: [
+              Spacer(
+                flex: 1,
+              ),
+              LineChartSample2(
+                index: index,
+              ),
+              Spacer(
+                flex: 2,
+              ),
+            ],
+          );
+        },
+        itemCount: 3,
+        pagination: new SwiperPagination(),
+        control: new SwiperControl(),
+      ),
     );
   }
 
