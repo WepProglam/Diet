@@ -153,6 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isItCalender = true;
   bool switchControl = false;
   FocusScopeNode myFocusNode = FocusScopeNode();
+  ScrollController _controller = new ScrollController();
 
   @override
   void dispose() {
@@ -186,6 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Expanded(
                   flex: 20,
                   child: SingleChildScrollView(
+                      controller: _controller,
                       child: SizedBox(
                           height: MediaQuery.of(context).size.height,
                           child: Column(
@@ -637,8 +639,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   )),
                 ),
                 onPressed: () {
-                  FocusScope.of(context).requestFocus(myFocusNode);
-                  // FocusScope.of(context).requestFocus(new FocusNode());
+                  int index = mealTime == "아침" ? 0 : 4;
+                  _goToElement(index);
                   setState(() {
                     mealTime = mealTime == "아침" ? "false" : "아침";
                   });
@@ -661,6 +663,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   )),
                 ),
                 onPressed: () {
+                  int index = mealTime == "점심" ? 0 : 4;
+                  _goToElement(index);
                   setState(() {
                     mealTime = mealTime == "점심" ? "false" : "점심";
                   });
@@ -681,6 +685,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   )),
                 ),
                 onPressed: () {
+                  int index = mealTime == "저녁" ? 0 : 4;
+                  _goToElement(index);
                   setState(() {
                     mealTime = mealTime == "저녁" ? "false" : "저녁";
                   });
@@ -711,5 +717,13 @@ class _MyHomePageState extends State<MyHomePage> {
         : Spacer(
             flex: 7,
           );
+  }
+
+  void _goToElement(int index) {
+    _controller.animateTo(
+        (30.0 *
+            index), // 100 is the height of container and index of 6th element is 5
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut);
   }
 }
