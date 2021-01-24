@@ -152,6 +152,13 @@ class _MyHomePageState extends State<MyHomePage> {
   var lastDayDateTime;
   bool isItCalender = true;
   bool switchControl = false;
+  FocusScopeNode myFocusNode = FocusScopeNode();
+
+  @override
+  void dispose() {
+    myFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -205,25 +212,36 @@ class _MyHomePageState extends State<MyHomePage> {
                     Spacer(
                       flex: 1,
                     ),
+                    Expanded(
+                        flex: 5,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            children: [
+                              Spacer(flex: 1),
+                              Expanded(
+                                flex: 20,
+                                child: Swiper(
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Container(
+                                      child: Text("추천 식단이 들어갈 자리"),
+                                      decoration:
+                                          BoxDecoration(color: Colors.white),
+                                    );
+                                  },
+                                  itemCount: 3,
+                                  pagination: new SwiperPagination(),
+                                  control: new SwiperControl(),
+                                ),
+                              ),
+                              Spacer(flex: 1),
+                            ],
+                          ),
+                        )),
+                    Spacer(flex: 1),
                     diet(date.toString()),
                     dietBox(mealTime, date),
-                    Spacer(
-                      flex: 2,
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: Swiper(
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            child: Text("추천 식단이 들어갈 자리"),
-                            decoration: BoxDecoration(color: Colors.white),
-                          );
-                        },
-                        itemCount: 3,
-                        pagination: new SwiperPagination(),
-                        control: new SwiperControl(),
-                      ),
-                    )
                   ],
                 ))));
   }
@@ -289,46 +307,6 @@ class _MyHomePageState extends State<MyHomePage> {
     //월 이동 함수
     return Expanded(flex: 2, child: calender());
   }
-
-  // Widget moveMonth() {
-  //   return Expanded(
-  //       flex: 1,
-  //       child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.start,
-  //         children: [
-  //           IconButton(
-  //             icon: Icon(Icons.arrow_back_ios),
-  //             onPressed: () {
-  //               if (calender_month == 1) {
-  //                 setState(() {
-  //                   calender_year -= 1;
-  //                   calender_month = 12;
-  //                 });
-  //               } else {
-  //                 setState(() {
-  //                   calender_month -= 1;
-  //                 });
-  //               }
-  //             },
-  //           ),
-  //           IconButton(
-  //             icon: Icon(Icons.arrow_forward_ios),
-  //             onPressed: () {
-  //               if (calender_month == 12) {
-  //                 setState(() {
-  //                   calender_year += 1;
-  //                   calender_month = 1;
-  //                 });
-  //               } else {
-  //                 setState(() {
-  //                   calender_month += 1;
-  //                 });
-  //               }
-  //             },
-  //           )
-  //         ],
-  //       ));
-  // }
 
   Widget calender() {
     return isItCalender
@@ -649,74 +627,88 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget diet(String data) {
     //아침 점심 저녁 표시
     return Expanded(
-      flex: 1,
-      child: Row(
-        children: [
-          Expanded(
-              flex: 1,
-              child: FlatButton(
-                color: Color(0xff58C9B9),
-                child: Container(
-                  child: Center(
-                      child: Text(
-                    '아침',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18),
-                  )),
+        flex: 1,
+        child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Row(children: [
+              Spacer(
+                flex: 1,
+              ),
+              Expanded(
+                flex: 20,
+                child: Row(
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: FlatButton(
+                          color: Color(0xff58C9B9),
+                          child: Container(
+                            child: Center(
+                                child: Text(
+                              '아침',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18),
+                            )),
+                          ),
+                          onPressed: () {
+                            FocusScope.of(context).requestFocus(myFocusNode);
+                            // FocusScope.of(context).requestFocus(new FocusNode());
+                            setState(() {
+                              mealTime = mealTime == "아침" ? "false" : "아침";
+                            });
+                          },
+                        )),
+                    Expanded(
+                        flex: 1,
+                        child: FlatButton(
+                          color: Color(0xff58C9B9),
+                          child: Container(
+                            // decoration: BoxDecoration(color: Colors.white10),
+                            // border: Border(bottom: BorderSide(color: Colors.blue))),
+                            child: Center(
+                                child: Text(
+                              '점심',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18),
+                            )),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              mealTime = mealTime == "점심" ? "false" : "점심";
+                            });
+                          },
+                        )),
+                    Expanded(
+                        flex: 1,
+                        child: FlatButton(
+                          color: Color(0xff58C9B9),
+                          child: Container(
+                            child: Center(
+                                child: Text(
+                              '저녁',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18),
+                            )),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              mealTime = mealTime == "저녁" ? "false" : "저녁";
+                            });
+                          },
+                        ))
+                  ],
                 ),
-                onPressed: () {
-                  setState(() {
-                    mealTime = mealTime == "아침" ? "false" : "아침";
-                  });
-                },
-              )),
-          Expanded(
-              flex: 1,
-              child: FlatButton(
-                color: Color(0xff58C9B9),
-                child: Container(
-                  // decoration: BoxDecoration(color: Colors.white10),
-                  // border: Border(bottom: BorderSide(color: Colors.blue))),
-                  child: Center(
-                      child: Text(
-                    '점심',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18),
-                  )),
-                ),
-                onPressed: () {
-                  setState(() {
-                    mealTime = mealTime == "점심" ? "false" : "점심";
-                  });
-                },
-              )),
-          Expanded(
-              flex: 1,
-              child: FlatButton(
-                color: Color(0xff58C9B9),
-                child: Container(
-                  child: Center(
-                      child: Text(
-                    '저녁',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18),
-                  )),
-                ),
-                onPressed: () {
-                  setState(() {
-                    mealTime = mealTime == "저녁" ? "false" : "저녁";
-                  });
-                },
-              ))
-        ],
-      ),
-    );
+              ),
+              Spacer(
+                flex: 1,
+              )
+            ])));
   }
 
   Widget dietBox(String day, int date) {
@@ -725,14 +717,26 @@ class _MyHomePageState extends State<MyHomePage> {
     return mealTime != "false"
         ? Expanded(
             flex: 7,
-            child: Container(
-              decoration: BoxDecoration(
-                  color: day == "아침"
-                      ? Color(0xff58C9B9) //Colors.red
-                      : day == "점심"
-                          ? Color(0xff58C9B9)
-                          : Color(0xff58C9B9)),
-            ))
+            child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Row(children: [
+                  Spacer(
+                    flex: 1,
+                  ),
+                  Expanded(
+                      flex: 20,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: day == "아침"
+                                ? Color(0xff58C9B9) //Colors.red
+                                : day == "점심"
+                                    ? Color(0xff58C9B9)
+                                    : Color(0xff58C9B9)),
+                      )),
+                  Spacer(
+                    flex: 1,
+                  )
+                ])))
         : Spacer(
             flex: 7,
           );
