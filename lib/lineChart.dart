@@ -61,12 +61,12 @@ class _LineChartSample2State extends State<LineChartSample2> {
         int i = 0;
 
         for (var item in value) {
-          personWeightSpot.add(FlSpot(
-              double.parse(i.toString()), (item.weight * 8) / maxWeigt.last));
-          personBmiSpot.add(
-              FlSpot(double.parse(i.toString()), (item.bmi * 8) / maxBmi.last));
+          personWeightSpot.add(FlSpot(double.parse(i.toString()),
+              myRounder((item.weight * 8) / maxWeigt.last)));
+          personBmiSpot.add(FlSpot(double.parse(i.toString()),
+              myRounder((item.bmi * 8) / maxBmi.last)));
           personMuscleSpot.add(FlSpot(double.parse(i.toString()),
-              (item.muscleMass * 8) / maxMuscle.last));
+              myRounder((item.muscleMass * 8) / maxMuscle.last)));
           i += 1;
         }
         personInfoLength = personWeightSpot.length - 1;
@@ -107,6 +107,13 @@ class _LineChartSample2State extends State<LineChartSample2> {
         ),
       ],
     );
+  }
+
+  double myRounder(num a) {
+    print(a);
+    return a.toString().length < 4
+        ? a.toDouble()
+        : double.parse(a.toString().substring(0, 4));
   }
 
   LineChartData mainData({int index}) {

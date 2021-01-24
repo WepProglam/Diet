@@ -47,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool switchControl = false;
   FocusScopeNode myFocusNode = FocusScopeNode();
   ScrollController _controller = new ScrollController();
+  List<bool> isSelected = [true, false];
 
   @override
   void dispose() {
@@ -94,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: Container(
                                     decoration:
                                         BoxDecoration(color: Color(0x7077AAAD)),
-                                    child: isItCalender
+                                    child: isSelected[0]
                                         ? returnCalender()
                                         : returnGraph()),
                               ),
@@ -321,17 +322,28 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget calenderSwitch() {
     return Expanded(
-        flex: 2,
-        child: Transform.scale(
-            scale: 1.5,
-            child: Switch(
-              onChanged: toggleSwitch,
-              value: switchControl,
-              activeColor: Colors.red,
-              activeTrackColor: Colors.blue,
-              inactiveThumbColor: Colors.red,
-              inactiveTrackColor: Colors.grey,
-            )));
+      flex: 5,
+      child: ToggleButtons(
+        children: <Widget>[
+          Icon(Icons.ac_unit),
+          Icon(Icons.call),
+        ],
+        onPressed: (int index) {
+          setState(() {
+            for (int buttonIndex = 0;
+                buttonIndex < isSelected.length;
+                buttonIndex++) {
+              if (buttonIndex == index) {
+                isSelected[buttonIndex] = true;
+              } else {
+                isSelected[buttonIndex] = false;
+              }
+            }
+          });
+        },
+        isSelected: isSelected,
+      ),
+    );
   }
 
   Widget calenderDayRow() {
