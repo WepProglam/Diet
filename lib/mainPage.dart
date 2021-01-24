@@ -178,72 +178,64 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Color(0xFFD7FFF1),
         appBar: basicAppBar('Main Page', context),
         drawer: NavDrawer(),
-        body: SingleChildScrollView(
-            child: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child: Column(
-                  children: [
-                    Spacer(
-                      flex: 1,
-                    ),
-                    calenderMonthChange(),
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Spacer(
-                            flex: 1,
-                          ),
-                          Expanded(
-                            flex: calenderWidthFlex,
-                            child: Container(
-                                decoration:
-                                    BoxDecoration(color: Color(0x7077AAAD)),
-                                child: isItCalender
-                                    ? returnCalender()
-                                    : returnGraph()),
-                          ),
-                          Spacer(
-                            flex: 1,
-                          )
-                        ],
-                      ),
-                      flex: 10,
-                    ),
-                    Spacer(
-                      flex: 1,
-                    ),
-                    Expanded(
-                        flex: 5,
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: Row(
+        body: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Row(
+            children: [
+              Spacer(flex: 1),
+              Expanded(
+                  flex: 20,
+                  child: SingleChildScrollView(
+                      child: SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          child: Column(
                             children: [
-                              Spacer(flex: 1),
+                              Spacer(
+                                flex: 1,
+                              ),
+                              calenderMonthChange(),
                               Expanded(
-                                flex: 20,
-                                child: Swiper(
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Container(
-                                      child: Text("추천 식단이 들어갈 자리"),
-                                      decoration:
-                                          BoxDecoration(color: Colors.white),
-                                    );
-                                  },
-                                  itemCount: 3,
-                                  pagination: new SwiperPagination(),
-                                  control: new SwiperControl(),
+                                flex: calenderWidthFlex,
+                                child: Container(
+                                    decoration:
+                                        BoxDecoration(color: Color(0x7077AAAD)),
+                                    child: isItCalender
+                                        ? returnCalender()
+                                        : returnGraph()),
+                              ),
+                              Spacer(
+                                flex: 1,
+                              ),
+                              Expanded(
+                                flex: 5,
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Swiper(
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Container(
+                                        child: Text("추천 식단이 들어갈 자리"),
+                                        decoration:
+                                            BoxDecoration(color: Colors.white),
+                                      );
+                                    },
+                                    itemCount: 3,
+                                    pagination: new SwiperPagination(),
+                                    control: new SwiperControl(),
+                                  ),
                                 ),
                               ),
                               Spacer(flex: 1),
+                              diet(date.toString()),
+                              dietBox(mealTime, date),
                             ],
-                          ),
-                        )),
-                    Spacer(flex: 1),
-                    diet(date.toString()),
-                    dietBox(mealTime, date),
-                  ],
-                ))));
+                          )))),
+              Spacer(
+                flex: 1,
+              )
+            ],
+          ),
+        ));
   }
 
   Widget returnCalender() {
@@ -627,88 +619,76 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget diet(String data) {
     //아침 점심 저녁 표시
     return Expanded(
-        flex: 1,
-        child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Row(children: [
-              Spacer(
-                flex: 1,
-              ),
-              Expanded(
-                flex: 20,
-                child: Row(
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        child: FlatButton(
-                          color: Color(0xff58C9B9),
-                          child: Container(
-                            child: Center(
-                                child: Text(
-                              '아침',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18),
-                            )),
-                          ),
-                          onPressed: () {
-                            FocusScope.of(context).requestFocus(myFocusNode);
-                            // FocusScope.of(context).requestFocus(new FocusNode());
-                            setState(() {
-                              mealTime = mealTime == "아침" ? "false" : "아침";
-                            });
-                          },
-                        )),
-                    Expanded(
-                        flex: 1,
-                        child: FlatButton(
-                          color: Color(0xff58C9B9),
-                          child: Container(
-                            // decoration: BoxDecoration(color: Colors.white10),
-                            // border: Border(bottom: BorderSide(color: Colors.blue))),
-                            child: Center(
-                                child: Text(
-                              '점심',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18),
-                            )),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              mealTime = mealTime == "점심" ? "false" : "점심";
-                            });
-                          },
-                        )),
-                    Expanded(
-                        flex: 1,
-                        child: FlatButton(
-                          color: Color(0xff58C9B9),
-                          child: Container(
-                            child: Center(
-                                child: Text(
-                              '저녁',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18),
-                            )),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              mealTime = mealTime == "저녁" ? "false" : "저녁";
-                            });
-                          },
-                        ))
-                  ],
+      flex: 1,
+      child: Row(
+        children: [
+          Expanded(
+              flex: 1,
+              child: FlatButton(
+                color: Color(0xff58C9B9),
+                child: Container(
+                  child: Center(
+                      child: Text(
+                    '아침',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18),
+                  )),
                 ),
-              ),
-              Spacer(
-                flex: 1,
-              )
-            ])));
+                onPressed: () {
+                  FocusScope.of(context).requestFocus(myFocusNode);
+                  // FocusScope.of(context).requestFocus(new FocusNode());
+                  setState(() {
+                    mealTime = mealTime == "아침" ? "false" : "아침";
+                  });
+                },
+              )),
+          Expanded(
+              flex: 1,
+              child: FlatButton(
+                color: Color(0xff58C9B9),
+                child: Container(
+                  // decoration: BoxDecoration(color: Colors.white10),
+                  // border: Border(bottom: BorderSide(color: Colors.blue))),
+                  child: Center(
+                      child: Text(
+                    '점심',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18),
+                  )),
+                ),
+                onPressed: () {
+                  setState(() {
+                    mealTime = mealTime == "점심" ? "false" : "점심";
+                  });
+                },
+              )),
+          Expanded(
+              flex: 1,
+              child: FlatButton(
+                color: Color(0xff58C9B9),
+                child: Container(
+                  child: Center(
+                      child: Text(
+                    '저녁',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18),
+                  )),
+                ),
+                onPressed: () {
+                  setState(() {
+                    mealTime = mealTime == "저녁" ? "false" : "저녁";
+                  });
+                },
+              ))
+        ],
+      ),
+    );
   }
 
   Widget dietBox(String day, int date) {
@@ -719,24 +699,15 @@ class _MyHomePageState extends State<MyHomePage> {
             flex: 7,
             child: SizedBox(
                 width: MediaQuery.of(context).size.width,
-                child: Row(children: [
-                  Spacer(
-                    flex: 1,
-                  ),
-                  Expanded(
-                      flex: 20,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: day == "아침"
-                                ? Color(0xff58C9B9) //Colors.red
-                                : day == "점심"
-                                    ? Color(0xff58C9B9)
-                                    : Color(0xff58C9B9)),
-                      )),
-                  Spacer(
-                    flex: 1,
-                  )
-                ])))
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: day == "아침"
+                          ? Color(0xff58C9B9) //Colors.red
+                          : day == "점심"
+                              ? Color(0xff58C9B9)
+                              : Color(0xff58C9B9)),
+                )),
+          )
         : Spacer(
             flex: 7,
           );
