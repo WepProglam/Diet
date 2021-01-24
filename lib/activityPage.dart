@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'db_helper.dart';
 import 'model.dart';
 import 'appBar.dart';
@@ -30,7 +31,10 @@ class _ActivityPageState extends State<ActivityPage> {
   var dbHelperPerson = DBHelperPerson();
 
   TextEditingController bmrText = TextEditingController();
+  TextEditingController amText = TextEditingController();
   TextEditingController carbohydrateText = TextEditingController();
+  int _nutriRateValue = 1;
+  int _activityValue = 1;
 
   var hint = {};
 
@@ -59,15 +63,18 @@ class _ActivityPageState extends State<ActivityPage> {
             (5 * hint['height']) -
             (6.8 * 22)); //23 -> person['age'] - 1 (만나이)
         bmrText.text = bmr.toStringAsFixed(1);
+        amText.text = bmrText.text;
       } else {
         bmr = (655.1 +
             (9.6 * hint['weight']) +
             (1.8 * hint['height']) -
             (4.7 * 22));
         bmrText.text = bmr.toStringAsFixed(1);
+        amText.text = bmrText.text;
       }
     } else {
       bmrText.text = '신체 정보가 비어있습니다.';
+      amText.text = bmrText.text;
     }
   }
 
@@ -77,23 +84,109 @@ class _ActivityPageState extends State<ActivityPage> {
     super.didChangeDependencies();
   }
 
-  Widget carbohydrateRate(TextEditingController controller) {
+  Widget metabolicRate(String mr, TextEditingController controller) {
+    String title = '';
+
+    if (mr == 'BMR') {
+      title = '기초대사량(BMR)';
+    } else if (mr == 'AM') {
+      title = '1일 총 에너지 대사량';
+    }
+
+    return Column(
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontSize: 15),
+        ),
+        TextFormField(
+            autofocus: false,
+            controller: controller,
+            style: TextStyle(
+              fontSize: 40,
+            ),
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            readOnly: (mr == 'AM' && _activityValue == 6) ? false : true),
+        Text(
+          'kcal',
+          style: TextStyle(fontSize: 15),
+        ),
+      ],
+    );
+  }
+
+  Widget nutriRate() {
     return Center(
       child: Row(
         children: [
           Spacer(
             flex: 1,
           ),
-          Expanded(flex: 4, child: Text('탄수화물 비율:')),
-          Expanded(
-            flex: 8,
-            child: TextFormField(
-                autofocus: false,
-                controller: controller,
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center),
+          Text('탄 : 단 : 지'),
+          Spacer(
+            flex: 1,
           ),
-          Text('%'),
+          DropdownButton(
+              value: _nutriRateValue,
+              items: [
+                DropdownMenuItem(child: Text('다이어트 3 : 4 : 3'), value: 1),
+                DropdownMenuItem(child: Text('벌크업 4 : 4 : 2'), value: 2),
+                DropdownMenuItem(child: Text('린매스업 5 : 3 : 2'), value: 3),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _nutriRateValue = value;
+                });
+              }),
+          Spacer(
+            flex: 1,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget selActivity() {
+    return Center(
+      child: Row(
+        children: [
+          Spacer(
+            flex: 1,
+          ),
+          DropdownButton(
+              value: _activityValue,
+              items: [
+                DropdownMenuItem(child: Text('적은 활동 및 운동 X'), value: 1),
+                DropdownMenuItem(child: Text('가벼운 활동 및 주 1~3일 운동'), value: 2),
+                DropdownMenuItem(child: Text('보통 활동 및 주 3~5일 운동'), value: 3),
+                DropdownMenuItem(child: Text('적극적인 활동 및 주 6~7일 운동'), value: 4),
+                DropdownMenuItem(child: Text('매우 적극적인 활동 및 선수급 운동'), value: 5),
+                DropdownMenuItem(child: Text('직접 설정'), value: 6),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _activityValue = value;
+                  if (_activityValue == 1) {
+                    amText.text =
+                        (num.parse(bmrText.text) * 1.2).toStringAsFixed(1);
+                  } else if (_activityValue == 2) {
+                    amText.text =
+                        (num.parse(bmrText.text) * 1.375).toStringAsFixed(1);
+                  } else if (_activityValue == 3) {
+                    amText.text =
+                        (num.parse(bmrText.text) * 1.555).toStringAsFixed(1);
+                  } else if (_activityValue == 4) {
+                    amText.text =
+                        (num.parse(bmrText.text) * 1.725).toStringAsFixed(1);
+                  } else if (_activityValue == 5) {
+                    amText.text =
+                        (num.parse(bmrText.text) * 1.9).toStringAsFixed(1);
+                  } else if (_activityValue == 6) {
+                    amText.text = '';
+                  }
+                });
+              }),
           Spacer(
             flex: 1,
           ),
@@ -108,37 +201,34 @@ class _ActivityPageState extends State<ActivityPage> {
         child: Center(
       child: Column(
         children: [
+          // Spacer(
+          //   flex: 1,
+          // ),
+          Container(
+            // color: Colors.yellow,
+            child: metabolicRate('BMR', bmrText),
+          ),
+          Spacer(
+            flex: 1,
+          ),
+          selActivity(),
+          Text('주로 하는 활동을 선택해주세요'),
+          Spacer(
+            flex: 1,
+          ),
+          nutriRate(),
+          Text('탄수화물, 단백질, 지방의 열량 비율을 선택해주세요'),
           Spacer(
             flex: 1,
           ),
           Container(
-            //사이즈 확인용
-            color: Colors.yellow,
-            child: Column(
-              children: [
-                Text(
-                  '기초대사량(BMR)',
-                  style: TextStyle(fontSize: 15),
-                ),
-                TextFormField(
-                  controller: bmrText,
-                  style: TextStyle(
-                    fontSize: 40,
-                  ),
-                  textAlign: TextAlign.center,
-                  readOnly: true,
-                ),
-                Text(
-                  'kcal',
-                  style: TextStyle(fontSize: 15),
-                ),
-              ],
-            ),
+            // color: Colors.yellow,
+            child: metabolicRate('AM', amText),
           ),
           Spacer(
             flex: 1,
           ),
-          carbohydrateRate(carbohydrateText),
+          FloatingActionButton(onPressed: null),
           Spacer(
             flex: 1,
           ),
