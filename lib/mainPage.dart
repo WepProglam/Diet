@@ -206,10 +206,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                         : returnGraph()),
                               ),
                               Spacer(
-                                flex: 1,
+                                flex: 2,
                               ),
                               Expanded(
-                                flex: 5,
+                                flex: 8,
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: Swiper(
@@ -227,9 +227,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ),
                                 ),
                               ),
-                              Spacer(flex: 1),
+                              Spacer(flex: 2),
                               diet(date.toString()),
                               dietBox(mealTime, date),
+                              Spacer(
+                                flex: 3,
+                              )
                             ],
                           )))),
               Spacer(
@@ -621,7 +624,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget diet(String data) {
     //아침 점심 저녁 표시
     return Expanded(
-      flex: 1,
+      flex: 3,
       child: Row(
         children: [
           Expanded(
@@ -702,7 +705,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return mealTime != "false"
         ? Expanded(
-            flex: 7,
+            flex: 8,
             child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Container(
