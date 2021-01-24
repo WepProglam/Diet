@@ -1,5 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'db_helper.dart';
+import 'model.dart';
+
+final dbHelperPerson = DBHelperPerson();
 
 class LineChartSample1 extends StatefulWidget {
   @override
@@ -8,17 +12,71 @@ class LineChartSample1 extends StatefulWidget {
 
 class LineChartSample1State extends State<LineChartSample1> {
   bool isShowingMainData;
+  List<Person> personInfo = [];
+  List<FlSpot> personWeightSpot = [];
+  List<FlSpot> personBmiSpot = [];
+  List<FlSpot> personMuscleSpot = [];
+  List<double> maxWeigt = [];
+  List<double> maxBmi = [];
+  List<double> maxMuscle = [];
+
+  int personInfoLength = 0;
 
   @override
   void initState() {
+    getInfo();
     super.initState();
     isShowingMainData = true;
+  }
+
+  void getInfo() async {
+    await dbHelperPerson.getAllPerson().then((value) {
+      personWeightSpot = [];
+      personBmiSpot = [];
+      personMuscleSpot = [];
+
+      setState(() {
+        for (var item in value) {
+          maxWeigt.add(item.weight);
+          maxBmi.add(item.bmi);
+          maxMuscle.add(item.muscleMass);
+        }
+
+        maxWeigt.sort();
+        maxBmi.sort();
+        maxMuscle.sort();
+
+        int i = 1;
+
+        for (var item in value) {
+          personWeightSpot.add(FlSpot(
+              double.parse(i.toString()), (item.weight * 8) / maxWeigt.last));
+          personBmiSpot.add(
+              FlSpot(double.parse(i.toString()), (item.bmi * 8) / maxBmi.last));
+          personMuscleSpot.add(FlSpot(double.parse(i.toString()),
+              (item.muscleMass * 8) / maxMuscle.last));
+          i += 1;
+        }
+
+        print(personBmiSpot);
+
+        personInfoLength = personInfo.length;
+      });
+
+      // print(personWeightSpot);
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    getInfo();
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1.23,
+      aspectRatio: 1.2,
       child: Container(
         decoration: const BoxDecoration(
           // borderRadius: BorderRadius.all(Radius.circular(18)),
@@ -36,9 +94,9 @@ class LineChartSample1State extends State<LineChartSample1> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                const SizedBox(
-                  height: 37,
-                ),
+                // const SizedBox(
+                //   height: 37,
+                // ),
                 // const Text(
                 //   'Unfold Shop 2018',
                 //   style: TextStyle(
@@ -50,25 +108,30 @@ class LineChartSample1State extends State<LineChartSample1> {
                 const SizedBox(
                   height: 4,
                 ),
-                // const Text(
-                //   'Monthly Sales',
-                //   style: TextStyle(
-                //       color: Colors.white,
-                //       fontSize: 32,
-                //       fontWeight: FontWeight.bold,
-                //       letterSpacing: 2),
-                //   textAlign: TextAlign.center,
-                // ),
+                const Text(
+                  'Monthly Sales',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(
                   height: 37,
                 ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 16.0, left: 6.0),
-                    child: LineChart(
-                      isShowingMainData ? sampleData1() : sampleData2(),
-                      swapAnimationDuration: const Duration(milliseconds: 250),
-                    ),
+                    child: (personWeightSpot.isEmpty) ||
+                            (personBmiSpot.isEmpty) ||
+                            (personMuscleSpot.isEmpty)
+                        ? null
+                        : LineChart(
+                            isShowingMainData ? sampleData1() : sampleData2(),
+                            swapAnimationDuration:
+                                const Duration(milliseconds: 250),
+                          ),
                   ),
                 ),
                 const SizedBox(
@@ -103,26 +166,24 @@ class LineChartSample1State extends State<LineChartSample1> {
         handleBuiltInTouches: true,
       ),
       gridData: FlGridData(
-        show: false,
+        show: true,
       ),
       titlesData: FlTitlesData(
         bottomTitles: SideTitles(
           showTitles: true,
           reservedSize: 22,
           getTextStyles: (value) => const TextStyle(
-            color: Color(0xff72719b),
+            color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),
           margin: 10,
           getTitles: (value) {
             switch (value.toInt()) {
+              case 1:
+                return '1';
               case 2:
-                return 'SEPT';
-              case 7:
-                return 'OCT';
-              case 12:
-                return 'DEC';
+                return '2';
             }
             return '';
           },
@@ -130,20 +191,32 @@ class LineChartSample1State extends State<LineChartSample1> {
         leftTitles: SideTitles(
           showTitles: true,
           getTextStyles: (value) => const TextStyle(
-            color: Color(0xff75729e),
+            color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 14,
           ),
           getTitles: (value) {
             switch (value.toInt()) {
               case 1:
-                return '1m';
+                return '10%';
               case 2:
-                return '2m';
+                return '20%';
               case 3:
-                return '3m';
+                return '30%';
               case 4:
-                return '5m';
+                return '40%';
+              case 5:
+                return '50%';
+              case 6:
+                return '60%';
+              case 7:
+                return '70%';
+              case 8:
+                return '80%';
+              case 9:
+                return '90%';
+              case 10:
+                return '100%';
             }
             return '';
           },
@@ -170,49 +243,34 @@ class LineChartSample1State extends State<LineChartSample1> {
         ),
       ),
       minX: 0,
-      maxX: 14,
-      maxY: 4,
+      maxX: 20,
+      maxY: 10,
       minY: 0,
       lineBarsData: linesBarData1(),
     );
   }
 
   List<LineChartBarData> linesBarData1() {
-    final LineChartBarData lineChartBarData1 = LineChartBarData(
-      spots: [
-        FlSpot(1, 1),
-        FlSpot(3, 1.5),
-        FlSpot(5, 1.4),
-        FlSpot(7, 3.4),
-        FlSpot(10, 2),
-        FlSpot(12, 2.2),
-        FlSpot(13, 1.8),
-      ],
+    LineChartBarData lineChartBarData1 = LineChartBarData(
+      spots: personWeightSpot,
       isCurved: true,
       colors: [
-        const Color(0xff4af699),
+        Color(0xff4af699),
       ],
       barWidth: 8,
       isStrokeCapRound: true,
       dotData: FlDotData(
-        show: false,
+        show: true,
       ),
       belowBarData: BarAreaData(
         show: false,
       ),
     );
-    final LineChartBarData lineChartBarData2 = LineChartBarData(
-      spots: [
-        FlSpot(1, 1),
-        FlSpot(3, 2.8),
-        FlSpot(7, 1.2),
-        FlSpot(10, 2.8),
-        FlSpot(12, 2.6),
-        FlSpot(13, 3.9),
-      ],
+    LineChartBarData lineChartBarData2 = LineChartBarData(
+      spots: personBmiSpot,
       isCurved: true,
       colors: [
-        const Color(0xffaa4cfc),
+        Color(0xffaa4cfc),
       ],
       barWidth: 8,
       isStrokeCapRound: true,
@@ -220,19 +278,13 @@ class LineChartSample1State extends State<LineChartSample1> {
         show: false,
       ),
       belowBarData: BarAreaData(show: false, colors: [
-        const Color(0x00aa4cfc),
+        Color(0x00aa4cfc),
       ]),
     );
-    final LineChartBarData lineChartBarData3 = LineChartBarData(
-      spots: [
-        FlSpot(1, 2.8),
-        FlSpot(3, 1.9),
-        FlSpot(6, 3),
-        FlSpot(10, 1.3),
-        FlSpot(13, 2.5),
-      ],
+    LineChartBarData lineChartBarData3 = LineChartBarData(
+      spots: personMuscleSpot,
       isCurved: true,
-      colors: const [
+      colors: [
         Color(0xff27b6fc),
       ],
       barWidth: 8,
@@ -244,6 +296,10 @@ class LineChartSample1State extends State<LineChartSample1> {
         show: false,
       ),
     );
+
+    for (var item in lineChartBarData1.spots) {
+      // print(item);
+    }
     return [
       lineChartBarData1,
       lineChartBarData2,
@@ -271,11 +327,23 @@ class LineChartSample1State extends State<LineChartSample1> {
           margin: 10,
           getTitles: (value) {
             switch (value.toInt()) {
-              case 2:
+              case 1:
                 return 'SEPT';
-              case 7:
+              case 2:
                 return 'OCT';
-              case 12:
+              case 3:
+                return 'DEC';
+              case 4:
+                return 'SEPT';
+              case 5:
+                return 'OCT';
+              case 6:
+                return 'DEC';
+              case 7:
+                return 'SEPT';
+              case 8:
+                return 'OCT';
+              case 9:
                 return 'DEC';
             }
             return '';
