@@ -12,7 +12,10 @@ import 'model.dart';
 import 'mainStream.dart' as mainStream;
 import 'lineChart.dart';
 
+//그래프 표시 버튼 위치 달력 우측 하단
+
 final dbHelperPerson = DBHelperPerson();
+final int calenderWidthFlex = 20;
 
 StreamController<bool> streamControllerMainPage =
     mainStream.streamControllerMainPage;
@@ -146,6 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var daysLastWeek;
   var lastDayDateTime;
   bool isItCalender = true;
+  bool switchControl = false;
 
   @override
   Widget build(BuildContext context) {
@@ -178,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     flex: 1,
                   ),
                   Expanded(
-                    flex: 20,
+                    flex: calenderWidthFlex,
                     child: Container(
                         decoration: BoxDecoration(color: Color(0x7077AAAD)),
                         child: isItCalender ? returnCalender() : returnGraph()),
@@ -261,8 +265,48 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget calenderMonthChange() {
     //월 이동 함수
-    return Expanded(flex: 1, child: calender());
+    return Expanded(flex: 2, child: calender());
   }
+
+  // Widget moveMonth() {
+  //   return Expanded(
+  //       flex: 1,
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.start,
+  //         children: [
+  //           IconButton(
+  //             icon: Icon(Icons.arrow_back_ios),
+  //             onPressed: () {
+  //               if (calender_month == 1) {
+  //                 setState(() {
+  //                   calender_year -= 1;
+  //                   calender_month = 12;
+  //                 });
+  //               } else {
+  //                 setState(() {
+  //                   calender_month -= 1;
+  //                 });
+  //               }
+  //             },
+  //           ),
+  //           IconButton(
+  //             icon: Icon(Icons.arrow_forward_ios),
+  //             onPressed: () {
+  //               if (calender_month == 12) {
+  //                 setState(() {
+  //                   calender_year += 1;
+  //                   calender_month = 1;
+  //                 });
+  //               } else {
+  //                 setState(() {
+  //                   calender_month += 1;
+  //                 });
+  //               }
+  //             },
+  //           )
+  //         ],
+  //       ));
+  // }
 
   Widget calender() {
     return isItCalender
@@ -271,108 +315,128 @@ class _MyHomePageState extends State<MyHomePage> {
               Spacer(
                 flex: 1,
               ),
-              Center(
+              Expanded(
+                flex: calenderWidthFlex,
                 child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    FlatButton(
-                      onPressed: () {
-                        if (calender_month == 1) {
-                          setState(() {
-                            calender_year -= 1;
-                            calender_month = 12;
-                          });
-                        } else {
-                          setState(() {
-                            calender_month -= 1;
-                          });
-                        }
-                      },
-                      child: Icon(Icons.arrow_back_ios),
+                    Expanded(
+                      flex: 1,
+                      child: IconButton(
+                        icon: Icon(Icons.arrow_back_ios),
+                        onPressed: () {
+                          if (calender_month == 1) {
+                            setState(() {
+                              calender_year -= 1;
+                              calender_month = 12;
+                            });
+                          } else {
+                            setState(() {
+                              calender_month -= 1;
+                            });
+                          }
+                        },
+                      ),
                     ),
-                    Text(
-                      "$calender_year년 $calender_month월 $calender_date일",
-                      style: TextStyle(fontSize: 20),
+                    Expanded(
+                      flex: 1,
+                      child: IconButton(
+                        icon: Icon(Icons.arrow_forward_ios),
+                        onPressed: () {
+                          if (calender_month == 12) {
+                            setState(() {
+                              calender_year += 1;
+                              calender_month = 1;
+                            });
+                          } else {
+                            setState(() {
+                              calender_month += 1;
+                            });
+                          }
+                        },
+                      ),
                     ),
-                    FlatButton(
-                      onPressed: () {
-                        if (calender_month == 12) {
-                          setState(() {
-                            calender_year += 1;
-                            calender_month = 1;
-                          });
-                        } else {
-                          setState(() {
-                            calender_month += 1;
-                          });
-                        }
-                      },
-                      child: Icon(Icons.arrow_forward_ios),
+                    Spacer(
+                      flex: 1,
                     ),
+                    Expanded(
+                      flex: 6,
+                      child: Text(
+                        "$calender_year년 $calender_month월",
+                        style: TextStyle(fontSize: 25),
+                      ),
+                    ),
+                    Spacer(
+                      flex: 4,
+                    ),
+                    Expanded(
+                        flex: 2,
+                        child: Transform.scale(
+                            scale: 1.5,
+                            child: Switch(
+                              onChanged: toggleSwitch,
+                              value: switchControl,
+                              activeColor: Colors.blue,
+                              activeTrackColor: Colors.green,
+                              inactiveThumbColor: Colors.white,
+                              inactiveTrackColor: Colors.grey,
+                            ))),
                   ],
                 ),
               ),
               Spacer(
                 flex: 1,
-              ),
-              Expanded(
-                  flex: 1,
-                  child: FlatButton(
-                    child: isItCalender
-                        ? Icon(Icons.gps_fixed)
-                        : Icon(Icons.gps_not_fixed),
-                    onPressed: () {
-                      setState(() {
-                        isItCalender = true;
-                        streamControllerMainPage.add(isItCalender);
-                      });
-                    },
-                  )),
-              Expanded(
-                  flex: 1,
-                  child: FlatButton(
-                    child: isItCalender
-                        ? Icon(Icons.gps_not_fixed)
-                        : Icon(Icons.gps_fixed),
-                    onPressed: () {
-                      setState(() {
-                        isItCalender = false;
-                        streamControllerMainPage.add(isItCalender);
-                      });
-                    },
-                  )),
+              )
             ],
           )
         : Row(
             children: [
               Spacer(
-                flex: 7,
+                flex: 1,
               ),
               Expanded(
-                  flex: 1,
-                  child: FlatButton(
-                    child: isItCalender
-                        ? Icon(Icons.gps_fixed)
-                        : Icon(Icons.gps_not_fixed),
-                    onPressed: () {
-                      setState(() {
-                        isItCalender = true;
-                      });
-                    },
-                  )),
-              Expanded(
-                  flex: 1,
-                  child: FlatButton(
-                    child: isItCalender
-                        ? Icon(Icons.gps_not_fixed)
-                        : Icon(Icons.gps_fixed),
-                    onPressed: () {
-                      setState(() {
-                        isItCalender = false;
-                      });
-                    },
-                  )),
+                flex: calenderWidthFlex,
+                child: Row(
+                  children: [
+                    Spacer(
+                      flex: 13,
+                    ),
+                    Expanded(
+                        flex: 2,
+                        child: Transform.scale(
+                            scale: 1.5,
+                            child: Switch(
+                              onChanged: toggleSwitch,
+                              value: switchControl,
+                              activeColor: Colors.red,
+                              activeTrackColor: Colors.blue,
+                              inactiveThumbColor: Colors.red,
+                              inactiveTrackColor: Colors.grey,
+                            ))),
+                  ],
+                ),
+              ),
+              Spacer(
+                flex: 1,
+              )
             ],
           );
+  }
+
+  void toggleSwitch(bool value) {
+    if (switchControl == false) {
+      setState(() {
+        switchControl = true;
+        isItCalender = false;
+        streamControllerMainPage.add(isItCalender);
+      });
+    } else {
+      setState(() {
+        switchControl = false;
+        isItCalender = true;
+        streamControllerMainPage.add(isItCalender);
+      });
+    }
   }
 
   Widget calenderDayRow() {

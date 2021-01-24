@@ -4,8 +4,8 @@ import 'package:path/path.dart';
 import 'package:intl/intl.dart';
 
 class Person {
-  var height;
-  var weight;
+  num height;
+  num weight;
   var bmi;
   var muscleMass;
   var purpose;

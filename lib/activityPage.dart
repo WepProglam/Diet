@@ -51,7 +51,7 @@ class _ActivityPageState extends State<ActivityPage> {
 
   void bmrVal() async {
     hint = await getHint();
-    //조건: 성별 + hint에 값이 있는지
+    //조건: 성별
     if (hint.isNotEmpty) {
       if (true) {
         bmr = (66.5 +

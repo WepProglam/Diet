@@ -185,10 +185,7 @@ class _CalcDietState extends State<CalcDiet> {
                 decoration: BoxDecoration(color: Color(0xff9DC8C8)),
               ))),
           onPressed: () {
-            setState(() {
-              //리로딩 해야지 읽힘 왜 이런지 모르겠음
-              fetchDiet(key);
-            });
+            fetchDiet(key);
           });
     }
   }
@@ -203,17 +200,15 @@ class _CalcDietState extends State<CalcDiet> {
       Map foodInfo = jsonDecode(val['myDiet']['foodInfo']);
       foodInfo = foodInfo[dietName];
       var foodNames = [];
+      setState(() {
+        foodInfo.forEach((key, value) {
+          //value안에 foodName, foodMass 존재 key안에는 코드 존재
+          foodNames.add(value['foodName']);
+        });
 
-      foodInfo.forEach((key, value) {
-        //value안에 foodName, foodMass 존재 key안에는 코드 존재
-        foodNames.add(value['foodName']);
+        visibleMeal[key]['diet'] = foodNames;
+        visibleMeal[key]['dietName'] = dietName;
       });
-
-      visibleMeal[key]['diet'] = foodNames;
-      visibleMeal[key]['dietName'] = dietName;
-      print(visibleMeal);
-
-      // print(val['myDiet']['dietName//']);
     });
   }
 }

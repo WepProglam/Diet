@@ -240,7 +240,7 @@ class _AddFoodSub extends State<AddFoodSub> {
             Expanded(flex: 6, child: questionForm(controller, value, question)),
             spacer_unit(unit),
             Spacer(
-              flex: 1,
+              flex: 2,
             ),
           ],
         )));
@@ -308,7 +308,7 @@ class _AddFoodSub extends State<AddFoodSub> {
 
   Widget spacer_unit(var unit) {
     return Expanded(
-        flex: 3,
+        flex: 1,
         child: Center(
           child: Text(unit),
         ));

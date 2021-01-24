@@ -114,9 +114,9 @@ class _FoodListState extends State<FoodList> {
               onPressed: () {
                 setState(() {
                   foodList.removeAt(index);
-                  for (var item in foodMassController) {
-                    item.text = "";
-                  }
+                  // for (var item in foodMassController) {
+                  //   item.text = "";
+                  // }
                 });
               },
             ),
@@ -335,6 +335,8 @@ class _FoodListState extends State<FoodList> {
                       icon: Icon(Icons.calculate, color: Color(0xFF69C2B0)),
                       onPressed: () async {
                         print(numOfMass(foodList));
+                        print("==================================");
+                        print(foodList.length);
                         if (foodList.length < 3) {
                           //최소 3개 선택하라는 경고창
                           var snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');

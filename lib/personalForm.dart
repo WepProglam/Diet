@@ -111,11 +111,11 @@ class _PersonalForm extends State<PersonalForm> {
                 //   flex: 1,
                 // ),
 
-                subBuilderQuestion("키", "CM",
+                subBuilderQuestion("키", "cm",
                     controller: _heightController,
                     icon: Icon(Icons.accessibility),
                     hint: hint['height']),
-                subBuilderQuestion("몸무게", "KG",
+                subBuilderQuestion("몸무게", "kg",
                     controller: _weightController,
                     icon: Icon(Icons.accessibility),
                     hint: hint['weight']),
@@ -123,7 +123,7 @@ class _PersonalForm extends State<PersonalForm> {
                     controller: _bmiController,
                     icon: Icon(Icons.directions_run),
                     hint: hint['bmi']),
-                subBuilderQuestion("골격근량", "KG/%",
+                subBuilderQuestion("골격근량", "kg",
                     controller: _strengthController,
                     icon: Icon(Icons.fitness_center),
                     hint: hint['muscleMass']),
@@ -151,8 +151,8 @@ class _PersonalForm extends State<PersonalForm> {
                 print(_heightController.value.text);
 
                 var person = Person(
-                    height: _heightController.value.text,
-                    weight: _weightController.value.text,
+                    height: num.parse(_heightController.value.text),
+                    weight: num.parse(_weightController.value.text),
                     bmi: _bmiController.value.text,
                     muscleMass: _strengthController.value.text,
                     purpose: purpose_index - 1,
