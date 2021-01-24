@@ -35,6 +35,7 @@ class DBHelperPerson {
             time TEXT,
             achieve REAL,
             metabolism REAL,
+            activity INT,
             nutriRate INT
             )
         ''');
@@ -82,6 +83,7 @@ class DBHelperPerson {
             time: res.first['time'],
             achieve: res.first['achieve'],
             metabolism: res.first['metabolism'],
+            activity: res.first['activity'],
             nutriRate: res.first['nutriRate'])
         : Null;
   }
@@ -102,6 +104,7 @@ class DBHelperPerson {
                   time: c['time'],
                   achieve: c['achieve'],
                   metabolism: c['metabolism'],
+                  activity: c['activity'],
                   nutriRate: c['nutriRate']),
             )
             .toList()
