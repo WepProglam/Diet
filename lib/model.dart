@@ -12,6 +12,9 @@ class Person {
   String time;
   num achieve;
 
+  num metabolism; //총 에너지 대사량
+  num nutriRate; //a : b : c
+
   Person(
       {this.height,
       this.weight,
@@ -19,7 +22,9 @@ class Person {
       this.muscleMass,
       this.purpose,
       this.time,
-      this.achieve});
+      this.achieve,
+      this.metabolism,
+      this.nutriRate});
 
   Map<String, dynamic> toMap() {
     return {
@@ -29,7 +34,9 @@ class Person {
       'muscleMass': muscleMass,
       'purpose': purpose,
       'time': time,
-      'achieve': achieve
+      'achieve': achieve,
+      'metabolism': metabolism,
+      'nutriRate': nutriRate
     };
   }
 }

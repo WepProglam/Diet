@@ -160,6 +160,7 @@ class _PersonalForm extends State<PersonalForm> {
                     achieve: 0);
 
                 dbHelper.createHelper(person);
+                Navigator.pushNamed(context, '/activityPage');
               }
 
               //print(_heightController.text);

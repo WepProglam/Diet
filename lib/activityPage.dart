@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'db_helper.dart';
@@ -49,6 +49,7 @@ class _ActivityPageState extends State<ActivityPage> {
       hint1['time'] = value.isNotEmpty ? value.last.time : null;
       hint1['muscleMass'] = value.isNotEmpty ? value.last.muscleMass : null;
       hint1['purpose'] = value.isNotEmpty ? value.last.purpose : null;
+      hint1['achieve'] = value.isNotEmpty ? value.last.purpose : null;
     });
     return hint1;
   }
@@ -63,14 +64,14 @@ class _ActivityPageState extends State<ActivityPage> {
             (5 * hint['height']) -
             (6.8 * 22)); //23 -> person['age'] - 1 (만나이)
         bmrText.text = bmr.toStringAsFixed(1);
-        amText.text = bmrText.text;
+        amText.text = (bmr * 1.2).toStringAsFixed(1);
       } else {
         bmr = (655.1 +
             (9.6 * hint['weight']) +
             (1.8 * hint['height']) -
             (4.7 * 22));
         bmrText.text = bmr.toStringAsFixed(1);
-        amText.text = bmrText.text;
+        amText.text = (bmr * 1.2).toStringAsFixed(1);
       }
     } else {
       bmrText.text = '신체 정보가 비어있습니다.';
@@ -228,7 +229,26 @@ class _ActivityPageState extends State<ActivityPage> {
           Spacer(
             flex: 1,
           ),
-          FloatingActionButton(onPressed: null),
+          FloatingActionButton(
+              child: Icon(Icons.done),
+              backgroundColor: Color(0xFF7EE0CC),
+              onPressed: () {
+                String time =
+                    DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
+                var person = Person(
+                  height: hint['height'],
+                  weight: hint['weight'],
+                  bmi: hint['bmi'],
+                  muscleMass: hint['muscleMass'],
+                  purpose: hint['purpose'],
+                  time: time,
+                  achieve: hint['achieve'],
+                  metabolism: num.parse(amText.value.text),
+                  nutriRate: _nutriRateValue,
+                );
+                // print(person.purpose);
+                dbHelperPerson.createHelper(person);
+              }),
           Spacer(
             flex: 1,
           ),
