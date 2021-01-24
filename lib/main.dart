@@ -23,7 +23,7 @@ void main() => runApp(MaterialApp(
         backgroundColor: Color(0xFFFFFEF5),
         primaryColor: Color(0xFF69C2B0),
       ),
-      initialRoute: '/',
+      initialRoute: '/mainPage',
       routes: {
         '/': (context) => InitPage(),
         '/personalForm': (context) => PersonalForm(),

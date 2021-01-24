@@ -11,6 +11,7 @@ import 'db_helper.dart';
 import 'model.dart';
 import 'mainStream.dart' as mainStream;
 import 'lineChart.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
 //그래프 표시 버튼 위치 달력 우측 하단
 
@@ -20,108 +21,109 @@ final int calenderWidthFlex = 20;
 StreamController<bool> streamControllerMainPage =
     mainStream.streamControllerMainPage;
 
-class MyScreen extends StatefulWidget {
-  final Stream<bool> stream = streamControllerMainPage.stream;
-  @override
-  _MyScreenState createState() => _MyScreenState();
-}
+// class MyScreen extends StatefulWidget {
+//   final Stream<bool> stream = streamControllerMainPage.stream;
+//   @override
+//   _MyScreenState createState() => _MyScreenState();
+// }
 
-class _MyScreenState extends State<MyScreen> {
-  Map listHistory = {"체중": <double>[], "체지방량": <double>[], "근육량": <double>[]};
-  List<String> labelX = [];
-  List<String> labelY = [];
-  List<Feature> features = [];
+// class _MyScreenState extends State<MyScreen> {
+//   Map listHistory = {"체중": <double>[], "체지방량": <double>[], "근육량": <double>[]};
+//   List<String> labelX = [];
+//   List<String> labelY = [];
+//   List<Feature> features = [];
 
-  @override
-  void didChangeDependencies() {
-    getInfo();
-    super.didChangeDependencies();
-  }
+//   @override
+//   void didChangeDependencies() {
+//     getInfo();
+//     super.didChangeDependencies();
+//   }
 
-  @override
-  void initState() {
-    super.initState();
-    // widget.stream.listen((isItCalender) {
-    //   if (!isItCalender) {
-    //       getInfo();
-    //   }
-    // });
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     // widget.stream.listen((isItCalender) {
+//     //   if (!isItCalender) {
+//     //       getInfo();
+//     //   }
+//     // });
+//   }
 
-  void getInfo() async {
-    listHistory["체중"] = <double>[];
-    listHistory["체지방량"] = <double>[];
-    listHistory["근육량"] = <double>[];
-    await dbHelperPerson.getAllPerson().then((value) {
-      print(value);
-      for (var item in value) {
-        listHistory["체중"].add(item.weight / 5);
-        listHistory["체지방량"].add(item.bmi / 5);
-        listHistory["근육량"].add(item.muscleMass / 5);
-        String time = item.time.split("-")[1] + "/" + item.time.split("-")[2];
-        labelX.add(time);
-        labelY.add("");
-      }
-      print(listHistory);
-      features = [
-        Feature(
-          title: "체중",
-          color: Colors.blue,
-          data: listHistory["체중"],
-        ),
-        Feature(
-          title: "체지방량",
-          color: Colors.pink,
-          data: listHistory["체지방량"],
-        ),
-        Feature(
-          title: "근육량",
-          color: Colors.cyan,
-          data: listHistory["근육량"],
-        ),
-      ];
-    });
-    if (this.mounted) {
-      setState(() {});
-    }
-  }
+//   void getInfo() async {
+//     listHistory["체중"] = <double>[];
+//     listHistory["체지방량"] = <double>[];
+//     listHistory["근육량"] = <double>[];
+//     await dbHelperPerson.getAllPerson().then((value) {
+//       print(value);
+//       for (var item in value) {
+//         listHistory["체중"].add(item.weight / 5);
+//         listHistory["체지방량"].add(item.bmi / 5);
+//         listHistory["근육량"].add(item.muscleMass / 5);
+//         String time = item.time.split("-")[1] + "/" + item.time.split("-")[2];
+//         labelX.add(time);
+//         labelY.add("");
+//       }
+//       print(listHistory);
+//       features = [
+//         Feature(
+//           title: "체중",
+//           color: Colors.blue,
+//           data: listHistory["체중"],
+//         ),
+//         Feature(
+//           title: "체지방량",
+//           color: Colors.pink,
+//           data: listHistory["체지방량"],
+//         ),
+//         Feature(
+//           title: "근육량",
+//           color: Colors.cyan,
+//           data: listHistory["근육량"],
+//         ),
+//       ];
+//     });
+//     if (this.mounted) {
+//       setState(() {});
+//     }
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+//   @override
+//   Widget build(BuildContext context) {
+//     final size = MediaQuery.of(context).size;
 
-    return SingleChildScrollView(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Container(),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 64.0),
-          child: Text(
-            "신체 기록",
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2,
-            ),
-          ),
-        ),
-        LineGraph(
-          features: features,
-          size: Size(size.width, size.height / 3.5),
-          labelX: labelX,
-          labelY: labelY,
-          showDescription: true,
-          graphColor: Colors.black,
-        ),
-        SizedBox(
-          height: 50,
-        )
-      ],
-    ));
-  }
-}
+//     return Expanded(
+//         flex: 1,
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.spaceAround,
+//           crossAxisAlignment: CrossAxisAlignment.center,
+//           children: <Widget>[
+//             Container(),
+//             Padding(
+//               padding: const EdgeInsets.symmetric(vertical: 64.0),
+//               child: Text(
+//                 "신체 기록",
+//                 style: TextStyle(
+//                   fontSize: 28,
+//                   fontWeight: FontWeight.bold,
+//                   letterSpacing: 2,
+//                 ),
+//               ),
+//             ),
+//             LineGraph(
+//               features: features,
+//               size: Size(size.width, size.height / 3.5),
+//               labelX: labelX,
+//               labelY: labelY,
+//               showDescription: true,
+//               graphColor: Colors.black,
+//             ),
+//             SizedBox(
+//               height: 50,
+//             )
+//           ],
+//         ));
+//   }
+// }
 
 class MainPage extends StatelessWidget {
   @override
@@ -169,41 +171,61 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Color(0xFFD7FFF1),
         appBar: basicAppBar('Main Page', context),
         drawer: NavDrawer(),
-        body: Column(
-          children: [
-            Spacer(
-              flex: 1,
-            ),
-            calenderMonthChange(),
-            Expanded(
-              child: Row(
-                children: [
-                  Spacer(
-                    flex: 1,
-                  ),
-                  Expanded(
-                    flex: calenderWidthFlex,
-                    child: Container(
-                        decoration: BoxDecoration(color: Color(0x7077AAAD)),
-                        child: isItCalender ? returnCalender() : returnGraph()),
-                  ),
-                  Spacer(
-                    flex: 1,
-                  )
-                ],
-              ),
-              flex: 10,
-            ),
-            Spacer(
-              flex: 1,
-            ),
-            diet(date.toString()),
-            dietBox(mealTime, date),
-            Spacer(
-              flex: 2,
-            ),
-          ],
-        ));
+        body: SingleChildScrollView(
+            child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  children: [
+                    Spacer(
+                      flex: 1,
+                    ),
+                    calenderMonthChange(),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Spacer(
+                            flex: 1,
+                          ),
+                          Expanded(
+                            flex: calenderWidthFlex,
+                            child: Container(
+                                decoration:
+                                    BoxDecoration(color: Color(0x7077AAAD)),
+                                child: isItCalender
+                                    ? returnCalender()
+                                    : returnGraph()),
+                          ),
+                          Spacer(
+                            flex: 1,
+                          )
+                        ],
+                      ),
+                      flex: 10,
+                    ),
+                    Spacer(
+                      flex: 1,
+                    ),
+                    diet(date.toString()),
+                    dietBox(mealTime, date),
+                    Spacer(
+                      flex: 2,
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Swiper(
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            child: Text("추천 식단이 들어갈 자리"),
+                            decoration: BoxDecoration(color: Colors.white),
+                          );
+                        },
+                        itemCount: 3,
+                        pagination: new SwiperPagination(),
+                        control: new SwiperControl(),
+                      ),
+                    )
+                  ],
+                ))));
   }
 
   Widget returnCalender() {
@@ -369,18 +391,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Spacer(
                       flex: 4,
                     ),
-                    Expanded(
-                        flex: 2,
-                        child: Transform.scale(
-                            scale: 1.5,
-                            child: Switch(
-                              onChanged: toggleSwitch,
-                              value: switchControl,
-                              activeColor: Colors.blue,
-                              activeTrackColor: Colors.green,
-                              inactiveThumbColor: Colors.white,
-                              inactiveTrackColor: Colors.grey,
-                            ))),
+                    calenderSwitch(),
                   ],
                 ),
               ),
@@ -401,18 +412,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Spacer(
                       flex: 13,
                     ),
-                    Expanded(
-                        flex: 2,
-                        child: Transform.scale(
-                            scale: 1.5,
-                            child: Switch(
-                              onChanged: toggleSwitch,
-                              value: switchControl,
-                              activeColor: Colors.red,
-                              activeTrackColor: Colors.blue,
-                              inactiveThumbColor: Colors.red,
-                              inactiveTrackColor: Colors.grey,
-                            ))),
+                    calenderSwitch(),
                   ],
                 ),
               ),
@@ -437,6 +437,21 @@ class _MyHomePageState extends State<MyHomePage> {
         streamControllerMainPage.add(isItCalender);
       });
     }
+  }
+
+  Widget calenderSwitch() {
+    return Expanded(
+        flex: 2,
+        child: Transform.scale(
+            scale: 1.5,
+            child: Switch(
+              onChanged: toggleSwitch,
+              value: switchControl,
+              activeColor: Colors.red,
+              activeTrackColor: Colors.blue,
+              inactiveThumbColor: Colors.red,
+              inactiveTrackColor: Colors.grey,
+            )));
   }
 
   Widget calenderDayRow() {
