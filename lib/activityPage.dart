@@ -43,10 +43,10 @@ class _ActivityPageState extends State<ActivityPage> {
   Future<Map> getHint() async {
     var hint1 = {};
     await dbHelperPerson.getAllPerson().then((value) {
-      print("*"*100);
+      print("*" * 100);
       print(value.length);
       print(value);
-      print("*"*100);
+      print("*" * 100);
       hint1['height'] = value.isNotEmpty ? value.last.height : null;
       hint1['weight'] = value.isNotEmpty ? value.last.weight : null;
       hint1['bmi'] = value.isNotEmpty ? value.last.bmi : null;
@@ -62,20 +62,10 @@ class _ActivityPageState extends State<ActivityPage> {
   }
 
   void bmrVal() async {
+    hint = await getHint();
 
-    final Map<String,Person> args = ModalRoute.of(context).settings.arguments;
-    if(args != null){
-      hint=args['person'].toMap();
-    }
-    else{
-      await getHint().then((value){
-        hint=value;
-      });
-    }
-    print("="*100);
-    print(hint);
-    //조건: 성별
     if (hint.isNotEmpty) {
+      //조건: 성별
       if (true) {
         bmr = (66.5 +
             (13.8 * hint['weight']) +
@@ -87,7 +77,7 @@ class _ActivityPageState extends State<ActivityPage> {
         if (hint['metabolism'] != null) {
           amText.text = hint['metabolism'].toString();
           setState(() {
-            _nutriRateValue = hint['nutriRate'].toInt();
+            _nutriRateValue = hint['nutriRate'];
             _activityValue = hint['activity'];
           });
         } else {
@@ -174,9 +164,9 @@ class _ActivityPageState extends State<ActivityPage> {
           DropdownButton(
               value: _nutriRateValue,
               items: [
-                DropdownMenuItem(child: Text('다이어트 3 : 4 : 3'), value: 0),
-                DropdownMenuItem(child: Text('벌크업 4 : 4 : 2'), value: 1),
-                DropdownMenuItem(child: Text('린매스업 5 : 3 : 2'), value: 2),
+                DropdownMenuItem(child: Text('다이어트 3 : 4 : 3'), value: 1),
+                DropdownMenuItem(child: Text('벌크업 4 : 4 : 2'), value: 2),
+                DropdownMenuItem(child: Text('린매스업 5 : 3 : 2'), value: 3),
               ],
               onChanged: (value) {
                 setState(() {
