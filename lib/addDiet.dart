@@ -102,12 +102,11 @@ class _FoodListState extends State<FoodList> {
               onChanged: (text) async {
                 massChangeList = [];
                 List<int> index = getIndex();
-                if (index.length == foodList.length) {
-                  for (var item in index) {
-                    massChangeList.insert(
-                        item, num.parse(foodMassController[item].value.text));
-                  }
+                for (var item in index) {
+                  massChangeList.insert(
+                      item, num.tryParse(foodMassController[item].value.text));
                 }
+
                 justCalNutri(foodList, massChangeList).then((val) {
                   print(val);
                   setState(() {
@@ -195,11 +194,11 @@ class _FoodListState extends State<FoodList> {
     var k = 0;
     for (var item in foodMassController) {
       dynamic j = num.tryParse(item.value.text);
-      if (j != null) {
-        if (j != 0) {
-          n.add(k);
-        }
-      }
+      // if (j != null) {
+      // if (j != 0) {
+      n.add(k);
+      // }
+      // }
       k += 1;
     }
     print("return $n");
@@ -211,10 +210,10 @@ class _FoodListState extends State<FoodList> {
     for (var item in foodMassController) {
       dynamic j = num.tryParse(item.value.text);
       if (j != null) {
-        if (j != 0) {
-          print("j is $j");
-          n++;
-        }
+        // if (j != 0) {
+        print("j is $j");
+        n++;
+        // }
       }
     }
     print("return $n");
@@ -678,13 +677,21 @@ class _FoodListState extends State<FoodList> {
     num protein = 0.0;
     num fat = 0.0;
 
-    var i = 0;
-    for (var item in foodList) {
-      Food food = await dbHelperFood.getFood(item.code);
+    List<num> index = [];
+    index = getIndex();
+    print("*" * 100);
+    print(foodList.length);
+    print(mass.length);
+    print("*" * 100);
+    for (var i = 0; i < foodList.length; i++) {
+      Food food = await dbHelperFood.getFood(foodList[i].code);
+      print(mass[i]);
+      if (mass[i] == null || mass.length - 1 < i) {
+        mass[i] = 0;
+      }
       carbohydrate += food.carbohydrate * mass[i];
       protein += food.protein * mass[i];
       fat += food.fat * mass[i];
-      i += 1;
     }
     return [carbohydrate, protein, fat];
   }
