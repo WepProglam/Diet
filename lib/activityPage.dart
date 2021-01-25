@@ -43,10 +43,10 @@ class _ActivityPageState extends State<ActivityPage> {
   Future<Map> getHint() async {
     var hint1 = {};
     await dbHelperPerson.getAllPerson().then((value) {
-      print("*"*100);
-      print(value.length);
-      print(value);
-      print("*"*100);
+      // print("*"*100);
+      // print(value.length);
+      // print(value);
+      // print("*"*100);
       hint1['height'] = value.isNotEmpty ? value.last.height : null;
       hint1['weight'] = value.isNotEmpty ? value.last.weight : null;
       hint1['bmi'] = value.isNotEmpty ? value.last.bmi : null;
@@ -57,25 +57,26 @@ class _ActivityPageState extends State<ActivityPage> {
       hint1['metabolism'] = value.isNotEmpty ? value.last.metabolism : null;
       hint1['activity'] = value.isNotEmpty ? value.last.activity : null;
       hint1['nutriRate'] = value.isNotEmpty ? value.last.nutriRate : null;
+      hint1['weightTarget'] = value.isNotEmpty ? value.last.weightTarget : null;
+      hint1['bmiTarget'] = value.isNotEmpty ? value.last.bmiTarget : null;
+      hint1['muscleTarget'] = value.isNotEmpty ? value.last.muscleTarget : null;
     });
     return hint1;
   }
 
   void bmrVal() async {
-
-    final Map<String,Person> args = ModalRoute.of(context).settings.arguments;
-    if(args != null){
-      hint=args['person'].toMap();
-    }
-    else{
-      await getHint().then((value){
-        hint=value;
+    final Map<String, Person> args = ModalRoute.of(context).settings.arguments;
+    if (args != null) {
+      hint = args['person'].toMap();
+    } else {
+      await getHint().then((value) {
+        hint = value;
       });
     }
-    print("="*100);
+    print("=" * 100);
     print(hint);
     //조건: 성별
-    if (hint.isNotEmpty) {
+    if (hint['time'] != null) {
       if (true) {
         bmr = (66.5 +
             (13.8 * hint['weight']) +
@@ -110,7 +111,7 @@ class _ActivityPageState extends State<ActivityPage> {
         }
       }
     } else {
-      bmrText.text = '신체 정보가 비어있습니다.';
+      bmrText.text = '신체 정보 X';
       amText.text = bmrText.text;
     }
   }
@@ -289,6 +290,9 @@ class _ActivityPageState extends State<ActivityPage> {
                   metabolism: num.parse(amText.value.text),
                   activity: _activityValue,
                   nutriRate: _nutriRateValue,
+                  weightTarget: hint['weightTarget'],
+                  bmiTarget: hint['bmiTarget'],
+                  muscleTarget: hint['muscleTarget'],
                 );
                 print(person.metabolism);
                 dbHelperPerson.createHelper(person);
