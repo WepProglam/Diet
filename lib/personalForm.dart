@@ -134,7 +134,7 @@ class _PersonalForm extends State<PersonalForm> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Swiper(
-                  duration: 1000,
+                  duration: 1500,
                   controller: swiperController,
                   scrollDirection: Axis.vertical,
 
