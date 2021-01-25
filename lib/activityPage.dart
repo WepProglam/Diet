@@ -64,7 +64,7 @@ class _ActivityPageState extends State<ActivityPage> {
   void bmrVal() async {
     hint = await getHint();
 
-    if (hint.isNotEmpty) {
+    if (hint['time'] != null) {
       //조건: 성별
       if (true) {
         bmr = (66.5 +
@@ -100,7 +100,8 @@ class _ActivityPageState extends State<ActivityPage> {
         }
       }
     } else {
-      bmrText.text = '신체 정보가 비어있습니다.';
+      //이거 text 뭐라고 하지
+      bmrText.text = '신체 정보 X';
       amText.text = bmrText.text;
     }
   }

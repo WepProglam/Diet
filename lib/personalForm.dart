@@ -193,7 +193,7 @@ class _PersonalForm extends State<PersonalForm> {
                     muscleTarget:
                         double.parse(_muscleTargetController.value.text));
 
-                dbHelper
+                await dbHelper
                     .createHelper(person)
                     .then(Navigator.pushNamed(context, '/activityPage'));
               }
