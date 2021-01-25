@@ -266,13 +266,40 @@ class _FoodListState extends State<FoodList> {
             child: Column(
               children: [
                 //음식 추가 버튼
+
+                //listview
+                Expanded(
+                  flex: 8,
+                  child: Container(
+                    margin: EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFF69C2B0)),
+                    ),
+                    child: Stack(
+                      children: [
+                        ListView.separated(
+                          padding: EdgeInsets.all(8),
+                          itemCount: foodList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return buildFood(foodList[index], index);
+                          },
+                          separatorBuilder: (BuildContext context, int index) =>
+                              Divider(),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: FloatingActionButton(
+                            onPressed: null,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 Expanded(
                   flex: 2,
                   child: Column(
                     children: [
-                      Spacer(
-                        flex: 1,
-                      ),
                       Row(
                         children: [
                           Spacer(
@@ -310,25 +337,6 @@ class _FoodListState extends State<FoodList> {
                         flex: 1,
                       ),
                     ],
-                  ),
-                ),
-                //listview
-                Expanded(
-                  flex: 8,
-                  child: Container(
-                    margin: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF69C2B0)),
-                    ),
-                    child: ListView.separated(
-                      padding: EdgeInsets.all(8),
-                      itemCount: foodList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return buildFood(foodList[index], index);
-                      },
-                      separatorBuilder: (BuildContext context, int index) =>
-                          Divider(),
-                    ),
                   ),
                 ),
               ],
