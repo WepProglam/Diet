@@ -57,7 +57,7 @@ class DBHelperPerson {
       } else {
         await createData(person);
       }
-    }, onError: (e) async{
+    }, onError: (e) async {
       await createData(person);
     });
   }
@@ -73,9 +73,10 @@ class DBHelperPerson {
   }
 
   //Read
-  getPerson(String time) async {
+  Future<Person> getPerson(String time) async {
     final db = await database;
-    var res = await db.rawQuery("SELECT * FROM $tableName WHERE time = '$time'");
+    var res =
+        await db.rawQuery("SELECT * FROM $tableName WHERE time = '$time'");
     return res.isNotEmpty
         ? Person(
             height: res.first['height'],
