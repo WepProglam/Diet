@@ -8,7 +8,7 @@ class Person {
   num weight;
   num bmi;
   num muscleMass;
-  var purpose;
+  num purpose;
   String time;
   num achieve;
 

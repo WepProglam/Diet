@@ -34,8 +34,8 @@ class _PersonalForm extends State<PersonalForm> {
     // DropdownMenuItem(child: Center(child: Text('일반 직장인')), value: 8),
     // DropdownMenuItem(child: Center(child: Text('휴가 직장인')), value: 9)
   ];
-  int _selValue = 1;
-  int purpose_index = 1;
+  int _selValue = 0;
+  // int purpose_index = 1;
   var dbHelper = DBHelperPerson();
   var hint = {};
   bool typeStart = false;
@@ -91,6 +91,7 @@ class _PersonalForm extends State<PersonalForm> {
     hint = await getHint();
     if (hint['time'] != null && !typeStart) {
       setState(() {
+        _selValue = hint['purpose'];
         _bmiController.text = hint['bmi'] == null ? "" : hint['bmi'].toString();
         _weightController.text =
             hint['weight'] == null ? "" : hint['weight'].toString();
@@ -179,8 +180,62 @@ class _PersonalForm extends State<PersonalForm> {
                                       subBuilderQuestion("목표 골격근량", "kg",
                                           controller: _muscleTargetController,
                                           hint: hint['muscleTarget']),
-                                      subBuilderPurpose("목표",
-                                          hint: hint['purpose']),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Center(
+                                              child: Row(
+                                            children: [
+                                              Spacer(
+                                                flex: 2,
+                                              ),
+                                              spacer_question('목표'),
+                                              Expanded(
+                                                flex: 8,
+                                                child: DropdownButtonFormField(
+                                                  value: _selValue,
+                                                  items: [
+                                                    DropdownMenuItem(
+                                                      child: Center(
+                                                          child: Text('다이어트')),
+                                                      value: 0,
+                                                    ),
+                                                    DropdownMenuItem(
+                                                      child: Center(
+                                                          child: Text('벌크업')),
+                                                      value: 1,
+                                                    ),
+                                                    DropdownMenuItem(
+                                                      child: Center(
+                                                          child: Text('린매스업')),
+                                                      value: 2,
+                                                    ),
+                                                  ],
+                                                  decoration: InputDecoration(
+                                                      hintText: ""),
+                                                  validator: (value) {
+                                                    if (value > 3) {
+                                                      return 'Select Number 1-3';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      // typeStart = true;
+                                                      // purpose_index = value;
+                                                      _selValue = value;
+                                                      print(_selValue);
+                                                    });
+                                                  },
+                                                  // onSaved: (value) {
+                                                  //   // print(purpose_index);
+                                                  // },
+                                                ),
+                                              ),
+                                              Spacer(
+                                                flex: 3,
+                                              ),
+                                            ],
+                                          ))),
                                       Expanded(
                                         flex: 1,
                                         child: RaisedButton(
@@ -205,7 +260,7 @@ class _PersonalForm extends State<PersonalForm> {
                                                   muscleMass: double.parse(
                                                       _strengthController
                                                           .value.text),
-                                                  purpose: purpose_index - 1,
+                                                  purpose: _selValue,
                                                   time: time,
                                                   achieve: 0.0,
                                                   metabolism:
@@ -264,7 +319,7 @@ class _PersonalForm extends State<PersonalForm> {
                     weight: double.parse(_weightController.value.text),
                     bmi: double.parse(_bmiController.value.text),
                     muscleMass: double.parse(_strengthController.value.text),
-                    purpose: purpose_index - 1,
+                    purpose: _selValue,
                     time: time,
                     achieve: 0.0,
                     metabolism: hint['metabolism'],
@@ -307,7 +362,7 @@ class _PersonalForm extends State<PersonalForm> {
         )));
   }
 
-  Widget subBuilderPurpose(var question, {var hint}) {
+  /* Widget subBuilderPurpose(var question, {var hint}) {
     return Expanded(
         flex: 1,
         child: Center(
@@ -323,7 +378,7 @@ class _PersonalForm extends State<PersonalForm> {
             ),
           ],
         )));
-  }
+  } */
 
   Widget questionForm(TextEditingController controller, var hint) {
     var hintText = hint.toString();
@@ -347,7 +402,7 @@ class _PersonalForm extends State<PersonalForm> {
     );
   }
 
-  Widget pruposeForm(var hint) {
+  /* Widget pruposeForm(var hint) {
     var _selValue = hint == null ? 1 : hint + 1;
     return DropdownButtonFormField(
       value: _selValue,
@@ -370,7 +425,7 @@ class _PersonalForm extends State<PersonalForm> {
         // print(purpose_index);
       },
     );
-  }
+  } */
 
   Widget spacer_icon({var icon}) {
     return Expanded(flex: 1, child: Center(child: icon));
