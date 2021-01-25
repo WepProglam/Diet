@@ -121,7 +121,7 @@ class _PersonalForm extends State<PersonalForm> {
           FocusScopeNode currentFocus = FocusScope.of(context);
           currentFocus.unfocus();
           print('curIndex $curIndex');
-          if (_formKey.currentState.validate() && curIndex != 2) {
+          if (_formKey.currentState.validate()) {
             swiperController.next(animation: true);
           }
         },
@@ -181,8 +181,54 @@ class _PersonalForm extends State<PersonalForm> {
                                           hint: hint['muscleTarget']),
                                       subBuilderPurpose("목표",
                                           hint: hint['purpose']),
-                                      Spacer(
+                                      Expanded(
                                         flex: 1,
+                                        child: RaisedButton(
+                                          child: Text("제출"),
+                                          onPressed: () async {
+                                            if (_formKey.currentState
+                                                .validate()) {
+                                              // dbHelper.deleteAllPerson();
+                                              String time =
+                                                  DateFormat('yyyy-MM-dd')
+                                                      .format(DateTime.now())
+                                                      .toString();
+
+                                              var person = Person(
+                                                  height: double.parse(_heightController
+                                                      .value.text),
+                                                  weight: double.parse(
+                                                      _weightController
+                                                          .value.text),
+                                                  bmi: double.parse(_bmiController
+                                                      .value.text),
+                                                  muscleMass: double.parse(
+                                                      _strengthController
+                                                          .value.text),
+                                                  purpose: purpose_index - 1,
+                                                  time: time,
+                                                  achieve: 0.0,
+                                                  metabolism:
+                                                      hint['metabolism'],
+                                                  activity: hint['activity'],
+                                                  nutriRate: hint['nutriRate'],
+                                                  weightTarget: double.parse(
+                                                      _weightTargetController.value.text),
+                                                  bmiTarget: double.parse(_bmiTargetController.value.text),
+                                                  muscleTarget: double.parse(_muscleTargetController.value.text));
+
+                                              await dbHelper
+                                                  .createHelper(person);
+                                              Navigator.pushNamed(
+                                                  context, '/activityPage',
+                                                  arguments: <String, Person>{
+                                                    'person': person
+                                                  });
+                                            }
+
+                                            //print(_heightController.text);
+                                          },
+                                        ),
                                       ),
                                       Spacer(
                                         flex: 2,
@@ -192,7 +238,7 @@ class _PersonalForm extends State<PersonalForm> {
                       decoration: BoxDecoration(color: Colors.white),
                     );
                   },
-                  itemCount: 3,
+                  itemCount: 2,
                   // viewportFraction: 0.8,
 
                   // scale: 0.9,
