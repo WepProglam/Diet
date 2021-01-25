@@ -88,7 +88,7 @@ class _ActivityPageState extends State<ActivityPage> {
         if (hint['metabolism'] != null) {
           amText.text = hint['metabolism'].toString();
           setState(() {
-            _nutriRateValue = hint['nutriRate'].toInt();
+            _nutriRateValue = hint['nutriRate'];
             _activityValue = hint['activity'];
           });
         } else {
@@ -111,6 +111,7 @@ class _ActivityPageState extends State<ActivityPage> {
         }
       }
     } else {
+      //이거 text 뭐라고 하지
       bmrText.text = '신체 정보 X';
       amText.text = bmrText.text;
     }
@@ -175,9 +176,9 @@ class _ActivityPageState extends State<ActivityPage> {
           DropdownButton(
               value: _nutriRateValue,
               items: [
-                DropdownMenuItem(child: Text('다이어트 3 : 4 : 3'), value: 0),
-                DropdownMenuItem(child: Text('벌크업 4 : 4 : 2'), value: 1),
-                DropdownMenuItem(child: Text('린매스업 5 : 3 : 2'), value: 2),
+                DropdownMenuItem(child: Text('다이어트 3 : 4 : 3'), value: 1),
+                DropdownMenuItem(child: Text('벌크업 4 : 4 : 2'), value: 2),
+                DropdownMenuItem(child: Text('린매스업 5 : 3 : 2'), value: 3),
               ],
               onChanged: (value) {
                 setState(() {
