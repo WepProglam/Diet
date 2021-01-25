@@ -48,6 +48,7 @@ class _FoodListState extends State<FoodList> {
   num correct = 0.0;
   bool isGraphShowed = false;
   var dietInfo = {};
+  List<num> massChangeList = [];
 
   @override
   void initState() {
@@ -97,11 +98,23 @@ class _FoodListState extends State<FoodList> {
               decoration: InputDecoration(hintText: 'mass'),
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
-              onChanged: (text) {
-                print("changin");
-                setState(() {
-                  // foodList[index].mass = num.parse(text);
-                  // print(foodMassController[index].value.text);
+
+              onChanged: (text) async {
+                massChangeList = [];
+                List<int> index = getIndex();
+                if (index.length == foodList.length) {
+                  for (var item in index) {
+                    massChangeList.insert(
+                        item, num.parse(foodMassController[item].value.text));
+                  }
+                }
+                justCalNutri(foodList, massChangeList).then((val) {
+                  print(val);
+                  setState(() {
+                    carbohydrateMass = val[0];
+                    proteinMass = val[1];
+                    fatMass = val[2];
+                  });
                 });
               },
             ),
@@ -114,6 +127,7 @@ class _FoodListState extends State<FoodList> {
               onPressed: () {
                 setState(() {
                   foodList.removeAt(index);
+                  foodMassController[index].text = "";
                   // for (var item in foodMassController) {
                   //   item.text = "";
                   // }
@@ -489,9 +503,9 @@ class _FoodListState extends State<FoodList> {
             ),
           ),
           PieChartSample2(
-            carbohydrate: carbohydrateMass,
-            fat: fatMass,
-            protein: proteinMass,
+            carbohydrate: carbohydrateMass * 4,
+            fat: fatMass * 9,
+            protein: proteinMass * 4,
             totalCalorie: carbohydrateMass * 4 + fatMass * 9 + proteinMass * 4,
             correct: correct,
           ),
