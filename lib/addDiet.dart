@@ -428,33 +428,33 @@ class _FoodListState extends State<FoodList> {
                         }
                       }),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    icon: Icon(Icons.palette),
-                    color: Color(0xFF69C2B0),
-                    onPressed: () {
-                      if (changeNumOfMass() == foodList.length) {
-                        var massList = <num>[];
-                        for (var i = 0; i < foodList.length; i++) {
-                          massList
-                              .add(num.parse(foodMassController[i].value.text));
-                        }
-                        print(massList);
-                        justCalNutri(foodList, massList).then((value) {
-                          setState(() {
-                            carbohydrateMass = value[0];
-                            proteinMass = value[1];
-                            fatMass = value[2];
-                          });
-                        });
-                      } else {
-                        var snackBar = buildSnackBar('그래프를 보려면 빈칸을 모두 채워주세요');
-                        Scaffold.of(context).showSnackBar(snackBar);
-                      }
-                    },
-                  ),
-                ),
+                // Expanded(
+                //   flex: 1,
+                //   child: IconButton(
+                //     icon: Icon(Icons.palette),
+                //     color: Color(0xFF69C2B0),
+                //     onPressed: () {
+                //       if (changeNumOfMass() == foodList.length) {
+                //         var massList = <num>[];
+                //         for (var i = 0; i < foodList.length; i++) {
+                //           massList
+                //               .add(num.parse(foodMassController[i].value.text));
+                //         }
+                //         print(massList);
+                //         justCalNutri(foodList, massList).then((value) {
+                //           setState(() {
+                //             carbohydrateMass = value[0];
+                //             proteinMass = value[1];
+                //             fatMass = value[2];
+                //           });
+                //         });
+                //       } else {
+                //         var snackBar = buildSnackBar('그래프를 보려면 빈칸을 모두 채워주세요');
+                //         Scaffold.of(context).showSnackBar(snackBar);
+                //       }
+                //     },
+                //   ),
+                // ),
                 // enter diet textfield
                 Expanded(
                   flex: 4,
@@ -496,7 +496,7 @@ class _FoodListState extends State<FoodList> {
                       }),
                 ),
                 Spacer(
-                  flex: 2,
+                  flex: 1,
                 ),
               ],
             ),
