@@ -17,6 +17,9 @@ class _PersonalForm extends State<PersonalForm> {
   final _weightController = TextEditingController();
   final _bmiController = TextEditingController();
   final _strengthController = TextEditingController();
+  final _weightTargetController = TextEditingController();
+  final _bmiTargetController = TextEditingController();
+  final _muscleTargetController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _purposeList = [
     DropdownMenuItem(child: Center(child: Text('다이어트')), value: 1),
@@ -33,6 +36,7 @@ class _PersonalForm extends State<PersonalForm> {
   int purpose_index = 1;
   var dbHelper = DBHelperPerson();
   var hint = {};
+  bool typeStart=false;
 
   // @override
   // void initState() {
@@ -53,21 +57,33 @@ class _PersonalForm extends State<PersonalForm> {
     var hint1 = {};
 
     await dbHelper.getAllPerson().then((value) {
-      print(value);
-      print(value.last.toMap());
+
       hint1['height'] = value.isNotEmpty ? value.last.height : null;
       hint1['weight'] = value.isNotEmpty ? value.last.weight : null;
       hint1['bmi'] = value.isNotEmpty ? value.last.bmi : null;
       hint1['time'] = value.isNotEmpty ? value.last.time : null;
       hint1['muscleMass'] = value.isNotEmpty ? value.last.muscleMass : null;
       hint1['purpose'] = value.isNotEmpty ? value.last.purpose : null;
+      hint1['weightTarget'] = value.isNotEmpty ? value.last.weightTarget : null;
+      hint1['bmiTarget'] = value.isNotEmpty ? value.last.bmiTarget : null;
+      hint1['muscleTarget'] = value.isNotEmpty ? value.last.muscleTarget : null;
+    },onError: (e){
+      hint1['height'] =  null;
+      hint1['weight'] = null;
+      hint1['bmi'] = null;
+      hint1['time'] =null;
+      hint1['muscleMass'] =  null;
+      hint1['purpose'] = null;
+      hint1['weightTarget'] = null;
+      hint1['bmiTarget'] = null;
+      hint1['muscleTarget'] = null;
     });
     return hint1;
   }
 
   void getHintGet() async {
     hint = await getHint();
-    if (hint.isNotEmpty) {
+    if (hint.isNotEmpty && !typeStart) {
       setState(() {
         _bmiController.text = hint['bmi'] == null ? "" : hint['bmi'].toString();
         _weightController.text =
@@ -76,6 +92,12 @@ class _PersonalForm extends State<PersonalForm> {
             hint['height'] == null ? "" : hint['height'].toString();
         _strengthController.text =
             hint['muscleMass'] == null ? "" : hint['muscleMass'].toString();
+        _weightTargetController.text =
+            hint['weightTarget'] == null ? "" : hint['weightTarget'].toString();
+        _bmiTargetController.text =
+            hint['bmiTarget'] == null ? "" : hint['bmiTarget'].toString();
+        _muscleTargetController.text =
+            hint['muscleTarget'] == null ? "" : hint['muscleTarget'].toString();
       });
     }
   }
@@ -112,23 +134,22 @@ class _PersonalForm extends State<PersonalForm> {
                 // ),
 
                 subBuilderQuestion("키", "cm",
-                    controller: _heightController,
-                    icon: Icon(Icons.accessibility),
-                    hint: hint['height']),
+                    controller: _heightController, hint: hint['height']),
                 subBuilderQuestion("몸무게", "kg",
-                    controller: _weightController,
-                    icon: Icon(Icons.accessibility),
-                    hint: hint['weight']),
+                    controller: _weightController, hint: hint['weight']),
                 subBuilderQuestion("체지방률", "%",
-                    controller: _bmiController,
-                    icon: Icon(Icons.directions_run),
-                    hint: hint['bmi']),
+                    controller: _bmiController, hint: hint['bmi']),
                 subBuilderQuestion("골격근량", "kg",
-                    controller: _strengthController,
-                    icon: Icon(Icons.fitness_center),
-                    hint: hint['muscleMass']),
-                subBuilderPurpose("목표",
-                    icon: Icon(Icons.accessibility), hint: hint['purpose']),
+                    controller: _strengthController, hint: hint['muscleMass']),
+                subBuilderQuestion("목표 몸무게", "kg",
+                    controller: _weightTargetController,
+                    hint: hint['weightTarget']),
+                subBuilderQuestion("목표 bmi", "",
+                    controller: _bmiTargetController, hint: hint['bmiTarget']),
+                subBuilderQuestion("목표 골격근량", "kg",
+                    controller: _muscleTargetController,
+                    hint: hint['muscleTarget']),
+                subBuilderPurpose("목표", hint: hint['purpose']),
                 Spacer(
                   flex: 1,
                 ),
@@ -142,25 +163,39 @@ class _PersonalForm extends State<PersonalForm> {
             backgroundColor: Color(0xFF69C2B0),
             focusColor: Color(0xFF69C2B0),
             child: Icon(Icons.done),
-            onPressed: () {
+            onPressed: () async {
               if (_formKey.currentState.validate()) {
                 // dbHelper.deleteAllPerson();
                 String time =
                     DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
 
-                print(_heightController.value.text);
+                // print(_heightController.value.text);
+                // print(_weightController.value.text);
+                // print(_bmiController.value.text);
+                // print(_strengthController.value.text);
+                // print(_weightTargetController.value.text);
+                // print(_bmiTargetController.value.text);
+                // print(_muscleTargetController.value.text);
 
                 var person = Person(
-                    height: num.parse(_heightController.value.text),
-                    weight: num.parse(_weightController.value.text),
-                    bmi: _bmiController.value.text,
-                    muscleMass: _strengthController.value.text,
+                    height: double.parse(_heightController.value.text),
+                    weight: double.parse(_weightController.value.text),
+                    bmi: double.parse(_bmiController.value.text),
+                    muscleMass: double.parse(_strengthController.value.text),
                     purpose: purpose_index - 1,
                     time: time,
-                    achieve: 0);
+                    achieve: 0.0,
+                metabolism: 0.0,
+                activity: null,
+                nutriRate: 0.0,
+                weightTarget: double.parse(_weightTargetController.value.text),
+                bmiTarget: double.parse(_bmiTargetController.value.text),
+                muscleTarget: double.parse(_muscleTargetController.value.text));
 
-                dbHelper.createHelper(person);
-                Navigator.pushNamed(context, '/activityPage');
+                await dbHelper.createHelper(person);
+                Navigator.pushNamed(context, '/activityPage',arguments: <String,Person>{
+                  'person':person
+                });
               }
 
               //print(_heightController.text);
@@ -170,40 +205,39 @@ class _PersonalForm extends State<PersonalForm> {
   }
 
   Widget subBuilderQuestion(var question, var unit,
-      {var controller, var icon, var hint}) {
+      {var controller, var hint}) {
+    print(hint);
     return Expanded(
         flex: 1,
         child: Center(
             child: Row(
           children: [
             Spacer(
-              flex: 1,
+              flex: 2,
             ),
-            spacer_icon(icon: icon),
             spacer_question(question),
             Expanded(flex: 6, child: questionForm(controller, hint)),
             spacer_unit(unit),
             Spacer(
-              flex: 1,
+              flex: 2,
             ),
           ],
         )));
   }
 
-  Widget subBuilderPurpose(var question, {var icon, var hint}) {
+  Widget subBuilderPurpose(var question, {var hint}) {
     return Expanded(
         flex: 1,
         child: Center(
             child: Row(
           children: [
             Spacer(
-              flex: 1,
+              flex: 2,
             ),
-            spacer_icon(icon: icon),
             spacer_question(question),
             Expanded(flex: 8, child: pruposeForm(hint)),
             Spacer(
-              flex: 2,
+              flex: 3,
             ),
           ],
         )));
@@ -223,6 +257,11 @@ class _PersonalForm extends State<PersonalForm> {
         }
         return null;
       },
+      onChanged: (text){
+        setState(() {
+          typeStart=true;
+        });
+      },
     );
   }
 
@@ -239,8 +278,11 @@ class _PersonalForm extends State<PersonalForm> {
         return null;
       },
       onChanged: (value) {
-        purpose_index = value;
-        _selValue = value;
+        setState(() {
+          typeStart=true;
+          purpose_index = value;
+          _selValue = value;
+        });
       },
       onSaved: (value) {
         print(purpose_index);

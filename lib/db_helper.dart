@@ -36,7 +36,10 @@ class DBHelperPerson {
             achieve REAL,
             metabolism REAL,
             activity INT,
-            nutriRate INT
+            nutriRate INT,
+            weightTarget REAL,
+            bmiTarget REAL,
+            muscleTarget REAL
             )
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
@@ -47,15 +50,15 @@ class DBHelperPerson {
       if (value.isNotEmpty) {
         if (value.last.time == person.time) {
           await deletePerson(value.last.time);
-          createData(person);
+          await createData(person);
         } else {
-          createData(person);
+          await createData(person);
         }
       } else {
-        createData(person);
+        await createData(person);
       }
-    }, onError: (e) {
-      createData(person);
+    }, onError: (e) async{
+      await createData(person);
     });
   }
 
@@ -84,7 +87,10 @@ class DBHelperPerson {
             achieve: res.first['achieve'],
             metabolism: res.first['metabolism'],
             activity: res.first['activity'],
-            nutriRate: res.first['nutriRate'])
+            nutriRate: res.first['nutriRate'],
+            weightTarget: res.first['weightTarget'],
+            bmiTarget: res.first['bmiTarget'],
+            muscleTarget: res.first['muscleTarget'])
         : Null;
   }
 
@@ -105,7 +111,10 @@ class DBHelperPerson {
                   achieve: c['achieve'],
                   metabolism: c['metabolism'],
                   activity: c['activity'],
-                  nutriRate: c['nutriRate']),
+                  nutriRate: c['nutriRate'],
+                  weightTarget: c['weightTarget'],
+                  bmiTarget: c['bmiTarget'],
+                  muscleTarget: c['muscleTarget']),
             )
             .toList()
         : [];

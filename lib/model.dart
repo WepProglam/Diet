@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 class Person {
   num height;
   num weight;
-  var bmi;
-  var muscleMass;
+  num bmi;
+  num muscleMass;
   var purpose;
   String time;
   num achieve;
@@ -15,6 +15,10 @@ class Person {
   num metabolism; //총 에너지 대사량
   num activity; //1, 2, 3, 4, 5, 6
   num nutriRate; //1, 2, 3
+
+  num weightTarget;
+  num bmiTarget;
+  num muscleTarget;
 
   Person(
       {this.height,
@@ -26,7 +30,10 @@ class Person {
       this.achieve,
       this.metabolism,
       this.activity,
-      this.nutriRate});
+      this.nutriRate,
+      this.weightTarget,
+      this.bmiTarget,
+      this.muscleTarget});
 
   Map<String, dynamic> toMap() {
     return {
@@ -39,7 +46,10 @@ class Person {
       'achieve': achieve,
       'metabolism': metabolism,
       'activity': activity,
-      'nutriRate': nutriRate
+      'nutriRate': nutriRate,
+      'weightTarget': weightTarget,
+      'bmiTarget': bmiTarget,
+      'muscleTarget': muscleTarget
     };
   }
 }
