@@ -40,7 +40,7 @@ class _ActivityPageState extends State<ActivityPage> {
 
   num bmr;
 
-  Future<Map> getHint() async {
+  /* Future<Map> getHint() async {
     var hint1 = {};
     await dbHelperPerson.getAllPerson().then((value) {
       // print("*"*100);
@@ -62,19 +62,19 @@ class _ActivityPageState extends State<ActivityPage> {
       hint1['muscleTarget'] = value.isNotEmpty ? value.last.muscleTarget : null;
     });
     return hint1;
-  }
+  } */
 
   void bmrVal() async {
     final Map<String, Person> args = ModalRoute.of(context).settings.arguments;
-    if (args != null) {
-      hint = args['person'].toMap();
-    } else {
-      await getHint().then((value) {
-        hint = value;
-      });
-    }
-    print("=" * 100);
-    print(hint);
+    // if (args != null) {
+    hint = args['person'].toMap();
+    // } else {
+    //   await getHint().then((value) {
+    //     hint = value;
+    //   });
+    // }
+    // print("=" * 100);
+    // print(hint);
     //조건: 성별
     if (hint['time'] != null) {
       if (true) {
