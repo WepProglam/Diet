@@ -182,7 +182,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
           show: true,
           border: Border.all(color: const Color(0xff37434d), width: 1)),
       minX: 0,
-      maxX: personInfoLength.toDouble()+1,
+      maxX: personInfoLength.toDouble(),
       minY: 0,
       maxY: 10,
       lineBarsData: [
