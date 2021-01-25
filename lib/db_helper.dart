@@ -57,7 +57,7 @@ class DBHelperPerson {
       } else {
         await createData(person);
       }
-    }, onError: (e) async{
+    }, onError: (e) async {
       await createData(person);
     });
   }
@@ -68,14 +68,16 @@ class DBHelperPerson {
     await db.insert(
       tableName,
       person.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      // conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
   //Read
-  getPerson(String time) async {
+  Future<Person> getPerson(String time) async {
     final db = await database;
-    var res = await db.rawQuery('SELECT * FROM $tableName WHERE time = $time');
+    var res =
+        await db.rawQuery("SELECT * FROM $tableName WHERE time = '$time'");
+    print(res.isNotEmpty);
     return res.isNotEmpty
         ? Person(
             height: res.first['height'],

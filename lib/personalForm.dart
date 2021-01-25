@@ -63,6 +63,9 @@ class _PersonalForm extends State<PersonalForm> {
       hint1['time'] = value.isNotEmpty ? value.last.time : null;
       hint1['muscleMass'] = value.isNotEmpty ? value.last.muscleMass : null;
       hint1['purpose'] = value.isNotEmpty ? value.last.purpose : null;
+      hint1['metabolism'] = value.isNotEmpty ? value.last.metabolism : null;
+      hint1['activity'] = value.isNotEmpty ? value.last.activity : null;
+      hint1['nutriRate'] = value.isNotEmpty ? value.last.nutriRate : null;
       hint1['weightTarget'] = value.isNotEmpty ? value.last.weightTarget : null;
       hint1['bmiTarget'] = value.isNotEmpty ? value.last.bmiTarget : null;
       hint1['muscleTarget'] = value.isNotEmpty ? value.last.muscleTarget : null;
@@ -82,7 +85,7 @@ class _PersonalForm extends State<PersonalForm> {
 
   void getHintGet() async {
     hint = await getHint();
-    if (hint.isNotEmpty && !typeStart) {
+    if (hint['time'] != null && !typeStart) {
       setState(() {
         _bmiController.text = hint['bmi'] == null ? "" : hint['bmi'].toString();
         _weightController.text =
@@ -184,18 +187,22 @@ class _PersonalForm extends State<PersonalForm> {
                     purpose: purpose_index - 1,
                     time: time,
                     achieve: 0.0,
-                    // metabolism: 0.0,
-                    // activity: null,
-                    // nutriRate: 0.0,
+                    metabolism: hint['metabolism'],
+                    activity: hint['activity'],
+                    nutriRate: hint['nutriRate'],
                     weightTarget:
                         double.parse(_weightTargetController.value.text),
                     bmiTarget: double.parse(_bmiTargetController.value.text),
                     muscleTarget:
                         double.parse(_muscleTargetController.value.text));
 
-                await dbHelper
-                    .createHelper(person)
-                    .then(Navigator.pushNamed(context, '/activityPage'));
+                await dbHelper.createHelper(person);
+                await dbHelper.getPerson(person.time).then((value) {
+                  print(value.height);
+                  print(value.weight);
+                });
+
+                Navigator.pushNamed(context, '/activityPage');
               }
 
               //print(_heightController.text);
