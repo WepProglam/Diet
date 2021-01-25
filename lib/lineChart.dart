@@ -41,13 +41,14 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
   void getInfo() async {
     await dbHelperPerson.getAllPerson().then((value) {
+      print(value);
       personWeightSpot = [];
       personBmiSpot = [];
       personMuscleSpot = [];
       personTimeInfo = [];
 
       setState(() {
-        for (var item in value) {
+        for (var item in value){
           maxWeigt.add(item.weight);
           maxBmi.add(item.bmi);
           maxMuscle.add(item.muscleMass);
@@ -153,7 +154,13 @@ class _LineChartSample2State extends State<LineChartSample2> {
               fontWeight: FontWeight.bold,
               fontSize: 12),
           getTitles: (value) {
-            return personTimeInfo[value.toInt()];
+            print("+"*10);
+            print(value);
+            if(value.toInt() < personTimeInfo.length){
+              return personTimeInfo[value.toInt()];
+            }
+            return "future";
+
           },
           margin: 8,
         ),
@@ -175,7 +182,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
           show: true,
           border: Border.all(color: const Color(0xff37434d), width: 1)),
       minX: 0,
-      maxX: personInfoLength.toDouble(),
+      maxX: personInfoLength.toDouble()+1,
       minY: 0,
       maxY: 10,
       lineBarsData: [
@@ -190,7 +197,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
           barWidth: 5,
           isStrokeCapRound: true,
           dotData: FlDotData(
-            show: false,
+            show: true,
           ),
           belowBarData: BarAreaData(
             show: true,
