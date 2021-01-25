@@ -243,66 +243,68 @@ class _ActivityPageState extends State<ActivityPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
+        height: MediaQuery.of(context).size.height * 6 / 7,
         child: Center(
-      child: Column(
-        children: [
-          // Spacer(
-          //   flex: 1,
-          // ),
-          Container(
-            // color: Colors.yellow,
-            child: metabolicRate('BMR', bmrText),
+          child: Column(
+            children: [
+              // Spacer(
+              //   flex: 1,
+              // ),
+              Container(
+                // color: Colors.yellow,
+                child: metabolicRate('BMR', bmrText),
+              ),
+              Spacer(
+                flex: 1,
+              ),
+              selActivity(),
+              Text('주로 하는 활동을 선택해주세요'),
+              Spacer(
+                flex: 1,
+              ),
+              nutriRate(),
+              Text('탄수화물, 단백질, 지방의 열량 비율을 선택해주세요'),
+              Spacer(
+                flex: 1,
+              ),
+              Container(
+                // color: Colors.yellow,
+                child: metabolicRate('AM', amText),
+              ),
+              Spacer(
+                flex: 1,
+              ),
+              FloatingActionButton(
+                  child: Icon(Icons.done),
+                  backgroundColor: Color(0xFF7EE0CC),
+                  onPressed: () {
+                    String time = DateFormat('yyyy-MM-dd')
+                        .format(DateTime.now())
+                        .toString();
+                    var person = Person(
+                      height: hint['height'],
+                      weight: hint['weight'],
+                      bmi: hint['bmi'],
+                      muscleMass: hint['muscleMass'],
+                      purpose: hint['purpose'],
+                      time: time,
+                      achieve: hint['achieve'],
+                      metabolism: num.parse(amText.value.text),
+                      activity: _activityValue,
+                      nutriRate: _nutriRateValue,
+                      weightTarget: hint['weightTarget'],
+                      bmiTarget: hint['bmiTarget'],
+                      muscleTarget: hint['muscleTarget'],
+                    );
+                    print(person.metabolism);
+                    dbHelperPerson.createHelper(person);
+                  }),
+              Spacer(
+                flex: 1,
+              ),
+            ],
           ),
-          Spacer(
-            flex: 1,
-          ),
-          selActivity(),
-          Text('주로 하는 활동을 선택해주세요'),
-          Spacer(
-            flex: 1,
-          ),
-          nutriRate(),
-          Text('탄수화물, 단백질, 지방의 열량 비율을 선택해주세요'),
-          Spacer(
-            flex: 1,
-          ),
-          Container(
-            // color: Colors.yellow,
-            child: metabolicRate('AM', amText),
-          ),
-          Spacer(
-            flex: 1,
-          ),
-          FloatingActionButton(
-              child: Icon(Icons.done),
-              backgroundColor: Color(0xFF7EE0CC),
-              onPressed: () {
-                String time =
-                    DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
-                var person = Person(
-                  height: hint['height'],
-                  weight: hint['weight'],
-                  bmi: hint['bmi'],
-                  muscleMass: hint['muscleMass'],
-                  purpose: hint['purpose'],
-                  time: time,
-                  achieve: hint['achieve'],
-                  metabolism: num.parse(amText.value.text),
-                  activity: _activityValue,
-                  nutriRate: _nutriRateValue,
-                  weightTarget: hint['weightTarget'],
-                  bmiTarget: hint['bmiTarget'],
-                  muscleTarget: hint['muscleTarget'],
-                );
-                print(person.metabolism);
-                dbHelperPerson.createHelper(person);
-              }),
-          Spacer(
-            flex: 1,
-          ),
-        ],
-      ),
-    ));
+        ));
   }
 }

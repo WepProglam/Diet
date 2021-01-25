@@ -7,6 +7,7 @@ import 'appBar.dart';
 import 'package:intl/intl.dart';
 import 'model.dart';
 import 'db_helper.dart';
+import 'activityPage.dart';
 
 class PersonalForm extends StatefulWidget {
   @override
@@ -119,7 +120,8 @@ class _PersonalForm extends State<PersonalForm> {
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
           currentFocus.unfocus();
-          if (_formKey.currentState.validate()) {
+          print('curIndex $curIndex');
+          if (_formKey.currentState.validate() && curIndex != 2) {
             swiperController.next(animation: true);
           }
         },
@@ -133,11 +135,14 @@ class _PersonalForm extends State<PersonalForm> {
               key: _formKey,
               child: SizedBox(
                 width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
                 child: Swiper(
                   duration: 1500,
                   controller: swiperController,
                   scrollDirection: Axis.vertical,
-
+                  onIndexChanged: (index) {
+                    curIndex = index;
+                  },
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                       child: Column(
@@ -163,29 +168,31 @@ class _PersonalForm extends State<PersonalForm> {
                                     flex: 2,
                                   ),
                                 ]
-                              : [
-                                  subBuilderQuestion("목표 몸무게", "kg",
-                                      controller: _weightTargetController,
-                                      hint: hint['weightTarget']),
-                                  subBuilderQuestion("목표 bmi", "",
-                                      controller: _bmiTargetController,
-                                      hint: hint['bmiTarget']),
-                                  subBuilderQuestion("목표 골격근량", "kg",
-                                      controller: _muscleTargetController,
-                                      hint: hint['muscleTarget']),
-                                  subBuilderPurpose("목표",
-                                      hint: hint['purpose']),
-                                  Spacer(
-                                    flex: 1,
-                                  ),
-                                  Spacer(
-                                    flex: 2,
-                                  ),
-                                ]),
+                              : index == 1
+                                  ? [
+                                      subBuilderQuestion("목표 몸무게", "kg",
+                                          controller: _weightTargetController,
+                                          hint: hint['weightTarget']),
+                                      subBuilderQuestion("목표 bmi", "",
+                                          controller: _bmiTargetController,
+                                          hint: hint['bmiTarget']),
+                                      subBuilderQuestion("목표 골격근량", "kg",
+                                          controller: _muscleTargetController,
+                                          hint: hint['muscleTarget']),
+                                      subBuilderPurpose("목표",
+                                          hint: hint['purpose']),
+                                      Spacer(
+                                        flex: 1,
+                                      ),
+                                      Spacer(
+                                        flex: 2,
+                                      ),
+                                    ]
+                                  : [ActivityPage()]),
                       decoration: BoxDecoration(color: Colors.white),
                     );
                   },
-                  itemCount: 2,
+                  itemCount: 3,
                   // viewportFraction: 0.8,
 
                   // scale: 0.9,
