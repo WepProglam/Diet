@@ -152,7 +152,7 @@ class _SearchListState extends State<SearchList> {
           focusColor: Color(0xFF69C2B0),
           child: Icon(Icons.done),
           onPressed: () {
-            print(codeList);
+            // print(codeList);
             if (fromAddDiet) {
               Navigator.pop(context, codeList);
             } else {
