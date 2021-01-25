@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'savedDiet.dart';
 import 'appBar.dart';
 import 'package:intl/intl.dart';
@@ -37,6 +38,8 @@ class _PersonalForm extends State<PersonalForm> {
   var dbHelper = DBHelperPerson();
   var hint = {};
   bool typeStart = false;
+  int curIndex = 0;
+  SwiperController swiperController = new SwiperController();
 
   // @override
   // void initState() {
@@ -113,6 +116,9 @@ class _PersonalForm extends State<PersonalForm> {
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
           currentFocus.unfocus();
+          if (_formKey.currentState.validate()) {
+            swiperController.next(animation: true);
+          }
         },
         child: Scaffold(
           backgroundColor: Color(0xFFFFFEF5),
@@ -120,44 +126,73 @@ class _PersonalForm extends State<PersonalForm> {
           appBar: basicAppBar('Personal Form', context),
           drawer: NavDrawer(),
           body: Center(
-              child: Form(
-            key: _formKey,
-            child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              // mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Form(
+              key: _formKey,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Swiper(
+                  duration: 1000,
+                  controller: swiperController,
+                  scrollDirection: Axis.vertical,
 
-              children: [
-                // Spacer(
-                //   flex: 1,
-                // ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: index == 0
+                              ? [
+                                  subBuilderQuestion("키", "cm",
+                                      controller: _heightController,
+                                      hint: hint['height']),
+                                  subBuilderQuestion("몸무게", "kg",
+                                      controller: _weightController,
+                                      hint: hint['weight']),
+                                  subBuilderQuestion("체지방률", "%",
+                                      controller: _bmiController,
+                                      hint: hint['bmi']),
+                                  subBuilderQuestion("골격근량", "kg",
+                                      controller: _strengthController,
+                                      hint: hint['muscleMass']),
+                                  Spacer(
+                                    flex: 1,
+                                  ),
+                                  Spacer(
+                                    flex: 2,
+                                  ),
+                                ]
+                              : [
+                                  subBuilderQuestion("목표 몸무게", "kg",
+                                      controller: _weightTargetController,
+                                      hint: hint['weightTarget']),
+                                  subBuilderQuestion("목표 bmi", "",
+                                      controller: _bmiTargetController,
+                                      hint: hint['bmiTarget']),
+                                  subBuilderQuestion("목표 골격근량", "kg",
+                                      controller: _muscleTargetController,
+                                      hint: hint['muscleTarget']),
+                                  subBuilderPurpose("목표",
+                                      hint: hint['purpose']),
+                                  Spacer(
+                                    flex: 1,
+                                  ),
+                                  Spacer(
+                                    flex: 2,
+                                  ),
+                                ]),
+                      decoration: BoxDecoration(color: Colors.white),
+                    );
+                  },
+                  itemCount: 2,
+                  // viewportFraction: 0.8,
 
-                subBuilderQuestion("키", "cm",
-                    controller: _heightController, hint: hint['height']),
-                subBuilderQuestion("몸무게", "kg",
-                    controller: _weightController, hint: hint['weight']),
-                subBuilderQuestion("체지방률", "%",
-                    controller: _bmiController, hint: hint['bmi']),
-                subBuilderQuestion("골격근량", "kg",
-                    controller: _strengthController, hint: hint['muscleMass']),
-                subBuilderQuestion("목표 몸무게", "kg",
-                    controller: _weightTargetController,
-                    hint: hint['weightTarget']),
-                subBuilderQuestion("목표 bmi", "",
-                    controller: _bmiTargetController, hint: hint['bmiTarget']),
-                subBuilderQuestion("목표 골격근량", "kg",
-                    controller: _muscleTargetController,
-                    hint: hint['muscleTarget']),
-                subBuilderPurpose("목표", hint: hint['purpose']),
-                Spacer(
-                  flex: 1,
+                  // scale: 0.9,
+                  pagination: new SwiperPagination(),
+                  // control:
+                  //     new SwiperControl(iconNext: null, iconPrevious: null),
                 ),
-                Spacer(
-                  flex: 2,
-                ),
-              ],
+              ),
             ),
-          )),
+          ),
           floatingActionButton: FloatingActionButton(
             backgroundColor: Color(0xFF69C2B0),
             focusColor: Color(0xFF69C2B0),
@@ -168,14 +203,6 @@ class _PersonalForm extends State<PersonalForm> {
                 String time =
                     DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
 
-                // print(_heightController.value.text);
-                // print(_weightController.value.text);
-                // print(_bmiController.value.text);
-                // print(_strengthController.value.text);
-                // print(_weightTargetController.value.text);
-                // print(_bmiTargetController.value.text);
-                // print(_muscleTargetController.value.text);
-
                 var person = Person(
                     height: double.parse(_heightController.value.text),
                     weight: double.parse(_weightController.value.text),
@@ -184,9 +211,6 @@ class _PersonalForm extends State<PersonalForm> {
                     purpose: purpose_index - 1,
                     time: time,
                     achieve: 0.0,
-                    // metabolism: 0.0,
-                    // activity: null,
-                    // nutriRate: 0.0,
                     weightTarget:
                         double.parse(_weightTargetController.value.text),
                     bmiTarget: double.parse(_bmiTargetController.value.text),
@@ -206,7 +230,6 @@ class _PersonalForm extends State<PersonalForm> {
 
   Widget subBuilderQuestion(var question, var unit,
       {var controller, var hint}) {
-    print(hint);
     return Expanded(
         flex: 1,
         child: Center(
@@ -285,7 +308,7 @@ class _PersonalForm extends State<PersonalForm> {
         });
       },
       onSaved: (value) {
-        print(purpose_index);
+        // print(purpose_index);
       },
     );
   }
