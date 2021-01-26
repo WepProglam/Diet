@@ -2,16 +2,37 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model.dart';
+import 'package:provider/provider.dart';
 
 import 'db_helper.dart';
 import 'mainStream.dart' as mainStream;
 
-List<Diet> dietNameEX = [];
+class DietList extends ChangeNotifier {
+  List<Diet> dietNameEX;
+
+  DietList(this.dietNameEX);
+
+  getDietList() => dietNameEX;
+  setDietList(List<Diet> diets) => dietNameEX = diets;
+
+  void addDiet(Diet diet) {
+    dietNameEX.add(diet);
+    notifyListeners();
+  }
+
+  void removeDiet(Diet diet) {
+    dietNameEX.removeWhere((element) => element.dietName == diet.dietName);
+    notifyListeners();
+  }
+}
 
 class SearchDiet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SearchList();
+    return ChangeNotifierProvider(
+      create: (context) => DietList([]),
+      child: SearchList(),
+    );
   }
 }
 
@@ -31,10 +52,12 @@ class SearchList extends StatefulWidget {
 }
 
 class _SearchListState extends State<SearchList> {
+  // final DietList listProvider = Provider.of<DietList>(context);
   final key = GlobalKey<ScaffoldState>();
   final _searchQuery = TextEditingController();
-  List<Diet> _list;
+  // List<Diet> _list;
   List<Diet> _searchList = List();
+  List<Diet> dietNameEX = [];
 
   bool _IsSearching = false;
   String _searchText = "";
@@ -61,9 +84,9 @@ class _SearchListState extends State<SearchList> {
 
   List<Diet> _buildSearchList() {
     if (_searchText.isEmpty) {
-      return _searchList = _list;
+      return _searchList = dietNameEX;
     } else {
-      _searchList = _list
+      _searchList = dietNameEX
           .where((element) => //여기다가 검색될 요소 추가 가능
               element.dietName
                   .toLowerCase()
@@ -84,6 +107,20 @@ class _SearchListState extends State<SearchList> {
     setState(() {});
   }
 
+  //이 함수에서 list 만듦
+  void init() async {
+    // _list = List();
+    // int i = 1;
+    await getInfo();
+    // _list.addAll(dietNameEX);
+    // for (var item in dietNameEX) {
+    //   _list.add(
+    //     Diet(dietName: item.dietName, foodInfo: item.foodInfo),
+    //   );
+    // }
+    _searchList = dietNameEX;
+  }
+
   //init
   @override
   void initState() {
@@ -92,21 +129,17 @@ class _SearchListState extends State<SearchList> {
     init();
   }
 
-  //이 함수에서 list 만듦
-  void init() async {
-    _list = List();
-    int i = 1;
-    await getInfo();
-    for (var item in dietNameEX) {
-      _list.add(
-        Diet(dietName: item.dietName, foodInfo: item.foodInfo),
-      );
-    }
-    _searchList = _list;
+  @override
+  void didChangeDependencies() {
+    init();
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
+    final DietList listProvider = Provider.of<DietList>(context);
+    listProvider.setDietList(dietNameEX);
+
     return Scaffold(
       backgroundColor: Color(0xFFFFFEF5),
       key: key,
@@ -235,8 +268,9 @@ class _UiitemState extends State<Uiitem> {
   }
 
   Widget build(BuildContext context) {
+    final DietList listProvider = Provider.of<DietList>(context);
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
-    //null일 경우를 안해놓냐 슈발
+
     if (args == null) {
     } else if (args['pre'] == "calcDiet") {
       whereFrom = "calcDiet";
@@ -268,10 +302,10 @@ class _UiitemState extends State<Uiitem> {
             child: GestureDetector(
               onTap: () async {
                 await dbHelperDiet.deleteDiet(widget.diet.dietName);
-                setState(() {
-                  dietNameEX.removeWhere(
-                      (item) => item.dietName == widget.diet.dietName);
-                });
+                listProvider.removeDiet(widget.diet);
+                // dietNameEX.removeWhere(
+                //     (item) => item.dietName == widget.diet.dietName);
+                // );
               },
               child: Icon(
                 Icons.delete,
