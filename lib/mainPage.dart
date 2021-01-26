@@ -48,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ScrollController _controller = new ScrollController();
   List<bool> isSelected = [true, false];
   List<bool> dietAdded = [false, false, false, false];
+  List<Map> todayDietList = List<Map>(4);
 
   @override
   void dispose() {

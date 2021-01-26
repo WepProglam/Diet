@@ -76,6 +76,7 @@ class _SearchListState extends State<SearchList> {
 
   void getInfo() async {
     await dbHelperDiet.getAllMyDiet().then((val) {
+      dietNameEX = [];
       for (var item in val) {
         dietNameEX.add(item);
       }
@@ -204,6 +205,7 @@ class Uiitem extends StatefulWidget {
 class _UiitemState extends State<Uiitem> {
   final dbHelperDiet = DBHelperDiet();
   String whereFrom = null;
+
   void reactWhenCalc() {
     // print(widget.diet.toMap());
     Navigator.pop(context, <String, Map>{"myDiet": widget.diet.toMap()});
