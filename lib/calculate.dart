@@ -130,12 +130,12 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   List<List<num>> massList = [[]];
 
   foodLength = foodList.length;
-  if(foodLength <=3){
-    calculateDensity=20;
-  }else if(foodLength == 4){
+  if(foodLength <=5){
     calculateDensity=10;
+  }else if(foodLength <= 7){
+    calculateDensity=5;
   }else{
-    calculateDensity=10;
+    calculateDensity=3;
   }
 
   //음식 무게 리스트 초기화 600은 kcal
