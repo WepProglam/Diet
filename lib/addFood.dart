@@ -403,35 +403,59 @@ class _TypeFoodName extends State<TypeFoodName> {
               await dbHelper.filterFoods(text.toString()).then((value) async {
                 foodList = [];
                 List<int> foodListIndex = [];
+                List<Food> favoriteFood = [];
+                List<Food> notFavoriteFood = [];
 
                 var i = 0;
-                for (var item in value) {
-                  if (i < 10) {
-                    foodListIndex.add(item.selected);
-                    foodListIndex.sort((b, a) => a.compareTo(b));
-                    var index = foodListIndex.indexOf(item.selected);
-                    foodList.insert(
-                        index,
-                        ListTile(
-                          title: Text(item.foodName),
-                          leading: Icon(
-                            Icons.favorite,
-                            color: item.isItMine == "T" ? Colors.red : null,
-                            size: 20,
-                          ),
-                          trailing: Text("${item.selected}"),
-                          subtitle: Text(
-                              "${myRounder(item.kcal * item.servingSize)} Kcal"),
-                          onTap: () {
-                            Map foodInfo = {};
-                            controller.text = item.foodName;
-                            foodInfo = item.toMap();
+                favoriteFood
+                    .addAll(value.where((item) => item.isItMine == "T"));
+                notFavoriteFood
+                    .addAll(value.where((item) => item.isItMine == "F"));
 
-                            streamController.add(foodInfo);
-                            _focusNode.unfocus();
-                            foodList = [];
-                          },
-                        ));
+                for (var item in favoriteFood) {
+                  foodList.add(ListTile(
+                    title: Text(item.foodName),
+                    leading: Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                      size: 20,
+                    ),
+                    trailing: Text("${item.selected}"),
+                    subtitle:
+                        Text("${myRounder(item.kcal * item.servingSize)} Kcal"),
+                    onTap: () {
+                      Map foodInfo = {};
+                      controller.text = item.foodName;
+                      foodInfo = item.toMap();
+
+                      streamController.add(foodInfo);
+                      _focusNode.unfocus();
+                      foodList = [];
+                    },
+                  ));
+                }
+
+                for (var item in notFavoriteFood) {
+                  if (i < 5 - favoriteFood.length) {
+                    foodList.add(ListTile(
+                      title: Text(item.foodName),
+                      leading: Icon(
+                        Icons.favorite,
+                        size: 20,
+                      ),
+                      trailing: Text("${item.selected}"),
+                      subtitle: Text(
+                          "${myRounder(item.kcal * item.servingSize)} Kcal"),
+                      onTap: () {
+                        Map foodInfo = {};
+                        controller.text = item.foodName;
+                        foodInfo = item.toMap();
+
+                        streamController.add(foodInfo);
+                        _focusNode.unfocus();
+                        foodList = [];
+                      },
+                    ));
                     i += 1;
                   } else {
                     break;
