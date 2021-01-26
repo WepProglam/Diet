@@ -1,5 +1,6 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/calculate.dart';
 import 'package:flutter_application_1/savedFood.dart';
 import 'appBar.dart';
 import 'db_helper.dart';
@@ -336,6 +337,7 @@ class _TypeFoodName extends State<TypeFoodName> {
   _TypeFoodName({this.controller});
   bool isItCutom = false;
   bool isItSelected = false;
+  bool favorite = false;
 
   @override
   void initState() {
@@ -413,8 +415,14 @@ class _TypeFoodName extends State<TypeFoodName> {
                         index,
                         ListTile(
                           title: Text(item.foodName),
+                          leading: Icon(
+                            Icons.favorite,
+                            color: item.isItMine == "T" ? Colors.red : null,
+                            size: 20,
+                          ),
+                          trailing: Text("${item.selected}"),
                           subtitle: Text(
-                              "${item.kcal * item.servingSize} Kcal  ${item.isItMine} selected : ${item.selected}"),
+                              "${myRounder(item.kcal * item.servingSize)} Kcal"),
                           onTap: () {
                             Map foodInfo = {};
                             controller.text = item.foodName;

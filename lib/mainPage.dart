@@ -73,6 +73,41 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Color(0xFFD7FFF1),
         appBar: basicAppBar('Main Page', context),
         drawer: NavDrawer(),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          // currentIndex: _currentIndex,
+          // backgroundColor: colorScheme.surface,
+          // selectedItemColor: colorScheme.onSurface,
+          // unselectedItemColor: colorScheme.onSurface.withOpacity(.60),
+          // selectedLabelStyle: textTheme.caption,
+          // unselectedLabelStyle: textTheme.caption,
+          onTap: (value) {
+            // Respond to item press.
+            // setState(() => _currentIndex = value);
+          },
+          items: [
+            BottomNavigationBarItem(
+              title: Text('Favorites'),
+              icon: Icon(Icons.favorite),
+            ),
+            BottomNavigationBarItem(
+              title: Text('Music'),
+              icon: Icon(Icons.music_note),
+            ),
+            BottomNavigationBarItem(
+              title: Text('Places'),
+              icon: Icon(Icons.location_on),
+            ),
+            BottomNavigationBarItem(
+              title: Text('News'),
+              icon: Icon(Icons.library_books),
+            ),
+            BottomNavigationBarItem(
+              title: Text('Places'),
+              icon: Icon(Icons.location_on),
+            ),
+          ],
+        ),
         body: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Row(
