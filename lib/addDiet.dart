@@ -446,7 +446,8 @@ class _FoodListState extends State<FoodList> {
                     child: IconButton(
                         icon: Icon(Icons.add, color: Color(0xFF69C2B0)),
                         onPressed: () {
-                          if (changeNumOfMass() != foodList.length) {
+                          if (changeNumOfMass() != foodList.length ||
+                              dietNameController.value.text == '') {
                             var snackBar = buildSnackBar('빈칸이 있습니다.');
                             Scaffold.of(context).showSnackBar(snackBar);
                           } else {
