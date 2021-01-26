@@ -59,6 +59,11 @@ class _DietListState extends State<DietList> {
     Navigator.pop(context, <String, Map>{"myDiet": dietNameEX[index].toMap()});
   }
 
+  void reactWhenMain(int index) {
+    // print(dietNameEX[index].toMap());
+    Navigator.pop(context, <String, Map>{"myDiet": dietNameEX[index].toMap()});
+  }
+
   void reactWhenAdd(int index) {
     Navigator.pushNamed(context, '/addDiet',
             arguments: <String, Map>{"myTempoDiet": dietNameEX[index].toMap()})
@@ -78,11 +83,13 @@ class _DietListState extends State<DietList> {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, bool> args = ModalRoute.of(context).settings.arguments;
+    final Map<String, String> args = ModalRoute.of(context).settings.arguments;
     //null일 경우를 안해놓냐 슈발
-    if (args != null && args['fromCalcDiet']) {
+    if (args == null) {
+      fromCalcDiet = false;
+    } else if (args['pre'] == "searchDiet") {
       fromCalcDiet = true;
-    } else {
+    } else if (args['pre'] == "mainPage") {
       fromCalcDiet = false;
     }
 

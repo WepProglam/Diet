@@ -203,7 +203,13 @@ class Uiitem extends StatefulWidget {
 
 class _UiitemState extends State<Uiitem> {
   final dbHelperDiet = DBHelperDiet();
+  String whereFrom = null;
   void reactWhenCalc() {
+    // print(widget.diet.toMap());
+    Navigator.pop(context, <String, Map>{"myDiet": widget.diet.toMap()});
+  }
+
+  void reactWhenMain() {
     // print(widget.diet.toMap());
     Navigator.pop(context, <String, Map>{"myDiet": widget.diet.toMap()});
   }
@@ -214,24 +220,26 @@ class _UiitemState extends State<Uiitem> {
         arguments: <String, Map>{"myTempoDiet": widget.diet.toMap()});
   }
 
-  void react(bool flag) {
+  void react(String whereFrom) {
     // print(flag);
-    if (flag) {
+    print(whereFrom);
+    if (whereFrom == "calcDiet") {
       reactWhenCalc();
+    } else if (whereFrom == "mainPage") {
+      reactWhenMain();
     } else {
       reactWhenAdd();
     }
   }
 
   Widget build(BuildContext context) {
-    bool fromCalcDiet = false;
-
-    final Map<String, bool> args = ModalRoute.of(context).settings.arguments;
-
-    if (args != null && args['fromCalcDiet']) {
-      fromCalcDiet = true;
-    } else {
-      fromCalcDiet = false;
+    final Map<String, String> args = ModalRoute.of(context).settings.arguments;
+    //null일 경우를 안해놓냐 슈발
+    if (args == null) {
+    } else if (args['pre'] == "calcDiet") {
+      whereFrom = "calcDiet";
+    } else if (args['pre'] == "mainPage") {
+      whereFrom = "mainPage";
     }
 
     return Card(
@@ -243,7 +251,7 @@ class _UiitemState extends State<Uiitem> {
             // splashColor: Colors.orange,
             //여기다 눌렀을 때 기능 넣기
             onTap: () async {
-              react(fromCalcDiet);
+              react(whereFrom);
             },
             child: Center(
               child: Text(

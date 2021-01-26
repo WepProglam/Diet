@@ -173,18 +173,41 @@ class _MyHomePageState extends State<MyHomePage> {
                                                         child: GestureDetector(
                                                           child: Container(
                                                             child: Center(
-                                                              child: dietAdded[
-                                                                      index]
-                                                                  ? Icon(
-                                                                      Icons
-                                                                          .check,
-                                                                      size: 40,
-                                                                    )
-                                                                  : Icon(
-                                                                      Icons
-                                                                          .add_circle_outline,
-                                                                      size: 40,
-                                                                    ),
+                                                              child:
+                                                                  dietAdded[
+                                                                          index]
+                                                                      ? Icon(
+                                                                          Icons
+                                                                              .add_circle_outline,
+                                                                          size:
+                                                                              40,
+                                                                        )
+                                                                      : Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                                flex: 1,
+                                                                                child: GestureDetector(
+                                                                                    child: Container(
+                                                                                      child: Text("저장된 식단 불러오기"),
+                                                                                      decoration: BoxDecoration(color: Colors.red),
+                                                                                    ),
+                                                                                    onTap: () {
+                                                                                      Navigator.pushNamed(context, '/searchDiet', arguments: <String, String>{
+                                                                                        "pre": "mainPage"
+                                                                                      }).then((val) {
+                                                                                        print(val);
+                                                                                      });
+                                                                                    })),
+                                                                            Expanded(
+                                                                              flex: 1,
+                                                                              child: GestureDetector(
+                                                                                  child: Container(
+                                                                                    decoration: BoxDecoration(color: Colors.blue),
+                                                                                  ),
+                                                                                  onTap: () {}),
+                                                                            )
+                                                                          ],
+                                                                        ),
                                                             ),
                                                             decoration:
                                                                 BoxDecoration(

@@ -193,7 +193,7 @@ class _CalcDietState extends State<CalcDiet> {
   void fetchDiet(String key) {
     visibleMeal[key]["added"] = true;
     Navigator.pushNamed(context, '/searchDiet',
-        arguments: <String, bool>{"fromCalcDiet": true}).then((value) {
+        arguments: <String, String>{"pre": "/searchDiet"}).then((value) {
       var val = value as Map;
       String dietName = val['myDiet']['dietName'];
 
