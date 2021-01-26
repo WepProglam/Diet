@@ -347,7 +347,7 @@ class _FoodListState extends State<FoodList> {
                                   });
                                   for (var i = 0; i < 3; i++) {
                                     foodMassController[i].text =
-                                        val[i].toString();
+                                        val[i].toStringAsFixed(2);
                                   }
                                 } catch (e) {
                                   var snackBar =
