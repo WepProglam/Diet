@@ -5,38 +5,50 @@ import 'dart:math';
 import 'package:csv/csv.dart';
 import 'package:path_provider/path_provider.dart';
 import 'appBar.dart';
+import 'model.dart';
 
-List<dynamic> justCalculateNutri(List<num> foodList) {
+num calculateDensity=10;
+const targetCalorie=600;
+
+List<dynamic> justCalculateNutri(List<num> foodList,num foodLength) {
   List<num> ratio = [5, 3, 2];
-  List<num> carbohydrateList = [foodList[0], foodList[1], foodList[2]];
-  List<num> proteinList = [foodList[3], foodList[4], foodList[5]];
-  List<num> fatList = [foodList[6], foodList[7], foodList[8]];
+  List<num> carbohydrateList = List<num>(foodLength);
+  List<num> proteinList =List<num>(foodLength);
+  List<num> fatList = List<num>(foodLength);
+  for (var i=0;i<foodLength;i++){
+    carbohydrateList[i]=foodList[3*i];
+    proteinList[i]=foodList[3*i+1];
+    fatList[i]=foodList[3*i+2];
+  }
 
-  List<num> mass = [foodList[9], foodList[10], foodList[11]];
+
+  List<num> mass = List<num>(foodList.length - foodLength*3-1);
+
+  int j = 0;
+  //일치율은 무게 계산에서 제외
+  for (var i = foodLength*3; i < foodList.length - 1; i++) {
+    mass[j] = foodList[i];
+    j += 1;
+  }
 
   num carbohydrate = 0.0;
   num protein = 0.0;
   num fat = 0.0;
+
 
   for (var i = 0; i < mass.length; i++) {
     carbohydrate += carbohydrateList[i] * mass[i];
     protein += proteinList[i] * mass[i];
     fat += fatList[i] * mass[i];
   }
-  List<num> nutriRatio = [carbohydrate, protein, fat];
+  List<num> nutriRatio = [carbohydrate*4, protein*4, fat*9];
   num degree = acos(returnDotProduct(ratio, nutriRatio) /
       (returnAmplitude(ratio) * returnAmplitude(nutriRatio)));
-  // print(mass);
-  // print("일치율 : ${(1 - degree / pi) * 100}");
-  // print(
-  //     "1 : ${myRounder(protein / carbohydrate)} : ${myRounder(fat / carbohydrate)}");
 
   List<dynamic> csvFile = [
-    mass[0],
-    mass[1],
-    mass[2],
+    mass,
     (1 - degree / (pi / 2)) * 100,
-    "1 : ${myRounder(protein / carbohydrate)} : ${myRounder(fat / carbohydrate)}",
+    "1 : ${myRounder(protein / carbohydrate)} : ${myRounder(fat*9 / (carbohydrate*4))}",
     carbohydrate,
     protein,
     fat
@@ -45,148 +57,129 @@ List<dynamic> justCalculateNutri(List<num> foodList) {
 }
 
 num returnAmplitude(List<num> a) {
-  return (pow(pow(a[0], 2) + pow(a[1], 2) + pow(a[2], 2), 1 / 2));
+  num amp=0;
+  for(var i=0;i<a.length;i++){
+    amp+=pow(a[i],2);
+  }
+  return (pow(amp, 1 / 2));
 }
 
 num returnDotProduct(List<num> a, List<num> b) {
-  return (a[0] * b[0] + a[1] * b[1] + a[2] * b[2]);
+  num dot=0;
+  for(var i=0;i<a.length;i++){
+    dot+=a[i]*b[i];
+  }
+  return dot;
 }
 
-Future<List<num>> makeCsvFile({List<num> nutri = null}) async {
-  List<num> randomList1 = [];
-  List<List<dynamic>> randomList = [
-    [
-      "a1",
-      "b1",
-      "c1",
-      "a2",
-      "b2",
-      "c2",
-      "a3",
-      "b3",
-      "c3",
-      "mass1",
-      "mass2",
-      "mass3",
-      "correct(%)",
-      "1 : 0.6 : 0.4"
-    ]
-  ];
-  num repeat = 100;
+num totalCalorieOverFlow(List<num> mass,List<num> calorie){
+  num totalCalorie=0;
 
-  for (var i = 0; i < repeat; i++) {
-    randomList1 = [];
-    bool isNutriAllPos = true;
-    if (nutri != null) {
-      repeat = 1;
-      randomList1.addAll(nutri);
-    } else {
-      num a1 = Random().nextDouble();
-      num a2 = Random().nextDouble();
-      num a3 = Random().nextDouble();
-
-      num b1 = Random().nextDouble();
-      num b2 = Random().nextDouble();
-      num b3 = Random().nextDouble();
-
-      num c1 = Random().nextDouble();
-      num c2 = Random().nextDouble();
-      num c3 = Random().nextDouble();
-
-      if (a1 + a2 + a3 < 1 || b1 + b2 + b3 < 1 || c1 + c2 + c3 < 1) {
-        //각 영양성분(탄단지들의 합)이 1보다 커지면 안되므로(g당 탄단지)
-        isNutriAllPos = false;
-        print("false $i");
-      } else {
-        randomList1.addAll([a1, a2, a3, b1, b2, b3, c1, c2, c3]);
-      }
-    }
-    if (isNutriAllPos) {
-      List<dynamic> massDegree = [];
-      List<dynamic> putItem = [];
-      num biggestDegree = 100;
-      num tempDegree = 0;
-      bool saveOrNot = true;
-      bool keepGoing = true;
-      int j = 0;
-      List<num> massList = [];
-
-      for (num car = 0; car < 25 * 10; car++) {
-        for (num pro = 0; pro < 25 * 10; pro++) {
-          num myCar =
-              car / 10; // 25*10/10=25  (지방이 음수가 아니려면 (탄 + 단)*4 < 100)=> 탄 < 25
-          num myPro = pro / 10;
-          num myFat =
-              (100 - myCar * 4 - myPro * 4) / 9; //전체 칼로리 100 중 지방은 100 - 탄 - 단
-
-          List<num> item = new List<num>.from(randomList1);
-
-          List<dynamic> pushMass = [];
-
-          if (myFat < 0 || myCar < (myFat + myPro) / 5) {
-            //탄수화물이 20프로보다 적으면 필터링
-            //지방 음수 막기
-            biggestDegree = j == 0 ? tempDegree : biggestDegree;
-            // print("$i : $j fat $fat");
-            // saveOrNot=false;
-            // print("$tempDegree $leastDegree $j");
-
-          } else {
-            await calculate(item, [myCar, myPro, myFat]).then((value) {
-              List<num> nums = new List<num>.from(value);
-              nums.sort();
-              // *옵션 설정하기(강 - 중 - 약) 강일수록 밑에 음식 비율 규제 완화 -> 조금더 5:3:2에 가까워짐*
-              if (nums[0] / nums[2] > 0.3 && nums[1] / nums[2] > 0.3) {
-                // 다른 음식 : 가장 무거운 음식이 1:6을 넘어가지 않게
-                //100칼로리 기준 1.7g 이고 600칼로리면 대략 10g // 10g 이하는 계량 너무 어려워서
-                keepGoing = true;
-                item.addAll(value);
-                massList = value;
-              } else {
-                // print("$i : $j value $value");
-                keepGoing = false;
-                // saveOrNot=false;
-              }
-            });
-            if (keepGoing) {
-              keepGoing = true;
-              saveOrNot = true;
-              pushMass = justCalculateNutri(item);
-              massList.add(pushMass[3]);
-              tempDegree = pushMass[3];
-              biggestDegree = j == 0 ? tempDegree : biggestDegree;
-
-              if (tempDegree >= biggestDegree) {
-                massDegree = justCalculateNutri(item).sublist(0,
-                    5); //각 음식 무게 비율 토대로 목표 비율과 얼마나 차이가 나는지 계산 (삼차원 공간 속 내적으로 각도 계산함(feat 내적))
-                biggestDegree = tempDegree;
-              }
-            } else {
-              biggestDegree = j == 0 ? tempDegree : biggestDegree;
-            }
-          }
-          j += 1;
-        }
-      }
-      if (nutri != null) {
-        return massList;
-      } else if (saveOrNot) {
-        putItem.addAll(randomList1);
-        putItem.addAll(massDegree);
-        randomList.add(putItem);
-        if (i % 100 == 0) {
-          print("$i th loop - $putItem");
-        }
-      }
-    } else {}
+  for (var i = 0; i < calorie.length; i++) {
+    totalCalorie+=calorie[i]*mass[i];
   }
-  String csv = const ListToCsvConverter().convert(randomList);
+
+  return totalCalorie;
+
+}
+
+List<num> makeForLooP(num tempIndex, List<num> myFoodMassList,
+List<num> minMass,List<num> maxMass, List<num> nutriInfo,List<num> calorie) {
+  num totalCalorie=0;
+  print(calculateDensity);
+  if (tempIndex == maxMass.length - 1) {
+    num tempDegree = 0;
+    num maxDegree = myFoodMassList.last;
+    List<num> returnMassList = List<num>.from(myFoodMassList);
+    for (myFoodMassList[tempIndex] = minMass[tempIndex];
+        myFoodMassList[tempIndex] < maxMass[tempIndex];
+        myFoodMassList[tempIndex]+=((maxMass[tempIndex]-minMass[tempIndex])~/calculateDensity)) {
+      totalCalorie=totalCalorieOverFlow(myFoodMassList,calorie);
+
+      List<num> sendData = [];
+      sendData.addAll(nutriInfo);
+      sendData.addAll(myFoodMassList);
+      tempDegree = justCalculateNutri(sendData,maxMass.length)[3];
+
+      if (tempDegree >= maxDegree) {      //현재의 일치율을 가져와 전보다 높으면 return mass list에 저장
+        maxDegree = tempDegree;
+        returnMassList = List<num>.from(myFoodMassList);
+        returnMassList.last = maxDegree;
+
+      } else {
+      }
+
+    }
+    return returnMassList;
+  } else if (tempIndex < maxMass.length - 1) {
+    for (myFoodMassList[tempIndex] = minMass[tempIndex];
+        myFoodMassList[tempIndex] < maxMass[tempIndex];
+        myFoodMassList[tempIndex]+=(maxMass[tempIndex]-minMass[tempIndex])~/calculateDensity) {
+      tempIndex += 1;
+      myFoodMassList = new List<num>.from(
+          makeForLooP(tempIndex, myFoodMassList,minMass, maxMass, nutriInfo,calorie));
+      tempIndex -= 1;
+    }
+  } else {}
+  print("mass : $myFoodMassList");
+  return myFoodMassList;
+}
+
+Future<List<num>> makeCsvFile({List<Food> foodList}) async {
+  int foodLength = 0;
+  List<List<num>> massList = [[]];
+
+  foodLength = foodList.length;
+  if(foodLength <=3){
+    calculateDensity=20;
+  }else if(foodLength == 4){
+    calculateDensity=10;
+  }else{
+    calculateDensity=10;
+  }
+
+  //음식 무게 리스트 초기화 600은 kcal
+  List<num> myFoodMassList = new List(foodLength+1);
+  List<num> maxMass = new List(foodLength);
+  List<num> minMass = new List(foodLength);
+  List<num> calorie = new List(foodLength);
+  List<num> nutriInfo = new List(foodLength * 3);
+
+  for (var i = 0; i < foodLength; i++) {
+
+    minMass[i]=foodList[i].servingSize / 4;
+    maxMass[i] = foodList[i].servingSize * 2;
+    calorie[i]=foodList[i].kcal;
+
+    nutriInfo[i * 3] = foodList[i].carbohydrate;
+    nutriInfo[i * 3 + 1] = foodList[i].protein;
+    nutriInfo[i * 3 + 2] = foodList[i].fat;
+  }
+
+  int tempIndex = 0;
+  //일치율
+  myFoodMassList.last=0;
+  massList = [makeForLooP(tempIndex, myFoodMassList,minMass, maxMass, nutriInfo,calorie)];
+
+  String csv = const ListToCsvConverter().convert(massList);
   final directory = await getApplicationDocumentsDirectory();
   final pathOfTheFileToWrite = directory.path + "/calExcercise.csv";
   File file = await File(pathOfTheFileToWrite);
   file.writeAsString(csv);
-  print("finish");
-  // print(randomList[10]);
+  num totalCalorie=totalCalorieOverFlow(massList[0], calorie);
+
+  num sum=0;
+  for(var i=0;i<calorie.length;i++){
+    sum+=calorie[i];
+  }
+  for(var i=0;i<calorie.length;i++){
+    massList[0][i] *= (targetCalorie/totalCalorie);
+  }
+  totalCalorie=totalCalorieOverFlow(massList[0], calorie);
+
+  print(totalCalorie);
+
+  return massList[0];
 }
 
 String myRounder(num a) {

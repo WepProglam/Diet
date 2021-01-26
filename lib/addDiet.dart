@@ -85,25 +85,9 @@ class _FoodListState extends State<FoodList> {
   }
 
   Widget buildFood(ListContents food, int index) {
-    // print("index" * 10);
-    // print(index);
-    // print(food.foodName);
-    if (foodList.length > foodMassController.length) {
-      //saved에서 넘어오는 경우 계속 controller를 만드는거 방지
-      TextEditingController _controller = TextEditingController();
-      if (foodList.contains(food)) {
-        print(food.foodName);
-        print(food.code);
-        print(food.mass);
-        _controller.text = initialVal(food.mass);
-      } else {
-        _controller.text = initialVal(0);
-      }
-      foodMassController.add(_controller);
-    } else {}
-
-    // print("=$index" * 100);
-    // print(foodMassController.length);
+    TextEditingController _controller = TextEditingController();
+    _controller.text = initialVal(food.mass);
+    foodMassController.add(_controller);
     //받는 매게변수 index 추가
     return Center(
       child: Row(
@@ -133,7 +117,7 @@ class _FoodListState extends State<FoodList> {
                 }
 
                 justCalNutri(foodList, massChangeList).then((val) {
-                  // print(val);
+                  print(val);
                   setState(() {
                     carbohydrateMass = val[0];
                     proteinMass = val[1];
@@ -169,16 +153,13 @@ class _FoodListState extends State<FoodList> {
     // Navigator.push는 Future를 반환합니다. Future는 선택 창에서
     // Navigator.pop이 호출된 이후 완료될 것입니다.
     List<ListContents> foods = [];
-    var result;
-    await Navigator.pushNamed(
+    final result = await Navigator.pushNamed(
       context,
       '/searchFood',
       arguments: <String, String>{
         'pre': 'addDiet',
       },
-    ).then((val) {
-      result = val;
-    });
+    );
     for (var code in result) {
       Food food = await DBHelperFood().getFood(code);
       ListContents foodCopy = ListContents(
@@ -222,11 +203,11 @@ class _FoodListState extends State<FoodList> {
     var k = 0;
     for (var item in foodMassController) {
       dynamic j = num.tryParse(item.value.text);
-      // if (j != null) {
-      // if (j != 0) {
-      n.add(k);
-      // }
-      // }
+      if (j != null) {
+        if (j != 0) {
+          n.add(k);
+        }
+      }
       k += 1;
     }
     print("return $n");
@@ -264,13 +245,12 @@ class _FoodListState extends State<FoodList> {
   @override
   void didChangeDependencies() {
     final Map<String, Map> args = ModalRoute.of(context).settings.arguments;
+
     if (args != null) {
-      foodList = [];
-      changeList = [];
       dietInfo = args["myTempoDiet"];
       Map foodInfo = jsonDecode(dietInfo['foodInfo']);
       Map foods = Map<String, dynamic>.from(foodInfo[dietInfo['dietName']]);
-      // print(foods);
+      print(foods);
       var foodCodes = foods.keys;
 
       for (var item in foodCodes) {
@@ -280,10 +260,9 @@ class _FoodListState extends State<FoodList> {
             code: item,
             mass: foods[item]['foodMass']));
       }
-      // print(foodList.length);
 
       justCalNutri(foodList, changeList).then((val) {
-        // print(val);
+        print(val);
         setState(() {
           carbohydrateMass = val[0];
           proteinMass = val[1];
@@ -297,8 +276,6 @@ class _FoodListState extends State<FoodList> {
     } else {
       dietNameController.text = null;
     }
-
-    print("foodlist length : ${foodList.length}");
     super.didChangeDependencies();
   }
 
@@ -312,40 +289,13 @@ class _FoodListState extends State<FoodList> {
             child: Column(
               children: [
                 //음식 추가 버튼
-
-                //listview
-                Expanded(
-                  flex: 8,
-                  child: Container(
-                    margin: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF69C2B0)),
-                    ),
-                    child: Stack(
-                      children: [
-                        ListView.separated(
-                          padding: EdgeInsets.all(8),
-                          itemCount: foodList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return buildFood(foodList[index], index);
-                          },
-                          separatorBuilder: (BuildContext context, int index) =>
-                              Divider(),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: FloatingActionButton(
-                            onPressed: null,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 Expanded(
                   flex: 2,
                   child: Column(
                     children: [
+                      Spacer(
+                        flex: 1,
+                      ),
                       Row(
                         children: [
                           Spacer(
@@ -385,7 +335,6 @@ class _FoodListState extends State<FoodList> {
                     ],
                   ),
                 ),
-<<<<<<< HEAD
                 //listview
                 Expanded(
                   flex: 8,
@@ -398,19 +347,13 @@ class _FoodListState extends State<FoodList> {
                       padding: EdgeInsets.all(8),
                       itemCount: foodList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        if (index <= foodList.length - 1) {
-                          return buildFood(foodList[index], index);
-                        } else {
-                          return null;
-                        }
+                        return buildFood(foodList[index], index);
                       },
                       separatorBuilder: (BuildContext context, int index) =>
                           Divider(),
                     ),
                   ),
                 ),
-=======
->>>>>>> 671eb50f8c9d2a30bb113c19cf8afa604227e8ec
               ],
             ),
           ),
@@ -427,37 +370,45 @@ class _FoodListState extends State<FoodList> {
                   child: IconButton(
                       icon: Icon(Icons.calculate, color: Color(0xFF69C2B0)),
                       onPressed: () async {
-                        // print(numOfMass(foodList));
-                        // print("==================================");
-                        // print(foodList.length);
-                        if (foodList.length < 3) {
-                          //최소 3개 선택하라는 경고창
-                          var snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');
-                          Scaffold.of(context).showSnackBar(snackBar);
-                        } else if (foodList.length == 3) {
+                        print(numOfMass(foodList));
+                        print("==================================");
+                        print(foodList.length);
+                          if (foodList.length <= 5) {
                           await getFoodInfo(foodList).then((value) {
-                            makeCsvFile(nutri: value).then((val) {
+                            makeCsvFile(foodList: value).then((val) {
                               List<num> sendData = [];
-                              sendData.addAll(value);
+                              List<num> nutriInfo = new List(value.length * 3);
+                              for (var i = 0; i < value.length; i++) {
+                                nutriInfo[i * 3] = value[i].carbohydrate;
+                                nutriInfo[i * 3 + 1] = value[i].protein;
+                                nutriInfo[i * 3 + 2] = value[i].fat;
+                              }
+
+                              sendData.addAll(nutriInfo);
                               sendData.addAll(val);
-                              try {
+
+                              print("*"*100);
+                              print(val);
+                              print("*"*100);
+
+                              // try {
                                 List<dynamic> carProFat =
-                                    justCalculateNutri(sendData);
+                                    justCalculateNutri(sendData,foodList.length);
                                 setState(() {
-                                  carbohydrateMass = carProFat[5];
-                                  proteinMass = carProFat[6];
-                                  fatMass = carProFat[7];
-                                  correct = carProFat[3];
+                                  correct = carProFat[1];
+                                  carbohydrateMass = carProFat[3];
+                                  proteinMass = carProFat[4];
+                                  fatMass = carProFat[5];
                                 });
-                                for (var i = 0; i < 3; i++) {
+                                for (var i = 0; i < foodList.length; i++) {
                                   foodMassController[i].text =
                                       val[i].toString();
                                 }
-                              } catch (e) {
-                                var snackBar =
-                                    buildSnackBar('음식 조합이 매우 부적합합니다.');
-                                Scaffold.of(context).showSnackBar(snackBar);
-                              }
+                              // } catch (e) {
+                              //   var snackBar =
+                              //       buildSnackBar('음식 조합이 매우 부적합합니다.');
+                              //   Scaffold.of(context).showSnackBar(snackBar);
+                              // }
                             });
                           });
                         } else {
@@ -469,20 +420,20 @@ class _FoodListState extends State<FoodList> {
                             calculate(foodList, defaultMass: index)
                                 .then((value) {
                               for (var i = 0; i < 3; i++) {
-                                // print(value[i]);
+                                print(value[i]);
                               }
                               var massList = value;
-                              // print(massList);
+                              print(massList);
                               for (var item in index) {
                                 massList.insert(
                                     item,
                                     num.parse(
                                         foodMassController[item].value.text));
                               }
-                              // print(massList);
+                              print(massList);
 
                               justCalNutri(foodList, massList).then((val) {
-                                // print(val);
+                                print(val);
                                 setState(() {
                                   carbohydrateMass = val[0];
                                   proteinMass = val[1];
@@ -550,17 +501,7 @@ class _FoodListState extends State<FoodList> {
                   child: IconButton(
                       icon: Icon(Icons.add, color: Color(0xFF69C2B0)),
                       onPressed: () {
-                        int k = 0;
-                        for (var item in foodMassController) {
-                          // print(item.value.text);
-                          // print(item);
-                          if (item.value.text != "" ||
-                              item.value.text != null) {
-                            k += 1;
-                          }
-                        }
-                        // print(k);
-                        if (k != foodList.length) {
+                        if (changeNumOfMass() != foodList.length) {
                           var snackBar = buildSnackBar('빈칸이 있습니다.');
                           Scaffold.of(context).showSnackBar(snackBar);
                         } else {
@@ -671,7 +612,7 @@ class _FoodListState extends State<FoodList> {
     num x, y, z; //각 음식별 무게
     for (var i = 0; i < foodList.length; i++) {
       Food food = await dbHelperFood.getFood(foodList[i].code);
-      // print(foodList[i].code);
+      print(foodList[i].code);
       if (defaultMass != null) {
         if (defaultMass.contains(i)) {
           totalCalorie -=
@@ -689,10 +630,10 @@ class _FoodListState extends State<FoodList> {
         fat.add(food.fat);
       }
     }
-    // print(carbohydrate);
-    // print(protein);
-    // print(fat);
-    // print("totalcalorie $totalCalorie");
+    print(carbohydrate);
+    print(protein);
+    print(fat);
+    print("totalcalorie $totalCalorie");
     unit = totalCalorie / 50;
     /*
     탄수화물  단백질     지방
@@ -744,21 +685,14 @@ class _FoodListState extends State<FoodList> {
     return temp;
   }
 
-  Future<List<num>> getFoodInfo(List<ListContents> foodList) async {
-    List<num> carbohydrateList = [];
-    List<num> proteinList = [];
-    List<num> fatList = [];
+  Future<List<Food>> getFoodInfo(List<ListContents> foodList) async {
+    List<Food> foods = [];
     for (var i = 0; i < foodList.length; i++) {
       Food food = await dbHelperFood.getFood(foodList[i].code);
-      carbohydrateList.add(food.carbohydrate);
-      proteinList.add(food.protein);
-      fatList.add(food.fat);
+      foods.add(food);
     }
-    print("탄수화물 : $carbohydrateList");
 
-    print(carbohydrateList + proteinList + fatList);
-
-    return carbohydrateList + proteinList + fatList;
+    return foods;
   }
 
   Future<List<num>> justCalNutri(
@@ -769,13 +703,13 @@ class _FoodListState extends State<FoodList> {
 
     List<num> index = [];
     index = getIndex();
-    // print("*" * 100);
-    // print(foodList.length);
-    // print(mass.length);
-    // print("*" * 100);
+    print("*" * 100);
+    print(foodList.length);
+    print(mass.length);
+    print("*" * 100);
     for (var i = 0; i < foodList.length; i++) {
       Food food = await dbHelperFood.getFood(foodList[i].code);
-      // print(mass[i]);
+      print(mass[i]);
       if (mass[i] == null || mass.length - 1 < i) {
         mass[i] = 0;
       }
