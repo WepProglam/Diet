@@ -221,15 +221,47 @@ class _SearchListState extends State<SearchList> {
                     // color: Colors.orange,
                   );
                   this.appBarTitle = TextField(
-                    controller: _searchQuery,
-                    autofocus: true,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                    decoration: InputDecoration(
-                        hintText: "Search here..",
-                        hintStyle: TextStyle(color: Colors.white)),
-                  );
+                      controller: _searchQuery,
+                      autofocus: true,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                          hintText: "Search here..",
+                          hintStyle: TextStyle(color: Colors.white)),
+                      onChanged: (text) async {
+                        //text = 바뀐 글
+                        if (text != "") {
+                          await dbHelperFood.filterFoods(text.toString()).then(
+                              (value) async {
+                            List<Food> foodList = [];
+                            List<int> foodListIndex = [];
+                            List<Food> favoriteFood = [];
+                            List<Food> notFavoriteFood = [];
+                            var i = 0;
+                            favoriteFood.addAll(
+                                value.where((item) => item.isItMine == "T"));
+                            notFavoriteFood.addAll(
+                                value.where((item) => item.isItMine == "F"));
+                            for (var item in favoriteFood) {
+                              foodListIndex.add(item.selected);
+                              foodListIndex.sort((b, a) => a.compareTo(b));
+                              var index = foodListIndex.indexOf(item.selected);
+                              foodList.insert(index, item);
+                            }
+                            for (var item in notFavoriteFood) {
+                              if (i < 5 - favoriteFood.length) {
+                                foodList.add(item);
+                                i += 1;
+                              } else {
+                                break;
+                              }
+                            }
+                          }, onError: (e) {
+                            //print(e);
+                          });
+                        }
+                      });
                   _handleSearchStart();
                 } else {
                   _handleSearchEnd();
