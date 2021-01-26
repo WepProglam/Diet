@@ -265,13 +265,12 @@ class _FoodListState extends State<FoodList> {
             flex: 6,
             child: Column(
               children: [
-                //음식 추가 버튼
-
-                //listview
+                //listview & 음식추가 버튼 Stack
                 Expanded(
                   flex: 8,
                   child: Container(
-                    margin: EdgeInsets.all(8.0),
+                    margin: EdgeInsets.only(
+                        top: 10, left: 10, right: 10, bottom: 20),
                     decoration: BoxDecoration(
                       border: Border.all(color: Color(0xFF69C2B0)),
                     ),
@@ -288,55 +287,22 @@ class _FoodListState extends State<FoodList> {
                         ),
                         Align(
                           alignment: Alignment.bottomCenter,
-                          child: FloatingActionButton(
-                            onPressed: null,
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            height: 40,
+                            child: FloatingActionButton.extended(
+                              icon: Icon(Icons.add),
+                              backgroundColor: Color(0xFF69C2B0),
+                              onPressed: () {
+                                _navigateAndDisplaySelection(context);
+                                isGraphShowed = false;
+                              },
+                              label: Text('음식 추가'),
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Spacer(
-                            flex: 1,
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: GestureDetector(
-                              onTap: () {
-                                _navigateAndDisplaySelection(context);
-                                isGraphShowed = false;
-                              },
-                              child: Container(
-                                height: MediaQuery.of(context).size.height / 14,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Color(0xFF69C2B0),
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '음식 추가',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Spacer(
-                            flex: 1,
-                          ),
-                        ],
-                      ),
-                      Spacer(
-                        flex: 1,
-                      ),
-                    ],
                   ),
                 ),
               ],
