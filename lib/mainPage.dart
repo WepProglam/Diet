@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-
 import 'package:intl/intl.dart' show DateFormat;
 import 'appBar.dart';
 import 'db_helper.dart';
@@ -68,6 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     daysLastWeek = 7 - dayToDate(dayLast); //마지막 주에 몇일 있는지
     daysFirstWeek = 7 - dayToDate(dayFirst) + 1; //첫 주에 몇일 있는지
+    int curIndex = 0;
+
+    SwiperController swiperController = new SwiperController();
 
     return Scaffold(
         backgroundColor: Color(0xFFD7FFF1),
@@ -115,55 +117,103 @@ class _MyHomePageState extends State<MyHomePage> {
               Spacer(flex: 1),
               Expanded(
                   flex: 20,
-                  child: SingleChildScrollView(
-                      controller: _controller,
-                      child: SizedBox(
-                          height: MediaQuery.of(context).size.height,
-                          child: Column(
-                            children: [
-                              Spacer(
-                                flex: 1,
-                              ),
-                              calenderMonthChange(),
-                              Expanded(
-                                flex: calenderWidthFlex,
-                                child: Container(
-                                    decoration:
-                                        BoxDecoration(color: Color(0x7077AAAD)),
-                                    child: isSelected[0]
-                                        ? returnCalender()
-                                        : returnGraph()),
-                              ),
-                              Spacer(
-                                flex: 2,
-                              ),
-                              Expanded(
-                                flex: 8,
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Swiper(
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return Container(
-                                        child: Text("추천 식단이 들어갈 자리"),
-                                        decoration:
-                                            BoxDecoration(color: Colors.white),
-                                      );
-                                    },
-                                    itemCount: 3,
-                                    pagination: new SwiperPagination(),
-                                    control: new SwiperControl(),
-                                  ),
-                                ),
-                              ),
-                              Spacer(flex: 2),
-                              diet(date.toString()),
-                              dietBox(mealTime, date),
-                              Spacer(
-                                flex: 3,
-                              )
-                            ],
-                          )))),
+                  child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: Swiper(
+                          duration: 1500,
+                          itemCount: 2,
+                          controller: swiperController,
+                          scrollDirection: Axis.vertical,
+                          onIndexChanged: (index) {
+                            curIndex = index;
+                          },
+                          itemBuilder: (BuildContext context, int index) {
+                            return index == 0
+                                ? Column(
+                                    children: [
+                                      Spacer(
+                                        flex: 1,
+                                      ),
+                                      Expanded(
+                                        flex: 10,
+                                        child: SizedBox(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Swiper(
+                                            duration: 1500,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Container(
+                                                child: Text("아침 점심 저녁 간식"),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white),
+                                              );
+                                            },
+                                            itemCount: 3,
+                                            pagination: new SwiperPagination(),
+                                          ),
+                                        ),
+                                      ),
+                                      Spacer(
+                                        flex: 2,
+                                      ),
+                                      Expanded(
+                                        flex: 10,
+                                        child: SizedBox(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Swiper(
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Container(
+                                                child: Text("추천 식단이 들어갈 자리"),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white),
+                                              );
+                                            },
+                                            itemCount: 3,
+                                            pagination: new SwiperPagination(),
+                                            control: new SwiperControl(),
+                                          ),
+                                        ),
+                                      ),
+                                      Spacer(flex: 2),
+                                      // diet(date.toString()),
+                                      // dietBox(mealTime, date),
+                                      Spacer(
+                                        flex: 3,
+                                      ),
+
+                                      Expanded(
+                                        flex: 10,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Column(
+                                    children: [
+                                      Spacer(
+                                        flex: 1,
+                                      ),
+                                      //달력
+                                      calenderMonthChange(),
+                                      Expanded(
+                                        flex: calenderWidthFlex,
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Color(0x7077AAAD)),
+                                            child: isSelected[0]
+                                                ? returnCalender()
+                                                : returnGraph()),
+                                      ),
+                                      //달력
+                                    ],
+                                  );
+                          }))),
               Spacer(
                 flex: 1,
               )
