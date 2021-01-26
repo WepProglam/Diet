@@ -54,6 +54,8 @@ class _SearchListState extends State<SearchList> {
   String _searchText = "";
   List<String> codeList = [];
   bool fromAddDiet = false;
+  int offset = 0;
+  final ScrollController scrollController = ScrollController();
 
   final dbHelperFood = DBHelperFood();
   List<Food> foodNameEX = [];
@@ -92,20 +94,41 @@ class _SearchListState extends State<SearchList> {
   }
 
   void getInfo() async {
-    await dbHelperFood.getAllFood().then((val) {
-      //한번에 다 읽지말고 인덱스 설정해서 읽어오는 기능 필요
+    if (offset == 0) {
+      await dbHelperFood.getAllMyFood().then((val) {
+        for (var item in val) {
+          foodNameEX.add(item);
+        }
+      });
+    }
+    await dbHelperFood.getLimitFood(offset).then((val) {
       for (var item in val) {
         foodNameEX.add(item);
       }
     });
-    setState(() {});
+    setState(() {
+      init();
+    });
+  }
+
+  _scrollListener() async {
+    if (scrollController.offset >=
+            scrollController.position.maxScrollExtent * 0.8 &&
+        !scrollController.position.outOfRange) {
+      print("end");
+      offset += 50;
+      await getInfo();
+    }
   }
 
   //init
   @override
   initState() {
     _IsSearching = false;
-    init();
+    getInfo();
+    offset = 0;
+    scrollController.addListener(_scrollListener);
+
     widget.streamString.listen((code) {
       fromAddDiet = true;
       if (codeList.contains(code)) {
@@ -121,9 +144,7 @@ class _SearchListState extends State<SearchList> {
   void init() async {
     _list = List();
     int i = 1;
-    await getInfo();
     for (var item in foodNameEX) {
-      print(item);
       _list.add(
         Building(code: item.code, foodName: item.foodName, calories: item.kcal),
       );
@@ -140,6 +161,7 @@ class _SearchListState extends State<SearchList> {
       body: GridView.builder(
         padding: EdgeInsets.all(8),
         itemCount: _searchList.length,
+        controller: scrollController,
         itemBuilder: (context, index) {
           return Center(
             child: Uiitem(_searchList[index]),
