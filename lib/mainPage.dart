@@ -47,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   FocusScopeNode myFocusNode = FocusScopeNode();
   ScrollController _controller = new ScrollController();
   List<bool> isSelected = [true, false];
+  List<bool> dietAdded = [false, false, false, false];
 
   @override
   void dispose() {
@@ -121,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
                       child: Swiper(
-                          duration: 1500,
+                          duration: 2000,
                           itemCount: 2,
                           controller: swiperController,
                           scrollDirection: Axis.vertical,
@@ -129,11 +130,12 @@ class _MyHomePageState extends State<MyHomePage> {
                             curIndex = index;
                           },
                           itemBuilder: (BuildContext context, int index) {
+                            List<String> mealList = ["아침", "점심", "저녁", "간식"];
                             return index == 0
                                 ? Column(
                                     children: [
                                       Spacer(
-                                        flex: 1,
+                                        flex: 2,
                                       ),
                                       Expanded(
                                         flex: 10,
@@ -145,12 +147,69 @@ class _MyHomePageState extends State<MyHomePage> {
                                             itemBuilder: (BuildContext context,
                                                 int index) {
                                               return Container(
-                                                child: Text("아침 점심 저녁 간식"),
+                                                child: Column(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                color: Colors
+                                                                    .black),
+                                                        child: Center(
+                                                            child: Text(
+                                                          mealList[index],
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700),
+                                                        )),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                        flex: 5,
+                                                        child: GestureDetector(
+                                                          child: Container(
+                                                            child: Center(
+                                                              child: dietAdded[
+                                                                      index]
+                                                                  ? Icon(
+                                                                      Icons
+                                                                          .check,
+                                                                      size: 40,
+                                                                    )
+                                                                  : Icon(
+                                                                      Icons
+                                                                          .add_circle_outline,
+                                                                      size: 40,
+                                                                    ),
+                                                            ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    color: Colors
+                                                                        .white),
+                                                          ),
+                                                          onTap: () {
+                                                            print(dietAdded);
+                                                            print(index);
+                                                            setState(() {
+                                                              dietAdded[index] =
+                                                                  !dietAdded[
+                                                                      index];
+                                                            });
+                                                            print(dietAdded[
+                                                                index]);
+                                                          },
+                                                        ))
+                                                  ],
+                                                ),
                                                 decoration: BoxDecoration(
                                                     color: Colors.white),
                                               );
                                             },
-                                            itemCount: 3,
+                                            itemCount: 4,
                                             pagination: new SwiperPagination(),
                                           ),
                                         ),
@@ -172,26 +231,38 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     color: Colors.white),
                                               );
                                             },
-                                            itemCount: 3,
+                                            itemCount: 10,
                                             pagination: new SwiperPagination(),
-                                            control: new SwiperControl(),
+                                            // control: new SwiperControl(),
                                           ),
                                         ),
                                       ),
                                       Spacer(flex: 2),
                                       // diet(date.toString()),
                                       // dietBox(mealTime, date),
-                                      Spacer(
-                                        flex: 3,
-                                      ),
-
                                       Expanded(
-                                        flex: 10,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.black),
-                                        ),
-                                      ),
+                                          flex: 10,
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.red),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.blue),
+                                                ),
+                                              )
+                                            ],
+                                          )),
+                                      Spacer(
+                                        flex: 2,
+                                      )
                                     ],
                                   )
                                 : Column(

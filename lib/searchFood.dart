@@ -238,7 +238,7 @@ class _SearchListState extends State<SearchList> {
                             List<int> foodListIndex = [];
                             List<Food> favoriteFood = [];
                             List<Food> notFavoriteFood = [];
-                            var i = 0;
+
                             favoriteFood.addAll(
                                 value.where((item) => item.isItMine == "T"));
                             notFavoriteFood.addAll(
@@ -250,12 +250,7 @@ class _SearchListState extends State<SearchList> {
                               foodList.insert(index, item);
                             }
                             for (var item in notFavoriteFood) {
-                              if (i < 5 - favoriteFood.length) {
-                                foodList.add(item);
-                                i += 1;
-                              } else {
-                                break;
-                              }
+                              foodList.add(item);
                             }
                           }, onError: (e) {
                             //print(e);
