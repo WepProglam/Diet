@@ -72,6 +72,7 @@ class NavDrawer extends StatelessWidget {
             title: Text('mainPage'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/mainPage');
               print(ModalRoute.of(context).settings.name);
             },
@@ -81,6 +82,7 @@ class NavDrawer extends StatelessWidget {
             title: Text('addFood'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/addFood');
               print(ModalRoute.of(context).settings.name);
             },
@@ -90,6 +92,7 @@ class NavDrawer extends StatelessWidget {
             title: Text('addDiet'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/addDiet');
               print(ModalRoute.of(context).settings.name);
             },
@@ -99,6 +102,7 @@ class NavDrawer extends StatelessWidget {
             title: Text('personalForm'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/personalForm');
               print(ModalRoute.of(context).settings.name);
             },
@@ -108,6 +112,7 @@ class NavDrawer extends StatelessWidget {
             title: Text('savedDiet'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/savedDiet');
               print(ModalRoute.of(context).settings.name);
             },
@@ -117,6 +122,7 @@ class NavDrawer extends StatelessWidget {
             title: Text('savedFood'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/savedFood');
               print(ModalRoute.of(context).settings.name);
             },
@@ -126,6 +132,7 @@ class NavDrawer extends StatelessWidget {
             title: Text('calcDiet'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/calcDiet');
               print(ModalRoute.of(context).settings.name);
             },
@@ -135,6 +142,7 @@ class NavDrawer extends StatelessWidget {
             title: Text('Calculate'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/calculate');
               print(ModalRoute.of(context).settings.name);
             },
@@ -144,6 +152,7 @@ class NavDrawer extends StatelessWidget {
             title: Text('Activity Page'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/activityPage');
               print(ModalRoute.of(context).settings.name);
             },
