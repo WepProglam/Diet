@@ -237,7 +237,7 @@ class _AddFoodSub extends State<AddFoodSub> {
             ),
             // spacer_icon(icon: icon),
             spacer_question(question),
-            Expanded(flex: 6, child: questionForm(controller, value, question)),
+            Expanded(flex: 5, child: questionForm(controller, value, question)),
             spacer_unit(unit),
             Spacer(
               flex: 2,
@@ -310,7 +310,10 @@ class _AddFoodSub extends State<AddFoodSub> {
     return Expanded(
         flex: 1,
         child: Center(
-          child: Text(unit),
+          child: Text(
+            unit,
+            maxLines: 1,
+          ),
         ));
   }
 }
