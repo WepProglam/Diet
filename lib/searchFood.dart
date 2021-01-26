@@ -92,7 +92,8 @@ class _SearchListState extends State<SearchList> {
   }
 
   void getInfo() async {
-    await dbHelperFood.getAllMyFood().then((val) {
+    await dbHelperFood.getAllFood().then((val) {
+      //한번에 다 읽지말고 인덱스 설정해서 읽어오는 기능 필요
       for (var item in val) {
         foodNameEX.add(item);
       }

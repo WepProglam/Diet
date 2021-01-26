@@ -259,6 +259,31 @@ class DBHelperFood {
     return list;
   }
 
+//Read All
+  Future<List<Food>> getAllFood() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM $tableName");
+    List<Food> list = res.isNotEmpty
+        ? res
+            .map(
+              (c) => Food(
+                  code: c['code'],
+                  dbArmy: c['dbArmy'],
+                  foodName: c['foodName'],
+                  foodKinds: c['foodKinds'],
+                  kcal: c['kcal'],
+                  protein: c['protein'],
+                  carbohydrate: c['carbohydrate'],
+                  fat: c['fat'],
+                  isItMine: c['isItMine'],
+                  selected: c['selected'],
+                  servingSize: c['servingSize']),
+            )
+            .toList()
+        : [];
+    return list;
+  }
+
   //Delete
   deleteFood(String code) async {
     final db = await database;

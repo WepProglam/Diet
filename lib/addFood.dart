@@ -12,6 +12,8 @@ import 'package:crypto/crypto.dart';
 import 'package:convert/convert.dart';
 import 'dart:convert';
 
+import 'package:overlay/overlay.dart';
+
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 // StreamController<Map> streamController = StreamController<Map>.broadcast();
@@ -333,7 +335,6 @@ class _TypeFoodName extends State<TypeFoodName> {
   final dbHelper = DBHelperFood();
   var foodList = <Widget>[];
   var controller;
-  OverlayEntry _overlayEntry;
   _TypeFoodName({this.controller});
   bool isItCutom = false;
   bool isItSelected = false;
@@ -341,14 +342,6 @@ class _TypeFoodName extends State<TypeFoodName> {
 
   @override
   void initState() {
-    _focusNode.addListener(() {
-      if (_focusNode.hasFocus) {
-        this._overlayEntry = this._createOverlayEntry(context);
-        Overlay.of(context).insert(this._overlayEntry);
-      } else {
-        this._overlayEntry.remove();
-      }
-    });
     widget.streamBool.listen((isItCustom) {
       setState(() {
         isItCutom = isItCustom;
@@ -359,138 +352,114 @@ class _TypeFoodName extends State<TypeFoodName> {
     super.initState();
   }
 
-  OverlayEntry _createOverlayEntry(BuildContext context) {
-    RenderBox renderBox = context.findRenderObject();
-    var size = renderBox.size;
-    var offset = renderBox.localToGlobal(Offset.zero);
-
-    return OverlayEntry(
-        builder: (context) => Positioned(
-              left: offset.dx,
-              top: offset.dy + size.height + 5.0,
-              width: size.width,
-              child: Material(
-                elevation: 1.0,
-                child: ListView(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    children: foodList),
-              ),
-            ));
-  }
-
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        child: TextFormField(
-            // autofocus: false,
-            enabled: !isItSelected,
-            controller: controller,
-            focusNode: _focusNode,
-            decoration: const InputDecoration(hintText: 'Type Food Name'),
-            textAlign: TextAlign.center,
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter info';
-              }
-              return null;
-            },
-            onChanged: (text) async {
-              if (isItCutom) {
-                //작동 X
-              } else {
-                //text = 바뀐 글
-                if (text != "") {
-                  await dbHelper.filterFoods(text.toString()).then(
-                      (value) async {
-                    foodList = [];
-                    List<int> foodListIndex = [];
-                    List<Food> favoriteFood = [];
-                    List<Food> notFavoriteFood = [];
-
-                    var i = 0;
-                    favoriteFood
-                        .addAll(value.where((item) => item.isItMine == "T"));
-                    notFavoriteFood
-                        .addAll(value.where((item) => item.isItMine == "F"));
-                    for (var item in favoriteFood) {
-                      foodListIndex.add(item.selected);
-                      foodListIndex.sort((b, a) => a.compareTo(b));
-                      var index = foodListIndex.indexOf(item.selected);
-
-                      foodList.insert(
-                          index,
-                          ListTile(
-                            title: Text(item.foodName),
-                            leading: Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                              size: 20,
-                            ),
-                            trailing: Text("${item.selected}"),
-                            subtitle: Text(
-                                "${myRounder(item.kcal * item.servingSize)} Kcal"),
-                            onTap: () {
-                              Map foodInfo = {};
-                              controller.text = item.foodName;
-                              foodInfo = item.toMap();
-
-                              streamController.add(foodInfo);
-                              _focusNode.unfocus();
-                              foodList = [];
-                            },
-                          ));
-                    }
-                    for (var item in notFavoriteFood) {
-                      if (i < 5 - favoriteFood.length) {
-                        foodList.add(ListTile(
-                          title: Text(item.foodName),
-                          leading: Icon(
-                            Icons.favorite,
-                            size: 20,
-                          ),
-                          trailing: Text("${item.selected}"),
-                          subtitle: Text(
-                              "${myRounder(item.kcal * item.servingSize)} Kcal"),
-                          onTap: () {
-                            Map foodInfo = {};
-                            controller.text = item.foodName;
-                            foodInfo = item.toMap();
-                            streamController.add(foodInfo);
-                            _focusNode.unfocus();
-                            foodList = [];
-                          },
-                        ));
-                        i += 1;
-                      } else {
-                        break;
-                      }
-                    }
-                  }, onError: (e) {
-                    //print(e);
-                  });
-
-                  foodList.add(ListTile(
-                    title: Text("나만의 음식 추가"),
-                    onTap: () {
-                      _focusNode.unfocus();
-                      foodList = [];
-                      Map foodInfo = {};
-                      foodInfo['foodName'] = controller.text;
-                      streamController.add(foodInfo);
-                      setState(() {
-                        isItCutom = true;
-                      });
-                    },
-                  ));
-                  this._overlayEntry = _createOverlayEntry(context);
-                  Overlay.of(context).insert(this._overlayEntry);
-                }
-              }
-            }),
+    return TextFormField(
+        // autofocus: false,
+        enabled: !isItSelected,
+        controller: controller,
+        focusNode: _focusNode,
+        decoration: const InputDecoration(hintText: 'Type Food Name'),
+        textAlign: TextAlign.center,
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Please enter info';
+          }
+          return null;
+        },
         onTap: () {
-          print("afds");
-          this._overlayEntry.remove();
+          Navigator.pushNamed(context, '/searchFood',
+              arguments: <String, String>{'pre': 'addFood'}).then((val) {
+            print(val);
+          });
+        },
+        onChanged: (text) async {
+          if (isItCutom) {
+            //작동 X
+          } else {
+            //text = 바뀐 글
+            if (text != "") {
+              await dbHelper.filterFoods(text.toString()).then((value) async {
+                foodList = [];
+                List<int> foodListIndex = [];
+                List<Food> favoriteFood = [];
+                List<Food> notFavoriteFood = [];
+
+                var i = 0;
+                favoriteFood
+                    .addAll(value.where((item) => item.isItMine == "T"));
+                notFavoriteFood
+                    .addAll(value.where((item) => item.isItMine == "F"));
+                for (var item in favoriteFood) {
+                  foodListIndex.add(item.selected);
+                  foodListIndex.sort((b, a) => a.compareTo(b));
+                  var index = foodListIndex.indexOf(item.selected);
+
+                  foodList.insert(
+                      index,
+                      ListTile(
+                        title: Text(item.foodName),
+                        leading: Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                          size: 20,
+                        ),
+                        trailing: Text("${item.selected}"),
+                        subtitle: Text(
+                            "${myRounder(item.kcal * item.servingSize)} Kcal"),
+                        onTap: () {
+                          Map foodInfo = {};
+                          controller.text = item.foodName;
+                          foodInfo = item.toMap();
+
+                          streamController.add(foodInfo);
+                          foodList = [];
+                        },
+                      ));
+                }
+                for (var item in notFavoriteFood) {
+                  if (i < 5 - favoriteFood.length) {
+                    foodList.add(ListTile(
+                      title: Text(item.foodName),
+                      leading: Icon(
+                        Icons.favorite,
+                        size: 20,
+                      ),
+                      trailing: Text("${item.selected}"),
+                      subtitle: Text(
+                          "${myRounder(item.kcal * item.servingSize)} Kcal"),
+                      onTap: () {
+                        Map foodInfo = {};
+                        controller.text = item.foodName;
+                        foodInfo = item.toMap();
+                        streamController.add(foodInfo);
+                        foodList = [];
+                      },
+                    ));
+                    i += 1;
+                  } else {
+                    break;
+                  }
+                }
+              }, onError: (e) {
+                //print(e);
+              });
+
+              foodList.add(ListTile(
+                title: Text("나만의 음식 추가"),
+                onTap: () {
+                  _focusNode.unfocus();
+                  foodList = [];
+                  Map foodInfo = {};
+                  foodInfo['foodName'] = controller.text;
+                  streamController.add(foodInfo);
+                  setState(() {
+                    isItCutom = true;
+                  });
+                },
+              ));
+            }
+          }
         });
   }
 }
