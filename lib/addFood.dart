@@ -411,30 +411,34 @@ class _TypeFoodName extends State<TypeFoodName> {
                     .addAll(value.where((item) => item.isItMine == "T"));
                 notFavoriteFood
                     .addAll(value.where((item) => item.isItMine == "F"));
-
                 for (var item in favoriteFood) {
-                  foodList.add(ListTile(
-                    title: Text(item.foodName),
-                    leading: Icon(
-                      Icons.favorite,
-                      color: Colors.red,
-                      size: 20,
-                    ),
-                    trailing: Text("${item.selected}"),
-                    subtitle:
-                        Text("${myRounder(item.kcal * item.servingSize)} Kcal"),
-                    onTap: () {
-                      Map foodInfo = {};
-                      controller.text = item.foodName;
-                      foodInfo = item.toMap();
+                  foodListIndex.add(item.selected);
+                  foodListIndex.sort((b, a) => a.compareTo(b));
+                  var index = foodListIndex.indexOf(item.selected);
 
-                      streamController.add(foodInfo);
-                      _focusNode.unfocus();
-                      foodList = [];
-                    },
-                  ));
+                  foodList.insert(
+                      index,
+                      ListTile(
+                        title: Text(item.foodName),
+                        leading: Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                          size: 20,
+                        ),
+                        trailing: Text("${item.selected}"),
+                        subtitle: Text(
+                            "${myRounder(item.kcal * item.servingSize)} Kcal"),
+                        onTap: () {
+                          Map foodInfo = {};
+                          controller.text = item.foodName;
+                          foodInfo = item.toMap();
+
+                          streamController.add(foodInfo);
+                          _focusNode.unfocus();
+                          foodList = [];
+                        },
+                      ));
                 }
-
                 for (var item in notFavoriteFood) {
                   if (i < 5 - favoriteFood.length) {
                     foodList.add(ListTile(
