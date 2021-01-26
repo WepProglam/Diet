@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/addDiet.dart';
 import 'package:flutter_application_1/model.dart';
@@ -52,7 +53,9 @@ class _SearchListState extends State<SearchList> {
   final key = GlobalKey<ScaffoldState>();
   final _searchQuery = TextEditingController();
   List<Building> _list;
+
   List<Building> _searchList = List();
+
   bool _IsSearching = false;
   String _searchText = "";
   List<String> codeList = [];
@@ -62,39 +65,19 @@ class _SearchListState extends State<SearchList> {
 
   final dbHelperFood = DBHelperFood();
   List<Food> foodNameEX = [];
+  List<Building> foodDBNameEX = [];
 
-  _SearchListState() {
-    _searchQuery.addListener(() {
-      if (_searchQuery.text.isEmpty) {
-        setState(() {
-          _IsSearching = false;
-          _searchText = "";
-          _buildSearchList();
-        });
-      } else {
-        setState(() {
-          _IsSearching = true;
-          _searchText = _searchQuery.text;
-          _buildSearchList();
-        });
-      }
-    });
-  }
+  // _SearchListState() {
+  //   _searchQuery.addListener(() async {
+  //     print("listen");
 
-  List<Building> _buildSearchList() {
-    if (_searchText.isEmpty) {
-      return _searchList = _list;
-    } else {
-      _searchList = _list
-          .where((element) => //여기다가 검색될 요소 추가 가능
-              element.foodName
-                  .toLowerCase()
-                  .contains(_searchText.toLowerCase()))
-          .toList();
-      print('${_searchList.length}');
-      return _searchList;
-    }
-  }
+  //     if (_searchQuery.text.isEmpty) {
+  //       setState(() {
+  //         _searchText = "";
+  //       });
+  //     } else {}
+  //   });
+  // }
 
   void getInfo() async {
     if (offset == 0) {
@@ -104,19 +87,17 @@ class _SearchListState extends State<SearchList> {
         }
       });
     }
-    await dbHelperFood.getLimitFood(offset).then((val) {
+    await dbHelperFood.getLimitFood(offset, 50).then((val) {
       for (var item in val) {
         foodNameEX.add(item);
       }
     });
-    setState(() {
-      init();
-    });
+    init();
   }
 
   _scrollListener() async {
     if (scrollController.offset >=
-            scrollController.position.maxScrollExtent * 0.8 &&
+            scrollController.position.maxScrollExtent * 0.6 &&
         !scrollController.position.outOfRange) {
       print("end");
       offset += 50;
@@ -131,7 +112,6 @@ class _SearchListState extends State<SearchList> {
     getInfo();
     offset = 0;
     scrollController.addListener(_scrollListener);
-
     widget.streamString.listen((code) {
       fromAddDiet = true;
       if (codeList.contains(code)) {
@@ -145,8 +125,8 @@ class _SearchListState extends State<SearchList> {
 
   //이 함수에서 list 만듦
   void init() async {
-    _list = List();
-    int i = 1;
+    _list = [];
+    _searchList = [];
     for (var item in foodNameEX) {
       await _list.add(
         Building(
@@ -156,27 +136,46 @@ class _SearchListState extends State<SearchList> {
             isItFavorite: item.isItMine == "T" ? true : false),
       );
     }
-    _searchList = _list;
+    setState(() {
+      _searchList = _list;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    print("is searchign $_IsSearching");
     return Scaffold(
       backgroundColor: Color(0xFFFFFEF5),
-      key: key,
       appBar: buildBar(context),
-      body: GridView.builder(
-        padding: EdgeInsets.all(8),
-        itemCount: _searchList.length,
-        controller: scrollController,
-        itemBuilder: (context, index) {
-          return Center(
-            child: Uiitem(_searchList[index]),
-          );
-        },
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, childAspectRatio: 5 / 3),
-      ),
+      body: _IsSearching
+          ?
+          // Column(children: [
+          //     for (var item in foodDBNameEX) Text("${item.foodName}")
+          //   ])
+          GridView.builder(
+              padding: EdgeInsets.all(8),
+              itemCount: foodDBNameEX.length,
+              controller: scrollController,
+              itemBuilder: (context, index) {
+                return Center(
+                  child: Uiitem(foodDBNameEX[index]),
+                );
+              },
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, childAspectRatio: 5 / 3),
+            )
+          : GridView.builder(
+              padding: EdgeInsets.all(8),
+              itemCount: _searchList.length,
+              controller: scrollController,
+              itemBuilder: (context, index) {
+                return Center(
+                  child: Uiitem(_searchList[index]),
+                );
+              },
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, childAspectRatio: 5 / 3),
+            ),
       floatingActionButton: FloatingActionButton(
           backgroundColor: Color(0xFF69C2B0),
           focusColor: Color(0xFF69C2B0),
@@ -208,6 +207,7 @@ class _SearchListState extends State<SearchList> {
     return AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         centerTitle: true,
+        key: key,
         title: appBarTitle,
         backgroundColor: Color(0xFF69C2B0),
         actions: <Widget>[
@@ -215,6 +215,20 @@ class _SearchListState extends State<SearchList> {
             icon: actionIcon,
             onPressed: () {
               setState(() {
+                _IsSearching = !_IsSearching;
+                _searchQuery.text = "";
+
+                if (!_IsSearching) {
+                  print("scroll");
+                  init();
+
+                  scrollController.jumpTo(
+                    scrollController.position.maxScrollExtent,
+                  );
+                } else {
+                  init();
+                }
+
                 if (this.actionIcon.icon == Icons.search) {
                   this.actionIcon = Icon(
                     Icons.close,
@@ -222,44 +236,105 @@ class _SearchListState extends State<SearchList> {
                   );
                   this.appBarTitle = TextField(
                       controller: _searchQuery,
+                      onEditingComplete: () async {
+                        List<Food> foodList = [];
+                        List<int> foodListIndex = [];
+                        List<Food> favoriteFood = [];
+                        List<Food> notFavoriteFood = [];
+                        foodDBNameEX = [];
+                        _searchList = [];
+                        await dbHelperFood
+                            .filterFoods(_searchQuery.value.text.toString(),
+                                limit: 50)
+                            .then((value) async {
+                          favoriteFood.addAll(
+                              value.where((item) => item.isItMine == "T"));
+                          notFavoriteFood.addAll(
+                              value.where((item) => item.isItMine == "F"));
+                          for (var item in favoriteFood) {
+                            foodListIndex.add(item.selected);
+                            foodListIndex.sort((b, a) => a.compareTo(b));
+                            var index = foodListIndex.indexOf(item.selected);
+                            foodList.insert(index, item);
+                          }
+                          for (var item in notFavoriteFood) {
+                            foodList.add(item);
+                          }
+                        }, onError: (e) {
+                          print(e);
+                        });
+                        print(foodList);
+
+                        setState(() {
+                          for (var item in foodList) {
+                            foodDBNameEX.add(
+                              Building(
+                                  code: item.code,
+                                  foodName: item.foodName,
+                                  calories: item.kcal,
+                                  isItFavorite:
+                                      item.isItMine == "T" ? true : false),
+                            );
+                          }
+                        });
+                      },
+                      onChanged: (text) async {
+                        List<Food> foodList = [];
+                        List<int> foodListIndex = [];
+                        List<Food> favoriteFood = [];
+                        List<Food> notFavoriteFood = [];
+                        foodDBNameEX = [];
+                        _searchList = [];
+                        await dbHelperFood
+                            .filterFoods(text.toString(), limit: 50)
+                            .then((value) async {
+                          favoriteFood.addAll(
+                              value.where((item) => item.isItMine == "T"));
+                          notFavoriteFood.addAll(
+                              value.where((item) => item.isItMine == "F"));
+                          for (var item in favoriteFood) {
+                            foodListIndex.add(item.selected);
+                            foodListIndex.sort((b, a) => a.compareTo(b));
+                            var index = foodListIndex.indexOf(item.selected);
+                            foodList.insert(index, item);
+                          }
+                          for (var item in notFavoriteFood) {
+                            foodList.add(item);
+                          }
+                        }, onError: (e) {
+                          print(e);
+                        });
+                        print(foodList);
+
+                        setState(() {
+                          for (var item in foodList) {
+                            foodDBNameEX.add(
+                              Building(
+                                  code: item.code,
+                                  foodName: item.foodName,
+                                  calories: item.kcal,
+                                  isItFavorite:
+                                      item.isItMine == "T" ? true : false),
+                            );
+                          }
+                        });
+                      },
                       autofocus: true,
                       style: TextStyle(
                         color: Colors.white,
                       ),
                       decoration: InputDecoration(
                           hintText: "Search here..",
-                          hintStyle: TextStyle(color: Colors.white)),
-                      onChanged: (text) async {
-                        //text = 바뀐 글
-                        if (text != "") {
-                          await dbHelperFood.filterFoods(text.toString()).then(
-                              (value) async {
-                            List<Food> foodList = [];
-                            List<int> foodListIndex = [];
-                            List<Food> favoriteFood = [];
-                            List<Food> notFavoriteFood = [];
-
-                            favoriteFood.addAll(
-                                value.where((item) => item.isItMine == "T"));
-                            notFavoriteFood.addAll(
-                                value.where((item) => item.isItMine == "F"));
-                            for (var item in favoriteFood) {
-                              foodListIndex.add(item.selected);
-                              foodListIndex.sort((b, a) => a.compareTo(b));
-                              var index = foodListIndex.indexOf(item.selected);
-                              foodList.insert(index, item);
-                            }
-                            for (var item in notFavoriteFood) {
-                              foodList.add(item);
-                            }
-                          }, onError: (e) {
-                            //print(e);
-                          });
-                        }
-                      });
-                  _handleSearchStart();
+                          hintStyle: TextStyle(color: Colors.white)));
                 } else {
-                  _handleSearchEnd();
+                  this.actionIcon = Icon(
+                    Icons.search,
+                    // color: Colors.orange,
+                  );
+                  this.appBarTitle = Text(
+                    "Search Food",
+                    style: TextStyle(color: Colors.white),
+                  );
                 }
               });
             },
@@ -383,4 +458,96 @@ class _UiitemState extends State<Uiitem> {
     );
   }
 }
-//
+
+class UiDietitem extends StatefulWidget {
+  final Building building;
+  UiDietitem(this.building);
+  @override
+  _UiDietitemState createState() => _UiDietitemState(building);
+}
+
+class _UiDietitemState extends State<UiDietitem> {
+  final Building building;
+  _UiDietitemState(this.building);
+  bool isItSelected = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final Map<String, String> args = ModalRoute.of(context).settings.arguments;
+    return Card(
+      margin: EdgeInsets.all(8),
+      color: isItSelected ? Colors.green : Colors.white70,
+      child: InkWell(
+        // splashColor: Colors.orange,
+        //여기다 눌렀을 때 기능 넣기
+        onTap: () {
+          //add Diet 페이지에서 넘어왔을 경우
+          // 이거 수정해서 음식 데이터 보낼 거임
+          if (args['pre'] == 'addDiet') {
+            streamControllerString.add(building.code);
+            setState(() {
+              isItSelected = !isItSelected;
+            });
+          }
+          // 그 외 일반적인 경우
+          else if (args['pre'] == 'addFood') {
+            Navigator.pop(context, building.code);
+            print(building.code);
+          } else {
+            print(building.code);
+          }
+        },
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    FlatButton(
+                      child: Icon(
+                        Icons.favorite,
+                        color: this.building.isItFavorite ? Colors.red : null,
+                        size: 25,
+                      ),
+                      onPressed: () async {
+                        setState(() {
+                          this.building.isItFavorite =
+                              !this.building.isItFavorite;
+                        });
+                        Food food;
+                        await dbHelperFood
+                            .getFood(this.building.code)
+                            .then((val) {
+                          food = val;
+                        });
+                        food.isItMine = this.building.isItFavorite ? "T" : "F";
+                        dbHelperFood.updateFood(food);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                this.building.foodName,
+                style: TextStyle(
+                    // fontFamily: 'Raleway',
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 30),
+              ),
+              SizedBox(height: 5.0),
+              Text(
+                '${this.building.calories}',
+                // style: TextStyle(fontFamily: 'Roboto'),
+              ),
+              Spacer(
+                flex: 1,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

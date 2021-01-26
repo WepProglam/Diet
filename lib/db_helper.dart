@@ -187,7 +187,6 @@ class DBHelperFood {
 
   Future<void> updateFood(Food food) async {
     final db = await database;
-
     await db.update(
       tableName,
       food.toMap(),
@@ -218,10 +217,10 @@ class DBHelperFood {
   }
 
   //Read All
-  Future<List<Food>> filterFoods(String value) async {
+  Future<List<Food>> filterFoods(String value, {int limit = 10}) async {
     final db = await database;
-    var res = await db
-        .rawQuery("SELECT * FROM $tableName WHERE foodName LIKE '%$value%'");
+    var res = await db.rawQuery(
+        "SELECT * FROM $tableName WHERE foodName LIKE '%$value%' LIMIT '$limit'");
     List<Food> list = res.isNotEmpty
         ? res
             .map(
@@ -295,10 +294,10 @@ class DBHelperFood {
     return list;
   }
 
-  Future<List<Food>> getLimitFood(int offset) async {
+  Future<List<Food>> getLimitFood(int offset, int rows) async {
     final db = await database;
     var res = await db.rawQuery(
-        "SELECT * FROM $tableName WHERE isItMine = 'F' LIMIT 50 OFFSET '$offset'");
+        "SELECT * FROM $tableName WHERE isItMine = 'F' LIMIT '$rows' OFFSET '$offset'");
     List<Food> list = res.isNotEmpty
         ? res
             .map(

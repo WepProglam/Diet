@@ -196,7 +196,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                                       Navigator.pushNamed(context, '/searchDiet', arguments: <String, String>{
                                                                                         "pre": "mainPage"
                                                                                       }).then((val) {
-                                                                                        print(val);
+                                                                                        setState(() {
+                                                                                          todayDietList[index] = val;
+                                                                                        });
+                                                                                        print(todayDietList[index]);
                                                                                       });
                                                                                     })),
                                                                             Expanded(
