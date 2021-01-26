@@ -38,103 +38,99 @@ class PieChart2State extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        flex: 3,
-        child: AspectRatio(
-          aspectRatio: 1.3,
-          child: Card(
-            color: Color(0xFFFFFEF5),
-            child: Row(
+    return AspectRatio(
+      aspectRatio: 1.3,
+      child: Container(
+        color: Color(0xFFFFFEF5),
+        child: Row(
+          children: <Widget>[
+            // SizedBox(
+            //   height: 18,
+            // ),
+            Expanded(
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: PieChart(
+                  PieChartData(
+                      pieTouchData:
+                          PieTouchData(touchCallback: (pieTouchResponse) {
+                        setState(() {
+                          if (pieTouchResponse.touchInput is FlLongPressEnd ||
+                              pieTouchResponse.touchInput is FlPanEnd) {
+                            touchedIndex = -1;
+                          } else {
+                            touchedIndex = pieTouchResponse.touchedSectionIndex;
+                          }
+                        });
+                      }),
+                      borderData: FlBorderData(
+                        show: false,
+                      ),
+                      sectionsSpace: 0,
+                      centerSpaceRadius: 30,
+                      sections: showingSections()),
+                ),
+              ),
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Indicator(
+                  color: Color(0xff0293ee),
+                  text: '탄수화물',
+                  fontSize: 12,
+                  isSquare: true,
+                ),
                 SizedBox(
-                  height: 18,
+                  height: 4,
                 ),
-                Expanded(
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: PieChart(
-                      PieChartData(
-                          pieTouchData:
-                              PieTouchData(touchCallback: (pieTouchResponse) {
-                            setState(() {
-                              if (pieTouchResponse.touchInput
-                                      is FlLongPressEnd ||
-                                  pieTouchResponse.touchInput is FlPanEnd) {
-                                touchedIndex = -1;
-                              } else {
-                                touchedIndex =
-                                    pieTouchResponse.touchedSectionIndex;
-                              }
-                            });
-                          }),
-                          borderData: FlBorderData(
-                            show: false,
-                          ),
-                          sectionsSpace: 0,
-                          centerSpaceRadius: 40,
-                          sections: showingSections()),
-                    ),
-                  ),
+                Indicator(
+                  color: Color(0xfff8b250),
+                  text: '단백질',
+                  fontSize: 12,
+                  isSquare: true,
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Indicator(
-                      color: Color(0xff0293ee),
-                      text: '탄수화물',
-                      fontSize: 12,
-                      isSquare: true,
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Indicator(
-                      color: Color(0xfff8b250),
-                      text: '단백질',
-                      fontSize: 12,
-                      isSquare: true,
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Indicator(
-                      color: Color(0xff845bef),
-                      text: '지방',
-                      isSquare: true,
-                      fontSize: 12,
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Indicator(
-                      color: Colors.black,
-                      text: "${myRounder(myTotalCalroie)}Kcal",
-                      isSquare: true,
-                      fontSize: 12,
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Indicator(
-                      color: Colors.black,
-                      text: "${myRounder(myCorrect)}% 일치",
-                      isSquare: true,
-                      fontSize: 12,
-                    ),
-                    SizedBox(
-                      height: 18,
-                    ),
-                  ],
+                SizedBox(
+                  height: 4,
                 ),
-                const SizedBox(
-                  width: 28,
+                Indicator(
+                  color: Color(0xff845bef),
+                  text: '지방',
+                  isSquare: true,
+                  fontSize: 12,
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Indicator(
+                  color: Colors.black,
+                  text: "${myRounder(myTotalCalroie)}Kcal",
+                  isSquare: true,
+                  fontSize: 12,
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Indicator(
+                  color: Colors.black,
+                  text: "${myRounder(myCorrect)}% 일치",
+                  isSquare: true,
+                  fontSize: 12,
+                ),
+                SizedBox(
+                  height: 40,
                 ),
               ],
             ),
-          ),
-        ));
+            const SizedBox(
+              width: 20,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   List<PieChartSectionData> showingSections() {

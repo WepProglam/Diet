@@ -288,112 +288,88 @@ class _FoodListState extends State<FoodList> {
             flex: 6,
             child: Column(
               children: [
-                //음식 추가 버튼
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    children: [
-                      Spacer(
-                        flex: 1,
-                      ),
-                      Row(
-                        children: [
-                          Spacer(
-                            flex: 1,
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: GestureDetector(
-                              onTap: () {
-                                _navigateAndDisplaySelection(context);
-                                isGraphShowed = false;
-                              },
-                              child: Container(
-                                height: MediaQuery.of(context).size.height / 14,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Color(0xFF69C2B0),
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '음식 추가',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Spacer(
-                            flex: 1,
-                          ),
-                        ],
-                      ),
-                      Spacer(
-                        flex: 1,
-                      ),
-                    ],
-                  ),
-                ),
-                //listview
+                //listview & 음식추가 버튼 Stack
                 Expanded(
                   flex: 8,
                   child: Container(
-                    margin: EdgeInsets.all(8.0),
+                    margin: EdgeInsets.only(
+                        top: 10, left: 10, right: 10, bottom: 20),
                     decoration: BoxDecoration(
                       border: Border.all(color: Color(0xFF69C2B0)),
                     ),
-                    child: ListView.separated(
-                      padding: EdgeInsets.all(8),
-                      itemCount: foodList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return buildFood(foodList[index], index);
-                      },
-                      separatorBuilder: (BuildContext context, int index) =>
-                          Divider(),
+                    child: Stack(
+                      children: [
+                        ListView.separated(
+                          padding: EdgeInsets.all(8),
+                          itemCount: foodList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return buildFood(foodList[index], index);
+                          },
+                          separatorBuilder: (BuildContext context, int index) =>
+                              Divider(),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            height: 40,
+                            child: FloatingActionButton.extended(
+                              icon: Icon(Icons.add),
+                              backgroundColor: Color(0xFF69C2B0),
+                              onPressed: () {
+                                _navigateAndDisplaySelection(context);
+                                isGraphShowed = false;
+                              },
+                              label: Text('음식 추가'),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          Expanded(
+          //식단명 입력
+      Expanded(
             flex: 1,
-            child: Row(
-              children: [
-                Spacer(
-                  flex: 1,
-                ),
-                // calculate button
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                      icon: Icon(Icons.calculate, color: Color(0xFF69C2B0)),
-                      onPressed: () async {
-                        print(numOfMass(foodList));
-                        print("==================================");
-                        print(foodList.length);
+            child: Container(
+              child: Row(
+                children: [
+                  Spacer(
+                    flex: 1,
+                  ),
+                  // calculate button
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                        icon: Icon(Icons.calculate, color: Color(0xFF69C2B0)),
+                        onPressed: () async {
+                          print(numOfMass(foodList));
+                          print("==================================");
+                          print(foodList.length);
                           if (foodList.length <= 5) {
-                          await getFoodInfo(foodList).then((value) {
-                            makeCsvFile(foodList: value).then((val) {
-                              List<num> sendData = [];
-                              List<num> nutriInfo = new List(value.length * 3);
-                              for (var i = 0; i < value.length; i++) {
-                                nutriInfo[i * 3] = value[i].carbohydrate;
-                                nutriInfo[i * 3 + 1] = value[i].protein;
-                                nutriInfo[i * 3 + 2] = value[i].fat;
-                              }
+                            await getFoodInfo(foodList).then((value) {
+                              makeCsvFile(foodList: value).then((val) {
+                                List<num> sendData = [];
+                                List<num> nutriInfo = new List(value.length * 3);
+                                for (var i = 0; i < value.length; i++) {
+                                  nutriInfo[i * 3] = value[i].carbohydrate;
+                                  nutriInfo[i * 3 + 1] = value[i].protein;
+                                  nutriInfo[i * 3 + 2] = value[i].fat;
+                                }
 
-                              sendData.addAll(nutriInfo);
-                              sendData.addAll(val);
+                                sendData.addAll(nutriInfo);
+                                sendData.addAll(val);
 
-                              print("*"*100);
-                              print(val);
-                              print("*"*100);
+                                print("*"*100);
+                                print(val);
+                                print("*"*100);
 
-                              // try {
+                                // try {
                                 List<dynamic> carProFat =
-                                    justCalculateNutri(sendData,foodList.length);
+                                justCalculateNutri(sendData,foodList.length);
                                 setState(() {
                                   correct = carProFat[1];
                                   carbohydrateMass = carProFat[3];
@@ -404,61 +380,61 @@ class _FoodListState extends State<FoodList> {
                                   foodMassController[i].text =
                                       val[i].toString();
                                 }
-                              // } catch (e) {
-                              //   var snackBar =
-                              //       buildSnackBar('음식 조합이 매우 부적합합니다.');
-                              //   Scaffold.of(context).showSnackBar(snackBar);
-                              // }
-                            });
-                          });
-                        } else {
-                          if (foodList.length - changeNumOfMass() == 3) {
-                            //should add change calorie
-
-                            List<int> index = getIndex();
-
-                            calculate(foodList, defaultMass: index)
-                                .then((value) {
-                              for (var i = 0; i < 3; i++) {
-                                print(value[i]);
-                              }
-                              var massList = value;
-                              print(massList);
-                              for (var item in index) {
-                                massList.insert(
-                                    item,
-                                    num.parse(
-                                        foodMassController[item].value.text));
-                              }
-                              print(massList);
-
-                              justCalNutri(foodList, massList).then((val) {
-                                print(val);
-                                setState(() {
-                                  carbohydrateMass = val[0];
-                                  proteinMass = val[1];
-                                  fatMass = val[2];
-                                });
-                                var controllerIndex = 0;
-
-                                for (var i = 0; i < value.length; i++) {
-                                  if (index.contains(controllerIndex)) {
-                                  } else {
-                                    foodMassController[controllerIndex].text =
-                                        value[i].toString();
-                                  }
-                                  controllerIndex += 1;
-                                }
+                                // } catch (e) {
+                                //   var snackBar =
+                                //       buildSnackBar('음식 조합이 매우 부적합합니다.');
+                                //   Scaffold.of(context).showSnackBar(snackBar);
+                                // }
                               });
                             });
                           } else {
-                            var snackBar = buildSnackBar(
-                                '빈칸이 3개일 경우에만 계산 가능합니다.\n 0인 값이 4개 이상입니다.');
-                            Scaffold.of(context).showSnackBar(snackBar);
+                            if (foodList.length - changeNumOfMass() == 3) {
+                              //should add change calorie
+
+                              List<int> index = getIndex();
+
+                              calculate(foodList, defaultMass: index)
+                                  .then((value) {
+                                for (var i = 0; i < 3; i++) {
+                                  print(value[i]);
+                                }
+                                var massList = value;
+                                print(massList);
+                                for (var item in index) {
+                                  massList.insert(
+                                      item,
+                                      num.parse(
+                                          foodMassController[item].value.text));
+                                }
+                                print(massList);
+
+                                justCalNutri(foodList, massList).then((val) {
+                                  print(val);
+                                  setState(() {
+                                    carbohydrateMass = val[0];
+                                    proteinMass = val[1];
+                                    fatMass = val[2];
+                                  });
+                                  var controllerIndex = 0;
+
+                                  for (var i = 0; i < value.length; i++) {
+                                    if (index.contains(controllerIndex)) {
+                                    } else {
+                                      foodMassController[controllerIndex].text =
+                                          value[i].toString();
+                                    }
+                                    controllerIndex += 1;
+                                  }
+                                });
+                              });
+                            } else {
+                              var snackBar = buildSnackBar(
+                                  '빈칸이 3개일 경우에만 계산 가능합니다.\n 0인 값이 4개 이상입니다.');
+                              Scaffold.of(context).showSnackBar(snackBar);
+                            }
                           }
-                        }
-                      }),
-                ),
+                        }),
+                  ),
                 // Expanded(
                 //   flex: 1,
                 //   child: IconButton(
@@ -531,17 +507,29 @@ class _FoodListState extends State<FoodList> {
                 ),
               ],
             ),
+          ),),
+        Container(
+            margin: EdgeInsets.only(
+              left: 10,
+              right: 10,
+            ),
+            padding: EdgeInsets.only(
+              left: 10,
+              right: 10,
+            ),
+            child: PieChartSample2(
+              carbohydrate: carbohydrateMass * 4,
+              fat: fatMass * 9,
+              protein: proteinMass * 4,
+              totalCalorie:
+                  carbohydrateMass * 4 + fatMass * 9 + proteinMass * 4,
+              correct: correct,
+            ),
           ),
-          PieChartSample2(
-            carbohydrate: carbohydrateMass * 4,
-            fat: fatMass * 9,
-            protein: proteinMass * 4,
-            totalCalorie: carbohydrateMass * 4 + fatMass * 9 + proteinMass * 4,
-            correct: correct,
-          ),
-          Spacer(
-            flex: 1,
-          ),
+
+          // Spacer(
+          //   flex: 1,
+          // ),
         ],
       ),
     );
