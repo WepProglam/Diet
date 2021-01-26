@@ -547,6 +547,7 @@ class _FoodListState extends State<FoodList> {
         onPressed: () async {
           await dbHelperDiet.createHelper(diet);
           Navigator.pop(context);
+          Navigator.pushNamed(context, '/savedDiet');
         });
 
     Widget noButton = FlatButton(

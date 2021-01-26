@@ -93,8 +93,40 @@ class _DietListState extends State<DietList> {
       childAspectRatio: 5 / 3,
       children: List.generate(dietNameEX.length, (index) {
         return Card(
+          color: Colors.white70,
           margin: EdgeInsets.all(8),
-          child: Column(
+          child: Stack(
+            children: [
+              Center(
+                child: GestureDetector(
+                  onTap: () async {
+                    react(index, fromCalcDiet);
+                  },
+                  child: Text(
+                    '${dietNameEX[index].dietName}',
+                    style: TextStyle(fontSize: 30),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 5,
+                right: 5,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      dbHelperDiet.deleteDiet(dietNameEX[index].dietName);
+                      dietNameEX.removeAt(index);
+                    });
+                  },
+                  child: Icon(
+                    Icons.delete,
+                    size: 15,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          /* Column(
             children: [
               Expanded(
                   flex: 2,
@@ -122,8 +154,7 @@ class _DietListState extends State<DietList> {
                 ),
               ),
             ],
-          ),
-          color: Colors.white70,
+          ), */
         );
       }),
     );
