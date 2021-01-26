@@ -120,7 +120,7 @@ class PieChart2State extends State {
                   fontSize: 12,
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 40,
                 ),
               ],
             ),
