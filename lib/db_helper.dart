@@ -181,12 +181,23 @@ class DBHelperFood {
     await db.insert(
       tableName,
       food.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      // conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> updateFood(Food food) async {
+    final db = await database;
+
+    await db.update(
+      tableName,
+      food.toMap(),
+      where: "code = ?",
+      whereArgs: [food.code],
     );
   }
 
   //Read
-  getFood(String code) async {
+  Future<Food> getFood(String code) async {
     final db = await database;
     var res =
         await db.rawQuery("SELECT * FROM $tableName WHERE code = '$code'");

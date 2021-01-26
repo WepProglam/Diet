@@ -1,5 +1,6 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/addDiet.dart';
 import 'package:flutter_application_1/calculate.dart';
 import 'package:flutter_application_1/savedFood.dart';
 import 'appBar.dart';
@@ -77,6 +78,7 @@ class _AddFoodSub extends State<AddFoodSub> {
     _fatController.dispose();
     _ulController.dispose();
     _servingController.dispose();
+    _foodNameController.dispose();
     //_purposeController.dispose();
     super.dispose();
     isDisposed = true;
@@ -102,19 +104,22 @@ class _AddFoodSub extends State<AddFoodSub> {
               Spacer(
                 flex: 1,
               ),
-              subBuilderQuestion("1회 제공량", "g",
-                  controller: _servingController, icon: Icon(Icons.favorite)),
-              subBuilderQuestion("탄수화물", "g",
-                  controller: _carboController, icon: Icon(Icons.favorite)),
-              subBuilderQuestion("단백질", "g",
-                  controller: _proController,
-                  icon: Icon(Icons.restaurant_menu_outlined)),
+              subBuilderQuestion("음식명", " ", controller: _foodNameController),
+              subBuilderQuestion("1회 제공량", "g", controller: _servingController),
+              subBuilderQuestion("탄수화물", "g", controller: _carboController),
+              subBuilderQuestion(
+                "단백질",
+                "g",
+                controller: _proController,
+              ),
               subBuilderQuestion("지방", "g",
                   controller: _fatController,
                   icon: Icon(Icons.restaurant_outlined)),
-              subBuilderQuestion("열량", "kcal",
-                  controller: _ulController,
-                  icon: Icon(Icons.restaurant_menu_sharp)),
+              subBuilderQuestion(
+                "열량",
+                "kcal",
+                controller: _ulController,
+              ),
               Spacer(
                 flex: 1,
               ),
@@ -267,6 +272,9 @@ class _AddFoodSub extends State<AddFoodSub> {
       case "1회 제공량":
         returnValue = "servingSize";
         break;
+      case "음식명":
+        returnValue = "foodName";
+        break;
       default:
     }
     return returnValue;
@@ -276,12 +284,14 @@ class _AddFoodSub extends State<AddFoodSub> {
       TextEditingController controller, num value, String question) {
     //print(foodInfo);
     String fieldName = koreanQusetionToEnglish(question);
+    bool enable =
+        fieldName == "servingSize" || fieldName == "foodName" ? false : true;
 
     return TextFormField(
       autofocus: false,
       controller: controller,
       // focusNode: _focusNode,
-      enabled: fieldName == "servingSize" ? false : true,
+      enabled: enable,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(hintText: ''),
       textAlign: TextAlign.center,
@@ -371,8 +381,10 @@ class _TypeFoodName extends State<TypeFoodName> {
       // },
       onPressed: () {
         Navigator.pushNamed(context, '/searchFood',
-            arguments: <String, String>{'pre': 'addFood'}).then((val) {
-          print(val);
+            arguments: <String, String>{'pre': 'addFood'}).then((code) async {
+          await dbHelperFood.getFood(code).then((food) {
+            streamController.add(food.toMap());
+          });
         });
       },
       // onChanged: (text) async {

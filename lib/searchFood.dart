@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/addDiet.dart';
 import 'package:flutter_application_1/model.dart';
 
 import 'db_helper.dart';
@@ -27,6 +28,7 @@ class Building {
   num carbohydrate;
   num protein;
   num fat;
+  bool isItFavorite;
 
   Building(
       {this.code,
@@ -34,7 +36,8 @@ class Building {
       this.calories,
       this.carbohydrate,
       this.protein,
-      this.fat});
+      this.fat,
+      this.isItFavorite});
 }
 
 class SearchList extends StatefulWidget {
@@ -145,8 +148,12 @@ class _SearchListState extends State<SearchList> {
     _list = List();
     int i = 1;
     for (var item in foodNameEX) {
-      _list.add(
-        Building(code: item.code, foodName: item.foodName, calories: item.kcal),
+      await _list.add(
+        Building(
+            code: item.code,
+            foodName: item.foodName,
+            calories: item.kcal,
+            isItFavorite: item.isItMine == "T" ? true : false),
       );
     }
     _searchList = _list;
@@ -215,6 +222,7 @@ class _SearchListState extends State<SearchList> {
                   );
                   this.appBarTitle = TextField(
                     controller: _searchQuery,
+                    autofocus: true,
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -287,15 +295,44 @@ class _UiitemState extends State<Uiitem> {
             });
           }
           // 그 외 일반적인 경우
-          else {
+          else if (args['pre'] == 'addFood') {
+            Navigator.pop(context, building.code);
+            print(building.code);
+          } else {
             print(building.code);
           }
         },
         child: Center(
           child: Column(
             children: <Widget>[
-              Spacer(
+              Expanded(
                 flex: 2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    FlatButton(
+                      child: Icon(
+                        Icons.favorite,
+                        color: this.building.isItFavorite ? Colors.red : null,
+                        size: 25,
+                      ),
+                      onPressed: () async {
+                        setState(() {
+                          this.building.isItFavorite =
+                              !this.building.isItFavorite;
+                        });
+                        Food food;
+                        await dbHelperFood
+                            .getFood(this.building.code)
+                            .then((val) {
+                          food = val;
+                        });
+                        food.isItMine = this.building.isItFavorite ? "T" : "F";
+                        dbHelperFood.updateFood(food);
+                      },
+                    ),
+                  ],
+                ),
               ),
               Text(
                 this.building.foodName,
