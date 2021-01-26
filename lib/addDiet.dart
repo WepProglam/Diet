@@ -308,183 +308,192 @@ class _FoodListState extends State<FoodList> {
               ],
             ),
           ),
+          //식단명 입력
           Expanded(
             flex: 1,
-            child: Row(
-              children: [
-                Spacer(
-                  flex: 1,
-                ),
-                // calculate button
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                      icon: Icon(Icons.calculate, color: Color(0xFF69C2B0)),
-                      onPressed: () async {
-                        print(numOfMass(foodList));
-                        print("==================================");
-                        print(foodList.length);
-                        if (foodList.length < 3) {
-                          //최소 3개 선택하라는 경고창
-                          var snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');
-                          Scaffold.of(context).showSnackBar(snackBar);
-                        } else if (foodList.length == 3) {
-                          await getFoodInfo(foodList).then((value) {
-                            makeCsvFile(nutri: value).then((val) {
-                              List<num> sendData = [];
-                              sendData.addAll(value);
-                              sendData.addAll(val);
-                              try {
-                                List<dynamic> carProFat =
-                                    justCalculateNutri(sendData);
-                                setState(() {
-                                  carbohydrateMass = carProFat[5];
-                                  proteinMass = carProFat[6];
-                                  fatMass = carProFat[7];
-                                  correct = carProFat[3];
-                                });
-                                for (var i = 0; i < 3; i++) {
-                                  foodMassController[i].text =
-                                      val[i].toString();
-                                }
-                              } catch (e) {
-                                var snackBar =
-                                    buildSnackBar('음식 조합이 매우 부적합합니다.');
-                                Scaffold.of(context).showSnackBar(snackBar);
-                              }
-                            });
-                          });
-                        } else {
-                          if (foodList.length - changeNumOfMass() == 3) {
-                            //should add change calorie
-
-                            List<int> index = getIndex();
-
-                            calculate(foodList, defaultMass: index)
-                                .then((value) {
-                              for (var i = 0; i < 3; i++) {
-                                print(value[i]);
-                              }
-                              var massList = value;
-                              print(massList);
-                              for (var item in index) {
-                                massList.insert(
-                                    item,
-                                    num.parse(
-                                        foodMassController[item].value.text));
-                              }
-                              print(massList);
-
-                              justCalNutri(foodList, massList).then((val) {
-                                print(val);
-                                setState(() {
-                                  carbohydrateMass = val[0];
-                                  proteinMass = val[1];
-                                  fatMass = val[2];
-                                });
-                                var controllerIndex = 0;
-
-                                for (var i = 0; i < value.length; i++) {
-                                  if (index.contains(controllerIndex)) {
-                                  } else {
-                                    foodMassController[controllerIndex].text =
-                                        value[i].toString();
+            child: Container(
+              child: Row(
+                children: [
+                  Spacer(
+                    flex: 1,
+                  ),
+                  // calculate button
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                        icon: Icon(Icons.calculate, color: Color(0xFF69C2B0)),
+                        onPressed: () async {
+                          print(numOfMass(foodList));
+                          print("==================================");
+                          print(foodList.length);
+                          if (foodList.length < 3) {
+                            //최소 3개 선택하라는 경고창
+                            var snackBar = buildSnackBar('음식을 3종류 이상 선택해주세요');
+                            Scaffold.of(context).showSnackBar(snackBar);
+                          } else if (foodList.length == 3) {
+                            await getFoodInfo(foodList).then((value) {
+                              makeCsvFile(nutri: value).then((val) {
+                                List<num> sendData = [];
+                                sendData.addAll(value);
+                                sendData.addAll(val);
+                                try {
+                                  List<dynamic> carProFat =
+                                      justCalculateNutri(sendData);
+                                  setState(() {
+                                    carbohydrateMass = carProFat[5];
+                                    proteinMass = carProFat[6];
+                                    fatMass = carProFat[7];
+                                    correct = carProFat[3];
+                                  });
+                                  for (var i = 0; i < 3; i++) {
+                                    foodMassController[i].text =
+                                        val[i].toString();
                                   }
-                                  controllerIndex += 1;
+                                } catch (e) {
+                                  var snackBar =
+                                      buildSnackBar('음식 조합이 매우 부적합합니다.');
+                                  Scaffold.of(context).showSnackBar(snackBar);
                                 }
                               });
                             });
                           } else {
-                            var snackBar = buildSnackBar(
-                                '빈칸이 3개일 경우에만 계산 가능합니다.\n 0인 값이 4개 이상입니다.');
-                            Scaffold.of(context).showSnackBar(snackBar);
-                          }
-                        }
-                      }),
-                ),
-                // Expanded(
-                //   flex: 1,
-                //   child: IconButton(
-                //     icon: Icon(Icons.palette),
-                //     color: Color(0xFF69C2B0),
-                //     onPressed: () {
-                //       if (changeNumOfMass() == foodList.length) {
-                //         var massList = <num>[];
-                //         for (var i = 0; i < foodList.length; i++) {
-                //           massList
-                //               .add(num.parse(foodMassController[i].value.text));
-                //         }
-                //         print(massList);
-                //         justCalNutri(foodList, massList).then((value) {
-                //           setState(() {
-                //             carbohydrateMass = value[0];
-                //             proteinMass = value[1];
-                //             fatMass = value[2];
-                //           });
-                //         });
-                //       } else {
-                //         var snackBar = buildSnackBar('그래프를 보려면 빈칸을 모두 채워주세요');
-                //         Scaffold.of(context).showSnackBar(snackBar);
-                //       }
-                //     },
-                //   ),
-                // ),
-                // enter diet textfield
-                Expanded(
-                  flex: 4,
-                  child: TextField(
-                    decoration: InputDecoration(hintText: '식단명을 입력하세요'),
-                    controller: dietNameController,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                // add button
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                      icon: Icon(Icons.add, color: Color(0xFF69C2B0)),
-                      onPressed: () {
-                        if (changeNumOfMass() != foodList.length) {
-                          var snackBar = buildSnackBar('빈칸이 있습니다.');
-                          Scaffold.of(context).showSnackBar(snackBar);
-                        } else {
-                          //db에 저장
-                          String dietName = dietNameController.value.text;
-                          Map foodInfo = {dietName: {}};
-                          for (var i = 0; i < foodList.length; i++) {
-                            var foodMass =
-                                num.parse(foodMassController[i].value.text);
+                            if (foodList.length - changeNumOfMass() == 3) {
+                              //should add change calorie
 
-                            foodInfo[dietName][foodList[i].code] = {
-                              "foodName": foodList[i].foodName,
-                              "foodMass": foodMass
-                            };
+                              List<int> index = getIndex();
+
+                              calculate(foodList, defaultMass: index)
+                                  .then((value) {
+                                for (var i = 0; i < 3; i++) {
+                                  print(value[i]);
+                                }
+                                var massList = value;
+                                print(massList);
+                                for (var item in index) {
+                                  massList.insert(
+                                      item,
+                                      num.parse(
+                                          foodMassController[item].value.text));
+                                }
+                                print(massList);
+
+                                justCalNutri(foodList, massList).then((val) {
+                                  print(val);
+                                  setState(() {
+                                    carbohydrateMass = val[0];
+                                    proteinMass = val[1];
+                                    fatMass = val[2];
+                                  });
+                                  var controllerIndex = 0;
+
+                                  for (var i = 0; i < value.length; i++) {
+                                    if (index.contains(controllerIndex)) {
+                                    } else {
+                                      foodMassController[controllerIndex].text =
+                                          value[i].toString();
+                                    }
+                                    controllerIndex += 1;
+                                  }
+                                });
+                              });
+                            } else {
+                              var snackBar = buildSnackBar(
+                                  '빈칸이 3개일 경우에만 계산 가능합니다.\n 0인 값이 4개 이상입니다.');
+                              Scaffold.of(context).showSnackBar(snackBar);
+                            }
                           }
-                          String foodInfoString = jsonEncode(foodInfo);
-                          var diet = Diet(
-                            dietName: dietName,
-                            foodInfo: foodInfoString,
-                          );
-                          showAlertDialog(context, diet);
-                        }
-                      }),
-                ),
-                Spacer(
-                  flex: 1,
-                ),
-              ],
+                        }),
+                  ),
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: IconButton(
+                  //     icon: Icon(Icons.palette),
+                  //     color: Color(0xFF69C2B0),
+                  //     onPressed: () {
+                  //       if (changeNumOfMass() == foodList.length) {
+                  //         var massList = <num>[];
+                  //         for (var i = 0; i < foodList.length; i++) {
+                  //           massList
+                  //               .add(num.parse(foodMassController[i].value.text));
+                  //         }
+                  //         print(massList);
+                  //         justCalNutri(foodList, massList).then((value) {
+                  //           setState(() {
+                  //             carbohydrateMass = value[0];
+                  //             proteinMass = value[1];
+                  //             fatMass = value[2];
+                  //           });
+                  //         });
+                  //       } else {
+                  //         var snackBar = buildSnackBar('그래프를 보려면 빈칸을 모두 채워주세요');
+                  //         Scaffold.of(context).showSnackBar(snackBar);
+                  //       }
+                  //     },
+                  //   ),
+                  // ),
+                  // enter diet textfield
+                  Expanded(
+                    flex: 4,
+                    child: TextField(
+                      decoration: InputDecoration(hintText: '식단명을 입력하세요'),
+                      controller: dietNameController,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  // add button
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                        icon: Icon(Icons.add, color: Color(0xFF69C2B0)),
+                        onPressed: () {
+                          if (changeNumOfMass() != foodList.length) {
+                            var snackBar = buildSnackBar('빈칸이 있습니다.');
+                            Scaffold.of(context).showSnackBar(snackBar);
+                          } else {
+                            //db에 저장
+                            String dietName = dietNameController.value.text;
+                            Map foodInfo = {dietName: {}};
+                            for (var i = 0; i < foodList.length; i++) {
+                              var foodMass =
+                                  num.parse(foodMassController[i].value.text);
+
+                              foodInfo[dietName][foodList[i].code] = {
+                                "foodName": foodList[i].foodName,
+                                "foodMass": foodMass
+                              };
+                            }
+                            String foodInfoString = jsonEncode(foodInfo);
+                            var diet = Diet(
+                              dietName: dietName,
+                              foodInfo: foodInfoString,
+                            );
+                            showAlertDialog(context, diet);
+                          }
+                        }),
+                  ),
+                  Spacer(
+                    flex: 1,
+                  ),
+                ],
+              ),
             ),
           ),
-          PieChartSample2(
-            carbohydrate: carbohydrateMass * 4,
-            fat: fatMass * 9,
-            protein: proteinMass * 4,
-            totalCalorie: carbohydrateMass * 4 + fatMass * 9 + proteinMass * 4,
-            correct: correct,
+          Container(
+            margin: EdgeInsets.all(20),
+            padding: EdgeInsets.all(10),
+            child: PieChartSample2(
+              carbohydrate: carbohydrateMass * 4,
+              fat: fatMass * 9,
+              protein: proteinMass * 4,
+              totalCalorie:
+                  carbohydrateMass * 4 + fatMass * 9 + proteinMass * 4,
+              correct: correct,
+            ),
           ),
-          Spacer(
-            flex: 1,
-          ),
+
+          // Spacer(
+          //   flex: 1,
+          // ),
         ],
       ),
     );

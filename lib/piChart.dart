@@ -46,9 +46,9 @@ class PieChart2State extends State {
             color: Color(0xFFFFFEF5),
             child: Row(
               children: <Widget>[
-                SizedBox(
-                  height: 18,
-                ),
+                // SizedBox(
+                //   height: 18,
+                // ),
                 Expanded(
                   child: AspectRatio(
                     aspectRatio: 1,
@@ -71,7 +71,7 @@ class PieChart2State extends State {
                             show: false,
                           ),
                           sectionsSpace: 0,
-                          centerSpaceRadius: 40,
+                          centerSpaceRadius: 30,
                           sections: showingSections()),
                     ),
                   ),
@@ -124,12 +124,12 @@ class PieChart2State extends State {
                       fontSize: 12,
                     ),
                     SizedBox(
-                      height: 18,
+                      height: 20,
                     ),
                   ],
                 ),
                 const SizedBox(
-                  width: 28,
+                  width: 20,
                 ),
               ],
             ),
