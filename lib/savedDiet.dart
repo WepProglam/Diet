@@ -113,8 +113,8 @@ class _DietListState extends State<DietList> {
                 right: 5,
                 child: GestureDetector(
                   onTap: () {
-                    setState(() {
-                      dbHelperDiet.deleteDiet(dietNameEX[index].dietName);
+                    setState(() async {
+                      await dbHelperDiet.deleteDiet(dietNameEX[index].dietName);
                       dietNameEX.removeAt(index);
                     });
                   },

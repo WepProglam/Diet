@@ -6,17 +6,12 @@ import 'package:flutter_application_1/model.dart';
 import 'db_helper.dart';
 import 'mainStream.dart' as mainStream;
 
-StreamController<String> streamControllerString =
-    mainStream.streamControllerString;
+List<Diet> dietNameEX = [];
 
 class SearchDiet extends StatelessWidget {
-  final Stream<List> stream;
-  SearchDiet({this.stream});
   @override
   Widget build(BuildContext context) {
-    return SearchList(
-      streamString: streamControllerString.stream,
-    );
+    return SearchList();
   }
 }
 
@@ -29,8 +24,7 @@ class SearchDiet extends StatelessWidget {
 // }
 
 class SearchList extends StatefulWidget {
-  final Stream<String> streamString;
-  SearchList({Key key, this.streamString}) : super(key: key);
+  SearchList({Key key}) : super(key: key);
 
   @override
   _SearchListState createState() => _SearchListState();
@@ -46,7 +40,6 @@ class _SearchListState extends State<SearchList> {
   String _searchText = "";
 
   final dbHelperDiet = DBHelperDiet();
-  List<Diet> dietNameEX = [];
 
   _SearchListState() {
     _searchQuery.addListener(() {
@@ -209,6 +202,7 @@ class Uiitem extends StatefulWidget {
 }
 
 class _UiitemState extends State<Uiitem> {
+  final dbHelperDiet = DBHelperDiet();
   void reactWhenCalc() {
     // print(widget.diet.toMap());
     Navigator.pop(context, <String, Map>{"myDiet": widget.diet.toMap()});
@@ -243,37 +237,39 @@ class _UiitemState extends State<Uiitem> {
     return Card(
       margin: EdgeInsets.all(8),
       color: Colors.white70,
-      child: InkWell(
-        // splashColor: Colors.orange,
-        //여기다 눌렀을 때 기능 넣기
-        onTap: () async {
-          react(fromCalcDiet);
-        },
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Spacer(
-                flex: 2,
-              ),
-              Text(
+      child: Stack(
+        children: [
+          InkWell(
+            // splashColor: Colors.orange,
+            //여기다 눌렀을 때 기능 넣기
+            onTap: () async {
+              react(fromCalcDiet);
+            },
+            child: Center(
+              child: Text(
                 widget.diet.dietName,
-                style: TextStyle(
-                    // fontFamily: 'Raleway',
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 30),
+                style: TextStyle(fontSize: 30),
               ),
-              SizedBox(height: 5.0),
-              Text(
-                // '${this.building.calories}',
-                '',
-                // style: TextStyle(fontFamily: 'Roboto'),
-              ),
-              Spacer(
-                flex: 1,
-              ),
-            ],
+            ),
           ),
-        ),
+          Positioned(
+            top: 5,
+            right: 5,
+            child: GestureDetector(
+              onTap: () async {
+                await dbHelperDiet.deleteDiet(widget.diet.dietName);
+                setState(() {
+                  dietNameEX.removeWhere(
+                      (item) => item.dietName == widget.diet.dietName);
+                });
+              },
+              child: Icon(
+                Icons.delete,
+                size: 15,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
