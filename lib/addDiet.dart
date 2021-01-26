@@ -244,11 +244,14 @@ class _FoodListState extends State<FoodList> {
       print(foods);
       var foodCodes = foods.keys;
       print(foodCodes);
-      for (var item in foodCodes) {
-        foodList.add(ListContents(
-            foodName: foods[item]['foodName'],
-            code: item,
-            mass: foods[item]['foodMass']));
+      bool stopper = false;
+      if (foodList.isEmpty) {
+        for (var item in foodCodes) {
+          foodList.add(ListContents(
+              foodName: foods[item]['foodName'],
+              code: item,
+              mass: foods[item]['foodMass']));
+        }
       }
 
       setState(() {
