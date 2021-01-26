@@ -86,7 +86,7 @@ num totalCalorieOverFlow(List<num> mass,List<num> calorie){
 List<num> makeForLooP(num tempIndex, List<num> myFoodMassList,
 List<num> minMass,List<num> maxMass, List<num> nutriInfo,List<num> calorie) {
   num totalCalorie=0;
-  print(calculateDensity);
+  // print(calculateDensity);
   if (tempIndex == maxMass.length - 1) {
     num tempDegree = 0;
     num maxDegree = myFoodMassList.last;
@@ -121,7 +121,7 @@ List<num> minMass,List<num> maxMass, List<num> nutriInfo,List<num> calorie) {
       tempIndex -= 1;
     }
   } else {}
-  print("mass : $myFoodMassList");
+  // print("mass : $myFoodMassList");
   return myFoodMassList;
 }
 
@@ -148,7 +148,7 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   for (var i = 0; i < foodLength; i++) {
 
     minMass[i]=foodList[i].servingSize / 4;
-    maxMass[i] = foodList[i].servingSize * 2;
+    maxMass[i] = foodList[i].servingSize * 1.5;
     calorie[i]=foodList[i].kcal;
 
     nutriInfo[i * 3] = foodList[i].carbohydrate;
@@ -177,7 +177,7 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   }
   totalCalorie=totalCalorieOverFlow(massList[0], calorie);
 
-  print(totalCalorie);
+  // print(totalCalorie);
 
   return massList[0];
 }

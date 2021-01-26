@@ -346,10 +346,11 @@ class _FoodListState extends State<FoodList> {
                     child: IconButton(
                         icon: Icon(Icons.calculate, color: Color(0xFF69C2B0)),
                         onPressed: () async {
-                          print(numOfMass(foodList));
-                          print("==================================");
-                          print(foodList.length);
-                          if (foodList.length <= 5) {
+                          // if (changeNumOfMass() == 0) {
+                          //음식 무게 입력되어있는 칸이 있을땐 빼고 계산하는 기능 추가 필요
+                          //그람은 반올림해서 표시 필요
+                          //음식 옆에 검정색 x표 버튼 외에 버튼 하나 더 추가 => 누르면 해당 음식의 텍스트필드 값이 0으로 바뀜
+                          //일치율 계산 함수 구현 필요
                             await getFoodInfo(foodList).then((value) {
                               makeCsvFile(foodList: value).then((val) {
                                 List<num> sendData = [];
@@ -363,11 +364,8 @@ class _FoodListState extends State<FoodList> {
                                 sendData.addAll(nutriInfo);
                                 sendData.addAll(val);
 
-                                print("*"*100);
-                                print(val);
-                                print("*"*100);
 
-                                // try {
+                                try {
                                 List<dynamic> carProFat =
                                 justCalculateNutri(sendData,foodList.length);
                                 setState(() {
@@ -380,59 +378,59 @@ class _FoodListState extends State<FoodList> {
                                   foodMassController[i].text =
                                       val[i].toString();
                                 }
-                                // } catch (e) {
-                                //   var snackBar =
-                                //       buildSnackBar('음식 조합이 매우 부적합합니다.');
-                                //   Scaffold.of(context).showSnackBar(snackBar);
-                                // }
+                                } catch (e) {
+                                  var snackBar =
+                                      buildSnackBar('음식 조합이 매우 부적합합니다.');
+                                  Scaffold.of(context).showSnackBar(snackBar);
+                                }
                               });
                             });
-                          } else {
-                            if (foodList.length - changeNumOfMass() == 3) {
-                              //should add change calorie
-
-                              List<int> index = getIndex();
-
-                              calculate(foodList, defaultMass: index)
-                                  .then((value) {
-                                for (var i = 0; i < 3; i++) {
-                                  print(value[i]);
-                                }
-                                var massList = value;
-                                print(massList);
-                                for (var item in index) {
-                                  massList.insert(
-                                      item,
-                                      num.parse(
-                                          foodMassController[item].value.text));
-                                }
-                                print(massList);
-
-                                justCalNutri(foodList, massList).then((val) {
-                                  print(val);
-                                  setState(() {
-                                    carbohydrateMass = val[0];
-                                    proteinMass = val[1];
-                                    fatMass = val[2];
-                                  });
-                                  var controllerIndex = 0;
-
-                                  for (var i = 0; i < value.length; i++) {
-                                    if (index.contains(controllerIndex)) {
-                                    } else {
-                                      foodMassController[controllerIndex].text =
-                                          value[i].toString();
-                                    }
-                                    controllerIndex += 1;
-                                  }
-                                });
-                              });
-                            } else {
-                              var snackBar = buildSnackBar(
-                                  '빈칸이 3개일 경우에만 계산 가능합니다.\n 0인 값이 4개 이상입니다.');
-                              Scaffold.of(context).showSnackBar(snackBar);
-                            }
-                          }
+                          // } else {
+                          //   if (foodList.length - changeNumOfMass() == 3) {
+                          //     //should add change calorie
+                          //
+                          //     List<int> index = getIndex();
+                          //
+                          //     calculate(foodList, defaultMass: index)
+                          //         .then((value) {
+                          //       for (var i = 0; i < 3; i++) {
+                          //         print(value[i]);
+                          //       }
+                          //       var massList = value;
+                          //       print(massList);
+                          //       for (var item in index) {
+                          //         massList.insert(
+                          //             item,
+                          //             num.parse(
+                          //                 foodMassController[item].value.text));
+                          //       }
+                          //       print(massList);
+                          //
+                          //       justCalNutri(foodList, massList).then((val) {
+                          //         print(val);
+                          //         setState(() {
+                          //           carbohydrateMass = val[0];
+                          //           proteinMass = val[1];
+                          //           fatMass = val[2];
+                          //         });
+                          //         var controllerIndex = 0;
+                          //
+                          //         for (var i = 0; i < value.length; i++) {
+                          //           if (index.contains(controllerIndex)) {
+                          //           } else {
+                          //             foodMassController[controllerIndex].text =
+                          //                 value[i].toString();
+                          //           }
+                          //           controllerIndex += 1;
+                          //         }
+                          //       });
+                          //     });
+                          //   } else {
+                          //     var snackBar = buildSnackBar(
+                          //         '빈칸이 3개일 경우에만 계산 가능합니다.\n 0인 값이 4개 이상입니다.');
+                          //     Scaffold.of(context).showSnackBar(snackBar);
+                          //   }
+                          // }
                         }),
                   ),
                 // Expanded(
