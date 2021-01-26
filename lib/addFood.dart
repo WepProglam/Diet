@@ -410,7 +410,6 @@ class _TypeFoodName extends State<TypeFoodName> {
                     foodListIndex.add(item.selected);
                     foodListIndex.sort((b, a) => a.compareTo(b));
                     var index = foodListIndex.indexOf(item.selected);
-
                     foodList.insert(
                         index,
                         ListTile(
@@ -427,9 +426,6 @@ class _TypeFoodName extends State<TypeFoodName> {
                             Map foodInfo = {};
                             controller.text = item.foodName;
                             foodInfo = item.toMap();
-                            setState(() {
-                              isItSelected = true;
-                            });
 
                             streamController.add(foodInfo);
                             _focusNode.unfocus();
@@ -455,7 +451,6 @@ class _TypeFoodName extends State<TypeFoodName> {
                   streamController.add(foodInfo);
                   setState(() {
                     isItCutom = true;
-                    isItSelected = true;
                   });
                 },
               ));
