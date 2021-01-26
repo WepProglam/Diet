@@ -311,6 +311,30 @@ class DBHelperDiet {
     );
   }
 
+  createHelper(Diet diet) {
+    getAllMyDiet().then((value) async {
+      if (value.isNotEmpty) {
+        bool isThere = false;
+        for (var item in value) {
+          if (diet.dietName == item.dietName) {
+            isThere = true;
+            break;
+          } else {
+            isThere = false;
+          }
+        }
+        if (isThere) {
+          await deleteDiet(diet.dietName);
+          await createData(diet);
+        } else {
+          await createData(diet);
+        }
+      } else {
+        await createData(diet);
+      }
+    });
+  }
+
   getDiet(String dietName) async {
     final db = await database;
     var res = await db
