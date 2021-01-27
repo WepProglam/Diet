@@ -143,56 +143,58 @@ class _SearchListState extends State<SearchList> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> args = ModalRoute.of(context).settings.arguments;
     print("is searchign $_IsSearching");
     return Scaffold(
-      backgroundColor: Color(0xFFFFFEF5),
-      appBar: buildBar(context),
-      body: _IsSearching
-          ?
-          // Column(children: [
-          //     for (var item in foodDBNameEX) Text("${item.foodName}")
-          //   ])
-          GridView.builder(
-              padding: EdgeInsets.all(8),
-              itemCount: foodDBNameEX.length,
-              controller: scrollController,
-              itemBuilder: (context, index) {
-                
-                return Center(
-                  child: Uiitem(foodDBNameEX[index]),
-                );
-              },
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: 5 / 3),
-            )
-          : GridView.builder(
-              padding: EdgeInsets.all(8),
-              itemCount: _searchList.length,
-              controller: scrollController,
-              itemBuilder: (context, index) {
-                return Center(
-                  child: Uiitem(_searchList[index]),
-                );
-              },
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: 5 / 3),
-            ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFF69C2B0),
-          focusColor: Color(0xFF69C2B0),
-          child: Icon(Icons.done),
-          onPressed: () {
-            // print(codeList);
-            if (fromAddDiet) {
-              Navigator.pop(context, codeList);
-            } else {
-              Navigator.pop(context);
-            }
-          }
-
-          //print(_heightController.text);
-          ),
-    );
+        backgroundColor: Color(0xFFFFFEF5),
+        appBar: buildBar(context),
+        body: _IsSearching
+            ?
+            // Column(children: [
+            //     for (var item in foodDBNameEX) Text("${item.foodName}")
+            //   ])
+            GridView.builder(
+                padding: EdgeInsets.all(8),
+                itemCount: foodDBNameEX.length,
+                controller: scrollController,
+                itemBuilder: (context, index) {
+                  return Center(
+                    child: Uiitem(foodDBNameEX[index]),
+                  );
+                },
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, childAspectRatio: 5 / 3),
+              )
+            : GridView.builder(
+                padding: EdgeInsets.all(8),
+                itemCount: _searchList.length,
+                controller: scrollController,
+                itemBuilder: (context, index) {
+                  return Center(
+                    child: Uiitem(_searchList[index]),
+                  );
+                },
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, childAspectRatio: 5 / 3),
+              ),
+        floatingActionButton: (args != null)
+            ? ((args['pre'] == 'addDiet')
+                ? FloatingActionButton(
+                    backgroundColor: Color(0xFF69C2B0),
+                    focusColor: Color(0xFF69C2B0),
+                    child: Icon(Icons.done),
+                    onPressed: () {
+                      // print(codeList);
+                      if (fromAddDiet) {
+                        Navigator.pop(context, codeList);
+                      } else {
+                        Navigator.pop(context);
+                      }
+                    }
+                    //print(_heightController.text);
+                    )
+                : null)
+            : null);
   }
 
   Widget appBarTitle = Text(
@@ -383,49 +385,101 @@ class _UiitemState extends State<Uiitem> {
   Widget build(BuildContext context) {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
     return Card(
-      margin: EdgeInsets.all(8),
-      color: isItSelected ? Colors.green : Colors.white70,
-      child: InkWell(
-        // splashColor: Colors.orange,
-        //여기다 눌렀을 때 기능 넣기
-        onTap: () {
-          //add Diet 페이지에서 넘어왔을 경우
-          // 이거 수정해서 음식 데이터 보낼 거임
-          if (args != null) {
-            if (args['pre'] == 'addDiet') {
-              streamControllerString.add(building.code);
-              setState(() {
-                isItSelected = !isItSelected;
-              });
-            }
-            // 그 외 일반적인 경우
-            else if (args['pre'] == 'addFood') {
-              Navigator.pop(context, building.code);
-              print(building.code);
-            } else {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/addFood',
-                  arguments: <String, Map>{"myTempoFood": building.toMap()});
+        margin: EdgeInsets.all(8),
+        color: isItSelected ? Colors.green : Colors.white70,
+        child: Stack(
+          children: [
+            InkWell(
+              // splashColor: Colors.orange,
+              //여기다 눌렀을 때 기능 넣기
+              onTap: () {
+                //add Diet 페이지에서 넘어왔을 경우
+                // 이거 수정해서 음식 데이터 보낼 거임
+                if (args != null) {
+                  if (args['pre'] == 'addDiet') {
+                    streamControllerString.add(building.code);
+                    setState(() {
+                      isItSelected = !isItSelected;
+                    });
+                  }
+                  // 그 외 일반적인 경우
+                  else if (args['pre'] == 'addFood') {
+                    Navigator.pop(context, building.code);
+                    print(building.code);
+                  } else {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/addFood',
+                        arguments: <String, Map>{
+                          "myTempoFood": building.toMap()
+                        });
 
-              print(building.code);
-            }
-          } else {
-            Navigator.pop(context);
-            Navigator.pushNamed(context, '/addFood',
-                arguments: <String, Map>{"myTempoFood": building.toMap()});
+                    print(building.code);
+                  }
+                } else {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/addFood',
+                      arguments: <String, Map>{
+                        "myTempoFood": building.toMap()
+                      });
 
-            print(building.code);
-          }
-        },
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  print(building.code);
+                }
+              },
+              child: Center(
+                child: Column(
                   children: [
-                    FlatButton(
+                    Spacer(
+                      flex: 1,
+                    ),
+                    Text(
+                      this.building.foodName,
+                      style: TextStyle(
+                          // fontFamily: 'Raleway',
+                          // fontWeight: FontWeight.bold,
+                          fontSize: 25),
+                      maxLines: 1,
+                    ),
+                    Spacer(
+                      flex: 1,
+                    ),
+                    Text(
+                      '${this.building.kcal}',
+                      // style: TextStyle(fontFamily: 'Roboto'),
+                    ),
+                    Spacer(
+                      flex: 1,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: 5,
+              left: 5,
+              child: GestureDetector(
+                child: Icon(
+                  Icons.favorite,
+                  color: this.building.isItMine == "T" ? Colors.red : null,
+                  size: 20,
+                ),
+                onTap: () async {
+                  setState(() {
+                    this.building.isItMine =
+                        this.building.isItMine == "T" ? "F" : "T";
+                  });
+                  Food food;
+                  await dbHelperFood.getFood(this.building.code).then((val) {
+                    food = val;
+                  });
+                  food.isItMine = this.building.isItMine == "T" ? "T" : "F";
+                  dbHelperFood.updateFood(food);
+                },
+              ),
+            ),
+          ],
+        )
+
+        /* FlatButton(
                       child: Icon(
                         Icons.favorite,
                         color:
@@ -447,29 +501,8 @@ class _UiitemState extends State<Uiitem> {
                             this.building.isItMine == "T" ? "T" : "F";
                         dbHelperFood.updateFood(food);
                       },
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                this.building.foodName,
-                style: TextStyle(
-                    // fontFamily: 'Raleway',
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 30),
-              ),
-              SizedBox(height: 5.0),
-              Text(
-                '${this.building.kcal}',
-                // style: TextStyle(fontFamily: 'Roboto'),
-              ),
-              Spacer(
-                flex: 1,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+                    ), */
+
+        );
   }
 }
