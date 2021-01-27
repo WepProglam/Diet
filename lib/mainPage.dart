@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 "pre": {"pre": "mainPage", "index": index}
                               }).then((val) {
                             setState(() {
-                              dietAdded[index][3] = true;
+                              dietAdded[index][3] = val == null ? false : true;
                               todayDietList[index] = val;
                             });
                             print(todayDietList[index]);
@@ -115,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 "pre": "mainPage"
                               }).then((val) {
                             setState(() {
-                              dietAdded[index][3] = true;
+                              dietAdded[index][3] = val == null ? false : true;
                               todayDietList[index] = val;
                             });
                             print(todayDietList[index]);
