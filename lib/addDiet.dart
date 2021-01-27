@@ -699,8 +699,11 @@ class _FoodListState extends State<FoodList> {
       print(foodList[i].code);
       if (defaultMass != null) {
         if (defaultMass.contains(i)) {
-          totalCalorie -=
-              food.kcal * num.parse(foodMassController[i].value.text);
+          totalCalorie -= food.carbohydrate *
+                  num.parse(foodMassController[i].value.text) *
+                  4 +
+              food.fat * num.parse(foodMassController[i].value.text) * 9 +
+              food.protein * num.parse(foodMassController[i].value.text) * 4;
         } else {
           foods.add(food.toMap());
           carbohydrate.add(food.carbohydrate);

@@ -7,26 +7,25 @@ import 'package:path_provider/path_provider.dart';
 import 'appBar.dart';
 import 'model.dart';
 
-num calculateDensity=10;
-const targetCalorie=600;
+num calculateDensity = 1;
+const targetCalorie = 600;
 
-List<dynamic> justCalculateNutri(List<num> foodList,num foodLength) {
+List<dynamic> justCalculateNutri(List<num> foodList, num foodLength) {
   List<num> ratio = [5, 3, 2];
   List<num> carbohydrateList = List<num>(foodLength);
-  List<num> proteinList =List<num>(foodLength);
+  List<num> proteinList = List<num>(foodLength);
   List<num> fatList = List<num>(foodLength);
-  for (var i=0;i<foodLength;i++){
-    carbohydrateList[i]=foodList[3*i];
-    proteinList[i]=foodList[3*i+1];
-    fatList[i]=foodList[3*i+2];
+  for (var i = 0; i < foodLength; i++) {
+    carbohydrateList[i] = foodList[3 * i];
+    proteinList[i] = foodList[3 * i + 1];
+    fatList[i] = foodList[3 * i + 2];
   }
 
-
-  List<num> mass = List<num>(foodList.length - foodLength*3-1);
+  List<num> mass = List<num>(foodList.length - foodLength * 3 - 1);
 
   int j = 0;
   //일치율은 무게 계산에서 제외
-  for (var i = foodLength*3; i < foodList.length - 1; i++) {
+  for (var i = foodLength * 3; i < foodList.length - 1; i++) {
     mass[j] = foodList[i];
     j += 1;
   }
@@ -35,20 +34,19 @@ List<dynamic> justCalculateNutri(List<num> foodList,num foodLength) {
   num protein = 0.0;
   num fat = 0.0;
 
-
   for (var i = 0; i < mass.length; i++) {
     carbohydrate += carbohydrateList[i] * mass[i];
     protein += proteinList[i] * mass[i];
     fat += fatList[i] * mass[i];
   }
-  List<num> nutriRatio = [carbohydrate*4, protein*4, fat*9];
+  List<num> nutriRatio = [carbohydrate * 4, protein * 4, fat * 9];
   num degree = acos(returnDotProduct(ratio, nutriRatio) /
       (returnAmplitude(ratio) * returnAmplitude(nutriRatio)));
 
   List<dynamic> csvFile = [
     mass,
     (1 - degree / (pi / 2)) * 100,
-    "1 : ${myRounder(protein / carbohydrate)} : ${myRounder(fat*9 / (carbohydrate*4))}",
+    "1 : ${myRounder(protein / carbohydrate)} : ${myRounder(fat * 9 / (carbohydrate * 4))}",
     carbohydrate,
     protein,
     fat
@@ -57,35 +55,39 @@ List<dynamic> justCalculateNutri(List<num> foodList,num foodLength) {
 }
 
 num returnAmplitude(List<num> a) {
-  num amp=0;
-  for(var i=0;i<a.length;i++){
-    amp+=pow(a[i],2);
+  num amp = 0;
+  for (var i = 0; i < a.length; i++) {
+    amp += pow(a[i], 2);
   }
   return (pow(amp, 1 / 2));
 }
 
 num returnDotProduct(List<num> a, List<num> b) {
-  num dot=0;
-  for(var i=0;i<a.length;i++){
-    dot+=a[i]*b[i];
+  num dot = 0;
+  for (var i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
   }
   return dot;
 }
 
-num totalCalorieOverFlow(List<num> mass,List<num> calorie){
-  num totalCalorie=0;
+num totalCalorieOverFlow(List<num> mass, List<num> calorie) {
+  num totalCalorie = 0;
 
   for (var i = 0; i < calorie.length; i++) {
-    totalCalorie+=calorie[i]*mass[i];
+    totalCalorie += calorie[i] * mass[i];
   }
 
   return totalCalorie;
-
 }
 
-List<num> makeForLooP(num tempIndex, List<num> myFoodMassList,
-List<num> minMass,List<num> maxMass, List<num> nutriInfo,List<num> calorie) {
-  num totalCalorie=0;
+List<num> makeForLooP(
+    num tempIndex,
+    List<num> myFoodMassList,
+    List<num> minMass,
+    List<num> maxMass,
+    List<num> nutriInfo,
+    List<num> calorie) {
+  num totalCalorie = 0;
   // print(calculateDensity);
   if (tempIndex == maxMass.length - 1) {
     num tempDegree = 0;
@@ -93,31 +95,31 @@ List<num> minMass,List<num> maxMass, List<num> nutriInfo,List<num> calorie) {
     List<num> returnMassList = List<num>.from(myFoodMassList);
     for (myFoodMassList[tempIndex] = minMass[tempIndex];
         myFoodMassList[tempIndex] < maxMass[tempIndex];
-        myFoodMassList[tempIndex]+=((maxMass[tempIndex]-minMass[tempIndex])~/calculateDensity)) {
-      totalCalorie=totalCalorieOverFlow(myFoodMassList,calorie);
+        myFoodMassList[tempIndex] +=
+            ((maxMass[tempIndex] - minMass[tempIndex]) ~/ calculateDensity)) {
+      totalCalorie = totalCalorieOverFlow(myFoodMassList, calorie);
 
       List<num> sendData = [];
       sendData.addAll(nutriInfo);
       sendData.addAll(myFoodMassList);
-      tempDegree = justCalculateNutri(sendData,maxMass.length)[3];
+      tempDegree = justCalculateNutri(sendData, maxMass.length)[3];
 
-      if (tempDegree >= maxDegree) {      //현재의 일치율을 가져와 전보다 높으면 return mass list에 저장
+      if (tempDegree >= maxDegree) {
+        //현재의 일치율을 가져와 전보다 높으면 return mass list에 저장
         maxDegree = tempDegree;
         returnMassList = List<num>.from(myFoodMassList);
         returnMassList.last = maxDegree;
-
-      } else {
-      }
-
+      } else {}
     }
     return returnMassList;
   } else if (tempIndex < maxMass.length - 1) {
     for (myFoodMassList[tempIndex] = minMass[tempIndex];
         myFoodMassList[tempIndex] < maxMass[tempIndex];
-        myFoodMassList[tempIndex]+=(maxMass[tempIndex]-minMass[tempIndex])~/calculateDensity) {
+        myFoodMassList[tempIndex] +=
+            (maxMass[tempIndex] - minMass[tempIndex]) ~/ calculateDensity) {
       tempIndex += 1;
-      myFoodMassList = new List<num>.from(
-          makeForLooP(tempIndex, myFoodMassList,minMass, maxMass, nutriInfo,calorie));
+      myFoodMassList = new List<num>.from(makeForLooP(
+          tempIndex, myFoodMassList, minMass, maxMass, nutriInfo, calorie));
       tempIndex -= 1;
     }
   } else {}
@@ -128,28 +130,29 @@ List<num> minMass,List<num> maxMass, List<num> nutriInfo,List<num> calorie) {
 Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   int foodLength = 0;
   List<List<num>> massList = [[]];
-
+  calculateDensity = 1;
   foodLength = foodList.length;
-  if(foodLength <=5){
-    calculateDensity=10;
-  }else if(foodLength <= 7){
-    calculateDensity=5;
-  }else{
-    calculateDensity=3;
+  if (foodLength <= 5) {
+    calculateDensity *= 10;
+  } else if (foodLength <= 7) {
+    calculateDensity *= 5;
+  } else {
+    calculateDensity *= 3;
   }
 
   //음식 무게 리스트 초기화 600은 kcal
-  List<num> myFoodMassList = new List(foodLength+1);
+  List<num> myFoodMassList = new List(foodLength + 1);
   List<num> maxMass = new List(foodLength);
   List<num> minMass = new List(foodLength);
   List<num> calorie = new List(foodLength);
   List<num> nutriInfo = new List(foodLength * 3);
 
   for (var i = 0; i < foodLength; i++) {
-
-    minMass[i]=foodList[i].servingSize / 4;
-    maxMass[i] = foodList[i].servingSize * 1.5;
-    calorie[i]=foodList[i].kcal;
+    minMass[i] = foodList[i].servingSize / 5;
+    maxMass[i] = foodList[i].servingSize * 2;
+    calorie[i] = foodList[i].carbohydrate * 4 +
+        foodList[i].fat * 9 +
+        foodList[i].protein * 4;
 
     nutriInfo[i * 3] = foodList[i].carbohydrate;
     nutriInfo[i * 3 + 1] = foodList[i].protein;
@@ -158,24 +161,26 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
 
   int tempIndex = 0;
   //일치율
-  myFoodMassList.last=0;
-  massList = [makeForLooP(tempIndex, myFoodMassList,minMass, maxMass, nutriInfo,calorie)];
+  myFoodMassList.last = 0;
+  massList = [
+    makeForLooP(tempIndex, myFoodMassList, minMass, maxMass, nutriInfo, calorie)
+  ];
 
   String csv = const ListToCsvConverter().convert(massList);
   final directory = await getApplicationDocumentsDirectory();
   final pathOfTheFileToWrite = directory.path + "/calExcercise.csv";
   File file = await File(pathOfTheFileToWrite);
   file.writeAsString(csv);
-  num totalCalorie=totalCalorieOverFlow(massList[0], calorie);
+  num totalCalorie = totalCalorieOverFlow(massList[0], calorie);
 
-  num sum=0;
-  for(var i=0;i<calorie.length;i++){
-    sum+=calorie[i];
+  num sum = 0;
+  for (var i = 0; i < calorie.length; i++) {
+    sum += calorie[i];
   }
-  for(var i=0;i<calorie.length;i++){
-    massList[0][i] *= (targetCalorie/totalCalorie);
+  for (var i = 0; i < calorie.length; i++) {
+    massList[0][i] *= (targetCalorie / totalCalorie);
   }
-  totalCalorie=totalCalorieOverFlow(massList[0], calorie);
+  totalCalorie = totalCalorieOverFlow(massList[0], calorie);
 
   // print(totalCalorie);
 

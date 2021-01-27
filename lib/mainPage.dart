@@ -47,8 +47,112 @@ class _MyHomePageState extends State<MyHomePage> {
   FocusScopeNode myFocusNode = FocusScopeNode();
   ScrollController _controller = new ScrollController();
   List<bool> isSelected = [true, false];
-  List<bool> dietAdded = [false, false, false, false];
+  List<List<bool>> dietAdded = [
+    [false, false, false, false],
+    [false, false, false, false],
+    [false, false, false, false],
+    [false, false, false, false]
+  ];
+  // +버튼, adddiet로 가는지, savedDiet로 가는지
   List<Map> todayDietList = List<Map>(4);
+  List<Widget> itemList = [];
+
+  void makeItemList(int index) {
+    itemList = [
+      GestureDetector(
+        child: Center(
+            child: Icon(
+          Icons.add_circle_outline,
+          size: 40,
+        )),
+        onTap: () {
+          print(dietAdded);
+          print(index);
+          setState(() {
+            dietAdded[index][0] = !dietAdded[index][0];
+          });
+          print(dietAdded[index]);
+        },
+      ),
+      dietAdded[index][0]
+          ? Row(
+              children: [
+                Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                        child: FractionallySizedBox(
+                          widthFactor: 1,
+                          heightFactor: 1,
+                          child: Container(
+                              child: Center(child: Text("식단 추가하기")),
+                              decoration: BoxDecoration(color: Colors.red)),
+                        ),
+                        onTap: () {
+                          Navigator.pushNamed(context, '/addDiet',
+                              arguments: <String, Map>{
+                                "pre": {"pre": "mainPage", "index": index}
+                              }).then((val) {
+                            setState(() {
+                              dietAdded[index][3] = true;
+                              todayDietList[index] = val;
+                            });
+                            print(todayDietList[index]);
+                          });
+                        })),
+                Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                        child: FractionallySizedBox(
+                          widthFactor: 1,
+                          heightFactor: 1,
+                          child: Container(
+                              child: Center(child: Text("저장된 식단 불러오기")),
+                              decoration: BoxDecoration(color: Colors.blue)),
+                        ),
+                        onTap: () {
+                          Navigator.pushNamed(context, '/searchDiet',
+                              arguments: <String, String>{
+                                "pre": "mainPage"
+                              }).then((val) {
+                            setState(() {
+                              dietAdded[index][3] = true;
+                              todayDietList[index] = val;
+                            });
+                            print(todayDietList[index]);
+                          });
+                        })),
+              ],
+            )
+          : Container(),
+      dietAdded[index][3]
+          ? Container(
+              child: Text("음식"),
+            )
+          : Container(),
+      dietAdded[index][0]
+          ? Positioned(
+              left: 0,
+              child: GestureDetector(
+                child: Icon(
+                  Icons.keyboard_backspace,
+                  size: 20,
+                ),
+                onTap: () {
+                  setState(() {
+                    dietAdded[index] = [false, false, false];
+                  });
+                  print("뒤로가기");
+                },
+              ),
+            )
+          : Container()
+    ];
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -70,48 +174,12 @@ class _MyHomePageState extends State<MyHomePage> {
     daysLastWeek = 7 - dayToDate(dayLast); //마지막 주에 몇일 있는지
     daysFirstWeek = 7 - dayToDate(dayFirst) + 1; //첫 주에 몇일 있는지
     int curIndex = 0;
-
     SwiperController swiperController = new SwiperController();
 
     return Scaffold(
         backgroundColor: Color(0xFFD7FFF1),
         appBar: basicAppBar('Main Page', context),
         drawer: NavDrawer(),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          // currentIndex: _currentIndex,
-          // backgroundColor: colorScheme.surface,
-          // selectedItemColor: colorScheme.onSurface,
-          // unselectedItemColor: colorScheme.onSurface.withOpacity(.60),
-          // selectedLabelStyle: textTheme.caption,
-          // unselectedLabelStyle: textTheme.caption,
-          onTap: (value) {
-            // Respond to item press.
-            // setState(() => _currentIndex = value);
-          },
-          items: [
-            BottomNavigationBarItem(
-              title: Text('Favorites'),
-              icon: Icon(Icons.favorite),
-            ),
-            BottomNavigationBarItem(
-              title: Text('Music'),
-              icon: Icon(Icons.music_note),
-            ),
-            BottomNavigationBarItem(
-              title: Text('Places'),
-              icon: Icon(Icons.location_on),
-            ),
-            BottomNavigationBarItem(
-              title: Text('News'),
-              icon: Icon(Icons.library_books),
-            ),
-            BottomNavigationBarItem(
-              title: Text('Places'),
-              icon: Icon(Icons.location_on),
-            ),
-          ],
-        ),
         body: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Row(
@@ -146,7 +214,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                           child: Swiper(
                                             duration: 1500,
                                             itemBuilder: (BuildContext context,
-                                                int index) {
+                                                int listIndex) {
+                                              makeItemList(listIndex);
+
                                               return Container(
                                                 child: Column(
                                                   children: [
@@ -159,7 +229,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                     .black),
                                                         child: Center(
                                                             child: Text(
-                                                          mealList[index],
+                                                          mealList[listIndex],
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.white,
@@ -173,72 +243,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                                         flex: 5,
                                                         child: Container(
                                                           child: Center(
-                                                            child: !dietAdded[
-                                                                    index]
-                                                                ? GestureDetector(
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .add_circle_outline,
-                                                                      size: 40,
-                                                                    ),
-                                                                    onTap: () {
-                                                                      print(
-                                                                          dietAdded);
-                                                                      print(
-                                                                          index);
-                                                                      setState(
-                                                                          () {
-                                                                        dietAdded[index] =
-                                                                            !dietAdded[index];
-                                                                      });
-                                                                      print(dietAdded[
-                                                                          index]);
-                                                                    },
-                                                                  )
-                                                                : Row(
-                                                                    children: [
-                                                                      Expanded(
-                                                                          flex:
-                                                                              1,
-                                                                          child: GestureDetector(
-                                                                              child: Container(
-                                                                                child: Text("식단 추가하기"),
-                                                                                decoration: BoxDecoration(color: Colors.red),
-                                                                              ),
-                                                                              onTap: () {
-                                                                                Navigator.pushNamed(context, '/addDiet', arguments: <String, Map>{
-                                                                                  "pre": {
-                                                                                    "pre": "mainPage",
-                                                                                    "index": index
-                                                                                  }
-                                                                                }).then((val) {
-                                                                                  setState(() {
-                                                                                    todayDietList[index] = val;
-                                                                                  });
-                                                                                  print(todayDietList[index]);
-                                                                                });
-                                                                              })),
-                                                                      Expanded(
-                                                                          flex:
-                                                                              1,
-                                                                          child: GestureDetector(
-                                                                              child: Container(
-                                                                                child: Text("저장된 식단 불러오기"),
-                                                                                decoration: BoxDecoration(color: Colors.blue),
-                                                                              ),
-                                                                              onTap: () {
-                                                                                Navigator.pushNamed(context, '/searchDiet', arguments: <String, String>{
-                                                                                  "pre": "mainPage"
-                                                                                }).then((val) {
-                                                                                  setState(() {
-                                                                                    todayDietList[index] = val;
-                                                                                  });
-                                                                                  print(todayDietList[index]);
-                                                                                });
-                                                                              })),
-                                                                    ],
-                                                                  ),
-                                                          ),
+                                                              child: Stack(
+                                                            children: itemList,
+                                                          )),
                                                           decoration:
                                                               BoxDecoration(
                                                                   color: Colors
