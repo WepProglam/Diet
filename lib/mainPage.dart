@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -96,7 +97,21 @@ class _MyHomePageState extends State<MyHomePage> {
                               dietAdded[index][3] = val == null ? false : true;
                               todayDietList[index] = val;
                             });
-                            print(todayDietList[index]);
+                            todayDietList[index]['foodInfo'] =
+                                jsonDecode(todayDietList[index]['foodInfo']);
+
+                            print(todayDietList[index]['foodInfo']['foods']
+                                is List);
+                            for (var i = 0;
+                                i <
+                                    todayDietList[index]['foodInfo']['foods']
+                                        .length;
+                                i++) {
+                              todayDietList[index]['foodInfo']['foods'][i] =
+                                  todayDietList[index]['foodInfo']['foods'][i]
+                                      .values
+                                      .toList();
+                            }
                           });
                         })),
                 Expanded(
@@ -118,7 +133,21 @@ class _MyHomePageState extends State<MyHomePage> {
                               dietAdded[index][3] = val == null ? false : true;
                               todayDietList[index] = val;
                             });
-                            print(todayDietList[index]);
+                            todayDietList[index]['foodInfo'] =
+                                jsonDecode(todayDietList[index]['foodInfo']);
+
+                            print(todayDietList[index]['foodInfo']['foods']
+                                is List);
+                            for (var i = 0;
+                                i <
+                                    todayDietList[index]['foodInfo']['foods']
+                                        .length;
+                                i++) {
+                              todayDietList[index]['foodInfo']['foods'][i] =
+                                  todayDietList[index]['foodInfo']['foods'][i]
+                                      .values
+                                      .toList();
+                            }
                           });
                         })),
               ],
@@ -130,7 +159,14 @@ class _MyHomePageState extends State<MyHomePage> {
               heightFactor: 1.0,
               child: Container(
                 decoration: BoxDecoration(color: Colors.yellow),
-                child: Center(child: Text("${todayDietList[index]}")),
+                child: Center(
+                    child: Column(children: [
+                  for (var item in todayDietList[index]['foodInfo']['foods'])
+                    //item[0] : 코드
+                    //item[1] : 음식 이름
+                    //item[2] : 음식 무게
+                    Text("${item[1]}")
+                ])),
               ),
             )
           : Container(),
