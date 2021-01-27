@@ -171,64 +171,78 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     ),
                                                     Expanded(
                                                         flex: 5,
-                                                        child: GestureDetector(
-                                                          child: Container(
-                                                            child: Center(
-                                                              child:
-                                                                  dietAdded[
-                                                                          index]
-                                                                      ? Icon(
-                                                                          Icons
-                                                                              .add_circle_outline,
-                                                                          size:
-                                                                              40,
-                                                                        )
-                                                                      : Row(
-                                                                          children: [
-                                                                            Expanded(
-                                                                                flex: 1,
-                                                                                child: GestureDetector(
-                                                                                    child: Container(
-                                                                                      child: Text("저장된 식단 불러오기"),
-                                                                                      decoration: BoxDecoration(color: Colors.red),
-                                                                                    ),
-                                                                                    onTap: () {
-                                                                                      Navigator.pushNamed(context, '/searchDiet', arguments: <String, String>{
-                                                                                        "pre": "mainPage"
-                                                                                      }).then((val) {
-                                                                                        setState(() {
-                                                                                          todayDietList[index] = val;
-                                                                                        });
-                                                                                        print(todayDietList[index]);
-                                                                                      });
-                                                                                    })),
-                                                                            Expanded(
-                                                                              flex: 1,
-                                                                              child: GestureDetector(
-                                                                                  child: Container(
-                                                                                    decoration: BoxDecoration(color: Colors.blue),
-                                                                                  ),
-                                                                                  onTap: () {}),
-                                                                            )
-                                                                          ],
-                                                                        ),
-                                                            ),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                    color: Colors
-                                                                        .white),
+                                                        child: Container(
+                                                          child: Center(
+                                                            child: !dietAdded[
+                                                                    index]
+                                                                ? GestureDetector(
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .add_circle_outline,
+                                                                      size: 40,
+                                                                    ),
+                                                                    onTap: () {
+                                                                      print(
+                                                                          dietAdded);
+                                                                      print(
+                                                                          index);
+                                                                      setState(
+                                                                          () {
+                                                                        dietAdded[index] =
+                                                                            !dietAdded[index];
+                                                                      });
+                                                                      print(dietAdded[
+                                                                          index]);
+                                                                    },
+                                                                  )
+                                                                : Row(
+                                                                    children: [
+                                                                      Expanded(
+                                                                          flex:
+                                                                              1,
+                                                                          child: GestureDetector(
+                                                                              child: Container(
+                                                                                child: Text("식단 추가하기"),
+                                                                                decoration: BoxDecoration(color: Colors.red),
+                                                                              ),
+                                                                              onTap: () {
+                                                                                Navigator.pushNamed(context, '/addDiet', arguments: <String, Map>{
+                                                                                  "pre": {
+                                                                                    "pre": "mainPage",
+                                                                                    "index": index
+                                                                                  }
+                                                                                }).then((val) {
+                                                                                  setState(() {
+                                                                                    todayDietList[index] = val;
+                                                                                  });
+                                                                                  print(todayDietList[index]);
+                                                                                });
+                                                                              })),
+                                                                      Expanded(
+                                                                          flex:
+                                                                              1,
+                                                                          child: GestureDetector(
+                                                                              child: Container(
+                                                                                child: Text("저장된 식단 불러오기"),
+                                                                                decoration: BoxDecoration(color: Colors.blue),
+                                                                              ),
+                                                                              onTap: () {
+                                                                                Navigator.pushNamed(context, '/searchDiet', arguments: <String, String>{
+                                                                                  "pre": "mainPage"
+                                                                                }).then((val) {
+                                                                                  setState(() {
+                                                                                    todayDietList[index] = val;
+                                                                                  });
+                                                                                  print(todayDietList[index]);
+                                                                                });
+                                                                              })),
+                                                                    ],
+                                                                  ),
                                                           ),
-                                                          onTap: () {
-                                                            print(dietAdded);
-                                                            print(index);
-                                                            setState(() {
-                                                              dietAdded[index] =
-                                                                  !dietAdded[
-                                                                      index];
-                                                            });
-                                                            print(dietAdded[
-                                                                index]);
-                                                          },
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  color: Colors
+                                                                      .white),
                                                         ))
                                                   ],
                                                 ),

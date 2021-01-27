@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model.dart';
+import 'package:intl/intl.dart';
 import 'appBar.dart';
 import 'db_helper.dart';
 import 'piChart.dart';
@@ -50,6 +51,8 @@ class _FoodListState extends State<FoodList> {
   var dietInfo = {};
   List<num> massChangeList = [];
   List<num> changeList = [];
+  String whereFrom;
+  int mainPageIndex;
 
   @override
   void initState() {
@@ -247,8 +250,15 @@ class _FoodListState extends State<FoodList> {
   @override
   void didChangeDependencies() {
     final Map<String, Map> args = ModalRoute.of(context).settings.arguments;
-
-    if (args != null) {
+    if (args == null) {
+      whereFrom = null;
+    } else if (args.containsKey('pre')) {
+      if (args['pre']['pre'] == "mainPage") {
+        whereFrom = "mainPage";
+        mainPageIndex = args['pre']['index'];
+      }
+    } else if (args['myTempoDiet'] is Map) {
+      whereFrom = "savedDiet";
       dietInfo = args["myTempoDiet"];
       Map foodInfo = jsonDecode(dietInfo['foodInfo']);
       Map foods = Map<String, dynamic>.from(foodInfo[dietInfo['dietName']]);
@@ -486,6 +496,7 @@ class _FoodListState extends State<FoodList> {
                             Scaffold.of(context).showSnackBar(snackBar);
                           } else {
                             //db에 저장
+
                             String dietName = dietNameController.value.text;
                             Map foodInfo = {dietName: {}};
                             for (var i = 0; i < foodList.length; i++) {
@@ -502,7 +513,21 @@ class _FoodListState extends State<FoodList> {
                               dietName: dietName,
                               foodInfo: foodInfoString,
                             );
-                            showAlertDialog(context, diet);
+                            if (whereFrom == "mainPage") {
+                              //메인페이지에서 접근
+                              mainPageAlertDialog(context, diet);
+                            } else {
+                              //savedDiet,다른 경로로 접근
+                              bool flag =
+                                  whereFrom == "savedDiet" ? true : false;
+                              if (diet.dietName == "" || //식단 이름이 없을 경우
+                                  diet.dietName == null) {
+                                noDietNameAlertDialog(context, diet, flag);
+                              } else {
+                                //식단 이름이 있을 경우
+                                showAlertDialog(context, diet, flag);
+                              }
+                            }
                           }
                         }),
                   ),
@@ -540,15 +565,71 @@ class _FoodListState extends State<FoodList> {
     );
   }
 
-  showAlertDialog(BuildContext context, Diet diet) {
+  String mainPageReturnMealTime(int index) {
+    String returnValue;
+    switch (index) {
+      case 0:
+        returnValue = "B";
+        break;
+      case 1:
+        returnValue = "L";
+        break;
+      case 2:
+        returnValue = "D";
+        break;
+      case 3:
+        returnValue = "S";
+        break;
+      default:
+        returnValue = "S";
+    }
+    return returnValue;
+  }
+
+  mainPageAlertDialog(BuildContext context, Diet diet) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () async {
+        String mealTime = mainPageReturnMealTime(mainPageIndex);
+        String dietTitle = DateFormat('yyMMdd$mealTime').format(DateTime.now());
+        diet.dietName = (diet.dietName.length > 0) ? diet.dietName : dietTitle;
+        await dbHelperDiet.createHelper(diet);
+        Navigator.pop(context);
+        Navigator.pop(context, diet.toMap());
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("음식 저장"),
+      content: Text("저장하시겠습니까?"),
+      actions: [okButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  showAlertDialog(BuildContext context, Diet diet, bool flag) {
     // set up the button
     Widget okButton = FlatButton(
         child: Text("OK"),
         onPressed: () async {
           await dbHelperDiet.createHelper(diet);
-          Navigator.pop(context);
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/savedDiet');
+          if (flag) {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          } else {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pushNamed(context, '/savedDiet');
+          }
         });
 
     Widget noButton = FlatButton(
@@ -561,6 +642,49 @@ class _FoodListState extends State<FoodList> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("음식 저장"),
+      content: Text("저장하시겠습니까?"),
+      actions: [okButton, noButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  noDietNameAlertDialog(BuildContext context, Diet diet, bool flag) {
+    // set up the button
+    Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () async {
+          String mealTime = mainPageReturnMealTime(mainPageIndex);
+          String dietTitle =
+              DateFormat('yyMMdd$mealTime').format(DateTime.now());
+          diet.dietName = dietTitle;
+          await dbHelperDiet.createHelper(diet);
+          if (flag) {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          } else {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pushNamed(context, '/savedDiet');
+          }
+        });
+
+    Widget noButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("식단 이름을 지정하지 않았습니다."),
       content: Text("저장하시겠습니까?"),
       actions: [okButton, noButton],
     );

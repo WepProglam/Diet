@@ -371,6 +371,16 @@ class DBHelperDiet {
     );
   }
 
+  Future<void> updateDiet(Diet diet) async {
+    final db = await database;
+    await db.update(
+      tableName,
+      diet.toMap(),
+      where: "dietName = ?",
+      whereArgs: [diet.dietName],
+    );
+  }
+
   createHelper(Diet diet) {
     getAllMyDiet().then((value) async {
       if (value.isNotEmpty) {
@@ -384,8 +394,7 @@ class DBHelperDiet {
           }
         }
         if (isThere) {
-          await deleteDiet(diet.dietName);
-          await createData(diet);
+          await updateDiet(diet);
         } else {
           await createData(diet);
         }

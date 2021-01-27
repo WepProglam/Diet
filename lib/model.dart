@@ -103,20 +103,25 @@ class Diet {
   String foodInfo;
   /*
   {
-    "식단 이름" : {
-      "음식 코드1" : {
+    "kcal" : "식단의 칼로리(num 형태로)",
+    "nutri" : "탄단지 비율(string으로 5:2:3)",
+    "foods" : [
+        { 
+        "code" : "음식 코드1",
         "foodName" :"음식 이름1",
         "foodMass" : "음식 무게1"
         },
-        "음식 코드2" : {
+         { 
+        "code" : "음식 코드2",
         "foodName" :"음식 이름2",
         "foodMass" : "음식 무게2"
         },
-        "음식 코드3" : {
+         { 
+        "code" : "음식 코드3",
         "foodName" :"음식 이름3",
         "foodMass" : "음식 무게3"
         }
-    }
+    ]
   }
   */
 
