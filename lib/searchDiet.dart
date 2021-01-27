@@ -166,6 +166,7 @@ class _SearchListState extends State<SearchList> {
         heroTag: null,
         onPressed: () {
           //이거 addDiet로 바꿔야 함
+          Navigator.pop(context);
           Navigator.pushNamed(context, '/addDiet');
         },
         tooltip: 'Add',
