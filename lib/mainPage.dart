@@ -57,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // +버튼, adddiet로 가는지, savedDiet로 가는지
   List<Map> todayDietList = List<Map>(4);
   List<Widget> itemList = [];
+  num totalCalorie = 0;
 
   void makeItemList(int index) {
     itemList = [
@@ -165,7 +166,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     //item[0] : 코드
                     //item[1] : 음식 이름
                     //item[2] : 음식 무게
-                    Text("${item[1]}")
+                    Text("${item[1]}  ${item[2]}g"),
+                  Text("총 칼로리 : ${todayDietList[index]['foodInfo']['kcal']}"),
+                  Text(
+                      "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
                 ])),
               ),
             )

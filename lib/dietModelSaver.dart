@@ -45,7 +45,9 @@ Future<Diet> formatDiet(
   foodInfo['kcal'] = totalCalorie;
   String nutri;
   await justCalNutri(foodList, foodMass).then((value) {
-    nutri = "${value[0]}:${value[1]}:${value[2]}";
+    num sum = value[0] + value[1] + value[2];
+    nutri =
+        "${myRounder(value[0] * 100 / sum)}:${myRounder(value[1] * 100 / sum)}:${myRounder(value[2] * 100 / sum)}";
   });
   foodInfo['nutri'] = nutri;
 
@@ -106,4 +108,8 @@ Future<List<num>> justCalNutri(
     fat += food.fat * mass[i];
   }
   return [carbohydrate, protein, fat];
+}
+
+String myRounder(num a) {
+  return a.toString().length < 4 ? a.toString() : a.toString().substring(0, 4);
 }
