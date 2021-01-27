@@ -493,6 +493,12 @@ class _FoodListState extends State<FoodList> {
                                     ? null
                                     : dietNameController.value.text.trim();
 
+                            print("/" * 100);
+                            print(dietName);
+                            print(dietNameController.value.text);
+                            print(dietNameController.value.text.trim());
+                            print("/" * 100);
+
                             List<num> foodMass = [];
                             Diet diet;
 
