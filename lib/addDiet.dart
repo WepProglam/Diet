@@ -609,7 +609,9 @@ class _FoodListState extends State<FoodList> {
           } else {
             Navigator.pop(context);
             Navigator.pop(context);
-            Navigator.pushNamed(context, '/savedDiet');
+            List temp = await dbHelperDiet.getAllMyDiet();
+            temp.clear();
+            Navigator.pushNamed(context, '/searchDiet');
           }
         });
 
