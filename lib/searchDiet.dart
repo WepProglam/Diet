@@ -263,7 +263,7 @@ class _UiitemState extends State<Uiitem> {
 
   void reactWhenMain() {
     // print(widget.diet.toMap());
-    Navigator.pop(context, <String, Map>{"myDiet": widget.diet.toMap()});
+    Navigator.pop(context, widget.diet.toMap());
   }
 
   void reactWhenAdd() {

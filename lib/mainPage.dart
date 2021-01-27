@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 "pre": {"pre": "mainPage", "index": index}
                               }).then((val) {
                             setState(() {
-                              dietAdded[index][3] = true;
+                              dietAdded[index][3] = val == null ? false : true;
                               todayDietList[index] = val;
                             });
                             print(todayDietList[index]);
@@ -115,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 "pre": "mainPage"
                               }).then((val) {
                             setState(() {
-                              dietAdded[index][3] = true;
+                              dietAdded[index][3] = val == null ? false : true;
                               todayDietList[index] = val;
                             });
                             print(todayDietList[index]);
@@ -125,8 +125,13 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           : Container(),
       dietAdded[index][3]
-          ? Container(
-              child: Text("음식"),
+          ? FractionallySizedBox(
+              widthFactor: 1.0,
+              heightFactor: 1.0,
+              child: Container(
+                decoration: BoxDecoration(color: Colors.yellow),
+                child: Center(child: Text("${todayDietList[index]}")),
+              ),
             )
           : Container(),
       dietAdded[index][0]

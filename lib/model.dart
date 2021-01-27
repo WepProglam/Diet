@@ -134,3 +134,27 @@ class Diet {
     return {"dietName": dietName, "foodInfo": foodInfo};
   }
 }
+
+class DietHistory {
+  String date;
+  String dateHistory;
+  /*
+  {
+    meal : [
+      "b":{
+        
+      },
+      "l":{
+
+      },
+      "d":{
+
+      },
+      "s":{
+
+      }
+    ]
+  }
+  */
+
+}

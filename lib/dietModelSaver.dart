@@ -22,8 +22,11 @@ Future<Diet> formatDiet(
     // 있을 수 없는 경우(saveddiet에선 무조건 식단 이름입력)
     return null;
   } else if (dietName == null && mainPageIndex is int) {
+    print(dietName);
+    print(mainPageIndex);
     mealTime = mainPageReturnMealTime(mainPageIndex);
-    dietTitle = DateFormat('yyMMdd$mealTime').format(DateTime.now());
+    dietTitle =
+        ('${DateTime.now().toString().substring(0, 10)}-${mealTime.toUpperCase()}');
   } else if (dietName != null) {
     dietTitle = dietName;
   }
