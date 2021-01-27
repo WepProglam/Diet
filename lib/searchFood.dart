@@ -429,14 +429,15 @@ class _UiitemState extends State<Uiitem> {
                 child: Column(
                   children: [
                     Spacer(
-                      flex: 1,
+                      flex: 2,
                     ),
                     Text(
                       this.building.foodName,
                       style: TextStyle(
                           // fontFamily: 'Raleway',
                           // fontWeight: FontWeight.bold,
-                          fontSize: 25),
+                          fontSize:
+                              this.building.foodName.length < 6 ? 25 : 20),
                       maxLines: 1,
                     ),
                     Spacer(
@@ -467,12 +468,9 @@ class _UiitemState extends State<Uiitem> {
                     this.building.isItMine =
                         this.building.isItMine == "T" ? "F" : "T";
                   });
-                  Food food;
-                  await dbHelperFood.getFood(this.building.code).then((val) {
-                    food = val;
-                  });
+                  Food food = await dbHelperFood.getFood(this.building.code);
                   food.isItMine = this.building.isItMine == "T" ? "T" : "F";
-                  dbHelperFood.updateFood(food);
+                  await dbHelperFood.updateFood(food);
                 },
               ),
             ),
