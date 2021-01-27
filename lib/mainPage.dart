@@ -125,8 +125,13 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           : Container(),
       dietAdded[index][3]
-          ? Container(
-              child: Text("음식"),
+          ? FractionallySizedBox(
+              widthFactor: 1.0,
+              heightFactor: 1.0,
+              child: Container(
+                decoration: BoxDecoration(color: Colors.yellow),
+                child: Center(child: Text("${todayDietList[index]}")),
+              ),
             )
           : Container(),
       dietAdded[index][0]
@@ -139,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onTap: () {
                   setState(() {
-                    dietAdded[index] = [false, false, false];
+                    dietAdded[index] = [false, false, false, false];
                   });
                   print("뒤로가기");
                 },
