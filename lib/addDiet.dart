@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/dietModelSaver.dart';
 import 'package:flutter_application_1/model.dart';
 import 'package:intl/intl.dart';
 import 'appBar.dart';
@@ -251,26 +252,42 @@ class _FoodListState extends State<FoodList> {
   void didChangeDependencies() {
     final Map<String, Map> args = ModalRoute.of(context).settings.arguments;
     if (args == null) {
+      print(1);
+
       whereFrom = null;
     } else if (args.containsKey('pre')) {
+      print(2);
       if (args['pre']['pre'] == "mainPage") {
         whereFrom = "mainPage";
         mainPageIndex = args['pre']['index'];
       }
     } else if (args['myTempoDiet'] is Map) {
+      print(3);
+
+      //diet db 문제
       whereFrom = "savedDiet";
       dietInfo = args["myTempoDiet"];
-      Map foodInfo = jsonDecode(dietInfo['foodInfo']);
-      Map foods = Map<String, dynamic>.from(foodInfo[dietInfo['dietName']]);
-      print(foods);
-      var foodCodes = foods.keys;
 
-      for (var item in foodCodes) {
-        changeList.add(foods[item]['foodMass']);
+      // print("/" * 100);
+      // print(dietInfo);
+      // print("/" * 100);
+
+      String dietName = dietInfo['dietName'];
+
+      Map foodInfo = jsonDecode(dietInfo['foodInfo']);
+      print(foodInfo['foods'][0]['code']);
+
+      // Map foodInfo = jsonDecode(dietInfo['foodInfo']);
+      // Map foods = Map<String, dynamic>.from(foodInfo[dietInfo['dietName']]);
+      // print(foods);
+      // var foodCodes = foods.keys;
+
+      for (var item in foodInfo['foods']) {
+        changeList.add(item['foodMass']);
         foodList.add(ListContents(
-            foodName: foods[item]['foodName'],
-            code: item,
-            mass: foods[item]['foodMass']));
+            foodName: item['foodName'],
+            code: item['code'],
+            mass: item['foodMass']));
       }
 
       justCalNutri(foodList, changeList).then((val) {
@@ -444,34 +461,6 @@ class _FoodListState extends State<FoodList> {
                           // }
                         }),
                   ),
-                  // Expanded(
-                  //   flex: 1,
-                  //   child: IconButton(
-                  //     icon: Icon(Icons.palette),
-                  //     color: Color(0xFF69C2B0),
-                  //     onPressed: () {
-                  //       if (changeNumOfMass() == foodList.length) {
-                  //         var massList = <num>[];
-                  //         for (var i = 0; i < foodList.length; i++) {
-                  //           massList
-                  //               .add(num.parse(foodMassController[i].value.text));
-                  //         }
-                  //         print(massList);
-                  //         justCalNutri(foodList, massList).then((value) {
-                  //           setState(() {
-                  //             carbohydrateMass = value[0];
-                  //             proteinMass = value[1];
-                  //             fatMass = value[2];
-                  //           });
-                  //         });
-                  //       } else {
-                  //         var snackBar = buildSnackBar('그래프를 보려면 빈칸을 모두 채워주세요');
-                  //         Scaffold.of(context).showSnackBar(snackBar);
-                  //       }
-                  //     },
-                  //   ),
-                  // ),
-                  // enter diet textfield
                   Expanded(
                     flex: 4,
                     child: TextField(
@@ -485,7 +474,7 @@ class _FoodListState extends State<FoodList> {
                     flex: 1,
                     child: IconButton(
                         icon: Icon(Icons.add, color: Color(0xFF69C2B0)),
-                        onPressed: () {
+                        onPressed: () async {
                           if (changeNumOfMass() != foodList.length) {
                             for (var item in foodMassController) {
                               print(item.value.text);
@@ -497,34 +486,47 @@ class _FoodListState extends State<FoodList> {
                           } else {
                             //db에 저장
 
-                            String dietName = dietNameController.value.text;
-                            Map foodInfo = {dietName: {}};
-                            for (var i = 0; i < foodList.length; i++) {
-                              var foodMass =
-                                  num.parse(foodMassController[i].value.text);
+                            String dietName =
+                                dietNameController.value.text.trim() == "" ||
+                                        dietNameController.value.text.trim() ==
+                                            null
+                                    ? null
+                                    : dietNameController.value.text.trim();
 
-                              foodInfo[dietName][foodList[i].code] = {
-                                "foodName": foodList[i].foodName,
-                                "foodMass": foodMass
-                              };
+                            List<num> foodMass = [];
+                            Diet diet;
+
+                            for (var i = 0; i < foodList.length; i++) {
+                              foodMass.add(
+                                  num.parse(foodMassController[i].value.text));
                             }
-                            String foodInfoString = jsonEncode(foodInfo);
-                            var diet = Diet(
-                              dietName: dietName,
-                              foodInfo: foodInfoString,
-                            );
+
                             if (whereFrom == "mainPage") {
                               //메인페이지에서 접근
+                              await formatDiet(
+                                      dietName: dietName,
+                                      foodList: foodList,
+                                      mainPageIndex: mainPageIndex,
+                                      massList: foodMass)
+                                  .then((value) {
+                                diet = value;
+                              });
                               mainPageAlertDialog(context, diet);
                             } else {
                               //savedDiet,다른 경로로 접근
                               bool flag =
                                   whereFrom == "savedDiet" ? true : false;
-                              if (diet.dietName == "" || //식단 이름이 없을 경우
-                                  diet.dietName == null) {
+                              if (dietName == null) {
                                 noDietNameAlertDialog(context, diet, flag);
                               } else {
-                                //식단 이름이 있을 경우
+                                await formatDiet(
+                                        dietName: dietName,
+                                        foodList: foodList,
+                                        mainPageIndex: null,
+                                        massList: foodMass)
+                                    .then((value) {
+                                  diet = value;
+                                });
                                 showAlertDialog(context, diet, flag);
                               }
                             }
@@ -563,27 +565,6 @@ class _FoodListState extends State<FoodList> {
         ],
       ),
     );
-  }
-
-  String mainPageReturnMealTime(int index) {
-    String returnValue;
-    switch (index) {
-      case 0:
-        returnValue = "B";
-        break;
-      case 1:
-        returnValue = "L";
-        break;
-      case 2:
-        returnValue = "D";
-        break;
-      case 3:
-        returnValue = "S";
-        break;
-      default:
-        returnValue = "S";
-    }
-    return returnValue;
   }
 
   mainPageAlertDialog(BuildContext context, Diet diet) {
@@ -658,25 +639,7 @@ class _FoodListState extends State<FoodList> {
   noDietNameAlertDialog(BuildContext context, Diet diet, bool flag) {
     // set up the button
     Widget okButton = FlatButton(
-        child: Text("OK"),
-        onPressed: () async {
-          String mealTime = mainPageReturnMealTime(mainPageIndex);
-          String dietTitle =
-              DateFormat('yyMMdd$mealTime').format(DateTime.now());
-          diet.dietName = dietTitle;
-          await dbHelperDiet.createHelper(diet);
-          if (flag) {
-            Navigator.pop(context);
-            Navigator.pop(context);
-          } else {
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.pushNamed(context, '/savedDiet');
-          }
-        });
-
-    Widget noButton = FlatButton(
-      child: Text("Cancel"),
+      child: Text("OK"),
       onPressed: () {
         Navigator.pop(context);
       },
@@ -685,8 +648,8 @@ class _FoodListState extends State<FoodList> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("식단 이름을 지정하지 않았습니다."),
-      content: Text("저장하시겠습니까?"),
-      actions: [okButton, noButton],
+      content: Text(""),
+      actions: [okButton],
     );
 
     // show the dialog

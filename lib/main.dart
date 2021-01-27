@@ -19,8 +19,6 @@ StreamController<bool> streamControllerBool =
     StreamController<bool>.broadcast();
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-
   runApp(MaterialApp(
     theme: ThemeData(
       backgroundColor: Color(0xFFFFFEF5),

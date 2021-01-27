@@ -65,6 +65,10 @@ class _DietListState extends State<DietList> {
   }
 
   void reactWhenAdd(int index) {
+    print("/" * 100);
+    print(dietNameEX[index].toMap());
+    print("/" * 100);
+
     Navigator.pushNamed(context, '/addDiet',
             arguments: <String, Map>{"myTempoDiet": dietNameEX[index].toMap()})
         .then((_) {
