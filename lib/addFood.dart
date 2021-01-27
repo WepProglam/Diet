@@ -20,6 +20,7 @@ final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 //     StreamController<bool>.broadcast();
 StreamController<Map> streamController = mainStream.streamController;
 StreamController<bool> streamControllerBool = mainStream.streamControllerBool;
+bool tempo = false;
 
 class AddFood extends StatefulWidget {
   final Stream<Map> stream;
@@ -67,7 +68,6 @@ class _AddFoodSub extends State<AddFoodSub> {
   OverlayEntry _overLayEntry;
   bool isDisposed = true;
   Map foodTempInfo = {};
-  bool tempo = false;
 
   @override
   void dispose() {
@@ -157,6 +157,7 @@ class _AddFoodSub extends State<AddFoodSub> {
       // streamController.add(foodInfo);
     } else {
       //일반적인 상황
+      // foodInfo.clear();
       tempo = false;
     }
   }
@@ -607,8 +608,9 @@ class _TransFoodFABState extends State<TransFoodFAB>
       child: FloatingActionButton(
         heroTag: null,
         onPressed: () async {
-          await streamControllerBool.add(isItCutom);
-          //print("myfoodinfoasdf = $myFoodInfo");
+          if (tempo) {
+            await streamControllerBool.add(isItCutom);
+          } else {}
           if (_formKey.currentState.validate()) {
             showAlertDialog(context);
           }
@@ -663,6 +665,7 @@ class _TransFoodFABState extends State<TransFoodFAB>
               selected: myFoodInfo['selected'] + 1,
               servingSize: myFoodInfo['servingSize']);
           await dbHelperFood.updateFood(foodClass);
+          Navigator.pop(context);
 
           /* await dbHelperFood.getFood(myFoodInfo['code']).then((value) async {
             Food dbFoodClass = value;
