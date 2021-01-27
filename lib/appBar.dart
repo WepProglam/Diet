@@ -109,21 +109,21 @@ class NavDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.settings),
-            title: Text('savedDiet'),
+            title: Text('searchDiet'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/savedDiet');
+              Navigator.pushNamed(context, '/searchDiet');
               print(ModalRoute.of(context).settings.name);
             },
           ),
           ListTile(
             leading: Icon(Icons.border_color),
-            title: Text('savedFood'),
+            title: Text('searchFood'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/savedFood');
+              Navigator.pushNamed(context, '/searchFood');
               print(ModalRoute.of(context).settings.name);
             },
           ),
