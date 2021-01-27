@@ -22,7 +22,7 @@ class SearchFood extends StatelessWidget {
   }
 }
 
-class Building {
+/* class Building {
   String code; //나중에 바꿔야 함
   String foodName;
   num calories;
@@ -39,7 +39,7 @@ class Building {
       this.protein,
       this.fat,
       this.isItFavorite});
-}
+} */
 
 class SearchList extends StatefulWidget {
   final Stream<String> streamString;
@@ -52,9 +52,9 @@ class SearchList extends StatefulWidget {
 class _SearchListState extends State<SearchList> {
   final key = GlobalKey<ScaffoldState>();
   final _searchQuery = TextEditingController();
-  List<Building> _list;
+  List<Food> _list;
 
-  List<Building> _searchList = List();
+  List<Food> _searchList = List();
 
   bool _IsSearching = false;
   String _searchText = "";
@@ -65,7 +65,7 @@ class _SearchListState extends State<SearchList> {
 
   final dbHelperFood = DBHelperFood();
   List<Food> foodNameEX = [];
-  List<Building> foodDBNameEX = [];
+  List<Food> foodDBNameEX = [];
 
   // _SearchListState() {
   //   _searchQuery.addListener(() async {
@@ -128,13 +128,13 @@ class _SearchListState extends State<SearchList> {
     _list = [];
     _searchList = [];
     for (var item in foodNameEX) {
-      await _list.add(
-        Building(
-            code: item.code,
-            foodName: item.foodName,
-            calories: item.kcal,
-            isItFavorite: item.isItMine == "T" ? true : false),
-      );
+      await _list.add(item);
+      //   Food(
+      //       code: item.code,
+      //       foodName: item.foodName,
+      //       calories: item.kcal,
+      //       isItFavorite: item.isItMine == "T" ? true : false),
+      // );
     }
     setState(() {
       _searchList = _list;
@@ -268,14 +268,14 @@ class _SearchListState extends State<SearchList> {
 
                         setState(() {
                           for (var item in foodList) {
-                            foodDBNameEX.add(
-                              Building(
-                                  code: item.code,
-                                  foodName: item.foodName,
-                                  calories: item.kcal,
-                                  isItFavorite:
-                                      item.isItMine == "T" ? true : false),
-                            );
+                            foodDBNameEX.add(item
+                                // Food(
+                                //     code: item.code,
+                                //     foodName: item.foodName,
+                                //     calories: item.kcal,
+                                //     isItFavorite:
+                                //         item.isItMine == "T" ? true : false),
+                                );
                           }
                         });
                       },
@@ -309,14 +309,14 @@ class _SearchListState extends State<SearchList> {
 
                         setState(() {
                           for (var item in foodList) {
-                            foodDBNameEX.add(
-                              Building(
-                                  code: item.code,
-                                  foodName: item.foodName,
-                                  calories: item.kcal,
-                                  isItFavorite:
-                                      item.isItMine == "T" ? true : false),
-                            );
+                            foodDBNameEX.add(item
+                                // Food(
+                                //     code: item.code,
+                                //     foodName: item.foodName,
+                                //     calories: item.kcal,
+                                //     isItFavorite:
+                                //         item.isItMine == "T" ? true : false),
+                                );
                           }
                         });
                       },
@@ -368,14 +368,14 @@ class _SearchListState extends State<SearchList> {
 }
 
 class Uiitem extends StatefulWidget {
-  final Building building;
+  final Food building;
   Uiitem(this.building);
   @override
   _UiitemState createState() => _UiitemState(building);
 }
 
 class _UiitemState extends State<Uiitem> {
-  final Building building;
+  final Food building;
   _UiitemState(this.building);
   bool isItSelected = false;
 
@@ -391,17 +391,29 @@ class _UiitemState extends State<Uiitem> {
         onTap: () {
           //add Diet 페이지에서 넘어왔을 경우
           // 이거 수정해서 음식 데이터 보낼 거임
-          if (args['pre'] == 'addDiet') {
-            streamControllerString.add(building.code);
-            setState(() {
-              isItSelected = !isItSelected;
-            });
-          }
-          // 그 외 일반적인 경우
-          else if (args['pre'] == 'addFood') {
-            Navigator.pop(context, building.code);
-            print(building.code);
+          if (args != null) {
+            if (args['pre'] == 'addDiet') {
+              streamControllerString.add(building.code);
+              setState(() {
+                isItSelected = !isItSelected;
+              });
+            }
+            // 그 외 일반적인 경우
+            else if (args['pre'] == 'addFood') {
+              Navigator.pop(context, building.code);
+              print(building.code);
+            } else {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/addFood',
+                  arguments: <String, Map>{"myTempoFood": building.toMap()});
+
+              print(building.code);
+            }
           } else {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, '/addFood',
+                arguments: <String, Map>{"myTempoFood": building.toMap()});
+
             print(building.code);
           }
         },
@@ -416,13 +428,14 @@ class _UiitemState extends State<Uiitem> {
                     FlatButton(
                       child: Icon(
                         Icons.favorite,
-                        color: this.building.isItFavorite ? Colors.red : null,
+                        color:
+                            this.building.isItMine == "T" ? Colors.red : null,
                         size: 25,
                       ),
                       onPressed: () async {
                         setState(() {
-                          this.building.isItFavorite =
-                              !this.building.isItFavorite;
+                          this.building.isItMine =
+                              this.building.isItMine == "T" ? "F" : "T";
                         });
                         Food food;
                         await dbHelperFood
@@ -430,7 +443,8 @@ class _UiitemState extends State<Uiitem> {
                             .then((val) {
                           food = val;
                         });
-                        food.isItMine = this.building.isItFavorite ? "T" : "F";
+                        food.isItMine =
+                            this.building.isItMine == "T" ? "T" : "F";
                         dbHelperFood.updateFood(food);
                       },
                     ),
@@ -446,100 +460,7 @@ class _UiitemState extends State<Uiitem> {
               ),
               SizedBox(height: 5.0),
               Text(
-                '${this.building.calories}',
-                // style: TextStyle(fontFamily: 'Roboto'),
-              ),
-              Spacer(
-                flex: 1,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class UiDietitem extends StatefulWidget {
-  final Building building;
-  UiDietitem(this.building);
-  @override
-  _UiDietitemState createState() => _UiDietitemState(building);
-}
-
-class _UiDietitemState extends State<UiDietitem> {
-  final Building building;
-  _UiDietitemState(this.building);
-  bool isItSelected = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final Map<String, String> args = ModalRoute.of(context).settings.arguments;
-    return Card(
-      margin: EdgeInsets.all(8),
-      color: isItSelected ? Colors.green : Colors.white70,
-      child: InkWell(
-        // splashColor: Colors.orange,
-        //여기다 눌렀을 때 기능 넣기
-        onTap: () {
-          //add Diet 페이지에서 넘어왔을 경우
-          // 이거 수정해서 음식 데이터 보낼 거임
-          if (args['pre'] == 'addDiet') {
-            streamControllerString.add(building.code);
-            setState(() {
-              isItSelected = !isItSelected;
-            });
-          }
-          // 그 외 일반적인 경우
-          else if (args['pre'] == 'addFood') {
-            Navigator.pop(context, building.code);
-            print(building.code);
-          } else {
-            print(building.code);
-          }
-        },
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    FlatButton(
-                      child: Icon(
-                        Icons.favorite,
-                        color: this.building.isItFavorite ? Colors.red : null,
-                        size: 25,
-                      ),
-                      onPressed: () async {
-                        setState(() {
-                          this.building.isItFavorite =
-                              !this.building.isItFavorite;
-                        });
-                        Food food;
-                        await dbHelperFood
-                            .getFood(this.building.code)
-                            .then((val) {
-                          food = val;
-                        });
-                        food.isItMine = this.building.isItFavorite ? "T" : "F";
-                        dbHelperFood.updateFood(food);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                this.building.foodName,
-                style: TextStyle(
-                    // fontFamily: 'Raleway',
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 30),
-              ),
-              SizedBox(height: 5.0),
-              Text(
-                '${this.building.calories}',
+                '${this.building.kcal}',
                 // style: TextStyle(fontFamily: 'Roboto'),
               ),
               Spacer(

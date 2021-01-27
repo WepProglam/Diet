@@ -155,6 +155,23 @@ class _SearchListState extends State<SearchList> {
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, childAspectRatio: 5 / 3),
       ),
+      floatingActionButton: add(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  Widget add() {
+    return Container(
+      child: FloatingActionButton(
+        heroTag: null,
+        onPressed: () {
+          //이거 addDiet로 바꿔야 함
+          Navigator.pushNamed(context, '/addDiet');
+        },
+        tooltip: 'Add',
+        child: Icon(Icons.add, size: 30),
+        backgroundColor: Color(0xFF7EE0CC),
+      ),
     );
   }
 
