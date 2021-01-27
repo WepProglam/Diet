@@ -138,7 +138,7 @@ class _AddFoodSub extends State<AddFoodSub> {
   void getInfo() async {
     final Map<String, Map> args = ModalRoute.of(context).settings.arguments;
     if (args != null) {
-      //savedFood에서 넘겼을때
+      //searchFood에서 넘겼을때
       foodInfo = args["myTempoFood"];
       tempo = true;
       setState(() {
@@ -164,7 +164,7 @@ class _AddFoodSub extends State<AddFoodSub> {
   @override
   void initState() {
     widget.streamMap.listen((info) {
-      if (tempo == false) {
+      if (!tempo) {
         if (info.containsKey('fat') == false) {
           info['carbohydrate'] = 0.0;
           info['fat'] = 0.0;
@@ -282,14 +282,14 @@ class _AddFoodSub extends State<AddFoodSub> {
       TextEditingController controller, num value, String question) {
     //print(foodInfo);
     String fieldName = koreanQusetionToEnglish(question);
-    bool enable =
-        fieldName == "servingSize" || fieldName == "foodName" ? false : true;
+    // bool enable =
+    //     fieldName == "servingSize" || fieldName == "foodName" ? false : true;
 
     return TextFormField(
       autofocus: false,
       controller: controller,
       // focusNode: _focusNode,
-      enabled: enable,
+      enabled: true,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(hintText: ''),
       textAlign: TextAlign.center,
@@ -504,6 +504,7 @@ class _TransFoodFABState extends State<TransFoodFAB>
 
   @override
   initState() {
+    myFoodInfo = {};
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500))
           ..addListener(() {
@@ -649,7 +650,21 @@ class _TransFoodFABState extends State<TransFoodFAB>
         child: Text("OK"),
         onPressed: () async {
           //print("this is myFoodinfo2 $myFoodInfo");
-          await dbHelperFood.getFood(myFoodInfo['code']).then((value) async {
+          Food foodClass = Food(
+              code: myFoodInfo['code'],
+              dbArmy: myFoodInfo['dbArmy'],
+              foodName: myFoodInfo['foodName'],
+              foodKinds: myFoodInfo['foodKinds'],
+              kcal: myFoodInfo['kcal'],
+              protein: myFoodInfo['protein'],
+              carbohydrate: myFoodInfo['carbohydrate'],
+              fat: myFoodInfo['fat'],
+              isItMine: 'T',
+              selected: myFoodInfo['selected'] + 1,
+              servingSize: myFoodInfo['servingSize']);
+          await dbHelperFood.updateFood(foodClass);
+
+          /* await dbHelperFood.getFood(myFoodInfo['code']).then((value) async {
             Food dbFoodClass = value;
             dbFoodClass.selected += 1;
             Food foodClass = Food(
@@ -687,9 +702,9 @@ class _TransFoodFABState extends State<TransFoodFAB>
                   dbHelperFood.createData(foodClass); //새로 저장하는 myfood 데이터
                   Navigator.pop(context);
                 }
-              });
+              }); 
             }
-          });
+          });*/
         });
 
     Widget noButton = FlatButton(
