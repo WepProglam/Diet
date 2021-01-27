@@ -70,12 +70,13 @@ class _FoodListState extends State<FoodList> {
             child: FlatButton(
               //onPressed에 식단 설정 페이지로 이동하는 함수 넣기
               onPressed: () async {
-                Navigator.pushNamed(context, '/addFood',
-                    arguments: <String, Map>{
-                      "myTempoFood": foodNameEX[index].toMap()
-                    }).then((_) {
+                Navigator.pushNamed(
+                        context, '/addFood', arguments: <String, Map>{
+                  "myTempoFood": foodNameEX[index].toMap()
+                }) /* .then((_) {
                   getInfo();
-                });
+                }) */
+                    ;
               },
 
               child: ListTile(

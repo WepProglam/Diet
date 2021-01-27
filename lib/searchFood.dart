@@ -390,117 +390,29 @@ class _UiitemState extends State<Uiitem> {
         onTap: () {
           //add Diet 페이지에서 넘어왔을 경우
           // 이거 수정해서 음식 데이터 보낼 거임
-          if (args['pre'] == 'addDiet') {
-            streamControllerString.add(building.code);
-            setState(() {
-              isItSelected = !isItSelected;
-            });
-          }
-          // 그 외 일반적인 경우
-          else if (args['pre'] == 'addFood') {
-            Navigator.pop(context, building.code);
-            print(building.code);
+          if (args != null) {
+            if (args['pre'] == 'addDiet') {
+              streamControllerString.add(building.code);
+              setState(() {
+                isItSelected = !isItSelected;
+              });
+            }
+            // 그 외 일반적인 경우
+            else if (args['pre'] == 'addFood') {
+              Navigator.pop(context, building.code);
+              print(building.code);
+            } else {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/addFood',
+                  arguments: <String, Map>{"myTempoFood": building.toMap()});
+
+              print(building.code);
+            }
           } else {
-            print(building.code);
-          }
-        },
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    FlatButton(
-                      child: Icon(
-                        Icons.favorite,
-                        color:
-                            this.building.isItMine == "T" ? Colors.red : null,
-                        size: 25,
-                      ),
-                      onPressed: () async {
-                        setState(() {
-                          this.building.isItMine =
-                              this.building.isItMine == "T" ? "F" : "T";
-                        });
-                        Food food;
-                        await dbHelperFood
-                            .getFood(this.building.code)
-                            .then((val) {
-                          food = val;
-                        });
-                        food.isItMine =
-                            this.building.isItMine == "T" ? "T" : "F";
-                        dbHelperFood.updateFood(food);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                this.building.foodName,
-                style: TextStyle(
-                    // fontFamily: 'Raleway',
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 30),
-              ),
-              SizedBox(height: 5.0),
-              Text(
-                '${this.building.kcal}',
-                // style: TextStyle(fontFamily: 'Roboto'),
-              ),
-              Spacer(
-                flex: 1,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class UiDietitem extends StatefulWidget {
-  final Food building;
-  UiDietitem(this.building);
-  @override
-  _UiDietitemState createState() => _UiDietitemState(building);
-}
-
-class _UiDietitemState extends State<UiDietitem> {
-  final Food building;
-  _UiDietitemState(this.building);
-  bool isItSelected = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final Map<String, String> args = ModalRoute.of(context).settings.arguments;
-    return Card(
-      margin: EdgeInsets.all(8),
-      color: isItSelected ? Colors.green : Colors.white70,
-      child: InkWell(
-        // splashColor: Colors.orange,
-        //여기다 눌렀을 때 기능 넣기
-        onTap: () {
-          //add Diet 페이지에서 넘어왔을 경우
-          // 이거 수정해서 음식 데이터 보낼 거임
-          if (args['pre'] == 'addDiet') {
-            streamControllerString.add(building.code);
-            setState(() {
-              isItSelected = !isItSelected;
-            });
-          }
-          // 그 외 일반적인 경우
-          else if (args['pre'] == 'addFood') {
-            Navigator.pop(context, building.code);
-            print(building.code);
-          } else {
+            Navigator.pop(context);
             Navigator.pushNamed(context, '/addFood',
-                    arguments: <String, Map>{"myTempoFood": building.toMap()})
-                .then((_) {
-              // getInfo();
-            });
+                arguments: <String, Map>{"myTempoFood": building.toMap()});
+
             print(building.code);
           }
         },
