@@ -112,7 +112,7 @@ class Diet {
         "foodMass" : "음식 무게1"
         },
          { 
-        "code" : "음식 코드2",
+        "code" : "음식 코드2",0+
         "foodName" :"음식 이름2",
         "foodMass" : "음식 무게2"
         },

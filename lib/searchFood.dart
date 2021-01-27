@@ -157,6 +157,7 @@ class _SearchListState extends State<SearchList> {
               itemCount: foodDBNameEX.length,
               controller: scrollController,
               itemBuilder: (context, index) {
+                
                 return Center(
                   child: Uiitem(foodDBNameEX[index]),
                 );
