@@ -139,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onTap: () {
                   setState(() {
-                    dietAdded[index] = [false, false, false];
+                    dietAdded[index] = [false, false, false, false];
                   });
                   print("뒤로가기");
                 },
