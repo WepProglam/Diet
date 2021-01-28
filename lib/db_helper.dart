@@ -95,6 +95,28 @@ class DBHelperPerson {
         : Null;
   }
 
+  //ReadLast
+  Future<Person> getLastPerson() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM $tableName");
+    return res.isNotEmpty
+        ? Person(
+            height: res.last['height'],
+            weight: res.last['weight'],
+            bmi: res.last['bmi'],
+            muscleMass: res.last['muscleMass'],
+            purpose: res.last['purpose'],
+            time: res.last['time'],
+            achieve: res.last['achieve'],
+            metabolism: res.last['metabolism'],
+            activity: res.last['activity'],
+            nutriRate: res.last['nutriRate'],
+            weightTarget: res.last['weightTarget'],
+            bmiTarget: res.last['bmiTarget'],
+            muscleTarget: res.last['muscleTarget'])
+        : Null;
+  }
+
   //Read All
   Future<List<Person>> getAllPerson() async {
     final db = await database;
@@ -121,6 +143,16 @@ class DBHelperPerson {
         : [];
 
     return list;
+  }
+
+  Future<void> updatePerson(Person person) async {
+    final db = await database;
+    await db.update(
+      tableName,
+      person.toMap(),
+      where: "time = ?",
+      whereArgs: [person.time],
+    );
   }
 
   //Delete

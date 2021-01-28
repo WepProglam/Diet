@@ -9,7 +9,7 @@ class Person {
   num bmi;
   num muscleMass;
   num purpose;
-  String time;
+  String time; //2021-01-28
   num achieve;
 
   num metabolism; //총 에너지 대사량
