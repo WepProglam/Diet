@@ -40,12 +40,19 @@ List<dynamic> justCalculateNutri(List<num> foodList, num foodLength) {
     fat += fatList[i] * mass[i];
   }
   List<num> nutriRatio = [carbohydrate * 4, protein * 4, fat * 9];
-  num degree = acos(returnDotProduct(ratio, nutriRatio) /
-      (returnAmplitude(ratio) * returnAmplitude(nutriRatio)));
+  num cosTheta = returnDotProduct(ratio, nutriRatio) /
+      (returnAmplitude(ratio) * returnAmplitude(nutriRatio));
+  num degree = acos(cosTheta);
+  num correctRate = (4 * cosTheta - 3) * 100;
+
+  // if (degree > 0.9) {
+  //   correctRate = 0;
+  // }
 
   List<dynamic> csvFile = [
     mass,
-    (1 - degree / (pi / 2)) * 100,
+    // (1 - degree / (pi / 2)) * 100,
+    correctRate,
     "1 : ${myRounder(protein / carbohydrate)} : ${myRounder(fat * 9 / (carbohydrate * 4))}",
     carbohydrate,
     protein,
@@ -132,10 +139,12 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   List<List<num>> massList = [[]];
   calculateDensity = 1;
   foodLength = foodList.length;
-  if (foodLength <= 5) {
-    calculateDensity *= 10;
+  if (foodLength <= 3) {
+    calculateDensity *= 50;
+  } else if (foodLength <= 5) {
+    calculateDensity += 10;
   } else if (foodLength <= 7) {
-    calculateDensity *= 5;
+    calculateDensity *= 6;
   } else {
     calculateDensity *= 3;
   }
