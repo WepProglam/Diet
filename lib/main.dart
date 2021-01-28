@@ -18,7 +18,7 @@ import 'activityPage.dart';
 StreamController<Map> streamController = StreamController<Map>.broadcast();
 StreamController<bool> streamControllerBool =
     StreamController<bool>.broadcast();
-
+var accColor = Colors.white;
 void main() {
   runApp(MaterialApp(
     theme: ThemeData(
@@ -29,13 +29,16 @@ void main() {
       // backgroundColor: Colors.deepOrangeAccent,
       primaryColor: Colors.deepOrangeAccent[700],
       appBarTheme: AppBarTheme(color: Colors.black),
-      // buttonColor: Colors.white,
+      buttonColor: Colors.deepOrangeAccent[400],
       // iconTheme: IconThemeData(
       //   color: Colors.deepOrangeAccent[700],
       // ),
       cardColor: Colors.deepOrangeAccent[700],
-      splashColor: Colors.white,
-      accentColor: Colors.deepOrangeAccent[700],
+
+      accentColor: accColor,
+      splashColor: accColor == Colors.white
+          ? Colors.deepOrangeAccent[700]
+          : Colors.white,
 
       // textSelectionColor: Colors.white,
       // textTheme: TextTheme(

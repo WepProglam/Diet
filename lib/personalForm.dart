@@ -127,7 +127,7 @@ class _PersonalForm extends State<PersonalForm> {
           }
         },
         child: Scaffold(
-          backgroundColor: Color(0xFFFFFEF5),
+          // backgroundColor: Color(0xFFFFFEF5),
           resizeToAvoidBottomPadding: false,
           appBar: basicAppBar('Personal Form', context),
           drawer: NavDrawer(),
@@ -290,7 +290,7 @@ class _PersonalForm extends State<PersonalForm> {
                                       ),
                                     ]
                                   : [ActivityPage()]),
-                      decoration: BoxDecoration(color: Colors.white),
+                      // decoration: BoxDecoration(color: Colors.white),
                     );
                   },
                   itemCount: 2,
@@ -305,8 +305,8 @@ class _PersonalForm extends State<PersonalForm> {
             ),
           ),
           floatingActionButton: FloatingActionButton(
-            backgroundColor: Color(0xFF69C2B0),
-            focusColor: Color(0xFF69C2B0),
+            // backgroundColor: Color(0xFF69C2B0),
+            // focusColor: Color(0xFF69C2B0),
             child: Icon(Icons.done),
             onPressed: () async {
               if (_formKey.currentState.validate()) {

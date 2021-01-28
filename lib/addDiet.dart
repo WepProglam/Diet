@@ -10,7 +10,7 @@ import 'piChart.dart';
 import 'calculate.dart';
 
 Color listViewColor = Colors.deepOrangeAccent;
-Color iconColor = Colors.deepOrangeAccent[700];
+Color iconColor = Colors.deepOrangeAccent[400];
 
 final dbHelperFood = DBHelperFood();
 
@@ -356,7 +356,8 @@ class _FoodListState extends State<FoodList> {
                             child: FloatingActionButton.extended(
                               icon: Icon(Icons.add),
                               // backgroundColor: Color(0xFF69C2B0),
-
+                              backgroundColor: iconColor,
+                              splashColor: Colors.white,
                               onPressed: () {
                                 _navigateAndDisplaySelection(context);
                                 isGraphShowed = false;
@@ -385,6 +386,7 @@ class _FoodListState extends State<FoodList> {
                   Expanded(
                     flex: 2,
                     child: IconButton(
+                        splashColor: Colors.white,
                         icon: Icon(
                           Icons.calculate,
                           color: iconColor,
@@ -494,6 +496,7 @@ class _FoodListState extends State<FoodList> {
                   Expanded(
                     flex: 2,
                     child: IconButton(
+                        splashColor: Colors.white,
                         icon: Icon(
                           Icons.add,
                           color: iconColor,

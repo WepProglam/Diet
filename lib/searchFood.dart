@@ -146,55 +146,58 @@ class _SearchListState extends State<SearchList> {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
     print("is searchign $_IsSearching");
     return Scaffold(
-        // backgroundColor: Colors.black,
-        appBar: buildBar(context),
-        body: _IsSearching
-            ?
-            // Column(children: [
-            //     for (var item in foodDBNameEX) Text("${item.foodName}")
-            //   ])
-            GridView.builder(
-                padding: EdgeInsets.all(8),
-                itemCount: foodDBNameEX.length,
-                controller: scrollController,
-                itemBuilder: (context, index) {
-                  return Center(
-                    child: Uiitem(foodDBNameEX[index]),
-                  );
-                },
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, childAspectRatio: 5 / 4),
-              )
-            : GridView.builder(
-                padding: EdgeInsets.all(8),
-                itemCount: _searchList.length,
-                controller: scrollController,
-                itemBuilder: (context, index) {
-                  return Center(
-                    child: Uiitem(_searchList[index]),
-                  );
-                },
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, childAspectRatio: 5 / 4),
-              ),
-        floatingActionButton: (args != null)
-            ? ((args['pre'] == 'addDiet')
-                ? FloatingActionButton(
-                    backgroundColor: Color(0xFF69C2B0),
-                    focusColor: Color(0xFF69C2B0),
-                    child: Icon(Icons.done),
-                    onPressed: () {
-                      // print(codeList);
-                      if (fromAddDiet) {
-                        Navigator.pop(context, codeList);
-                      } else {
-                        Navigator.pop(context);
-                      }
+      // backgroundColor: Colors.black,
+      appBar: buildBar(context),
+      body: _IsSearching
+          ?
+          // Column(children: [
+          //     for (var item in foodDBNameEX) Text("${item.foodName}")
+          //   ])
+          GridView.builder(
+              padding: EdgeInsets.all(8),
+              itemCount: foodDBNameEX.length,
+              controller: scrollController,
+              itemBuilder: (context, index) {
+                return Center(
+                  child: Uiitem(foodDBNameEX[index]),
+                );
+              },
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, childAspectRatio: 5 / 4),
+            )
+          : GridView.builder(
+              padding: EdgeInsets.all(8),
+              itemCount: _searchList.length,
+              controller: scrollController,
+              itemBuilder: (context, index) {
+                return Center(
+                  child: Uiitem(_searchList[index]),
+                );
+              },
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, childAspectRatio: 5 / 4),
+            ),
+
+      floatingActionButton: (args != null)
+          ? ((args['pre'] == 'addDiet')
+              ? FloatingActionButton(
+                  // backgroundColor: Color(0xFF69C2B0),
+                  // focusColor: Color(0xFF69C2B0),
+                  child: Icon(Icons.done),
+                  onPressed: () {
+                    // print(codeList);
+                    if (fromAddDiet) {
+                      Navigator.pop(context, codeList);
+                    } else {
+                      Navigator.pop(context);
                     }
-                    //print(_heightController.text);
-                    )
-                : null)
-            : null);
+                  }
+                  //print(_heightController.text);
+                  )
+              : null)
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 
   Widget appBarTitle = Text(
@@ -397,7 +400,7 @@ class _UiitemState extends State<Uiitem> {
         child: Stack(
           children: [
             InkWell(
-              // splashColor: Colors.orange,
+              splashColor: Colors.white,
               //여기다 눌렀을 때 기능 넣기
               onTap: () {
                 //add Diet 페이지에서 넘어왔을 경우
