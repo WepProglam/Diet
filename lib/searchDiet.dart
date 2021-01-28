@@ -162,6 +162,7 @@ class _SearchListState extends State<SearchList> {
 
   Widget add() {
     return FloatingActionButton(
+      splashColor: Colors.deepOrangeAccent,
       heroTag: null,
       onPressed: () {
         //이거 addDiet로 바꿔야 함
@@ -170,8 +171,8 @@ class _SearchListState extends State<SearchList> {
       },
       tooltip: 'Add',
       child: Icon(
-        Icons.add_circle,
-        size: 50,
+        Icons.add,
+        size: 40,
         color: Colors.deepOrangeAccent,
       ),
       backgroundColor: Colors.white,
