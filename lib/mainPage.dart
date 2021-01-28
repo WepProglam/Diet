@@ -488,7 +488,12 @@ class _MyHomePageState extends State<MyHomePage> {
     daysFirstWeek = 7 - dayToDate(dayFirst) + 1; //첫 주에 몇일 있는지
     int curIndex = 0;
     // SwiperController swiperController = new SwiperController();
-    List<String> mealList = ["아침", "점심", "저녁", "간식"];
+    List<String> mealList = [
+      "$calender_month월$calender_date일 아침",
+      "$calender_month월$calender_date일 점심",
+      "$calender_month월$calender_date일 저녁",
+      "$calender_month월$calender_date일 간식"
+    ];
 
     return Scaffold(
         backgroundColor: Color(0xFFD7FFF1),
