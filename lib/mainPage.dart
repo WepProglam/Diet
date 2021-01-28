@@ -44,6 +44,10 @@ class _MyHomePageState extends State<MyHomePage> {
   var calender_year = DateTime.now().year; //달력 상 표기 되는 달력
   var calender_month = DateTime.now().month;
   var calender_date = DateTime.now().day;
+  String calenderYear;
+  String calenderMonth;
+  String calenderDate;
+  String dateData;
   var daysFirstWeek;
   var daysLastWeek;
   var lastDayDateTime;
@@ -63,6 +67,16 @@ class _MyHomePageState extends State<MyHomePage> {
     [false, false, false, false]
   ];
   List<bool> dietConfirm = [false, false, false, false];
+
+  void initDateInfo() {
+    dietAdded = [
+      [false, false, false, false],
+      [false, false, false, false],
+      [false, false, false, false],
+      [false, false, false, false]
+    ];
+    dietConfirm = [false, false, false, false];
+  }
 
   // +버튼, adddiet로 가는지, savedDiet로 가는지
   List<Map> todayDietList = List<Map>(4);
@@ -146,11 +160,17 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       print(e);
     }
+    print("/");
+    print(todayDietList);
+    print("/");
+
     setState(() {});
   }
 
   void getInfo() async {
-    String dateData = '${DateTime.now().toString().substring(0, 10)}';
+    // print("12312312");
+    // String dateData = '${DateTime.now().toString().substring(0, 10)}';
+
     await dbHelperDietHistory.getDietHistory(dateData).then((val) {
       dietHistory = val;
     });
@@ -162,8 +182,22 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
+  void changeIntToString() {
+    calenderYear = calender_year.toString();
+    calenderMonth = calender_month < 10
+        ? "0" + calender_month.toString()
+        : calender_month.toString();
+    calenderDate = calender_date < 10
+        ? "0" + calender_date.toString()
+        : calender_date.toString();
+    dateData = calenderYear + '-' + calenderMonth + '-' + calenderDate;
+  }
+
   @override
   void didChangeDependencies() async {
+    changeIntToString();
+    initDateInfo();
+    getConfirmedIndex(pastDietHistory);
     getInfo();
     super.didChangeDependencies();
   }
@@ -199,6 +233,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Center(
               child: Icon(
             Icons.add_circle_outline,
+            color: Colors.black,
             size: 40,
           )),
           onTap: () {
@@ -421,6 +456,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    changeIntToString();
     getInfo();
     super.initState();
   }
@@ -649,7 +685,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     duration: 1500,
                                     itemBuilder:
                                         (BuildContext context, int listIndex) {
-                                      makeItemListPast(listIndex);
+                                      makeItemList(listIndex);
                                       return Container(
                                         child: Column(
                                           children: [
@@ -1064,6 +1100,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget calenderBlock(Text title, bool isitDay) {
+    bool dateSelected = false;
     return Expanded(
         flex: 3,
         child: FlatButton(
@@ -1084,28 +1121,38 @@ class _MyHomePageState extends State<MyHomePage> {
                         Spacer(flex: 2),
                         Text(
                           '100%',
-                          style: TextStyle(fontSize: 7),
+                          style: TextStyle(
+                            fontSize: 7,
+                          ),
                           maxLines: 1,
                         ), //성취도
                         Spacer(flex: 1),
                       ]),
           ),
-          onPressed: () {
+          onPressed: () async {
             if (!isitDay) {
+              todayDietList = List<Map>(4);
+              initDateInfo();
               String dateTime;
+              date = int.parse(title.data);
+              calender_date = date;
               if (calender_month.toString().length == 1) {
                 dateTime = "$calender_year-0$calender_month-$date";
               } else {
                 dateTime = "$calender_year-$calender_month-$date";
               }
-              dbHelperDietHistory.getDietHistory(dateTime).then((value) {
+              await dbHelperDietHistory.getDietHistory(dateTime).then((value) {
                 pastDietHistory = value;
                 print(value);
               });
 
+              changeIntToString();
+
+              initDateInfo();
+              getConfirmedIndex(pastDietHistory);
+
               setState(() {
-                date = int.parse(title.data);
-                calender_date = date;
+                dateSelected = !dateSelected;
               });
             }
           },
