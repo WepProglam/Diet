@@ -204,7 +204,7 @@ List<num> makeForLooP(
       List<num> sendData = [];
       sendData.addAll(nutriInfo);
       sendData.addAll(myFoodMassList);
-      tempDegree = justCalculateNutri(sendData, maxMass.length)[1];
+      tempDegree = justCalculateNutri(sendData, maxMass.length)[3];
 
       if (tempDegree >= maxDegree) {
         //현재의 일치율을 가져와 전보다 높으면 return mass list에 저장

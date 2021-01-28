@@ -28,8 +28,7 @@ import 'package:flutter/material.dart';
 Widget basicAppBar(String title, BuildContext context) {
   return AppBar(
     //color
-    // backgroundColor: Color(0xFF69C2B0),
-    backgroundColor: Colors.redAccent,
+    backgroundColor: Color(0xFF69C2B0),
     iconTheme: IconThemeData(color: Colors.white),
 
     //앱 이름
