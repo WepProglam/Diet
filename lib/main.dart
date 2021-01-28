@@ -22,7 +22,7 @@ void main() {
   runApp(MaterialApp(
     theme: ThemeData(
         // backgroundColor: Color(0xFFFFFEF5),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.deepOrangeAccent,
         // primaryColor: Color(0xFF69C2B0),
         primaryColor: Colors.deepOrangeAccent,
         buttonColor: Colors.deepOrangeAccent,

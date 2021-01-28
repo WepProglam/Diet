@@ -204,7 +204,7 @@ List<num> makeForLooP(
       List<num> sendData = [];
       sendData.addAll(nutriInfo);
       sendData.addAll(myFoodMassList);
-      tempDegree = justCalculateNutri(sendData, maxMass.length)[3];
+      tempDegree = justCalculateNutri(sendData, maxMass.length)[1];
 
       if (tempDegree >= maxDegree) {
         //현재의 일치율을 가져와 전보다 높으면 return mass list에 저장
@@ -237,7 +237,7 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   if (foodLength <= 3) {
     calculateDensity *= 50;
   } else if (foodLength <= 5) {
-    calculateDensity += 10;
+    calculateDensity *= 10;
   } else if (foodLength <= 7) {
     calculateDensity *= 5;
   } else {
