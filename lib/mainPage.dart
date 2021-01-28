@@ -441,7 +441,9 @@ class _MyHomePageState extends State<MyHomePage> {
     daysLastWeek = 7 - dayToDate(dayLast); //마지막 주에 몇일 있는지
     daysFirstWeek = 7 - dayToDate(dayFirst) + 1; //첫 주에 몇일 있는지
     int curIndex = 0;
-    SwiperController swiperController = new SwiperController();
+    // SwiperController swiperController = new SwiperController();
+    List<String> mealList = ["아침", "점심", "저녁", "간식"];
+
 
     return Scaffold(
         backgroundColor: Color(0xFFD7FFF1),
@@ -457,149 +459,147 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
-                      child: Swiper(
-                          duration: 2000,
-                          itemCount: 2,
-                          controller: swiperController,
-                          scrollDirection: Axis.vertical,
-                          onIndexChanged: (index) {
-                            curIndex = index;
-                          },
-                          itemBuilder: (BuildContext context, int index) {
-                            List<String> mealList = ["아침", "점심", "저녁", "간식"];
-                            return index == 0
-                                ? Column(
-                                    children: [
-                                      Spacer(
-                                        flex: 2,
-                                      ),
-                                      Expanded(
-                                        flex: 10,
-                                        child: SizedBox(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Swiper(
-                                            duration: 1500,
-                                            itemBuilder: (BuildContext context,
-                                                int listIndex) {
-                                              makeItemList(listIndex);
+                      child: PageView(
+                        scrollDirection: Axis.vertical,
+                        // controller: ,
+                        children: [
+    Column(
+    children: [
+    Spacer(
+    flex: 2,
+    ),
+    Expanded(
+    flex: 10,
+    child: SizedBox(
+    width:
+    MediaQuery.of(context).size.width,
+    child: Swiper(
+    duration: 1500,
+    itemBuilder: (BuildContext context,
+    int listIndex) {
+    makeItemList(listIndex);
 
-                                              return Container(
-                                                child: Column(
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                color: Colors
-                                                                    .black),
-                                                        child: Center(
-                                                            child: Text(
-                                                          mealList[listIndex],
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700),
-                                                        )),
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                        flex: 5,
-                                                        child: Container(
-                                                          child: Center(
-                                                              child: Stack(
-                                                            children: itemList,
-                                                          )),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  color: Colors
-                                                                      .white),
-                                                        ))
-                                                  ],
-                                                ),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white),
-                                              );
-                                            },
-                                            itemCount: 4,
-                                            pagination: new SwiperPagination(),
-                                          ),
-                                        ),
-                                      ),
-                                      Spacer(
-                                        flex: 2,
-                                      ),
-                                      Expanded(
-                                        flex: 10,
-                                        child: SizedBox(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Swiper(
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return Container(
-                                                child: Text("추천 식단이 들어갈 자리"),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white),
-                                              );
-                                            },
-                                            itemCount: 10,
-                                            pagination: new SwiperPagination(),
-                                            // control: new SwiperControl(),
-                                          ),
-                                        ),
-                                      ),
-                                      Spacer(flex: 2),
-                                      // diet(date.toString()),
-                                      // dietBox(mealTime, date),
-                                      Expanded(
-                                          flex: 10,
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.red),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.blue),
-                                                ),
-                                              )
-                                            ],
-                                          )),
-                                      Spacer(
-                                        flex: 2,
-                                      )
-                                    ],
-                                  )
-                                : Column(
-                                    children: [
-                                      Spacer(
-                                        flex: 1,
-                                      ),
-                                      //달력
-                                      calenderMonthChange(),
-                                      Expanded(
-                                        flex: calenderWidthFlex,
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Color(0x7077AAAD)),
-                                            child: isSelected[0]
-                                                ? returnCalender()
-                                                : returnGraph()),
-                                      ),
-                                      //달력
-                                    ],
-                                  );
-                          }))),
+    return Container(
+    child: Column(
+    children: [
+    Expanded(
+    flex: 1,
+    child: Container(
+    decoration:
+    BoxDecoration(
+    color: Colors
+        .black),
+    child: Center(
+    child: Text(
+    mealList[listIndex],
+    style: TextStyle(
+    color:
+    Colors.white,
+    fontWeight:
+    FontWeight
+        .w700),
+    )),
+    ),
+    ),
+    Expanded(
+    flex: 5,
+    child: Container(
+    child: Center(
+    child: Stack(
+    children: itemList,
+    )),
+    decoration:
+    BoxDecoration(
+    color: Colors
+        .white),
+    ))
+    ],
+    ),
+    decoration: BoxDecoration(
+    color: Colors.white),
+    );
+    },
+    itemCount: 4,
+    pagination: new SwiperPagination(),
+    ),
+    ),
+    ),
+    Spacer(
+    flex: 2,
+    ),
+    Expanded(
+    flex: 10,
+    child: SizedBox(
+    width:
+    MediaQuery.of(context).size.width,
+    child: Swiper(
+    itemBuilder: (BuildContext context,
+    int index) {
+    return Container(
+    child: Text("추천 식단이 들어갈 자리"),
+    decoration: BoxDecoration(
+    color: Colors.white),
+    );
+    },
+    itemCount: 10,
+    pagination: new SwiperPagination(),
+    // control: new SwiperControl(),
+    ),
+    ),
+    ),
+    Spacer(flex: 2),
+    // diet(date.toString()),
+    // dietBox(mealTime, date),
+    Expanded(
+    flex: 10,
+    child: Row(
+    children: [
+    Expanded(
+    flex: 1,
+    child: Container(
+    decoration: BoxDecoration(
+    color: Colors.red),
+    ),
+    ),
+    Expanded(
+    flex: 1,
+    child: Container(
+    decoration: BoxDecoration(
+    color: Colors.blue),
+    ),
+    )
+    ],
+    )),
+    Spacer(
+    flex: 2,
+    )
+    ],
+    ),Column(
+    children: [
+    Spacer(
+    flex: 1,
+    ),
+    //달력
+    calenderMonthChange(),
+    Expanded(
+    flex: calenderWidthFlex,
+    child: Container(
+    decoration: BoxDecoration(
+    color: Color(0x7077AAAD)),
+    child: isSelected[0]
+    ? returnCalender()
+        : returnGraph()),
+    ),
+    //달력
+    ],
+    )
+
+                        ],
+                      )
+
+
+
+                          )),
               Spacer(
                 flex: 1,
               )
