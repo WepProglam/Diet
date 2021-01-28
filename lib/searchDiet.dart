@@ -175,12 +175,11 @@ class _SearchListState extends State<SearchList> {
         size: 40,
         color: Colors.deepOrangeAccent,
       ),
-      backgroundColor: Colors.white,
     );
   }
 
   Widget appBarTitle = Text(
-    "Search Diet",
+    "Diets",
     style: TextStyle(color: Colors.white),
   );
   Icon actionIcon = Icon(
@@ -239,7 +238,7 @@ class _SearchListState extends State<SearchList> {
         color: Colors.white,
       );
       this.appBarTitle = Text(
-        "Search Diet",
+        "Diets",
         style: TextStyle(color: Colors.white),
       );
       _IsSearching = false;

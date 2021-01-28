@@ -438,3 +438,119 @@ class DBHelperDiet {
     db.rawDelete('DELETE FROM $tableName');
   }
 }
+
+class DBHelperDietHistory {
+  final String dBName = 'DietHistory';
+  final String tableName = 'DietHistory';
+  DBHelperDietHistory._();
+  static final DBHelperDietHistory _db = DBHelperDietHistory._();
+  factory DBHelperDietHistory() => _db;
+
+  static Database _database;
+
+  Future<Database> get database async {
+    if (_database != null) return _database;
+
+    _database = await initDB();
+    return _database;
+  }
+
+  initDB() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, "$dBName.db");
+    return await openDatabase(path, version: 1, onCreate: (db, version) async {
+      await db.execute('''
+          CREATE TABLE $tableName(
+            date TEXT,
+            breakFast TEXT,
+            lunch TEXT,
+            dinner TEXT,
+            snack TEXT
+            )
+        ''');
+    }, onUpgrade: (db, oldVersion, newVersion) {});
+  }
+
+  createData(DietHistory dietHistory) async {
+    final db = await database;
+    await db.insert(
+      tableName,
+      dietHistory.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> updateDietHistory(DietHistory dietHistory) async {
+    final db = await database;
+    await db.update(
+      tableName,
+      dietHistory.toMap(),
+      where: "date = ?",
+      whereArgs: [dietHistory.date],
+    );
+  }
+
+  createHelper(DietHistory dietHistory) {
+    getAllMyDietHistory().then((value) async {
+      if (value.isNotEmpty) {
+        bool isThere = false;
+        for (var item in value) {
+          if (dietHistory.date == item.date) {
+            isThere = true;
+            break;
+          } else {
+            isThere = false;
+          }
+        }
+        if (isThere) {
+          await updateDietHistory(dietHistory);
+        } else {
+          await createData(dietHistory);
+        }
+      } else {
+        await createData(dietHistory);
+      }
+    });
+  }
+
+  Future<DietHistory> getDietHistory(String date) async {
+    final db = await database;
+    var res =
+        await db.rawQuery("SELECT * FROM $tableName WHERE date = '$date'");
+    return res.isNotEmpty
+        ? DietHistory(
+            date: res.first['date'],
+            breakFast: res.first['breakFast'],
+            lunch: res.first['lunch'],
+            dinner: res.first['dinner'],
+            snack: res.first['snack'])
+        : null;
+  }
+
+  Future<List<DietHistory>> getAllMyDietHistory() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM $tableName");
+    List<DietHistory> list = res.isNotEmpty
+        ? res
+            .map((c) => DietHistory(
+                date: c['date'],
+                breakFast: c['breakFast'],
+                lunch: c['lunch'],
+                dinner: c['dinner'],
+                snack: c['snack']))
+            .toList()
+        : [];
+    return list;
+  }
+
+  deleteDietHistory(String date) async {
+    final db = await database;
+    var res = db.rawDelete("DELETE FROM $tableName WHERE date = '$date'");
+    return res;
+  }
+
+  deleteAllDietHistory() async {
+    final db = await database;
+    db.rawDelete('DELETE FROM $tableName');
+  }
+}

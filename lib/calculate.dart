@@ -10,6 +10,8 @@ import 'model.dart';
 num calculateDensity = 1;
 const targetCalorie = 600;
 
+List<dynamic> csvList = [];
+
 List<dynamic> justCalculateNutri(List<num> foodList, num foodLength) {
   List<num> ratio = [5, 3, 2];
   List<num> carbohydrateList = List<num>(foodLength);
@@ -195,6 +197,8 @@ List<num> makeForLooP(
         myFoodMassList[tempIndex] < maxMass[tempIndex];
         myFoodMassList[tempIndex] +=
             ((maxMass[tempIndex] - minMass[tempIndex]) ~/ calculateDensity)) {
+      csvList.addAll(returnMassList);
+
       totalCalorie = totalCalorieOverFlow(myFoodMassList, calorie);
 
       List<num> sendData = [];
@@ -235,7 +239,7 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   } else if (foodLength <= 5) {
     calculateDensity += 10;
   } else if (foodLength <= 7) {
-    calculateDensity *= 6;
+    calculateDensity *= 5;
   } else {
     calculateDensity *= 3;
   }
@@ -267,11 +271,6 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
     makeForLooP(tempIndex, myFoodMassList, minMass, maxMass, nutriInfo, calorie)
   ];
 
-  String csv = const ListToCsvConverter().convert(massList);
-  final directory = await getApplicationDocumentsDirectory();
-  final pathOfTheFileToWrite = directory.path + "/calExcercise.csv";
-  File file = await File(pathOfTheFileToWrite);
-  file.writeAsString(csv);
   num totalCalorie = totalCalorieOverFlow(massList[0], calorie);
 
   num sum = 0;
@@ -285,6 +284,11 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
 
   // print(totalCalorie);
 
+  String csv = const ListToCsvConverter().convert([csvList]);
+  final directory = await getApplicationDocumentsDirectory();
+  final pathOfTheFileToWrite = directory.path + "/calExcercise.csv";
+  File file = await File(pathOfTheFileToWrite);
+  file.writeAsString(csv);
   return massList[0];
 }
 
