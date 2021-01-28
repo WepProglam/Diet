@@ -130,7 +130,7 @@ num correctness(List<num> ratio, List<num> nutriRatio) {
 
   num result =
       (1 - pow(((degreeWithNutriRatio / degreeWithPointInPlane)), 2)) * 100;
-  print(result);
+  // print(result);
   return result;
 }
 
