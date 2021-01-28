@@ -116,7 +116,11 @@ String myRounder(num a) {
 }
 
 Future<void> formatDietHistory(
-    {String dietName, String kcal, String nutri, int flag}) async {
+    {String dietName,
+    String kcal,
+    String nutri,
+    int flag,
+    String dateTime = null}) async {
   String dateData;
   String myBreakFast = "null";
   String myLunch = "null";
@@ -127,7 +131,9 @@ Future<void> formatDietHistory(
   // await dBHelperDietHistory.deleteAllDietHistory();
   DietHistory dietHistory;
 
-  dateData = '${DateTime.now().toString().substring(0, 10)}';
+  dateData = dateTime == null
+      ? '${DateTime.now().toString().substring(0, 10)}'
+      : dateTime;
   await dBHelperDietHistory.getDietHistory(dateData).then((val) {
     if (val != null) {
       dietHistory = val;

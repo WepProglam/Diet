@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Person person;
 
   FocusScopeNode myFocusNode = FocusScopeNode();
-  ScrollController _controller = new ScrollController();
+  // ScrollController _controller = new ScrollController();
   List<bool> isSelected = [true, false];
   List<List<bool>> dietAdded = [
     [false, false, false, false],
@@ -191,13 +191,16 @@ class _MyHomePageState extends State<MyHomePage> {
         ? "0" + calender_date.toString()
         : calender_date.toString();
     dateData = calenderYear + '-' + calenderMonth + '-' + calenderDate;
+    // setState(() {
+    //   // getInfo();
+    // });
   }
 
   @override
   void didChangeDependencies() async {
     changeIntToString();
     initDateInfo();
-    getConfirmedIndex(pastDietHistory);
+
     getInfo();
     super.didChangeDependencies();
   }
@@ -396,6 +399,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: RaisedButton(
                             child: Text("먹었"),
                             onPressed: () {
+                              print(todayDietList[index]);
                               formatDietHistory(
                                       dietName: todayDietList[index]
                                           ['dietName'],
@@ -404,11 +408,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                               ['kcal']
                                           .toString(),
                                       nutri: todayDietList[index]['foodInfo']
-                                          ['nutri'])
+                                          ['nutri'],
+                                      dateTime: dateData)
                                   .then((_) {
                                 setState(() {
                                   //확정
-
                                   dietConfirm[index] = true;
                                   dietAdded[index][3] = false;
                                 });
@@ -458,6 +462,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     changeIntToString();
     getInfo();
+
     super.initState();
   }
 
@@ -483,7 +488,12 @@ class _MyHomePageState extends State<MyHomePage> {
     daysFirstWeek = 7 - dayToDate(dayFirst) + 1; //첫 주에 몇일 있는지
     int curIndex = 0;
     // SwiperController swiperController = new SwiperController();
-    List<String> mealList = ["아침", "점심", "저녁", "간식"];
+    List<String> mealList = [
+      "$calender_month월$calender_date일 아침",
+      "$calender_month월$calender_date일 점심",
+      "$calender_month월$calender_date일 저녁",
+      "$calender_month월$calender_date일 간식"
+    ];
 
     return Scaffold(
         backgroundColor: Color(0xFFD7FFF1),
@@ -499,246 +509,276 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
-                      child: PageView(
-                        scrollDirection: Axis.vertical,
-                        // controller: ,
-                        children: [
-                          Column(
-                            children: [
-                              //page 1
-                              Spacer(
-                                flex: 2,
-                              ),
-                              Expanded(
-                                flex: 10,
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Swiper(
-                                    duration: 1500,
-                                    itemBuilder:
-                                        (BuildContext context, int listIndex) {
-                                      makeItemList(listIndex);
-                                      return Container(
-                                        child: Column(
-                                          children: [
-                                            Expanded(
-                                              flex: 1,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    color: Colors.black),
-                                                child: Center(
-                                                    child: Text(
-                                                  mealList[listIndex],
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                                )),
-                                              ),
-                                            ),
-                                            Expanded(
-                                                flex: 5,
-                                                child: Container(
-                                                  child: Center(
-                                                      child: Stack(
-                                                    children: itemList,
-                                                  )),
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white),
-                                                ))
-                                          ],
-                                        ),
-                                        decoration:
-                                            BoxDecoration(color: Colors.white),
-                                      );
-                                    },
-                                    itemCount: 4,
-                                    pagination: new SwiperPagination(),
-                                  ),
-                                ),
-                              ),
-                              Spacer(
-                                flex: 2,
-                              ),
-                              Expanded(
-                                flex: 10,
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Swiper(
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return Container(
-                                        child: Text("추천 식단이 들어갈 자리"),
-                                        decoration:
-                                            BoxDecoration(color: Colors.white),
-                                      );
-                                    },
-                                    itemCount: 10,
-                                    pagination: new SwiperPagination(),
-                                    // control: new SwiperControl(),
-                                  ),
-                                ),
-                              ),
-                              Spacer(flex: 2),
-                              // diet(date.toString()),
-                              // dietBox(mealTime, date),
-                              Expanded(
-                                  flex: 10,
-                                  child: Row(
+                      child: PageView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount: 2,
+                          onPageChanged: (page) {
+                            if (page == 0) {
+                              calender_year = DateTime.now().year;
+                              calender_month = DateTime.now().month;
+                              calender_date = DateTime.now().day;
+                              changeIntToString();
+                              getInfo();
+                            }
+                          },
+                          itemBuilder: (BuildContext context, int index) {
+                            return index == 0
+                                ? Column(
                                     children: [
+                                      //page 1
+                                      Spacer(
+                                        flex: 2,
+                                      ),
                                       Expanded(
-                                          flex: 1,
-                                          child: FractionallySizedBox(
-                                            child: Container(
-                                              // child: Text(),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: person == null
-                                                    ? [
-                                                        Text("키"),
-                                                        Text("몸무게"),
-                                                        Text("체지방률"),
-                                                        Text("골격근량"),
-                                                      ]
-                                                    : [
-                                                        Text(
-                                                            "키    ${person.height}"),
-                                                        Text(
-                                                            "몸무게    ${person.weight}"),
-                                                        Text(
-                                                            "체지방률    ${person.bmi}"),
-                                                        Text(
-                                                            "골격근량    ${person.muscleMass}"),
-                                                      ],
-                                              ),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.red),
-                                            ),
-                                            widthFactor: 1,
-                                            heightFactor: 1,
-                                          )),
-                                      Expanded(
-                                          flex: 1,
-                                          child: FractionallySizedBox(
-                                            child: Container(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: person == null
-                                                    ? [
-                                                        Text("목표 몸무게"),
-                                                        Text("목표 체지방률"),
-                                                        Text("목표 골격근량"),
-                                                        Text("목표"),
-                                                      ]
-                                                    : [
-                                                        Text(
-                                                            "목표 몸무게   ${person.weightTarget}"),
-                                                        Text(
-                                                            "목표 체지방률    ${person.bmiTarget}"),
-                                                        Text(
-                                                            "목표 골격근량   ${person.muscleTarget}"),
-                                                        Text(
-                                                            "목표    ${person.purpose}"),
-                                                      ],
-                                              ),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.blue),
-                                            ),
-                                            widthFactor: 1,
-                                            heightFactor: 1,
-                                          ))
-                                    ],
-                                  )),
-                              Spacer(
-                                flex: 2,
-                              )
-                            ],
-                          ),
-                          //page 2
-
-                          Column(
-                            children: [
-                              Spacer(
-                                flex: 2,
-                              ),
-                              //달력
-                              calenderMonthChange(),
-                              Expanded(
-                                flex: calenderWidthFlex,
-                                child: Container(
-                                    decoration:
-                                        BoxDecoration(color: Color(0x7077AAAD)),
-                                    child: isSelected[0]
-                                        ? returnCalender()
-                                        : returnGraph()),
-                              ),
-                              Spacer(
-                                flex: 2,
-                              ),
-                              Expanded(
-                                flex: 10,
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Swiper(
-                                    duration: 1500,
-                                    itemBuilder:
-                                        (BuildContext context, int listIndex) {
-                                      makeItemList(listIndex);
-                                      return Container(
-                                        child: Column(
-                                          children: [
-                                            Expanded(
-                                              flex: 1,
-                                              child: Container(
+                                        flex: 10,
+                                        child: SizedBox(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Swiper(
+                                            duration: 1500,
+                                            itemBuilder: (BuildContext context,
+                                                int listIndex) {
+                                              makeItemList(listIndex);
+                                              return Container(
+                                                child: Column(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                color: Colors
+                                                                    .black),
+                                                        child: Center(
+                                                            child: Text(
+                                                          mealList[listIndex],
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700),
+                                                        )),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                        flex: 5,
+                                                        child: Container(
+                                                          child: Center(
+                                                              child: Stack(
+                                                            children: itemList,
+                                                          )),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  color: Colors
+                                                                      .white),
+                                                        ))
+                                                  ],
+                                                ),
                                                 decoration: BoxDecoration(
-                                                    color: Colors.black),
-                                                child: Center(
-                                                    child: Text(
-                                                  mealList[listIndex],
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                                )),
-                                              ),
-                                            ),
-                                            Expanded(
-                                                flex: 5,
-                                                child: Container(
-                                                  child: Center(
-                                                      child: Stack(
-                                                    children: itemList,
-                                                  )),
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white),
-                                                ))
-                                          ],
+                                                    color: Colors.white),
+                                              );
+                                            },
+                                            itemCount: 4,
+                                            pagination: new SwiperPagination(),
+                                          ),
                                         ),
-                                        decoration:
-                                            BoxDecoration(color: Colors.white),
-                                      );
-                                    },
-                                    itemCount: 4,
-                                    pagination: new SwiperPagination(),
-                                  ),
-                                ),
-                              ),
-                              // Spacer(
-                              //   flex: 2,
-                              // ),
-                              // Spacer(
-                              //   flex: 10,
-                              // ),
-                              Spacer(
-                                flex: 2,
-                              ),
-                              //달력
-                            ],
-                          )
-                        ],
-                      ))),
+                                      ),
+                                      Spacer(
+                                        flex: 2,
+                                      ),
+                                      Expanded(
+                                        flex: 10,
+                                        child: SizedBox(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Swiper(
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Container(
+                                                child: Text("추천 식단이 들어갈 자리"),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white),
+                                              );
+                                            },
+                                            itemCount: 10,
+                                            pagination: new SwiperPagination(),
+                                            // control: new SwiperControl(),
+                                          ),
+                                        ),
+                                      ),
+                                      Spacer(flex: 2),
+                                      // diet(date.toString()),
+                                      // dietBox(mealTime, date),
+                                      Expanded(
+                                          flex: 10,
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                  flex: 1,
+                                                  child: FractionallySizedBox(
+                                                    child: Container(
+                                                      // child: Text(),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: person == null
+                                                            ? [
+                                                                Text("키"),
+                                                                Text("몸무게"),
+                                                                Text("체지방률"),
+                                                                Text("골격근량"),
+                                                              ]
+                                                            : [
+                                                                Text(
+                                                                    "키    ${person.height}"),
+                                                                Text(
+                                                                    "몸무게    ${person.weight}"),
+                                                                Text(
+                                                                    "체지방률    ${person.bmi}"),
+                                                                Text(
+                                                                    "골격근량    ${person.muscleMass}"),
+                                                              ],
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.red),
+                                                    ),
+                                                    widthFactor: 1,
+                                                    heightFactor: 1,
+                                                  )),
+                                              Expanded(
+                                                  flex: 1,
+                                                  child: FractionallySizedBox(
+                                                    child: Container(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: person == null
+                                                            ? [
+                                                                Text("목표 몸무게"),
+                                                                Text("목표 체지방률"),
+                                                                Text("목표 골격근량"),
+                                                                Text("목표"),
+                                                              ]
+                                                            : [
+                                                                Text(
+                                                                    "목표 몸무게   ${person.weightTarget}"),
+                                                                Text(
+                                                                    "목표 체지방률    ${person.bmiTarget}"),
+                                                                Text(
+                                                                    "목표 골격근량   ${person.muscleTarget}"),
+                                                                Text(
+                                                                    "목표    ${person.purpose}"),
+                                                              ],
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.blue),
+                                                    ),
+                                                    widthFactor: 1,
+                                                    heightFactor: 1,
+                                                  ))
+                                            ],
+                                          )),
+                                      Spacer(
+                                        flex: 2,
+                                      )
+                                    ],
+                                  )
+                                :
+                                //page 2
+                                GestureDetector(
+                                    // onVerticalDragUpdate: (details) {
+                                    //   print(details);
+                                    // },
+                                    child: Column(
+                                    children: [
+                                      Spacer(
+                                        flex: 2,
+                                      ),
+                                      //달력
+                                      calenderMonthChange(),
+                                      Expanded(
+                                        flex: calenderWidthFlex,
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Color(0x7077AAAD)),
+                                            child: isSelected[0]
+                                                ? returnCalender()
+                                                : returnGraph()),
+                                      ),
+                                      Spacer(
+                                        flex: 2,
+                                      ),
+                                      Expanded(
+                                        flex: 10,
+                                        child: SizedBox(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Swiper(
+                                            duration: 1500,
+                                            itemBuilder: (BuildContext context,
+                                                int listIndex) {
+                                              makeItemList(listIndex);
+                                              return Container(
+                                                child: Column(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                color: Colors
+                                                                    .black),
+                                                        child: Center(
+                                                            child: Text(
+                                                          mealList[listIndex],
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700),
+                                                        )),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                        flex: 5,
+                                                        child: Container(
+                                                          child: Center(
+                                                              child: Stack(
+                                                            children: itemList,
+                                                          )),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  color: Colors
+                                                                      .white),
+                                                        ))
+                                                  ],
+                                                ),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white),
+                                              );
+                                            },
+                                            itemCount: 4,
+                                            pagination: new SwiperPagination(),
+                                          ),
+                                        ),
+                                      ),
+                                      // Spacer(
+                                      //   flex: 2,
+                                      // ),
+                                      // Spacer(
+                                      //   flex: 10,
+                                      // ),
+                                      Spacer(
+                                        flex: 2,
+                                      ),
+                                      //달력
+                                    ],
+                                  ));
+                          }))),
               Spacer(
                 flex: 1,
               )
