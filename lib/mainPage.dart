@@ -558,14 +558,23 @@ class _MyHomePageState extends State<MyHomePage> {
                                               child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
-                                                children: [
-                                                  Text("키    ${person.height}"),
-                                                  Text(
-                                                      "몸무게    ${person.weight}"),
-                                                  Text("체지방률    ${person.bmi}"),
-                                                  Text(
-                                                      "골격근량    ${person.muscleMass}"),
-                                                ],
+                                                children: person == null
+                                                    ? [
+                                                        Text("키"),
+                                                        Text("몸무게"),
+                                                        Text("체지방률"),
+                                                        Text("골격근량"),
+                                                      ]
+                                                    : [
+                                                        Text(
+                                                            "키    ${person.height}"),
+                                                        Text(
+                                                            "몸무게    ${person.weight}"),
+                                                        Text(
+                                                            "체지방률    ${person.bmi}"),
+                                                        Text(
+                                                            "골격근량    ${person.muscleMass}"),
+                                                      ],
                                               ),
                                               decoration: BoxDecoration(
                                                   color: Colors.red),
@@ -580,16 +589,23 @@ class _MyHomePageState extends State<MyHomePage> {
                                               child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                      "목표 몸무게   ${person.weightTarget}"),
-                                                  Text(
-                                                      "목표 체지방률    ${person.bmiTarget}"),
-                                                  Text(
-                                                      "목표 골격근량   ${person.muscleTarget}"),
-                                                  Text(
-                                                      "목표    ${person.purpose}"),
-                                                ],
+                                                children: person == null
+                                                    ? [
+                                                        Text("목표 몸무게"),
+                                                        Text("목표 체지방률"),
+                                                        Text("목표 골격근량"),
+                                                        Text("목표"),
+                                                      ]
+                                                    : [
+                                                        Text(
+                                                            "목표 몸무게   ${person.weightTarget}"),
+                                                        Text(
+                                                            "목표 체지방률    ${person.bmiTarget}"),
+                                                        Text(
+                                                            "목표 골격근량   ${person.muscleTarget}"),
+                                                        Text(
+                                                            "목표    ${person.purpose}"),
+                                                      ],
                                               ),
                                               decoration: BoxDecoration(
                                                   color: Colors.blue),
@@ -1076,10 +1092,15 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           onPressed: () {
             if (!isitDay) {
-              dbHelperDietHistory
-                  .getDietHistory("$calender_year-$calender_month-$date")
-                  .then((value) {
+              String dateTime;
+              if (calender_month.toString().length == 1) {
+                dateTime = "$calender_year-0$calender_month-$date";
+              } else {
+                dateTime = "$calender_year-$calender_month-$date";
+              }
+              dbHelperDietHistory.getDietHistory(dateTime).then((value) {
                 pastDietHistory = value;
+                print(value);
               });
 
               setState(() {
