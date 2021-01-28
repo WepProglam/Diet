@@ -146,7 +146,7 @@ class _SearchListState extends State<SearchList> {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
     print("is searchign $_IsSearching");
     return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xFFFFFEF5),
         appBar: buildBar(context),
         body: _IsSearching
             ?
@@ -163,7 +163,7 @@ class _SearchListState extends State<SearchList> {
                   );
                 },
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, childAspectRatio: 5 / 4),
+                    crossAxisCount: 2, childAspectRatio: 5 / 3),
               )
             : GridView.builder(
                 padding: EdgeInsets.all(8),
@@ -175,7 +175,7 @@ class _SearchListState extends State<SearchList> {
                   );
                 },
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, childAspectRatio: 5 / 4),
+                    crossAxisCount: 2, childAspectRatio: 5 / 3),
               ),
         floatingActionButton: (args != null)
             ? ((args['pre'] == 'addDiet')
@@ -198,8 +198,7 @@ class _SearchListState extends State<SearchList> {
   }
 
   Widget appBarTitle = Text(
-    // "Search Food",
-    "Foods",
+    "Search Food",
     style: TextStyle(color: Colors.white),
   );
   Icon actionIcon = Icon(
@@ -213,7 +212,7 @@ class _SearchListState extends State<SearchList> {
         centerTitle: true,
         key: key,
         title: appBarTitle,
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xFF69C2B0),
         actions: <Widget>[
           IconButton(
             icon: actionIcon,
@@ -328,7 +327,7 @@ class _SearchListState extends State<SearchList> {
                         color: Colors.white,
                       ),
                       decoration: InputDecoration(
-                          hintText: "음식 이름을 입력하세요...",
+                          hintText: "Search here..",
                           hintStyle: TextStyle(color: Colors.white)));
                 } else {
                   this.actionIcon = Icon(
@@ -336,7 +335,7 @@ class _SearchListState extends State<SearchList> {
                     // color: Colors.orange,
                   );
                   this.appBarTitle = Text(
-                    "Foods",
+                    "Search Food",
                     style: TextStyle(color: Colors.white),
                   );
                 }
@@ -386,13 +385,8 @@ class _UiitemState extends State<Uiitem> {
   Widget build(BuildContext context) {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
     return Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
         margin: EdgeInsets.all(8),
-        color: isItSelected
-            ? Colors.deepOrangeAccent[700]
-            : Colors.deepOrangeAccent,
+        color: isItSelected ? Colors.green : Colors.white70,
         child: Stack(
           children: [
             InkWell(
@@ -466,9 +460,7 @@ class _UiitemState extends State<Uiitem> {
               child: GestureDetector(
                 child: Icon(
                   Icons.favorite,
-                  color: this.building.isItMine == "T"
-                      ? Colors.redAccent[700]
-                      : null,
+                  color: this.building.isItMine == "T" ? Colors.red : null,
                   size: 20,
                 ),
                 onTap: () async {

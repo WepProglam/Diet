@@ -137,24 +137,27 @@ class Diet {
 
 class DietHistory {
   String date;
-  String dateHistory;
+  String breakFast;
+  String lunch;
+  String dinner;
+  String snack;
+
   /*
+  breakfast 예시
   {
-    meal : [
-      "b":{
-        
-      },
-      "l":{
-
-      },
-      "d":{
-
-      },
-      "s":{
-
-      }
-    ]
+    "dietName" : "식단 이름",
+    "kcal" : "칼로리",
+    "nutri" : "영양소 비율"(5:2:3)
   }
   */
-
+  DietHistory({this.date, this.breakFast, this.lunch, this.dinner, this.snack});
+  Map<String, dynamic> toMap() {
+    return {
+      "date": date,
+      "breakFast": breakFast,
+      "lunch": lunch,
+      "dinner": dinner,
+      "snack": snack
+    };
+  }
 }

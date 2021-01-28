@@ -141,7 +141,7 @@ class _SearchListState extends State<SearchList> {
     listProvider.setDietList(dietNameEX);
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xFFFFFEF5),
       key: key,
       appBar: buildBar(context),
       body: GridView.builder(
@@ -153,7 +153,7 @@ class _SearchListState extends State<SearchList> {
           );
         },
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, childAspectRatio: 4 / 6),
+            crossAxisCount: 2, childAspectRatio: 5 / 3),
       ),
       floatingActionButton: add(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -161,21 +161,18 @@ class _SearchListState extends State<SearchList> {
   }
 
   Widget add() {
-    return FloatingActionButton(
-      splashColor: Colors.deepOrangeAccent,
-      heroTag: null,
-      onPressed: () {
-        //이거 addDiet로 바꿔야 함
-        Navigator.pop(context);
-        Navigator.pushNamed(context, '/addDiet');
-      },
-      tooltip: 'Add',
-      child: Icon(
-        Icons.add,
-        size: 40,
-        color: Colors.deepOrangeAccent,
+    return Container(
+      child: FloatingActionButton(
+        heroTag: null,
+        onPressed: () {
+          //이거 addDiet로 바꿔야 함
+          Navigator.pop(context);
+          Navigator.pushNamed(context, '/addDiet');
+        },
+        tooltip: 'Add',
+        child: Icon(Icons.add, size: 30),
+        backgroundColor: Color(0xFF7EE0CC),
       ),
-      backgroundColor: Colors.white,
     );
   }
 
@@ -193,8 +190,7 @@ class _SearchListState extends State<SearchList> {
         centerTitle: true,
         title: appBarTitle,
         iconTheme: IconThemeData(color: Colors.white),
-        // backgroundColor: Color(0xFF69C2B0),
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xFF69C2B0),
         actions: <Widget>[
           IconButton(
             icon: actionIcon,
@@ -301,11 +297,8 @@ class _UiitemState extends State<Uiitem> {
     }
 
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
       margin: EdgeInsets.all(8),
-      color: Colors.deepOrangeAccent,
+      color: Colors.white70,
       child: Stack(
         children: [
           InkWell(
