@@ -141,7 +141,7 @@ class _SearchListState extends State<SearchList> {
     listProvider.setDietList(dietNameEX);
 
     return Scaffold(
-      backgroundColor: Color(0xFFFFFEF5),
+      backgroundColor: Colors.black,
       key: key,
       appBar: buildBar(context),
       body: GridView.builder(
@@ -161,18 +161,20 @@ class _SearchListState extends State<SearchList> {
   }
 
   Widget add() {
-    return Container(
-      child: FloatingActionButton(
-        heroTag: null,
-        onPressed: () {
-          //이거 addDiet로 바꿔야 함
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/addDiet');
-        },
-        tooltip: 'Add',
-        child: Icon(Icons.add, size: 30),
-        backgroundColor: Color(0xFF7EE0CC),
+    return FloatingActionButton(
+      heroTag: null,
+      onPressed: () {
+        //이거 addDiet로 바꿔야 함
+        Navigator.pop(context);
+        Navigator.pushNamed(context, '/addDiet');
+      },
+      tooltip: 'Add',
+      child: Icon(
+        Icons.add_circle,
+        size: 50,
+        color: Colors.deepOrangeAccent,
       ),
+      backgroundColor: Colors.white,
     );
   }
 
@@ -190,7 +192,8 @@ class _SearchListState extends State<SearchList> {
         centerTitle: true,
         title: appBarTitle,
         iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Color(0xFF69C2B0),
+        // backgroundColor: Color(0xFF69C2B0),
+        backgroundColor: Colors.black,
         actions: <Widget>[
           IconButton(
             icon: actionIcon,
@@ -297,8 +300,11 @@ class _UiitemState extends State<Uiitem> {
     }
 
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
       margin: EdgeInsets.all(8),
-      color: Colors.redAccent,
+      color: Colors.deepOrangeAccent,
       child: Stack(
         children: [
           InkWell(

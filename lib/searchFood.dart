@@ -146,7 +146,7 @@ class _SearchListState extends State<SearchList> {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
     print("is searchign $_IsSearching");
     return Scaffold(
-        backgroundColor: Color(0xFFFFFEF5),
+        backgroundColor: Colors.black,
         appBar: buildBar(context),
         body: _IsSearching
             ?
@@ -198,7 +198,8 @@ class _SearchListState extends State<SearchList> {
   }
 
   Widget appBarTitle = Text(
-    "Search Food",
+    // "Search Food",
+    "Foods",
     style: TextStyle(color: Colors.white),
   );
   Icon actionIcon = Icon(
@@ -212,7 +213,7 @@ class _SearchListState extends State<SearchList> {
         centerTitle: true,
         key: key,
         title: appBarTitle,
-        backgroundColor: Color(0xFF69C2B0),
+        backgroundColor: Colors.black,
         actions: <Widget>[
           IconButton(
             icon: actionIcon,
@@ -327,7 +328,7 @@ class _SearchListState extends State<SearchList> {
                         color: Colors.white,
                       ),
                       decoration: InputDecoration(
-                          hintText: "Search here..",
+                          hintText: "음식 이름을 입력하세요...",
                           hintStyle: TextStyle(color: Colors.white)));
                 } else {
                   this.actionIcon = Icon(
@@ -335,7 +336,7 @@ class _SearchListState extends State<SearchList> {
                     // color: Colors.orange,
                   );
                   this.appBarTitle = Text(
-                    "Search Food",
+                    "Foods",
                     style: TextStyle(color: Colors.white),
                   );
                 }
@@ -385,8 +386,13 @@ class _UiitemState extends State<Uiitem> {
   Widget build(BuildContext context) {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
     return Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
         margin: EdgeInsets.all(8),
-        color: isItSelected ? Colors.green : Colors.white70,
+        color: isItSelected
+            ? Colors.deepOrangeAccent[700]
+            : Colors.deepOrangeAccent,
         child: Stack(
           children: [
             InkWell(
@@ -460,7 +466,9 @@ class _UiitemState extends State<Uiitem> {
               child: GestureDetector(
                 child: Icon(
                   Icons.favorite,
-                  color: this.building.isItMine == "T" ? Colors.red : null,
+                  color: this.building.isItMine == "T"
+                      ? Colors.redAccent[700]
+                      : null,
                   size: 20,
                 ),
                 onTap: () async {
