@@ -14,7 +14,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 
 //그래프 표시 버튼 위치 달력 우측 하단
 final dbHelperDietHistory = DBHelperDietHistory();
-final dbHelperDiet=DBHelperDiet();
+final dbHelperDiet = DBHelperDiet();
 final dbHelperPerson = DBHelperPerson();
 final int calenderWidthFlex = 20;
 
@@ -67,132 +67,94 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> itemList = [];
   num totalCalorie = 0;
 
-  void getConfirmedIndex()async {
-    try{
-      if(dietHistory.breakFast != "null"){
-        dietAdded[0]=[true,true,true,true];
+  void getConfirmedIndex() async {
+    try {
+      if (dietHistory.breakFast != "null") {
+        dietAdded[0] = [true, true, true, true];
         dietConfirm[0] = true;
 
-        Map tempDiet=jsonDecode(dietHistory.breakFast);
+        Map tempDiet = jsonDecode(dietHistory.breakFast);
         Diet myDiet;
-        await dbHelperDiet.getDiet(tempDiet['dietName']).then((val){
-          myDiet=val;
+        await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
+          myDiet = val;
         });
-        todayDietList[0]={};
-        todayDietList[0]['foodInfo'] =
-            jsonDecode(myDiet.foodInfo);
+        todayDietList[0] = {};
+        todayDietList[0]['foodInfo'] = jsonDecode(myDiet.foodInfo);
 
-
-        for (var i = 0;
-        i <
-            todayDietList[0]['foodInfo']['foods']
-                .length;
-        i++) {
+        for (var i = 0; i < todayDietList[0]['foodInfo']['foods'].length; i++) {
           todayDietList[0]['foodInfo']['foods'][i] =
-              todayDietList[0]['foodInfo']['foods'][i]
-                  .values
-                  .toList();
+              todayDietList[0]['foodInfo']['foods'][i].values.toList();
         }
       }
-      if(dietHistory.lunch != "null"){
-        dietAdded[1]=[true,true,true,true];
+      if (dietHistory.lunch != "null") {
+        dietAdded[1] = [true, true, true, true];
         dietConfirm[1] = true;
 
-        Map tempDiet=jsonDecode(dietHistory.lunch);
+        Map tempDiet = jsonDecode(dietHistory.lunch);
         Diet myDiet;
-        await dbHelperDiet.getDiet(tempDiet['dietName']).then((val){
-          myDiet=val;
+        await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
+          myDiet = val;
         });
-        todayDietList[1]={};
-        todayDietList[1]["foodInfo"] =
-            jsonDecode(myDiet.foodInfo);
+        todayDietList[1] = {};
+        todayDietList[1]["foodInfo"] = jsonDecode(myDiet.foodInfo);
 
-
-        for (var i = 0;
-        i <
-            todayDietList[1]['foodInfo']['foods']
-                .length;
-        i++) {
+        for (var i = 0; i < todayDietList[1]['foodInfo']['foods'].length; i++) {
           todayDietList[1]['foodInfo']['foods'][i] =
-              todayDietList[1]['foodInfo']['foods'][i]
-                  .values
-                  .toList();
+              todayDietList[1]['foodInfo']['foods'][i].values.toList();
         }
-
       }
-      if(dietHistory.dinner != "null"){
-
-        dietAdded[2]=[true,true,true,true];
+      if (dietHistory.dinner != "null") {
+        dietAdded[2] = [true, true, true, true];
         dietConfirm[2] = true;
 
-        todayDietList[2]={};
+        todayDietList[2] = {};
 
-
-        Map tempDiet=jsonDecode(dietHistory.dinner);
+        Map tempDiet = jsonDecode(dietHistory.dinner);
         Diet myDiet;
-        await dbHelperDiet.getDiet(tempDiet['dietName']).then((val){
-          myDiet=val;
+        await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
+          myDiet = val;
         });
 
-        todayDietList[2]['foodInfo'] =
-            jsonDecode(myDiet.foodInfo);
+        todayDietList[2]['foodInfo'] = jsonDecode(myDiet.foodInfo);
 
-
-        for (var i = 0;
-        i <
-            todayDietList[2]['foodInfo']['foods']
-                .length;
-        i++) {
+        for (var i = 0; i < todayDietList[2]['foodInfo']['foods'].length; i++) {
           todayDietList[2]['foodInfo']['foods'][i] =
-              todayDietList[2]['foodInfo']['foods'][i]
-                  .values
-                  .toList();
+              todayDietList[2]['foodInfo']['foods'][i].values.toList();
         }
-
       }
-      if(dietHistory.snack != "null"){
+      if (dietHistory.snack != "null") {
         print("12312312");
-        dietAdded[3]=[true,true,true,true];
+        dietAdded[3] = [true, true, true, true];
         dietConfirm[3] = true;
-        todayDietList[3]={};
+        todayDietList[3] = {};
 
-        Map tempDiet=jsonDecode(dietHistory.snack);
+        Map tempDiet = jsonDecode(dietHistory.snack);
         Diet myDiet;
-        await dbHelperDiet.getDiet(tempDiet['dietName']).then((val){
-          myDiet=val;
+        await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
+          myDiet = val;
         });
 
-        todayDietList[3]['foodInfo'] =
-            jsonDecode(myDiet.foodInfo);
+        todayDietList[3]['foodInfo'] = jsonDecode(myDiet.foodInfo);
 
-
-
-        for (var i = 0;
-        i <
-            todayDietList[3]['foodInfo']['foods']
-                .length;
-        i++) {
+        for (var i = 0; i < todayDietList[3]['foodInfo']['foods'].length; i++) {
           todayDietList[3]['foodInfo']['foods'][i] =
-              todayDietList[3]['foodInfo']['foods'][i]
-                  .values
-                  .toList();
+              todayDietList[3]['foodInfo']['foods'][i].values.toList();
         }
       }
-    }catch(e){
+    } catch (e) {
       print(e);
     }
   }
 
-
-
   @override
-  void didChangeDependencies()async {
+  void didChangeDependencies() async {
     String dateData = '${DateTime.now().toString().substring(0, 10)}';
-    await dbHelperDietHistory.getDietHistory(dateData).then((val){
-    dietHistory=val;
+    await dbHelperDietHistory.getDietHistory(dateData).then((val) {
+      dietHistory = val;
     });
     super.didChangeDependencies();
   }
+
   void makeItemList(int index) async {
     //날짜 정보
 
@@ -228,11 +190,9 @@ class _MyHomePageState extends State<MyHomePage> {
             size: 40,
           )),
           onTap: () {
-
             setState(() {
               dietAdded[index][0] = !dietAdded[index][0];
             });
-
           },
         ),
         dietAdded[index][0]
@@ -260,7 +220,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               });
                               todayDietList[index]['foodInfo'] =
                                   jsonDecode(todayDietList[index]['foodInfo']);
-
 
                               for (var i = 0;
                                   i <
@@ -395,7 +354,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                           ['dietName'],
                                       flag: index,
                                       kcal: todayDietList[index]['foodInfo']
-                                          ['kcal'].toString(),
+                                              ['kcal']
+                                          .toString(),
                                       nutri: todayDietList[index]['foodInfo']
                                           ['nutri'])
                                   .then((_) {
@@ -450,8 +410,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     String dateData = '${DateTime.now().toString().substring(0, 10)}';
-    dbHelperDietHistory.getDietHistory(dateData).then((val){
-      dietHistory=val;
+    dbHelperDietHistory.getDietHistory(dateData).then((val) {
+      dietHistory = val;
     });
     super.initState();
   }
