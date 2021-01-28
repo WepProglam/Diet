@@ -146,7 +146,7 @@ class _SearchListState extends State<SearchList> {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
     print("is searchign $_IsSearching");
     return Scaffold(
-        backgroundColor: Colors.black,
+        // backgroundColor: Colors.black,
         appBar: buildBar(context),
         body: _IsSearching
             ?
@@ -200,7 +200,7 @@ class _SearchListState extends State<SearchList> {
   Widget appBarTitle = Text(
     // "Search Food",
     "Foods",
-    style: TextStyle(color: Colors.white),
+    // style: TextStyle(color: Colors.white),
   );
   Icon actionIcon = Icon(
     Icons.search,
@@ -209,11 +209,11 @@ class _SearchListState extends State<SearchList> {
 
   Widget buildBar(BuildContext context) {
     return AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        // iconTheme: IconThemeData(color: Colors.white),
         centerTitle: true,
         key: key,
         title: appBarTitle,
-        backgroundColor: Colors.black,
+        // backgroundColor: Colors.black,
         actions: <Widget>[
           IconButton(
             icon: actionIcon,
@@ -324,12 +324,13 @@ class _SearchListState extends State<SearchList> {
                         });
                       },
                       autofocus: true,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                      // style: TextStyle(
+                      //   color: Colors.white,
+                      // ),
                       decoration: InputDecoration(
-                          hintText: "음식 이름을 입력하세요...",
-                          hintStyle: TextStyle(color: Colors.white)));
+                        hintText: "음식 이름을 입력하세요...",
+                      ));
+                  // hintStyle: TextStyle(color: Colors.white)));
                 } else {
                   this.actionIcon = Icon(
                     Icons.search,
@@ -337,7 +338,7 @@ class _SearchListState extends State<SearchList> {
                   );
                   this.appBarTitle = Text(
                     "Foods",
-                    style: TextStyle(color: Colors.white),
+                    // style: TextStyle(color: Colors.white),
                   );
                 }
               });
@@ -358,11 +359,11 @@ class _SearchListState extends State<SearchList> {
     setState(() {
       this.actionIcon = Icon(
         Icons.search,
-        color: Colors.white,
+        // color: Colors.white,
       );
       this.appBarTitle = Text(
         "Search Food",
-        style: TextStyle(color: Colors.white),
+        // style: TextStyle(color: Colors.white),
       );
       _IsSearching = false;
       _searchQuery.clear();
@@ -391,8 +392,8 @@ class _UiitemState extends State<Uiitem> {
         ),
         margin: EdgeInsets.all(8),
         color: isItSelected
-            ? Colors.deepOrangeAccent[700]
-            : Colors.deepOrangeAccent,
+            ? Colors.deepOrangeAccent
+            : Colors.deepOrangeAccent[700],
         child: Stack(
           children: [
             InkWell(
@@ -461,13 +462,13 @@ class _UiitemState extends State<Uiitem> {
               ),
             ),
             Positioned(
-              top: 5,
-              left: 5,
+              top: 10,
+              left: 10,
               child: GestureDetector(
                 child: Icon(
                   Icons.favorite,
                   color: this.building.isItMine == "T"
-                      ? Colors.redAccent[700]
+                      ? Colors.deepOrangeAccent
                       : null,
                   size: 20,
                 ),

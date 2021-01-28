@@ -41,13 +41,15 @@ class PieChart2State extends State {
     return AspectRatio(
       aspectRatio: 1.3,
       child: Container(
-        color: Color(0xFFFFFEF5),
+        // color: Color(0xFFFFFEF5),
         child: Row(
           children: <Widget>[
             // SizedBox(
             //   height: 18,
             // ),
+            // Spacer(),
             Expanded(
+              flex: 10,
               child: AspectRatio(
                 aspectRatio: 1,
                 child: PieChart(
@@ -77,9 +79,14 @@ class PieChart2State extends State {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Spacer(
+                  flex: 2,
+                ),
                 Indicator(
-                  color: Color(0xff0293ee),
-                  text: '탄수화물',
+                  // color: Color(0xff0293ee),
+                  color: Colors.deepOrangeAccent[700],
+                  text: ' 탄수화물',
+                  textColor: Colors.white,
                   fontSize: 12,
                   isSquare: true,
                 ),
@@ -87,8 +94,10 @@ class PieChart2State extends State {
                   height: 4,
                 ),
                 Indicator(
-                  color: Color(0xfff8b250),
-                  text: '단백질',
+                  // color: Color(0xfff8b250),
+                  color: Colors.deepOrangeAccent,
+                  text: ' 단백질',
+                  textColor: Colors.white,
                   fontSize: 12,
                   isSquare: true,
                 ),
@@ -96,8 +105,10 @@ class PieChart2State extends State {
                   height: 4,
                 ),
                 Indicator(
-                  color: Color(0xff845bef),
-                  text: '지방',
+                  // color: Color(0xff845bef),
+                  color: Colors.deepOrangeAccent[100],
+                  text: ' 지방',
+                  textColor: Colors.white,
                   isSquare: true,
                   fontSize: 12,
                 ),
@@ -105,8 +116,10 @@ class PieChart2State extends State {
                   height: 4,
                 ),
                 Indicator(
-                  color: Colors.black,
-                  text: "${myRounder(myTotalCalroie)}Kcal",
+                  // color: Colors.black,
+                  color: Colors.deepOrange[100],
+                  text: " ${myRounder(myTotalCalroie)}Kcal",
+                  textColor: Colors.white,
                   isSquare: true,
                   fontSize: 12,
                 ),
@@ -114,19 +127,23 @@ class PieChart2State extends State {
                   height: 4,
                 ),
                 Indicator(
-                  color: Colors.black,
-                  text: "${myRounder(myCorrect)}% 일치",
+                  // color: Colors.black,
+                  color: Colors.deepOrange[100],
+                  text: " ${myRounder(myCorrect)}% 일치",
+                  textColor: Colors.white,
                   isSquare: true,
                   fontSize: 12,
                 ),
-                SizedBox(
-                  height: 40,
-                ),
+                Spacer(),
+                // SizedBox(
+                //   height: 40,
+                // ),
               ],
             ),
-            const SizedBox(
-              width: 20,
-            ),
+            Spacer(),
+            // const SizedBox(
+            //   width: 20,
+            // ),
           ],
         ),
       ),
@@ -141,37 +158,40 @@ class PieChart2State extends State {
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: const Color(0xff0293ee),
-            value: myCarbohydrate,
-            title: myRounder(myCarbohydrate) + "%",
-            radius: radius,
-            titleStyle: TextStyle(
+              // color: const Color(0xff0293ee),
+              color: Colors.deepOrangeAccent[700],
+              value: myCarbohydrate,
+              title: myRounder(myCarbohydrate) + "%",
+              radius: radius,
+              titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-          );
+                // color: const Color(0xffffffff)
+              ));
         case 1:
           return PieChartSectionData(
-            color: const Color(0xfff8b250),
-            value: myProtein,
-            title: myRounder(myProtein) + "%",
-            radius: radius,
-            titleStyle: TextStyle(
+              // color: const Color(0xfff8b250),
+              color: Colors.deepOrangeAccent,
+              value: myProtein,
+              title: myRounder(myProtein) + "%",
+              radius: radius,
+              titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-          );
+                // color: const Color(0xffffffff)),
+              ));
         case 2:
           return PieChartSectionData(
-            color: const Color(0xff845bef),
-            value: myFat,
-            title: myRounder(myFat) + "%",
-            radius: radius,
-            titleStyle: TextStyle(
+              // color: const Color(0xff845bef),
+              color: Colors.deepOrangeAccent[100],
+              value: myFat,
+              title: myRounder(myFat) + "%",
+              radius: radius,
+              titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-          );
+                // color: const Color(0xffffffff)),
+              ));
 
         default:
           return null;

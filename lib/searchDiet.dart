@@ -141,7 +141,7 @@ class _SearchListState extends State<SearchList> {
     listProvider.setDietList(dietNameEX);
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      // backgroundColor: Colors.black,
       key: key,
       appBar: buildBar(context),
       body: GridView.builder(
@@ -162,7 +162,7 @@ class _SearchListState extends State<SearchList> {
 
   Widget add() {
     return FloatingActionButton(
-      splashColor: Colors.deepOrangeAccent,
+      // splashColor: Colors.deepOrangeAccent,
       heroTag: null,
       onPressed: () {
         //이거 addDiet로 바꿔야 함
@@ -173,14 +173,14 @@ class _SearchListState extends State<SearchList> {
       child: Icon(
         Icons.add,
         size: 40,
-        color: Colors.deepOrangeAccent,
+        // color: Colors.deepOrangeAccent,
       ),
     );
   }
 
   Widget appBarTitle = Text(
     "Diets",
-    style: TextStyle(color: Colors.white),
+    // style: TextStyle(color: Colors.white),
   );
   Icon actionIcon = Icon(
     Icons.search,
@@ -188,12 +188,10 @@ class _SearchListState extends State<SearchList> {
   );
 
   Widget buildBar(BuildContext context) {
-    return AppBar(
-        centerTitle: true,
-        title: appBarTitle,
-        iconTheme: IconThemeData(color: Colors.white),
+    return AppBar(centerTitle: true, title: appBarTitle,
+        // iconTheme: IconThemeData(color: Colors.white),
         // backgroundColor: Color(0xFF69C2B0),
-        backgroundColor: Colors.black,
+        // backgroundColor: Colors.black87,
         actions: <Widget>[
           IconButton(
             icon: actionIcon,
@@ -202,15 +200,15 @@ class _SearchListState extends State<SearchList> {
                 if (this.actionIcon.icon == Icons.search) {
                   this.actionIcon = Icon(
                     Icons.close,
-                    color: Colors.white,
+                    // color: Colors.white,
                   );
                   this.appBarTitle = TextField(
                     // autocorrect: true,
                     autofocus: true,
                     controller: _searchQuery,
                     style: TextStyle(
-                      color: Colors.white,
-                    ),
+                        // color: Colors.white,
+                        ),
                     decoration: InputDecoration(
                         hintText: "식단 이름을 입력하세요...",
                         hintStyle: TextStyle(color: Colors.white)),
@@ -237,11 +235,11 @@ class _SearchListState extends State<SearchList> {
     setState(() {
       this.actionIcon = Icon(
         Icons.search,
-        color: Colors.white,
+        // color: Colors.white,
       );
       this.appBarTitle = Text(
         "Diets",
-        style: TextStyle(color: Colors.white),
+        // style: TextStyle(color: Colors.white),
       );
       _IsSearching = false;
       _searchQuery.clear();
@@ -306,11 +304,11 @@ class _UiitemState extends State<Uiitem> {
         borderRadius: BorderRadius.circular(20.0),
       ),
       margin: EdgeInsets.all(8),
-      color: Colors.deepOrangeAccent,
+      // color: Colors.deepOrangeAccent,
       child: Stack(
         children: [
           InkWell(
-            splashColor: Colors.white,
+            // splashColor: Colors.white,
             //여기다 눌렀을 때 기능 넣기
             onTap: () async {
               react(whereFrom);

@@ -28,12 +28,14 @@ import 'package:flutter/material.dart';
 Widget basicAppBar(String title, BuildContext context) {
   return AppBar(
     //color
-    backgroundColor: Colors.deepOrangeAccent,
+    // backgroundColor: Colors.deepOrangeAccent,
     iconTheme: IconThemeData(color: Colors.white),
 
     //앱 이름
     centerTitle: true,
-    title: Text(title, style: TextStyle(color: Colors.white)),
+    title: Text(
+      title, /* style: TextStyle(color: Colors.white) */
+    ),
     //마이페이지
     actions: <Widget>[
       IconButton(
@@ -60,9 +62,9 @@ class NavDrawer extends StatelessWidget {
             child: DrawerHeader(
               child: Text(
                 'Side menu',
-                style: TextStyle(color: Colors.white, fontSize: 25),
+                style: TextStyle(fontSize: 25),
               ),
-              decoration: BoxDecoration(color: Colors.deepOrangeAccent),
+              // decoration: BoxDecoration(color: Colors.deepOrangeAccent),
             ),
           ),
           ListTile(

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'personalForm.dart';
@@ -21,21 +22,39 @@ StreamController<bool> streamControllerBool =
 void main() {
   runApp(MaterialApp(
     theme: ThemeData(
-        // backgroundColor: Color(0xFFFFFEF5),
-        backgroundColor: Colors.black,
-        // primaryColor: Color(0xFF69C2B0),
-        primaryColor: Colors.deepOrangeAccent,
-        buttonColor: Colors.deepOrangeAccent,
-        cardColor: Colors.deepOrangeAccent,
-        accentColor: Colors.white,
-        textTheme: TextTheme(
-          headline1:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          bodyText1: TextStyle(
-            // color: Colors.black,
-            fontWeight: FontWeight.normal,
-          ),
-        )),
+      brightness: Brightness.dark,
+
+      scaffoldBackgroundColor: Colors.black,
+      // canvasColor: Colors.black,
+      // backgroundColor: Colors.deepOrangeAccent,
+      primaryColor: Colors.deepOrangeAccent[700],
+      appBarTheme: AppBarTheme(color: Colors.black),
+      // buttonColor: Colors.white,
+      // iconTheme: IconThemeData(
+      //   color: Colors.deepOrangeAccent[700],
+      // ),
+      cardColor: Colors.deepOrangeAccent[700],
+      splashColor: Colors.white,
+      accentColor: Colors.deepOrangeAccent[700],
+
+      // textSelectionColor: Colors.white,
+      // textTheme: TextTheme(
+      //   headline1:
+      //       TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      //   headline2:
+      //       TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      //   headline3:
+      //       TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      //   bodyText1: TextStyle(
+      //     color: Colors.white,
+      //     fontWeight: FontWeight.normal,
+      //   ),
+      //   bodyText2: TextStyle(
+      //     color: Colors.white,
+      //     fontWeight: FontWeight.normal,
+      //   ),
+      // )
+    ),
     initialRoute: '/mainPage',
     routes: {
       '/': (context) => InitPage(),

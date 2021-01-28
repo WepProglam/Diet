@@ -9,6 +9,9 @@ import 'db_helper.dart';
 import 'piChart.dart';
 import 'calculate.dart';
 
+Color listViewColor = Colors.deepOrangeAccent;
+Color iconColor = Colors.deepOrangeAccent[700];
+
 final dbHelperFood = DBHelperFood();
 
 class AddDiet extends StatelessWidget {
@@ -102,11 +105,11 @@ class _FoodListState extends State<FoodList> {
             flex: 1,
           ),
           Expanded(
-            flex: 4,
+            flex: 6,
             child: Text('${food.foodName}'),
           ),
           Expanded(
-            flex: 2,
+            flex: 3,
             child: TextFormField(
               // initialValue: initialVal(food.mass),
               controller: foodMassController[index],
@@ -137,7 +140,10 @@ class _FoodListState extends State<FoodList> {
           Expanded(
             flex: 1,
             child: FlatButton(
-              child: Icon(Icons.cancel),
+              child: Icon(
+                Icons.cancel,
+                color: iconColor,
+              ),
               onPressed: () {
                 setState(() {
                   foodList.removeAt(index);
@@ -148,7 +154,8 @@ class _FoodListState extends State<FoodList> {
                 });
               },
             ),
-          )
+          ),
+          Spacer(),
         ],
       ),
     );
@@ -314,17 +321,17 @@ class _FoodListState extends State<FoodList> {
       child: Column(
         children: [
           Expanded(
-            flex: 6,
+            flex: 10,
             child: Column(
               children: [
                 //listview & 음식추가 버튼 Stack
                 Expanded(
-                  flex: 8,
+                  // flex: 8,
                   child: Container(
                     margin: EdgeInsets.only(
                         top: 10, left: 10, right: 10, bottom: 20),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.deepOrangeAccent),
+                      border: Border.all(color: listViewColor, width: 2),
                     ),
                     child: Stack(
                       children: [
@@ -335,16 +342,21 @@ class _FoodListState extends State<FoodList> {
                             return buildFood(foodList[index], index);
                           },
                           separatorBuilder: (BuildContext context, int index) =>
-                              Divider(),
+                              Divider(
+                            color: listViewColor,
+                            thickness: 1,
+                          ),
                         ),
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
                             margin: EdgeInsets.all(10),
                             height: 40,
+                            width: 120,
                             child: FloatingActionButton.extended(
                               icon: Icon(Icons.add),
                               // backgroundColor: Color(0xFF69C2B0),
+
                               onPressed: () {
                                 _navigateAndDisplaySelection(context);
                                 isGraphShowed = false;
@@ -366,14 +378,17 @@ class _FoodListState extends State<FoodList> {
             child: Container(
               child: Row(
                 children: [
-                  Spacer(
-                    flex: 1,
-                  ),
+                  // Spacer(
+                  //   flex: 1,
+                  // ),
                   // calculate button
                   Expanded(
-                    flex: 1,
+                    flex: 2,
                     child: IconButton(
-                        icon: Icon(Icons.calculate, color: Color(0xFF69C2B0)),
+                        icon: Icon(
+                          Icons.calculate,
+                          color: iconColor,
+                        ),
                         onPressed: () async {
                           // if (changeNumOfMass() == 0) {
                           //음식 무게 입력되어있는 칸이 있을땐 빼고 계산하는 기능 추가 필요
@@ -462,18 +477,27 @@ class _FoodListState extends State<FoodList> {
                         }),
                   ),
                   Expanded(
-                    flex: 4,
+                    flex: 5,
                     child: TextField(
-                      decoration: InputDecoration(hintText: '식단명을 입력하세요'),
+                      // style: TextStyle(
+                      //   color: Colors.white,
+                      // ),
+                      decoration: InputDecoration(
+                        hintText: '식단명을 입력하세요',
+                        // hintStyle: TextStyle(color: Colors.white)
+                      ),
                       controller: dietNameController,
                       textAlign: TextAlign.center,
                     ),
                   ),
                   // add button
                   Expanded(
-                    flex: 1,
+                    flex: 2,
                     child: IconButton(
-                        icon: Icon(Icons.add, color: Color(0xFF69C2B0)),
+                        icon: Icon(
+                          Icons.add,
+                          color: iconColor,
+                        ),
                         onPressed: () async {
                           if (changeNumOfMass() != foodList.length) {
                             for (var item in foodMassController) {
@@ -539,22 +563,22 @@ class _FoodListState extends State<FoodList> {
                           }
                         }),
                   ),
-                  Spacer(
-                    flex: 1,
-                  ),
+                  // Spacer(
+                  //   flex: 1,
+                  // ),
                 ],
               ),
             ),
           ),
           Container(
             margin: EdgeInsets.only(
-              left: 10,
-              right: 10,
+              left: 30,
+              right: 30,
             ),
-            padding: EdgeInsets.only(
-              left: 10,
-              right: 10,
-            ),
+            // padding: EdgeInsets.only(
+            //   left: 20,
+            //   right: 20,
+            // ),
             child: PieChartSample2(
               carbohydrate: carbohydrateMass * 4,
               fat: fatMass * 9,
