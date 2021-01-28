@@ -17,7 +17,7 @@ class AddDiet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFFFEF5),
+      // backgroundColor: Color(0xFFFFFEF5),
       appBar: basicAppBar('Add Diet', context),
       drawer: NavDrawer(),
       body: FoodList(),
@@ -324,7 +324,7 @@ class _FoodListState extends State<FoodList> {
                     margin: EdgeInsets.only(
                         top: 10, left: 10, right: 10, bottom: 20),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF69C2B0)),
+                      border: Border.all(color: Colors.deepOrangeAccent),
                     ),
                     child: Stack(
                       children: [
@@ -344,7 +344,7 @@ class _FoodListState extends State<FoodList> {
                             height: 40,
                             child: FloatingActionButton.extended(
                               icon: Icon(Icons.add),
-                              backgroundColor: Color(0xFF69C2B0),
+                              // backgroundColor: Color(0xFF69C2B0),
                               onPressed: () {
                                 _navigateAndDisplaySelection(context);
                                 isGraphShowed = false;

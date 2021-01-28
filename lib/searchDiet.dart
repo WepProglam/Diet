@@ -205,12 +205,14 @@ class _SearchListState extends State<SearchList> {
                     color: Colors.white,
                   );
                   this.appBarTitle = TextField(
+                    // autocorrect: true,
+                    autofocus: true,
                     controller: _searchQuery,
                     style: TextStyle(
                       color: Colors.white,
                     ),
                     decoration: InputDecoration(
-                        hintText: "Search here..",
+                        hintText: "식단 이름을 입력하세요...",
                         hintStyle: TextStyle(color: Colors.white)),
                   );
                   _handleSearchStart();
@@ -308,7 +310,7 @@ class _UiitemState extends State<Uiitem> {
       child: Stack(
         children: [
           InkWell(
-            // splashColor: Colors.orange,
+            splashColor: Colors.white,
             //여기다 눌렀을 때 기능 넣기
             onTap: () async {
               react(whereFrom);
@@ -316,7 +318,9 @@ class _UiitemState extends State<Uiitem> {
             child: Center(
               child: Text(
                 widget.diet.dietName,
-                style: TextStyle(fontSize: 30),
+                textScaleFactor: 1.5,
+                maxLines: 1,
+                // style: TextStyle(fontSize: 30),
               ),
             ),
           ),
