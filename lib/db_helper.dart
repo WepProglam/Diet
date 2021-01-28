@@ -404,7 +404,7 @@ class DBHelperDiet {
     });
   }
 
-  getDiet(String dietName) async {
+  Future<Diet> getDiet(String dietName) async {
     final db = await database;
     var res = await db
         .rawQuery("SELECT * FROM $tableName WHERE dietName = '$dietName'");
