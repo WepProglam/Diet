@@ -83,7 +83,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> itemList = [];
   List<Widget> itemListPast = [];
   num totalCalorie = 0;
-
+  
+  //이게 계속 실행됨
   void getConfirmedIndex(DietHistory myDietHistory) async {
     try {
       if (myDietHistory.breakFast != "null") {
@@ -512,15 +513,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: PageView.builder(
                           scrollDirection: Axis.vertical,
                           itemCount: 2,
-                          onPageChanged: (page) {
-                            if (page == 0) {
-                              calender_year = DateTime.now().year;
-                              calender_month = DateTime.now().month;
-                              calender_date = DateTime.now().day;
-                              changeIntToString();
-                              getInfo();
-                            }
-                          },
+                          // onPageChanged: (page) {
+                          //   if (page == 0) {
+                          //     calender_year = DateTime.now().year;
+                          //     calender_month = DateTime.now().month;
+                          //     calender_date = DateTime.now().day;
+                          //     changeIntToString();
+                          //     getInfo();
+                          //   }
+                          // },
                           itemBuilder: (BuildContext context, int index) {
                             return index == 0
                                 ? Column(
@@ -1183,7 +1184,7 @@ class _MyHomePageState extends State<MyHomePage> {
               }
               await dbHelperDietHistory.getDietHistory(dateTime).then((value) {
                 pastDietHistory = value;
-                print(value);
+                // print(value);
               });
 
               changeIntToString();

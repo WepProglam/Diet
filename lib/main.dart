@@ -11,7 +11,6 @@ import 'savedFood.dart';
 import 'searchDiet.dart';
 import 'searchFood.dart';
 import 'addDiet.dart';
-import 'calcDiet.dart';
 import 'calculate.dart';
 import 'activityPage.dart';
 
@@ -69,7 +68,6 @@ void main() {
       '/searchDiet': (context) => SearchDiet(),
       '/searchFood': (context) => SearchFood(),
       '/addDiet': (context) => AddDiet(),
-      '/calcDiet': (context) => CalcDiet(),
       '/calculate': (context) => Calculate(),
       '/activityPage': (context) => Activity()
     },

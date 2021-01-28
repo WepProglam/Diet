@@ -217,16 +217,16 @@ class _AddFoodSub extends State<AddFoodSub> {
         child: Row(
       children: [
         Spacer(
-          flex: 1,
+          flex: 2,
         ),
         Expanded(
-            flex: 2,
+            flex: 3,
             child: TypeFoodName(
               controller: _foodNameController,
               streamBool: widget.streamBool,
             )),
         Spacer(
-          flex: 1,
+          flex: 2,
         )
       ],
     ));
@@ -291,7 +291,8 @@ class _AddFoodSub extends State<AddFoodSub> {
       controller: controller,
       // focusNode: _focusNode,
       enabled: true,
-      keyboardType: TextInputType.number,
+      keyboardType:
+          fieldName == "foodName" ? TextInputType.text : TextInputType.number,
       decoration: InputDecoration(hintText: ''),
       textAlign: TextAlign.center,
       validator: (value) {
@@ -301,7 +302,9 @@ class _AddFoodSub extends State<AddFoodSub> {
         return null;
       },
       onChanged: (text) {
-        foodInfo[fieldName] = double.parse(text) / foodInfo['servingSize'];
+        if (fieldName != "foodName") {
+          foodInfo[fieldName] = double.parse(text) / foodInfo['servingSize'];
+        }
       },
     );
   }
@@ -378,6 +381,7 @@ class _TypeFoodName extends State<TypeFoodName> {
       //   }
       //   return null;
       // },
+      color: Colors.deepOrangeAccent[700],
       onPressed: () {
         Navigator.pushNamed(context, '/searchFood',
             arguments: <String, String>{'pre': 'addFood'}).then((code) async {
@@ -613,6 +617,14 @@ class _TransFoodFABState extends State<TransFoodFAB>
             await streamControllerBool.add(isItCutom);
           } else {}
           if (_formKey.currentState.validate()) {
+            if (myFoodInfo.isEmpty) {
+              //커스텀
+
+            } else {
+              //검색 정보
+
+            }
+            print(myFoodInfo);
             showAlertDialog(context);
           }
         },
@@ -653,6 +665,9 @@ class _TransFoodFABState extends State<TransFoodFAB>
         child: Text("OK"),
         onPressed: () async {
           //print("this is myFoodinfo2 $myFoodInfo");
+
+          print(myFoodInfo);
+
           Food foodClass = Food(
               code: myFoodInfo['code'],
               dbArmy: myFoodInfo['dbArmy'],
@@ -663,7 +678,9 @@ class _TransFoodFABState extends State<TransFoodFAB>
               carbohydrate: myFoodInfo['carbohydrate'],
               fat: myFoodInfo['fat'],
               isItMine: 'T',
-              selected: myFoodInfo['selected'] + 1,
+              selected: myFoodInfo['selected'] == null
+                  ? 1
+                  : myFoodInfo['selected'] + 1,
               servingSize: myFoodInfo['servingSize']);
           await dbHelperFood.updateFood(foodClass);
           Navigator.pop(context);

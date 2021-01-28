@@ -48,6 +48,7 @@ class _FoodListState extends State<FoodList> {
   final dbHelperDiet = DBHelperDiet();
   TextEditingController dietNameController = TextEditingController();
   List<TextEditingController> foodMassController = [];
+  List<TextEditingController> foodServingController = [];
   num carbohydrateMass, proteinMass, fatMass = 0.0;
   num totalCalorie;
   num correct = 0.0;
@@ -74,6 +75,9 @@ class _FoodListState extends State<FoodList> {
     for (var controller in foodMassController) {
       controller.dispose();
     }
+    for (var controller in foodServingController) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -93,9 +97,16 @@ class _FoodListState extends State<FoodList> {
 
   Widget buildFood(ListContents food, int index) {
     TextEditingController _controller = TextEditingController();
+    TextEditingController _controllerServing = TextEditingController();
     _controller.text = initialVal(food.mass);
+    _controllerServing.text = initialVal(0);
+
     if (index >= foodMassController.length) {
       foodMassController.add(_controller);
+    }
+
+    if (index >= foodServingController.length) {
+      foodServingController.add(_controllerServing);
     }
     //받는 매게변수 index 추가
     return Center(
@@ -105,8 +116,19 @@ class _FoodListState extends State<FoodList> {
             flex: 1,
           ),
           Expanded(
-            flex: 6,
+            flex: 3,
             child: Text('${food.foodName}'),
+          ),
+          Expanded(
+            flex: 2,
+            child: TextFormField(
+              // initialValue: initialVal(food.mass),
+              controller: foodServingController[index],
+              decoration: InputDecoration(hintText: '인분'),
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              enabled: false,
+            ),
           ),
           Expanded(
             flex: 3,
@@ -396,12 +418,13 @@ class _FoodListState extends State<FoodList> {
                           //음식 무게 입력되어있는 칸이 있을땐 빼고 계산하는 기능 추가 필요
                           //그람은 반올림해서 표시 필요
                           //음식 옆에 검정색 x표 버튼 외에 버튼 하나 더 추가 => 누르면 해당 음식의 텍스트필드 값이 0으로 바뀜
-                          //일치율 계산 함수 구현 필요
+                          List<num> servingSize = [];
                           await getFoodInfo(foodList).then((value) {
                             makeCsvFile(foodList: value).then((val) {
                               List<num> sendData = [];
                               List<num> nutriInfo = new List(value.length * 3);
                               for (var i = 0; i < value.length; i++) {
+                                servingSize.add(value[i].servingSize);
                                 nutriInfo[i * 3] = value[i].carbohydrate;
                                 nutriInfo[i * 3 + 1] = value[i].protein;
                                 nutriInfo[i * 3 + 2] = value[i].fat;
@@ -422,6 +445,8 @@ class _FoodListState extends State<FoodList> {
                                 for (var i = 0; i < foodList.length; i++) {
                                   foodMassController[i].text =
                                       val[i].toStringAsFixed(0);
+                                  foodServingController[i].text =
+                                      "${(val[i] / servingSize[i]).toStringAsFixed(1)}인분";
                                 }
                               } catch (e) {
                                 var snackBar =

@@ -187,46 +187,56 @@ List<num> makeForLooP(
     List<num> maxMass,
     List<num> nutriInfo,
     List<num> calorie) {
+  List<num> maxMassList;
   num totalCalorie = 0;
-  // print(calculateDensity);
   if (tempIndex == maxMass.length - 1) {
     num tempDegree = 0;
     num maxDegree = myFoodMassList.last;
     List<num> returnMassList = List<num>.from(myFoodMassList);
-    for (myFoodMassList[tempIndex] = minMass[tempIndex];
-        myFoodMassList[tempIndex] < maxMass[tempIndex];
-        myFoodMassList[tempIndex] +=
+    List<num> tempMassList = List<num>.from(myFoodMassList);
+    for (tempMassList[tempIndex] = minMass[tempIndex];
+        tempMassList[tempIndex] < maxMass[tempIndex];
+        tempMassList[tempIndex] +=
             ((maxMass[tempIndex] - minMass[tempIndex]) ~/ calculateDensity)) {
-      csvList.addAll(returnMassList);
-
       totalCalorie = totalCalorieOverFlow(myFoodMassList, calorie);
+      if (totalCalorie > targetCalorie * 1.3 ||
+          totalCalorie < targetCalorie * 0.7) {
+        //걍 넘어가
+      } else {
+        List<num> sendData = [];
+        sendData.addAll(nutriInfo);
+        sendData.addAll(tempMassList);
+        tempDegree = justCalculateNutri(sendData, maxMass.length)[1];
 
-      List<num> sendData = [];
-      sendData.addAll(nutriInfo);
-      sendData.addAll(myFoodMassList);
-      tempDegree = justCalculateNutri(sendData, maxMass.length)[1];
-
-      if (tempDegree >= maxDegree) {
-        //현재의 일치율을 가져와 전보다 높으면 return mass list에 저장
-        maxDegree = tempDegree;
-        returnMassList = List<num>.from(myFoodMassList);
-        returnMassList.last = maxDegree;
-      } else {}
+        if (tempDegree >= maxDegree) {
+          //현재의 일치율을 가져와 전보다 높으면 return mass list에 저장
+          maxDegree = tempDegree;
+          print(maxDegree);
+          returnMassList = List<num>.from(tempMassList);
+          returnMassList.last = maxDegree;
+        } else {}
+      }
     }
     return returnMassList;
   } else if (tempIndex < maxMass.length - 1) {
+    maxMassList = List<num>.from(myFoodMassList);
+    List<num> tempMassList = List<num>.from(myFoodMassList);
     for (myFoodMassList[tempIndex] = minMass[tempIndex];
         myFoodMassList[tempIndex] < maxMass[tempIndex];
         myFoodMassList[tempIndex] +=
             (maxMass[tempIndex] - minMass[tempIndex]) ~/ calculateDensity) {
       tempIndex += 1;
-      myFoodMassList = new List<num>.from(makeForLooP(
+      tempMassList = new List<num>.from(makeForLooP(
           tempIndex, myFoodMassList, minMass, maxMass, nutriInfo, calorie));
+
+      if (tempMassList.last >= maxMassList.last) {
+        maxMassList = new List<num>.from(tempMassList);
+      }
       tempIndex -= 1;
     }
   } else {}
   // print("mass : $myFoodMassList");
-  return myFoodMassList;
+  return maxMassList;
 }
 
 Future<List<num>> makeCsvFile({List<Food> foodList}) async {
@@ -235,9 +245,9 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   calculateDensity = 1;
   foodLength = foodList.length;
   if (foodLength <= 3) {
-    calculateDensity *= 50;
+    calculateDensity *= 30;
   } else if (foodLength <= 5) {
-    calculateDensity *= 5;
+    calculateDensity *= 20;
   } else if (foodLength <= 7) {
     calculateDensity *= 5;
   } else {
@@ -252,7 +262,7 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   List<num> nutriInfo = new List(foodLength * 3);
 
   for (var i = 0; i < foodLength; i++) {
-    minMass[i] = foodList[i].servingSize / 5;
+    minMass[i] = foodList[i].servingSize / 4;
     myFoodMassList[i] = minMass[i];
     maxMass[i] = foodList[i].servingSize * 2;
     calorie[i] = foodList[i].carbohydrate * 4 +
@@ -277,18 +287,18 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   for (var i = 0; i < calorie.length; i++) {
     sum += calorie[i];
   }
-  for (var i = 0; i < calorie.length; i++) {
-    massList[0][i] *= (targetCalorie / totalCalorie);
-  }
+  // for (var i = 0; i < calorie.length; i++) {
+  //   massList[0][i] *= (targetCalorie / totalCalorie);
+  // }
   totalCalorie = totalCalorieOverFlow(massList[0], calorie);
 
   // print(totalCalorie);
 
-  String csv = const ListToCsvConverter().convert([csvList]);
-  final directory = await getApplicationDocumentsDirectory();
-  final pathOfTheFileToWrite = directory.path + "/calExcercise.csv";
-  File file = await File(pathOfTheFileToWrite);
-  file.writeAsString(csv);
+  // String csv = const ListToCsvConverter().convert([csvList]);
+  // final directory = await getApplicationDocumentsDirectory();
+  // final pathOfTheFileToWrite = directory.path + "/calExcercise.csv";
+  // File file = await File(pathOfTheFileToWrite);
+  // file.writeAsString(csv);
   return massList[0];
 }
 
