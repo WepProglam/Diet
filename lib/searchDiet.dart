@@ -153,7 +153,7 @@ class _SearchListState extends State<SearchList> {
           );
         },
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, childAspectRatio: 5 / 3),
+            crossAxisCount: 2, childAspectRatio: 4 / 6),
       ),
       floatingActionButton: add(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -298,7 +298,7 @@ class _UiitemState extends State<Uiitem> {
 
     return Card(
       margin: EdgeInsets.all(8),
-      color: Colors.white70,
+      color: Colors.redAccent,
       child: Stack(
         children: [
           InkWell(

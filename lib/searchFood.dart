@@ -163,7 +163,7 @@ class _SearchListState extends State<SearchList> {
                   );
                 },
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, childAspectRatio: 5 / 3),
+                    crossAxisCount: 2, childAspectRatio: 5 / 4),
               )
             : GridView.builder(
                 padding: EdgeInsets.all(8),
@@ -175,7 +175,7 @@ class _SearchListState extends State<SearchList> {
                   );
                 },
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, childAspectRatio: 5 / 3),
+                    crossAxisCount: 2, childAspectRatio: 5 / 4),
               ),
         floatingActionButton: (args != null)
             ? ((args['pre'] == 'addDiet')
