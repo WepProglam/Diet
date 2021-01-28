@@ -42,18 +42,106 @@ List<dynamic> justCalculateNutri(List<num> foodList, num foodLength) {
     fat += fatList[i] * mass[i];
   }
   List<num> nutriRatio = [carbohydrate * 4, protein * 4, fat * 9];
-  num degree = acos(returnDotProduct(ratio, nutriRatio) /
-      (returnAmplitude(ratio) * returnAmplitude(nutriRatio)));
+  num cosTheta = returnDotProduct(ratio, nutriRatio) /
+      (returnAmplitude(ratio) * returnAmplitude(nutriRatio));
+  // num degree = acos(cosTheta);
+  // num correctRate = (4 * cosTheta - 3) * 100;
+  num correctRate = correctness(ratio, nutriRatio);
+
+  // if (degree > 0.9) {
+  //   correctRate = 0;
+  // }
 
   List<dynamic> csvFile = [
     mass,
-    (1 - degree / (pi / 2)) * 100,
+    // (1 - degree / (pi / 2)) * 100,
+    correctRate,
     "1 : ${myRounder(protein / carbohydrate)} : ${myRounder(fat * 9 / (carbohydrate * 4))}",
     carbohydrate,
     protein,
     fat
   ];
   return csvFile;
+}
+
+//ratio: 설정 비율, nutriRatio: 특정 점의 비율
+num correctness(List<num> ratio, List<num> nutriRatio) {
+  num ampRatio = returnAmplitude(ratio);
+  num ampNutriRatio = returnAmplitude(nutriRatio);
+  //단위원 안에 넣기
+  for (int i = 0; i < 3; i++) {
+    if (ampRatio == 0 || ampNutriRatio == 0) {
+      return 0;
+    }
+    ratio[i] = ratio[i] / ampRatio;
+    nutriRatio[i] = nutriRatio[i] / ampNutriRatio;
+  }
+
+  //nutriRatio - ratio (ratio -> nutriRatio)
+  List<num> minusV = returnMinus(ratio, nutriRatio);
+  //법선벡터
+  List<num> normalV = returnCrossProduct(ratio, nutriRatio);
+
+  //직선과 평면이 만날 때 매개변수 값
+  //[yz, zx, xy] (x = 0, y = 0, z = 0)
+  int direction = 0;
+  for (; direction < 3; direction++) {
+    if (minusV[direction] == 0) {
+      continue;
+    } else {
+      // num t = -ratio[direction] / minusV[direction];
+      if (ratio[direction] / minusV[direction] <= 0) {
+        break;
+      } else {
+        continue;
+      }
+    }
+  }
+
+  // List<num> plane = normalV;
+  List<num> pointInPlane = new List(3);
+  switch (direction) {
+    case 0: //yz평면 방향으로 갈때
+      {
+        pointInPlane[0] = 0;
+        pointInPlane[1] = sqrt(1 / (pow((normalV[1] / normalV[2]), 2) + 1));
+        pointInPlane[2] = sqrt(1 / (pow((normalV[2] / normalV[1]), 2) + 1));
+      }
+      break;
+    case 1: //zx 평면 방향
+      {
+        pointInPlane[1] = 0;
+        pointInPlane[2] = sqrt(1 / (pow((normalV[2] / normalV[0]), 2) + 1));
+        pointInPlane[0] = sqrt(1 / (pow((normalV[0] / normalV[2]), 2) + 1));
+      }
+      break;
+    case 2: //xy평면 방향
+      {
+        pointInPlane[2] = 0;
+        pointInPlane[0] = sqrt(1 / (pow((normalV[0] / normalV[1]), 2) + 1));
+        pointInPlane[1] = sqrt(1 / (pow((normalV[1] / normalV[0]), 2) + 1));
+      }
+      break;
+
+    default:
+      return 100;
+  }
+
+  num degreeWithNutriRatio = acos(returnDotProduct(ratio, nutriRatio));
+  num degreeWithPointInPlane = acos(returnDotProduct(ratio, pointInPlane));
+
+  num result =
+      (1 - pow(((degreeWithNutriRatio / degreeWithPointInPlane)), 2)) * 100;
+  // print(result);
+  return result;
+}
+
+List<num> returnMinus(List<num> a, List<num> b) {
+  List<num> result = new List(3);
+  for (int i = 0; i < 3; i++) {
+    result[i] = b[i] - a[i];
+  }
+  return result;
 }
 
 num returnAmplitude(List<num> a) {
@@ -70,6 +158,16 @@ num returnDotProduct(List<num> a, List<num> b) {
     dot += a[i] * b[i];
   }
   return dot;
+}
+
+List<num> returnCrossProduct(List<num> a, List<num> b) {
+  List<num> cross = new List(3);
+
+  cross[0] = a[1] * b[2] - a[2] * b[1];
+  cross[1] = a[2] * b[0] - a[0] * b[2];
+  cross[2] = a[0] * b[1] - a[1] * b[0];
+
+  return cross;
 }
 
 num totalCalorieOverFlow(List<num> mass, List<num> calorie) {
@@ -106,7 +204,7 @@ List<num> makeForLooP(
       List<num> sendData = [];
       sendData.addAll(nutriInfo);
       sendData.addAll(myFoodMassList);
-      tempDegree = justCalculateNutri(sendData, maxMass.length)[3];
+      tempDegree = justCalculateNutri(sendData, maxMass.length)[1];
 
       if (tempDegree >= maxDegree) {
         //현재의 일치율을 가져와 전보다 높으면 return mass list에 저장
@@ -136,8 +234,10 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   List<List<num>> massList = [[]];
   calculateDensity = 1;
   foodLength = foodList.length;
-  if (foodLength <= 5) {
-    calculateDensity *= 3;
+  if (foodLength <= 3) {
+    calculateDensity *= 50;
+  } else if (foodLength <= 5) {
+    calculateDensity *= 10;
   } else if (foodLength <= 7) {
     calculateDensity *= 5;
   } else {
@@ -153,6 +253,7 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
 
   for (var i = 0; i < foodLength; i++) {
     minMass[i] = foodList[i].servingSize / 5;
+    myFoodMassList[i] = minMass[i];
     maxMass[i] = foodList[i].servingSize * 2;
     calorie[i] = foodList[i].carbohydrate * 4 +
         foodList[i].fat * 9 +

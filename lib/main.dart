@@ -21,9 +21,20 @@ StreamController<bool> streamControllerBool =
 void main() {
   runApp(MaterialApp(
     theme: ThemeData(
-      backgroundColor: Color(0xFFFFFEF5),
-      primaryColor: Color(0xFF69C2B0),
-    ),
+        // backgroundColor: Color(0xFFFFFEF5),
+        backgroundColor: Colors.deepOrangeAccent,
+        // primaryColor: Color(0xFF69C2B0),
+        primaryColor: Colors.deepOrangeAccent,
+        buttonColor: Colors.deepOrangeAccent,
+        accentColor: Colors.white,
+        textTheme: TextTheme(
+          headline1:
+              TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          bodyText1: TextStyle(
+            // color: Colors.black,
+            fontWeight: FontWeight.normal,
+          ),
+        )),
     initialRoute: '/mainPage',
     routes: {
       '/': (context) => InitPage(),

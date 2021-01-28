@@ -514,7 +514,7 @@ class _TransFoodFABState extends State<TransFoodFAB>
     _animateIcon =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
     _buttonColor = ColorTween(
-      begin: Colors.black45,
+      begin: Colors.deepOrangeAccent,
       end: Colors.orange[300],
     ).animate(CurvedAnimation(
       parent: _animationController,
@@ -598,7 +598,7 @@ class _TransFoodFABState extends State<TransFoodFAB>
         },
         tooltip: 'Add',
         child: Icon(Icons.add, size: 30),
-        backgroundColor: Colors.black45,
+        backgroundColor: Colors.deepOrangeAccent,
       ),
     );
   }
@@ -617,7 +617,7 @@ class _TransFoodFABState extends State<TransFoodFAB>
         },
         tooltip: 'Search',
         child: Icon(Icons.search, size: 30),
-        backgroundColor: Colors.black45,
+        backgroundColor: Colors.deepOrangeAccent,
       ),
     );
   }

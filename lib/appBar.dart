@@ -28,7 +28,7 @@ import 'package:flutter/material.dart';
 Widget basicAppBar(String title, BuildContext context) {
   return AppBar(
     //color
-    backgroundColor: Color(0xFF69C2B0),
+    backgroundColor: Colors.deepOrangeAccent,
     iconTheme: IconThemeData(color: Colors.white),
 
     //앱 이름
@@ -62,9 +62,7 @@ class NavDrawer extends StatelessWidget {
                 'Side menu',
                 style: TextStyle(color: Colors.white, fontSize: 25),
               ),
-              decoration: BoxDecoration(
-                color: Color(0xFF69C2B0),
-              ),
+              decoration: BoxDecoration(color: Colors.deepOrangeAccent),
             ),
           ),
           ListTile(

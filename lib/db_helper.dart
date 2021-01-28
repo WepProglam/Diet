@@ -362,7 +362,6 @@ class DBHelperDiet {
     }, onUpgrade: (db, oldVersion, newVersion) {});
   }
 
-
   createData(Diet diet) async {
     final db = await database;
     await db.insert(
@@ -514,7 +513,7 @@ class DBHelperDietHistory {
     });
   }
 
-   Future<DietHistory> getDietHistory(String date) async {
+  Future<DietHistory> getDietHistory(String date) async {
     final db = await database;
     var res =
         await db.rawQuery("SELECT * FROM $tableName WHERE date = '$date'");

@@ -141,7 +141,7 @@ class _SearchListState extends State<SearchList> {
     listProvider.setDietList(dietNameEX);
 
     return Scaffold(
-      backgroundColor: Color(0xFFFFFEF5),
+      backgroundColor: Colors.black,
       key: key,
       appBar: buildBar(context),
       body: GridView.builder(
@@ -153,7 +153,7 @@ class _SearchListState extends State<SearchList> {
           );
         },
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, childAspectRatio: 5 / 3),
+            crossAxisCount: 2, childAspectRatio: 4 / 6),
       ),
       floatingActionButton: add(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -161,23 +161,25 @@ class _SearchListState extends State<SearchList> {
   }
 
   Widget add() {
-    return Container(
-      child: FloatingActionButton(
-        heroTag: null,
-        onPressed: () {
-          //이거 addDiet로 바꿔야 함
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/addDiet');
-        },
-        tooltip: 'Add',
-        child: Icon(Icons.add, size: 30),
-        backgroundColor: Color(0xFF7EE0CC),
+    return FloatingActionButton(
+      splashColor: Colors.deepOrangeAccent,
+      heroTag: null,
+      onPressed: () {
+        //이거 addDiet로 바꿔야 함
+        Navigator.pop(context);
+        Navigator.pushNamed(context, '/addDiet');
+      },
+      tooltip: 'Add',
+      child: Icon(
+        Icons.add,
+        size: 40,
+        color: Colors.deepOrangeAccent,
       ),
     );
   }
 
   Widget appBarTitle = Text(
-    "Search Diet",
+    "Diets",
     style: TextStyle(color: Colors.white),
   );
   Icon actionIcon = Icon(
@@ -190,7 +192,8 @@ class _SearchListState extends State<SearchList> {
         centerTitle: true,
         title: appBarTitle,
         iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Color(0xFF69C2B0),
+        // backgroundColor: Color(0xFF69C2B0),
+        backgroundColor: Colors.black,
         actions: <Widget>[
           IconButton(
             icon: actionIcon,
@@ -235,7 +238,7 @@ class _SearchListState extends State<SearchList> {
         color: Colors.white,
       );
       this.appBarTitle = Text(
-        "Search Diet",
+        "Diets",
         style: TextStyle(color: Colors.white),
       );
       _IsSearching = false;
@@ -297,8 +300,11 @@ class _UiitemState extends State<Uiitem> {
     }
 
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
       margin: EdgeInsets.all(8),
-      color: Colors.white70,
+      color: Colors.deepOrangeAccent,
       child: Stack(
         children: [
           InkWell(
