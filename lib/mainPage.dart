@@ -16,6 +16,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 final dbHelperDietHistory = DBHelperDietHistory();
 final dbHelperPerson = DBHelperPerson();
 final int calenderWidthFlex = 20;
+
 // final dbHelper
 StreamController<bool> streamControllerMainPage =
     mainStream.streamControllerMainPage;
@@ -47,6 +48,8 @@ class _MyHomePageState extends State<MyHomePage> {
   var lastDayDateTime;
   bool isItCalender = true;
   bool switchControl = false;
+  DietHistory dietHistory;
+
   FocusScopeNode myFocusNode = FocusScopeNode();
   ScrollController _controller = new ScrollController();
   List<bool> isSelected = [true, false];
@@ -63,7 +66,16 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> itemList = [];
   num totalCalorie = 0;
 
-  void makeItemList(int index) {
+  void getConfirmedIndex(){
+
+  }
+
+  void makeItemList(int index) async {
+    String dateData = '${DateTime.now().toString().substring(0, 10)}';
+    //날짜 정보
+    await dbHelperDietHistory.getDietHistory(dateData).then((val){
+      dietHistory=val;
+    });
     print("/" * 100);
     print(dietConfirm);
     print(itemList.length);
