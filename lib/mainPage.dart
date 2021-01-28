@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_application_1/dietModelSaver.dart';
+import 'package:flutter_application_1/model.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'appBar.dart';
 import 'db_helper.dart';
@@ -11,10 +13,10 @@ import 'lineChart.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 //그래프 표시 버튼 위치 달력 우측 하단
-
+final dbHelperDietHistory = DBHelperDietHistory();
 final dbHelperPerson = DBHelperPerson();
 final int calenderWidthFlex = 20;
-
+// final dbHelper
 StreamController<bool> streamControllerMainPage =
     mainStream.streamControllerMainPage;
 
@@ -54,144 +56,269 @@ class _MyHomePageState extends State<MyHomePage> {
     [false, false, false, false],
     [false, false, false, false]
   ];
+  List<bool> dietConfirm = [false, false, false, false];
+
   // +버튼, adddiet로 가는지, savedDiet로 가는지
   List<Map> todayDietList = List<Map>(4);
   List<Widget> itemList = [];
   num totalCalorie = 0;
 
   void makeItemList(int index) {
-    itemList = [
-      GestureDetector(
-        child: Center(
-            child: Icon(
-          Icons.add_circle_outline,
-          size: 40,
-        )),
-        onTap: () {
-          print(dietAdded);
-          print(index);
-          setState(() {
-            dietAdded[index][0] = !dietAdded[index][0];
-          });
-          print(dietAdded[index]);
-        },
-      ),
-      dietAdded[index][0]
-          ? Row(
-              children: [
-                Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                        child: FractionallySizedBox(
-                          widthFactor: 1,
-                          heightFactor: 1,
-                          child: Container(
-                              child: Center(child: Text("식단 추가하기")),
-                              decoration: BoxDecoration(color: Colors.red)),
-                        ),
-                        onTap: () {
-                          Navigator.pushNamed(context, '/addDiet',
-                              arguments: <String, Map>{
-                                "pre": {"pre": "mainPage", "index": index}
-                              }).then((val) {
-                            setState(() {
-                              dietAdded[index][3] = val == null ? false : true;
-                              todayDietList[index] = val;
-                            });
-                            todayDietList[index]['foodInfo'] =
-                                jsonDecode(todayDietList[index]['foodInfo']);
-
-                            print(todayDietList[index]['foodInfo']['foods']
-                                is List);
-                            for (var i = 0;
-                                i <
-                                    todayDietList[index]['foodInfo']['foods']
-                                        .length;
-                                i++) {
-                              todayDietList[index]['foodInfo']['foods'][i] =
-                                  todayDietList[index]['foodInfo']['foods'][i]
-                                      .values
-                                      .toList();
-                            }
-                          });
-                        })),
-                Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                        child: FractionallySizedBox(
-                          widthFactor: 1,
-                          heightFactor: 1,
-                          child: Container(
-                              child: Center(child: Text("저장된 식단 불러오기")),
-                              decoration: BoxDecoration(color: Colors.blue)),
-                        ),
-                        onTap: () {
-                          Navigator.pushNamed(context, '/searchDiet',
-                              arguments: <String, String>{
-                                "pre": "mainPage"
-                              }).then((val) {
-                            setState(() {
-                              dietAdded[index][3] = val == null ? false : true;
-                              todayDietList[index] = val;
-                            });
-                            todayDietList[index]['foodInfo'] =
-                                jsonDecode(todayDietList[index]['foodInfo']);
-
-                            print(todayDietList[index]['foodInfo']['foods']
-                                is List);
-                            for (var i = 0;
-                                i <
-                                    todayDietList[index]['foodInfo']['foods']
-                                        .length;
-                                i++) {
-                              todayDietList[index]['foodInfo']['foods'][i] =
-                                  todayDietList[index]['foodInfo']['foods'][i]
-                                      .values
-                                      .toList();
-                            }
-                          });
-                        })),
-              ],
-            )
-          : Container(),
-      dietAdded[index][3]
-          ? FractionallySizedBox(
-              widthFactor: 1.0,
-              heightFactor: 1.0,
-              child: Container(
-                decoration: BoxDecoration(color: Colors.yellow),
-                child: Center(
-                    child: Column(children: [
+    print("/" * 100);
+    print(dietConfirm);
+    print(itemList.length);
+    if (dietConfirm[index]) {
+      itemList = [
+        FractionallySizedBox(
+            widthFactor: 1.0,
+            heightFactor: 1.0,
+            child: Container(
+              decoration: BoxDecoration(color: Colors.yellow),
+              child: Center(
+                child: Column(children: [
                   for (var item in todayDietList[index]['foodInfo']['foods'])
                     //item[0] : 코드
                     //item[1] : 음식 이름
                     //item[2] : 음식 무게
                     Text("${item[1]}  ${item[2]}g"),
-                  Text("총 칼로리 : ${todayDietList[index]['foodInfo']['kcal']}"),
                   Text(
                       "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
-                ])),
+                  Text("총 칼로리 : ${todayDietList[index]['foodInfo']['kcal']}"),
+                ]),
               ),
-            )
-          : Container(),
-      dietAdded[index][0]
-          ? Positioned(
-              left: 0,
-              child: GestureDetector(
-                child: Icon(
-                  Icons.keyboard_backspace,
-                  size: 20,
-                ),
+            ))
+      ];
+    } else {
+      itemList = [
+        GestureDetector(
+          child: Center(
+              child: Icon(
+            Icons.add_circle_outline,
+            size: 40,
+          )),
+          onTap: () {
+            print(dietAdded);
+            print(index);
+            setState(() {
+              dietAdded[index][0] = !dietAdded[index][0];
+            });
+            print(dietAdded[index]);
+          },
+        ),
+        dietAdded[index][0]
+            ? Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                          child: FractionallySizedBox(
+                            widthFactor: 1,
+                            heightFactor: 1,
+                            child: Container(
+                                child: Center(child: Text("식단 추가하기")),
+                                decoration: BoxDecoration(color: Colors.red)),
+                          ),
+                          onTap: () {
+                            Navigator.pushNamed(context, '/addDiet',
+                                arguments: <String, Map>{
+                                  "pre": {"pre": "mainPage", "index": index}
+                                }).then((val) {
+                              setState(() {
+                                dietAdded[index][2] =
+                                    val == null ? false : true;
+                                todayDietList[index] = val;
+                              });
+                              todayDietList[index]['foodInfo'] =
+                                  jsonDecode(todayDietList[index]['foodInfo']);
+
+                              print(todayDietList[index]['foodInfo']['foods']
+                                  is List);
+                              for (var i = 0;
+                                  i <
+                                      todayDietList[index]['foodInfo']['foods']
+                                          .length;
+                                  i++) {
+                                todayDietList[index]['foodInfo']['foods'][i] =
+                                    todayDietList[index]['foodInfo']['foods'][i]
+                                        .values
+                                        .toList();
+                              }
+                            });
+                          })),
+                  Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                          child: FractionallySizedBox(
+                            widthFactor: 1,
+                            heightFactor: 1,
+                            child: Container(
+                                child: Center(child: Text("저장된 식단 불러오기")),
+                                decoration: BoxDecoration(color: Colors.blue)),
+                          ),
+                          onTap: () {
+                            Navigator.pushNamed(context, '/searchDiet',
+                                arguments: <String, String>{
+                                  "pre": "mainPage"
+                                }).then((val) {
+                              setState(() {
+                                dietAdded[index][2] =
+                                    val == null ? false : true;
+                                todayDietList[index] = val;
+                              });
+                              todayDietList[index]['foodInfo'] =
+                                  jsonDecode(todayDietList[index]['foodInfo']);
+
+                              print(todayDietList[index]['foodInfo']['foods']
+                                  is List);
+                              for (var i = 0;
+                                  i <
+                                      todayDietList[index]['foodInfo']['foods']
+                                          .length;
+                                  i++) {
+                                todayDietList[index]['foodInfo']['foods'][i] =
+                                    todayDietList[index]['foodInfo']['foods'][i]
+                                        .values
+                                        .toList();
+                              }
+                            });
+                          })),
+                ],
+              )
+            : Container(),
+        dietAdded[index][2] //
+            ? GestureDetector(
+                child: FractionallySizedBox(
+                    widthFactor: 1.0,
+                    heightFactor: 1.0,
+                    child: Container(
+                      decoration: BoxDecoration(color: Colors.yellow),
+                      child: Center(
+                        child: Column(children: [
+                          for (var item in todayDietList[index]['foodInfo']
+                              ['foods'])
+                            //item[0] : 코드
+                            //item[1] : 음식 이름
+                            //item[2] : 음식 무게
+                            AnimatedDefaultTextStyle(
+                                duration: const Duration(milliseconds: 300),
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  color: dietConfirm[index]
+                                      ? Colors.red
+                                      : Colors.blueAccent,
+                                  fontWeight: dietConfirm[index]
+                                      ? FontWeight.w100
+                                      : FontWeight.bold,
+                                ),
+                                child: Text("${item[1]}  ${item[2]}g")),
+                          AnimatedDefaultTextStyle(
+                            duration: const Duration(milliseconds: 300),
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              color: dietConfirm[index]
+                                  ? Colors.red
+                                  : Colors.blueAccent,
+                              fontWeight: dietConfirm[index]
+                                  ? FontWeight.w100
+                                  : FontWeight.bold,
+                            ),
+                            child: Text(
+                                "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
+                          ),
+                          AnimatedDefaultTextStyle(
+                            duration: const Duration(milliseconds: 300),
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              color: dietConfirm[index]
+                                  ? Colors.red
+                                  : Colors.blueAccent,
+                              fontWeight: dietConfirm[index]
+                                  ? FontWeight.w100
+                                  : FontWeight.bold,
+                            ),
+                            child: Text(
+                                "총 칼로리 : ${todayDietList[index]['foodInfo']['kcal']}"),
+                          ),
+                        ]),
+                      ),
+                    )),
                 onTap: () {
                   setState(() {
-                    dietAdded[index] = [false, false, false, false];
+                    dietAdded[index][3] = !dietAdded[index][3];
                   });
-                  print("뒤로가기");
+                  print(dietAdded);
                 },
-              ),
-            )
-          : Container()
-    ];
+              )
+            : Container(),
+        dietAdded[index][3] //dietConfirm
+            ? FractionallySizedBox(
+                widthFactor: 1,
+                heightFactor: 1,
+                child: Container(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Spacer(flex: 1),
+                        Expanded(
+                          flex: 1,
+                          child: RaisedButton(
+                            child: Text("먹었"),
+                            onPressed: () {
+                              formatDietHistory(
+                                      dietName: todayDietList[index]
+                                          ['dietName'],
+                                      flag: index,
+                                      kcal: todayDietList[index]['foodInfo']
+                                          ['kcal'].toString(),
+                                      nutri: todayDietList[index]['foodInfo']
+                                          ['nutri'])
+                                  .then((_) {
+                                setState(() {
+                                  //확정
+
+                                  dietConfirm[index] = true;
+                                  dietAdded[index][3] = false;
+                                });
+                              });
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: RaisedButton(
+                            child: Text("안먹었"),
+                            onPressed: () {
+                              setState(() {
+                                dietAdded[index] = [true, false, false, false];
+                              });
+                            },
+                          ),
+                        ),
+                        Spacer(flex: 1),
+                      ]),
+                ))
+            : Container(),
+        dietAdded[index][0]
+            ? Positioned(
+                left: 0,
+                child: GestureDetector(
+                  child: Icon(
+                    Icons.keyboard_backspace,
+                    size: 20,
+                  ),
+                  onTap: () {
+                    setState(() {
+                      dietAdded[index] = dietAdded[index][2] == true
+                          ? [true, false, false, false]
+                          : [false, false, false, false];
+                    });
+                    print("뒤로가기");
+                  },
+                ),
+              )
+            : Container()
+      ];
+    }
   }
 
   @override

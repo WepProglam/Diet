@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/db_helper.dart';
 import 'package:intl/intl.dart';
 
 import 'addDiet.dart';
@@ -112,4 +113,67 @@ Future<List<num>> justCalNutri(
 
 String myRounder(num a) {
   return a.toString().length < 4 ? a.toString() : a.toString().substring(0, 4);
+}
+
+Future<void> formatDietHistory(
+    {String dietName, String kcal, String nutri, int flag}) async {
+  String dateData;
+  String myBreakFast="null";
+  String myLunch="null";
+  String myDinner="null";
+  String mySnack="null";
+
+  final dBHelperDietHistory = DBHelperDietHistory();
+  // await dBHelperDietHistory.deleteAllDietHistory();
+  DietHistory dietHistory;
+
+  dateData = '${DateTime.now().toString().substring(0, 10)}';
+ await dBHelperDietHistory.getDietHistory(dateData).then((val){
+  if(val != null){
+    dietHistory =val;
+    print(dietHistory);
+  }else{
+    dietHistory =null;
+  }
+});
+
+  if (flag == 0) {
+    myBreakFast =
+        jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
+  } else if (flag == 1) {
+    myLunch =
+        jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
+  } else if (flag == 2) {
+    myDinner =
+        jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
+  } else if (flag == 3) {
+    mySnack =
+        jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
+  }
+
+  print(dietHistory);
+  print(dietHistory is DietHistory);
+  if (dietHistory != null) {
+    print("sadfasdfasd");
+    if(flag == 0){
+      dietHistory.breakFast =myBreakFast;
+
+    }else if(flag==1){
+      dietHistory.lunch = myLunch;
+
+    }else if(flag==2){
+      dietHistory.dinner = myDinner;
+
+    }else if(flag==3){
+      dietHistory.snack = mySnack;
+
+    }
+    print("update");
+    await dBHelperDietHistory.updateDietHistory(dietHistory);
+  } else {
+    print("123423423432");
+    dietHistory=DietHistory(date: dateData,breakFast: myBreakFast,lunch: myLunch,dinner: myDinner,snack: mySnack);
+
+    await dBHelperDietHistory.createData(dietHistory);
+  }
 }
