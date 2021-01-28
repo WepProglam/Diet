@@ -237,7 +237,7 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   if (foodLength <= 3) {
     calculateDensity *= 50;
   } else if (foodLength <= 5) {
-    calculateDensity *= 10;
+    calculateDensity *= 5;
   } else if (foodLength <= 7) {
     calculateDensity *= 5;
   } else {
