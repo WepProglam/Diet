@@ -26,6 +26,7 @@ void main() {
         // primaryColor: Color(0xFF69C2B0),
         primaryColor: Colors.deepOrangeAccent,
         buttonColor: Colors.deepOrangeAccent,
+        cardColor: Colors.deepOrangeAccent,
         accentColor: Colors.white,
         textTheme: TextTheme(
           headline1:
