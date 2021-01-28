@@ -118,61 +118,59 @@ String myRounder(num a) {
 Future<void> formatDietHistory(
     {String dietName, String kcal, String nutri, int flag}) async {
   String dateData;
-  String myBreakFast="null";
-  String myLunch="null";
-  String myDinner="null";
-  String mySnack="null";
+  String myBreakFast = "null";
+  String myLunch = "null";
+  String myDinner = "null";
+  String mySnack = "null";
 
   final dBHelperDietHistory = DBHelperDietHistory();
   // await dBHelperDietHistory.deleteAllDietHistory();
   DietHistory dietHistory;
 
   dateData = '${DateTime.now().toString().substring(0, 10)}';
- await dBHelperDietHistory.getDietHistory(dateData).then((val){
-  if(val != null){
-    dietHistory =val;
-    print(dietHistory);
-  }else{
-    dietHistory =null;
-  }
-});
+  await dBHelperDietHistory.getDietHistory(dateData).then((val) {
+    if (val != null) {
+      dietHistory = val;
+      print(dietHistory);
+    } else {
+      dietHistory = null;
+    }
+  });
 
   if (flag == 0) {
     myBreakFast =
         jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
   } else if (flag == 1) {
-    myLunch =
-        jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
+    myLunch = jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
   } else if (flag == 2) {
-    myDinner =
-        jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
+    myDinner = jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
   } else if (flag == 3) {
-    mySnack =
-        jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
+    mySnack = jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
   }
 
   print(dietHistory);
   print(dietHistory is DietHistory);
   if (dietHistory != null) {
     print("sadfasdfasd");
-    if(flag == 0){
-      dietHistory.breakFast =myBreakFast;
-
-    }else if(flag==1){
+    if (flag == 0) {
+      dietHistory.breakFast = myBreakFast;
+    } else if (flag == 1) {
       dietHistory.lunch = myLunch;
-
-    }else if(flag==2){
+    } else if (flag == 2) {
       dietHistory.dinner = myDinner;
-
-    }else if(flag==3){
+    } else if (flag == 3) {
       dietHistory.snack = mySnack;
-
     }
     print("update");
     await dBHelperDietHistory.updateDietHistory(dietHistory);
   } else {
     print("123423423432");
-    dietHistory=DietHistory(date: dateData,breakFast: myBreakFast,lunch: myLunch,dinner: myDinner,snack: mySnack);
+    dietHistory = DietHistory(
+        date: dateData,
+        breakFast: myBreakFast,
+        lunch: myLunch,
+        dinner: myDinner,
+        snack: mySnack);
 
     await dBHelperDietHistory.createData(dietHistory);
   }
