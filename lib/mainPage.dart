@@ -50,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isItCalender = true;
   bool switchControl = false;
   DietHistory dietHistory;
+  DietHistory pastDietHistory;
   Person person;
 
   FocusScopeNode myFocusNode = FocusScopeNode();
@@ -66,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // +버튼, adddiet로 가는지, savedDiet로 가는지
   List<Map> todayDietList = List<Map>(4);
   List<Widget> itemList = [];
+  List<Widget> itemListPast = [];
   num totalCalorie = 0;
 
   void getConfirmedIndex(DietHistory myDietHistory) async {
@@ -631,7 +633,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     duration: 1500,
                                     itemBuilder:
                                         (BuildContext context, int listIndex) {
-                                      makeItemList(listIndex);
+                                      makeItemListPast(listIndex);
                                       return Container(
                                         child: Column(
                                           children: [
@@ -1074,6 +1076,12 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           onPressed: () {
             if (!isitDay) {
+              dbHelperDietHistory
+                  .getDietHistory("$calender_year-$calender_month-$date")
+                  .then((value) {
+                pastDietHistory = value;
+              });
+
               setState(() {
                 date = int.parse(title.data);
                 calender_date = date;
@@ -1094,11 +1102,30 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  void _goToElement(int index) {
-    _controller.animateTo(
-        (30.0 *
-            index), // 100 is the height of container and index of 6th element is 5
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut);
+  void makeItemListPast(int index) async {
+    //날짜 정보
+    // await getConfirmedIndex();
+    if (pastDietHistory != null) {
+      itemListPast = [
+        FractionallySizedBox(
+            widthFactor: 1.0,
+            heightFactor: 1.0,
+            child: Container(
+              decoration: BoxDecoration(color: Colors.yellow),
+              child: Center(
+                child: Column(children: [
+                  for (var item in todayDietList[index]['foodInfo']['foods'])
+                    //item[0] : 코드
+                    //item[1] : 음식 이름
+                    //item[2] : 음식 무게
+                    Text("${item[1]}  ${item[2]}g"),
+                  Text(
+                      "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
+                  Text("총 칼로리 : ${todayDietList[index]['foodInfo']['kcal']}"),
+                ]),
+              ),
+            ))
+      ];
+    } else {}
   }
 }
