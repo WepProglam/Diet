@@ -8,7 +8,7 @@ import 'appBar.dart';
 import 'model.dart';
 
 num calculateDensity = 1;
-const targetCalorie = 600;
+const targetCalorie = 900;
 
 List<dynamic> csvList = [];
 
@@ -199,23 +199,23 @@ List<num> makeForLooP(
         tempMassList[tempIndex] +=
             ((maxMass[tempIndex] - minMass[tempIndex]) ~/ calculateDensity)) {
       totalCalorie = totalCalorieOverFlow(myFoodMassList, calorie);
-      if (totalCalorie > targetCalorie * 1.3 ||
-          totalCalorie < targetCalorie * 0.7) {
-        //걍 넘어가
-      } else {
-        List<num> sendData = [];
-        sendData.addAll(nutriInfo);
-        sendData.addAll(tempMassList);
-        tempDegree = justCalculateNutri(sendData, maxMass.length)[1];
+      // if (totalCalorie > targetCalorie * 1.2 ||
+      //     totalCalorie < targetCalorie * 0.8) {
+      //   //걍 넘어가  //걍 넘어가면 일치율은 올라가고 무게가 살인적
+      // } else {
+      List<num> sendData = [];
+      sendData.addAll(nutriInfo);
+      sendData.addAll(tempMassList);
+      tempDegree = justCalculateNutri(sendData, maxMass.length)[1];
 
-        if (tempDegree >= maxDegree) {
-          //현재의 일치율을 가져와 전보다 높으면 return mass list에 저장
-          maxDegree = tempDegree;
-          print(maxDegree);
-          returnMassList = List<num>.from(tempMassList);
-          returnMassList.last = maxDegree;
-        } else {}
-      }
+      if (tempDegree >= maxDegree) {
+        //현재의 일치율을 가져와 전보다 높으면 return mass list에 저장
+        maxDegree = tempDegree;
+        // print(maxDegree);
+        returnMassList = List<num>.from(tempMassList);
+        returnMassList.last = maxDegree;
+      } else {}
+      // }
     }
     return returnMassList;
   } else if (tempIndex < maxMass.length - 1) {
@@ -284,12 +284,17 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   num totalCalorie = totalCalorieOverFlow(massList[0], calorie);
 
   num sum = 0;
+
   for (var i = 0; i < calorie.length; i++) {
-    sum += calorie[i];
+    massList[0][i] *= (targetCalorie / totalCalorie);
   }
-  // for (var i = 0; i < calorie.length; i++) {
-  //   massList[0][i] *= (targetCalorie / totalCalorie);
-  // }
+
+  for (var i = 0; i < calorie.length; i++) {
+    sum += calorie[i] * massList[0][i];
+    print("${calorie[i]} * ${massList[0][i]} = ${calorie[i] * massList[0][i]}");
+    print(sum);
+  }
+
   totalCalorie = totalCalorieOverFlow(massList[0], calorie);
 
   // print(totalCalorie);

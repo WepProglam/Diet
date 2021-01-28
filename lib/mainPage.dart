@@ -83,83 +83,96 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> itemList = [];
   List<Widget> itemListPast = [];
   num totalCalorie = 0;
-  
+
   //이게 계속 실행됨
   void getConfirmedIndex(DietHistory myDietHistory) async {
     try {
       if (myDietHistory.breakFast != "null") {
-        dietAdded[0] = [true, true, true, true];
-        dietConfirm[0] = true;
-
         Map tempDiet = jsonDecode(myDietHistory.breakFast);
         Diet myDiet;
+        print(tempDiet);
         await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
           myDiet = val;
-        });
-        todayDietList[0] = {};
-        todayDietList[0]['foodInfo'] = jsonDecode(myDiet.foodInfo);
+          print(val);
+          dietAdded[0] = [true, true, true, true];
+          dietConfirm[0] = true;
+          todayDietList[0] = {};
+          todayDietList[0]['foodInfo'] = jsonDecode(myDiet.foodInfo);
 
-        for (var i = 0; i < todayDietList[0]['foodInfo']['foods'].length; i++) {
-          todayDietList[0]['foodInfo']['foods'][i] =
-              todayDietList[0]['foodInfo']['foods'][i].values.toList();
-        }
+          for (var i = 0;
+              i < todayDietList[0]['foodInfo']['foods'].length;
+              i++) {
+            todayDietList[0]['foodInfo']['foods'][i] =
+                todayDietList[0]['foodInfo']['foods'][i].values.toList();
+          }
+        }, onError: (e) {
+          // print(e);
+        });
       }
       if (myDietHistory.lunch != "null") {
-        dietAdded[1] = [true, true, true, true];
-        dietConfirm[1] = true;
-
         Map tempDiet = jsonDecode(myDietHistory.lunch);
         Diet myDiet;
         await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
           myDiet = val;
-        });
-        todayDietList[1] = {};
-        todayDietList[1]["foodInfo"] = jsonDecode(myDiet.foodInfo);
+          todayDietList[1] = {};
+          todayDietList[1]["foodInfo"] = jsonDecode(myDiet.foodInfo);
 
-        for (var i = 0; i < todayDietList[1]['foodInfo']['foods'].length; i++) {
-          todayDietList[1]['foodInfo']['foods'][i] =
-              todayDietList[1]['foodInfo']['foods'][i].values.toList();
-        }
+          for (var i = 0;
+              i < todayDietList[1]['foodInfo']['foods'].length;
+              i++) {
+            todayDietList[1]['foodInfo']['foods'][i] =
+                todayDietList[1]['foodInfo']['foods'][i].values.toList();
+            dietAdded[1] = [true, true, true, true];
+            dietConfirm[1] = true;
+          }
+        }, onError: (e) {
+          // print(e);
+        });
       }
       if (myDietHistory.dinner != "null") {
-        dietAdded[2] = [true, true, true, true];
-        dietConfirm[2] = true;
-
         todayDietList[2] = {};
 
         Map tempDiet = jsonDecode(myDietHistory.dinner);
         Diet myDiet;
         await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
           myDiet = val;
+          todayDietList[2]['foodInfo'] = jsonDecode(myDiet.foodInfo);
+
+          for (var i = 0;
+              i < todayDietList[2]['foodInfo']['foods'].length;
+              i++) {
+            todayDietList[2]['foodInfo']['foods'][i] =
+                todayDietList[2]['foodInfo']['foods'][i].values.toList();
+          }
+          dietAdded[2] = [true, true, true, true];
+          dietConfirm[2] = true;
+        }, onError: (e) {
+          // print(e);
         });
-
-        todayDietList[2]['foodInfo'] = jsonDecode(myDiet.foodInfo);
-
-        for (var i = 0; i < todayDietList[2]['foodInfo']['foods'].length; i++) {
-          todayDietList[2]['foodInfo']['foods'][i] =
-              todayDietList[2]['foodInfo']['foods'][i].values.toList();
-        }
       }
       if (myDietHistory.snack != "null") {
-        dietAdded[3] = [true, true, true, true];
-        dietConfirm[3] = true;
         todayDietList[3] = {};
 
         Map tempDiet = jsonDecode(myDietHistory.snack);
         Diet myDiet;
         await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
           myDiet = val;
+          todayDietList[3]['foodInfo'] = jsonDecode(myDiet.foodInfo);
+
+          for (var i = 0;
+              i < todayDietList[3]['foodInfo']['foods'].length;
+              i++) {
+            todayDietList[3]['foodInfo']['foods'][i] =
+                todayDietList[3]['foodInfo']['foods'][i].values.toList();
+          }
+          dietAdded[3] = [true, true, true, true];
+          dietConfirm[3] = true;
+        }, onError: (e) {
+          // print(e);
         });
-
-        todayDietList[3]['foodInfo'] = jsonDecode(myDiet.foodInfo);
-
-        for (var i = 0; i < todayDietList[3]['foodInfo']['foods'].length; i++) {
-          todayDietList[3]['foodInfo']['foods'][i] =
-              todayDietList[3]['foodInfo']['foods'][i].values.toList();
-        }
       }
     } catch (e) {
-      print(e);
+      // print(e);
     }
     print("/");
     print(todayDietList);
@@ -209,7 +222,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void makeItemList(int index) async {
     //날짜 정보
     // await getConfirmedIndex();
-
+    // print(dietConfirm);
+    // print(dietAdded);
     if (dietConfirm[index]) {
       itemList = [
         FractionallySizedBox(
@@ -445,6 +459,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     size: 20,
                   ),
                   onTap: () {
+                    print("123213123");
                     setState(() {
                       dietAdded[index] = dietAdded[index][2] == true
                           ? [true, false, false, false]

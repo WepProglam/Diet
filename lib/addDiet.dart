@@ -436,6 +436,11 @@ class _FoodListState extends State<FoodList> {
                               try {
                                 List<dynamic> carProFat = justCalculateNutri(
                                     sendData, foodList.length);
+                                num total = carProFat[3] * 4 +
+                                    carProFat[4] * 4 +
+                                    carProFat[5] * 9;
+                                // assert(total < 600 * 1.2 && total > 600 * 0.8); //이 칼로리 조합이 아니면 단 하나의 경우도 케이스 통과 X
+
                                 setState(() {
                                   correct = carProFat[1];
                                   carbohydrateMass = carProFat[3];
@@ -449,6 +454,7 @@ class _FoodListState extends State<FoodList> {
                                       "${(val[i] / servingSize[i]).toStringAsFixed(1)}인분";
                                 }
                               } catch (e) {
+                                print(e);
                                 var snackBar =
                                     buildSnackBar('음식 조합이 매우 부적합합니다.');
                                 Scaffold.of(context).showSnackBar(snackBar);
