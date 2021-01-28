@@ -67,13 +67,14 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> itemList = [];
   num totalCalorie = 0;
 
-  void getConfirmedIndex() async {
+  void getConfirmedIndex(DietHistory myDietHistory) async {
     try {
-      if (dietHistory.breakFast != "null") {
+
+      if (myDietHistory.breakFast != "null") {
         dietAdded[0] = [true, true, true, true];
         dietConfirm[0] = true;
 
-        Map tempDiet = jsonDecode(dietHistory.breakFast);
+        Map tempDiet = jsonDecode(myDietHistory.breakFast);
         Diet myDiet;
         await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
           myDiet = val;
@@ -86,11 +87,11 @@ class _MyHomePageState extends State<MyHomePage> {
               todayDietList[0]['foodInfo']['foods'][i].values.toList();
         }
       }
-      if (dietHistory.lunch != "null") {
+      if (myDietHistory.lunch != "null") {
         dietAdded[1] = [true, true, true, true];
         dietConfirm[1] = true;
 
-        Map tempDiet = jsonDecode(dietHistory.lunch);
+        Map tempDiet = jsonDecode(myDietHistory.lunch);
         Diet myDiet;
         await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
           myDiet = val;
@@ -103,13 +104,13 @@ class _MyHomePageState extends State<MyHomePage> {
               todayDietList[1]['foodInfo']['foods'][i].values.toList();
         }
       }
-      if (dietHistory.dinner != "null") {
+      if (myDietHistory.dinner != "null") {
         dietAdded[2] = [true, true, true, true];
         dietConfirm[2] = true;
 
         todayDietList[2] = {};
 
-        Map tempDiet = jsonDecode(dietHistory.dinner);
+        Map tempDiet = jsonDecode(myDietHistory.dinner);
         Diet myDiet;
         await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
           myDiet = val;
@@ -122,13 +123,12 @@ class _MyHomePageState extends State<MyHomePage> {
               todayDietList[2]['foodInfo']['foods'][i].values.toList();
         }
       }
-      if (dietHistory.snack != "null") {
-        print("12312312");
+      if (myDietHistory.snack != "null") {
         dietAdded[3] = [true, true, true, true];
         dietConfirm[3] = true;
         todayDietList[3] = {};
 
-        Map tempDiet = jsonDecode(dietHistory.snack);
+        Map tempDiet = jsonDecode(myDietHistory.snack);
         Diet myDiet;
         await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
           myDiet = val;
@@ -144,20 +144,27 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       print(e);
     }
+    setState(() {
+
+    });
   }
 
-  @override
-  void didChangeDependencies() async {
+  void getInfo() async{
     String dateData = '${DateTime.now().toString().substring(0, 10)}';
     await dbHelperDietHistory.getDietHistory(dateData).then((val) {
       dietHistory = val;
     });
+    await getConfirmedIndex(dietHistory);
+  }
+
+  @override
+  void didChangeDependencies() async {
+    getInfo();
     super.didChangeDependencies();
   }
 
   void makeItemList(int index) async {
     //날짜 정보
-
     // await getConfirmedIndex();
 
     if (dietConfirm[index]) {
@@ -408,11 +415,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-  void initState() {
-    String dateData = '${DateTime.now().toString().substring(0, 10)}';
-    dbHelperDietHistory.getDietHistory(dateData).then((val) {
-      dietHistory = val;
-    });
+  void initState()  {
+    getInfo();
     super.initState();
   }
 
@@ -424,6 +428,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // getInfo();
     var dateTime = DateTime(calender_year, calender_month, 1);
     var dayFirst =
         DateFormat('EEEE').format(DateTime(calender_year, calender_month, 1));
