@@ -43,8 +43,8 @@ List<dynamic> justCalculateNutri(List<num> foodList, num foodLength) {
   num cosTheta = returnDotProduct(ratio, nutriRatio) /
       (returnAmplitude(ratio) * returnAmplitude(nutriRatio));
   // num degree = acos(cosTheta);
-  num correctRate = (4 * cosTheta - 3) * 100;
-  // num correctRate = correctness(ratio, nutriRatio);
+  // num correctRate = (4 * cosTheta - 3) * 100;
+  num correctRate = correctness(ratio, nutriRatio);
 
   // if (degree > 0.9) {
   //   correctRate = 0;
@@ -101,21 +101,21 @@ num correctness(List<num> ratio, List<num> nutriRatio) {
   switch (direction) {
     case 0: //yz평면 방향으로 갈때
       {
-        // plane[0] = null;
+        pointInPlane[0] = 0;
         pointInPlane[1] = sqrt(1 / (pow((normalV[1] / normalV[2]), 2) + 1));
         pointInPlane[2] = sqrt(1 / (pow((normalV[2] / normalV[1]), 2) + 1));
       }
       break;
     case 1: //zx 평면 방향
       {
-        // plane[1] = null;
+        pointInPlane[1] = 0;
         pointInPlane[2] = sqrt(1 / (pow((normalV[2] / normalV[0]), 2) + 1));
         pointInPlane[0] = sqrt(1 / (pow((normalV[0] / normalV[2]), 2) + 1));
       }
       break;
     case 2: //xy평면 방향
       {
-        // plane[2] = null;
+        pointInPlane[2] = 0;
         pointInPlane[0] = sqrt(1 / (pow((normalV[0] / normalV[1]), 2) + 1));
         pointInPlane[1] = sqrt(1 / (pow((normalV[1] / normalV[0]), 2) + 1));
       }
@@ -129,7 +129,7 @@ num correctness(List<num> ratio, List<num> nutriRatio) {
   num degreeWithPointInPlane = acos(returnDotProduct(ratio, pointInPlane));
 
   num result =
-      pow((1 - (degreeWithNutriRatio / degreeWithPointInPlane)), 2) * 100;
+      (1 - pow(((degreeWithNutriRatio / degreeWithPointInPlane)), 2)) * 100;
   print(result);
   return result;
 }
