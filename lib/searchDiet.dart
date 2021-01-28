@@ -321,8 +321,8 @@ class _UiitemState extends State<Uiitem> {
             ),
           ),
           Positioned(
-            top: 5,
-            right: 5,
+            top: 10,
+            right: 10,
             child: GestureDetector(
               onTap: () async {
                 await dbHelperDiet.deleteDiet(widget.diet.dietName);
@@ -333,7 +333,7 @@ class _UiitemState extends State<Uiitem> {
               },
               child: Icon(
                 Icons.delete,
-                size: 15,
+                size: 20,
               ),
             ),
           ),
