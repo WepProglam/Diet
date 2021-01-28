@@ -277,8 +277,8 @@ class _ActivityPageState extends State<ActivityPage> {
               ),
               FloatingActionButton(
                   child: Icon(Icons.done),
-                  backgroundColor: Color(0xFF7EE0CC),
-                  onPressed: () {
+                  // backgroundColor: Color(0xFF7EE0CC),
+                  onPressed: () async {
                     String time = DateFormat('yyyy-MM-dd')
                         .format(DateTime.now())
                         .toString();
@@ -298,7 +298,9 @@ class _ActivityPageState extends State<ActivityPage> {
                       muscleTarget: hint['muscleTarget'],
                     );
                     print(person.metabolism);
-                    dbHelperPerson.createHelper(person);
+                    await dbHelperPerson.createHelper(person);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
                   }),
               Spacer(
                 flex: 1,

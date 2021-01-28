@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'model.dart';
 import 'db_helper.dart';
 import 'activityPage.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class PersonalForm extends StatefulWidget {
   @override
@@ -236,57 +237,72 @@ class _PersonalForm extends State<PersonalForm> {
                                               ),
                                             ],
                                           ))),
+                                      Spacer(),
                                       Expanded(
                                         flex: 1,
-                                        child: RaisedButton(
-                                          child: Text("제출"),
-                                          onPressed: () async {
-                                            if (_formKey.currentState
-                                                .validate()) {
-                                              // dbHelper.deleteAllPerson();
-                                              String time =
-                                                  DateFormat('yyyy-MM-dd')
-                                                      .format(DateTime.now())
-                                                      .toString();
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0),
+                                          ),
+                                          child: InkWell(
+                                            splashColor: Colors.white,
+                                            child: AspectRatio(
+                                              aspectRatio: 5 / 3,
+                                              child: Center(
+                                                child: Text("제출"),
+                                              ),
+                                            ),
+                                            onTap: () async {
+                                              if (_formKey.currentState
+                                                  .validate()) {
+                                                // dbHelper.deleteAllPerson();
+                                                String time =
+                                                    DateFormat('yyyy-MM-dd')
+                                                        .format(DateTime.now())
+                                                        .toString();
 
-                                              var person = Person(
-                                                  height: double.parse(_heightController
-                                                      .value.text),
-                                                  weight: double.parse(
-                                                      _weightController
-                                                          .value.text),
-                                                  bmi: double.parse(_bmiController
-                                                      .value.text),
-                                                  muscleMass: double.parse(
-                                                      _strengthController
-                                                          .value.text),
-                                                  purpose: _selValue,
-                                                  time: time,
-                                                  achieve: 0.0,
-                                                  metabolism:
-                                                      hint['metabolism'],
-                                                  activity: hint['activity'],
-                                                  nutriRate: hint['nutriRate'],
-                                                  weightTarget: double.parse(
-                                                      _weightTargetController.value.text),
-                                                  bmiTarget: double.parse(_bmiTargetController.value.text),
-                                                  muscleTarget: double.parse(_muscleTargetController.value.text));
+                                                var person = Person(
+                                                    height: double.parse(
+                                                        _heightController
+                                                            .value.text),
+                                                    weight: double.parse(
+                                                        _weightController
+                                                            .value.text),
+                                                    bmi: double.parse(
+                                                        _bmiController
+                                                            .value.text),
+                                                    muscleMass: double.parse(
+                                                        _strengthController
+                                                            .value.text),
+                                                    purpose: _selValue,
+                                                    time: time,
+                                                    achieve: 0.0,
+                                                    metabolism:
+                                                        hint['metabolism'],
+                                                    activity: hint['activity'],
+                                                    nutriRate:
+                                                        hint['nutriRate'],
+                                                    weightTarget: double.parse(_weightTargetController.value.text),
+                                                    bmiTarget: double.parse(_bmiTargetController.value.text),
+                                                    muscleTarget: double.parse(_muscleTargetController.value.text));
 
-                                              await dbHelper
-                                                  .createHelper(person);
-                                              Navigator.pushNamed(
-                                                  context, '/activityPage',
-                                                  arguments: <String, Person>{
-                                                    'person': person
-                                                  });
-                                            }
+                                                await dbHelper
+                                                    .createHelper(person);
+                                                Navigator.pushNamed(
+                                                    context, '/activityPage',
+                                                    arguments: <String, Person>{
+                                                      'person': person
+                                                    });
+                                              }
 
-                                            //print(_heightController.text);
-                                          },
+                                              //print(_heightController.text);
+                                            },
+                                          ),
                                         ),
                                       ),
                                       Spacer(
-                                        flex: 2,
+                                        flex: 1,
                                       ),
                                     ]
                                   : [ActivityPage()]),
@@ -304,41 +320,41 @@ class _PersonalForm extends State<PersonalForm> {
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            // backgroundColor: Color(0xFF69C2B0),
-            // focusColor: Color(0xFF69C2B0),
-            child: Icon(Icons.done),
-            onPressed: () async {
-              if (_formKey.currentState.validate()) {
-                // dbHelper.deleteAllPerson();
-                String time =
-                    DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
+          // floatingActionButton: FloatingActionButton(
+          //   // backgroundColor: Color(0xFF69C2B0),
+          //   // focusColor: Color(0xFF69C2B0),
+          //   child: Icon(Icons.done),
+          //   onPressed: () async {
+          //     if (_formKey.currentState.validate()) {
+          //       // dbHelper.deleteAllPerson();
+          //       String time =
+          //           DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
 
-                var person = Person(
-                    height: double.parse(_heightController.value.text),
-                    weight: double.parse(_weightController.value.text),
-                    bmi: double.parse(_bmiController.value.text),
-                    muscleMass: double.parse(_strengthController.value.text),
-                    purpose: _selValue,
-                    time: time,
-                    achieve: 0.0,
-                    metabolism: hint['metabolism'],
-                    activity: hint['activity'],
-                    nutriRate: hint['nutriRate'],
-                    weightTarget:
-                        double.parse(_weightTargetController.value.text),
-                    bmiTarget: double.parse(_bmiTargetController.value.text),
-                    muscleTarget:
-                        double.parse(_muscleTargetController.value.text));
+          //       var person = Person(
+          //           height: double.parse(_heightController.value.text),
+          //           weight: double.parse(_weightController.value.text),
+          //           bmi: double.parse(_bmiController.value.text),
+          //           muscleMass: double.parse(_strengthController.value.text),
+          //           purpose: _selValue,
+          //           time: time,
+          //           achieve: 0.0,
+          //           metabolism: hint['metabolism'],
+          //           activity: hint['activity'],
+          //           nutriRate: hint['nutriRate'],
+          //           weightTarget:
+          //               double.parse(_weightTargetController.value.text),
+          //           bmiTarget: double.parse(_bmiTargetController.value.text),
+          //           muscleTarget:
+          //               double.parse(_muscleTargetController.value.text));
 
-                await dbHelper.createHelper(person);
-                Navigator.pushNamed(context, '/activityPage',
-                    arguments: <String, Person>{'person': person});
-              }
+          //       await dbHelper.createHelper(person);
+          //       Navigator.pushNamed(context, '/activityPage',
+          //           arguments: <String, Person>{'person': person});
+          //     }
 
-              //print(_heightController.text);
-            },
-          ),
+          //     //print(_heightController.text);
+          //   },
+          // ),
         ));
   }
 
@@ -356,7 +372,7 @@ class _PersonalForm extends State<PersonalForm> {
             Expanded(flex: 6, child: questionForm(controller, hint)),
             spacer_unit(unit),
             Spacer(
-              flex: 2,
+              flex: 1,
             ),
           ],
         )));
@@ -435,9 +451,13 @@ class _PersonalForm extends State<PersonalForm> {
     return Expanded(
         flex: 4,
         child: Center(
-          child: Text(
+          child: AutoSizeText(
             question,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
+            ),
+            maxLines: 1,
           ),
         ));
   }
