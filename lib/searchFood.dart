@@ -7,6 +7,7 @@ import 'package:flutter_application_1/model.dart';
 
 import 'db_helper.dart';
 import 'mainStream.dart' as mainStream;
+import 'package:auto_size_text/auto_size_text.dart';
 
 StreamController<String> streamControllerString =
     mainStream.streamControllerString;
@@ -200,9 +201,10 @@ class _SearchListState extends State<SearchList> {
     );
   }
 
-  Widget appBarTitle = Text(
+  Widget appBarTitle = AutoSizeText(
     // "Search Food",
     "Foods",
+    maxLines: 1,
     // style: TextStyle(color: Colors.white),
   );
   Icon actionIcon = Icon(
@@ -339,8 +341,9 @@ class _SearchListState extends State<SearchList> {
                     Icons.search,
                     // color: Colors.orange,
                   );
-                  this.appBarTitle = Text(
+                  this.appBarTitle = AutoSizeText(
                     "Foods",
+                    maxLines: 1,
                     // style: TextStyle(color: Colors.white),
                   );
                 }
@@ -364,8 +367,9 @@ class _SearchListState extends State<SearchList> {
         Icons.search,
         // color: Colors.white,
       );
-      this.appBarTitle = Text(
+      this.appBarTitle = AutoSizeText(
         "Search Food",
+        maxLines: 1,
         // style: TextStyle(color: Colors.white),
       );
       _IsSearching = false;
@@ -390,17 +394,25 @@ class _UiitemState extends State<Uiitem> {
   Widget build(BuildContext context) {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
     return Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        margin: EdgeInsets.all(8),
-        color: isItSelected
-            ? Colors.deepOrangeAccent
-            : Colors.deepOrangeAccent[700],
+      // shape: RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.circular(20.0),
+      // ),
+      margin: EdgeInsets.all(8),
+      color: isItSelected
+          ? Colors.deepOrangeAccent[700]
+          // : Colors.deepOrangeAccent[700],
+          : Colors.black,
+      child: Container(
+        decoration: BoxDecoration(
+            border:
+                Border.all(color: Colors.deepOrangeAccent[700], width: 1.2)),
         child: Stack(
           children: [
             InkWell(
-              splashColor: Colors.white,
+              splashColor: isItSelected
+                  ? Colors.white
+                  // : Colors.deepOrangeAccent[700],
+                  : Colors.deepOrangeAccent[400],
               //여기다 눌렀을 때 기능 넣기
               onTap: () {
                 //add Diet 페이지에서 넘어왔을 경우
@@ -441,20 +453,24 @@ class _UiitemState extends State<Uiitem> {
                     Spacer(
                       flex: 2,
                     ),
-                    Text(
-                      this.building.foodName,
-                      style: TextStyle(
-                          // fontFamily: 'Raleway',
-                          // fontWeight: FontWeight.bold,
-                          fontSize:
-                              this.building.foodName.length < 6 ? 25 : 20),
-                      maxLines: 1,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AutoSizeText(
+                        this.building.foodName,
+                        style: TextStyle(
+                            fontFamily: 'Raleway',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                        maxLines: 1,
+                      ),
                     ),
                     Spacer(
                       flex: 1,
                     ),
-                    Text(
-                      '${this.building.kcal}',
+                    AutoSizeText(
+                      (this.building.kcal * this.building.servingSize)
+                              .toStringAsFixed(1) +
+                          ' kcal',
                       // style: TextStyle(fontFamily: 'Roboto'),
                     ),
                     Spacer(
@@ -471,7 +487,7 @@ class _UiitemState extends State<Uiitem> {
                 child: Icon(
                   Icons.favorite,
                   color: this.building.isItMine == "T"
-                      ? Colors.deepOrangeAccent
+                      ? Colors.deepOrangeAccent[400]
                       : null,
                   size: 20,
                 ),
@@ -487,32 +503,8 @@ class _UiitemState extends State<Uiitem> {
               ),
             ),
           ],
-        )
-
-        /* FlatButton(
-                      child: Icon(
-                        Icons.favorite,
-                        color:
-                            this.building.isItMine == "T" ? Colors.red : null,
-                        size: 25,
-                      ),
-                      onPressed: () async {
-                        setState(() {
-                          this.building.isItMine =
-                              this.building.isItMine == "T" ? "F" : "T";
-                        });
-                        Food food;
-                        await dbHelperFood
-                            .getFood(this.building.code)
-                            .then((val) {
-                          food = val;
-                        });
-                        food.isItMine =
-                            this.building.isItMine == "T" ? "T" : "F";
-                        dbHelperFood.updateFood(food);
-                      },
-                    ), */
-
-        );
+        ),
+      ),
+    );
   }
 }
