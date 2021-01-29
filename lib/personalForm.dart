@@ -69,7 +69,7 @@ class _PersonalForm extends State<PersonalForm> {
       hint1['muscleMass'] = value.isNotEmpty ? value.last.muscleMass : null;
       hint1['purpose'] = value.isNotEmpty ? value.last.purpose : null;
       hint1['metabolism'] = value.isNotEmpty
-          ? resetMetabolism(value.last.metabolism, hint1['purpose'])
+          ? resetMetabolism(value.last.metabolism, value.last.purpose)
           : null;
       hint1['activity'] = value.isNotEmpty ? value.last.activity : null;
       hint1['nutriRate'] = value.isNotEmpty ? value.last.nutriRate : null;
@@ -92,13 +92,13 @@ class _PersonalForm extends State<PersonalForm> {
 
   num resetMetabolism(num metabolism, int purpose) {
     switch (purpose) {
-      case 0:
+      case 0: //다이어트
         metabolism += 500;
         break;
-      case 1:
+      case 1: //벌크업
         metabolism -= 500;
         break;
-      case 2:
+      case 2: //린매스업(일반)
         break;
       default:
     }
@@ -311,8 +311,10 @@ class _PersonalForm extends State<PersonalForm> {
                                                     purpose: _selValue,
                                                     time: time,
                                                     achieve: 0.0,
-                                                    metabolism: setMetabolism(
-                                                        hint['metabolism'], _selValue),
+                                                    metabolism:
+                                                        hint['metabolism'] != null
+                                                            ? setMetabolism(hint['metabolism'], _selValue)
+                                                            : null,
                                                     activity: hint['activity'],
                                                     nutriRate: hint['nutriRate'],
                                                     weightTarget: double.parse(_weightTargetController.value.text),

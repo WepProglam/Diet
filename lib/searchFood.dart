@@ -43,15 +43,11 @@ class SearchFood extends StatelessWidget {
   SearchFood({this.stream});
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (context) => SelectedFoods([]),
-          ),
-        ],
-        child: SearchList(
-          streamString: streamControllerString.stream,
-        ));
+    return MultiProvider(providers: [
+      ChangeNotifierProvider(
+        create: (context) => SelectedFoods([]),
+      ),
+    ], child: SearchList(streamString: streamControllerString.stream));
   }
 }
 
@@ -99,6 +95,11 @@ class _SearchListState extends State<SearchList> {
   final dbHelperFood = DBHelperFood();
   List<Food> foodNameEX = [];
   List<Food> foodDBNameEX = [];
+
+  int flexVal = 0;
+  List<String> selectedFoods = null;
+  Widget listView = null;
+  var createListViewIcon = Icons.arrow_circle_down;
 
   // _SearchListState() {
   //   _searchQuery.addListener(() async {
@@ -174,9 +175,25 @@ class _SearchListState extends State<SearchList> {
     });
   }
 
-  int flexVal = 0;
-  List<String> selectedFoods = new List();
-  Widget listView = null;
+  @override
+  void didChangeDependencies() {
+    SelectedFoods foodProvider = Provider.of<SelectedFoods>(context);
+    if (foodProvider._selectedFoodsList.isNotEmpty) {
+      setState(() {
+        selectedFoods = foodProvider.getFoods();
+        listView = ListView.separated(
+            itemBuilder: (context, int index) {
+              return Center(child: Text(selectedFoods[index]));
+            },
+            separatorBuilder: (context, int index) => const Divider(),
+            itemCount: selectedFoods.length);
+      });
+    } else {
+      selectedFoods = null;
+      listView = null;
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -253,65 +270,74 @@ class _SearchListState extends State<SearchList> {
                         ],
                       ),
                     ),
-                    GestureDetector(
+                    Material(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(100),
+                            bottomRight: Radius.circular(100),
+                          ),
+                          side: BorderSide(
+                              color: Colors.deepOrangeAccent[700], width: 1.2)),
                       child: InkWell(
                         splashColor: Colors.deepOrangeAccent[700],
-                        child: Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Colors.deepOrangeAccent[700],
-                          size: 40,
-                        ),
                         onTap: () {
                           // animation
                           if (flexVal == 0) {
-                            if (selectedFoods != null) {
-                              setState(() {
-                                flexVal = 1;
-                                selectedFoods = foodProvider.getFoods();
-                                listView = ListView.separated(
-                                    itemBuilder: (context, int index) {
-                                      return Center(
-                                          child: Text(selectedFoods[index]));
-                                    },
-                                    separatorBuilder: (context, int index) =>
-                                        const Divider(),
-                                    itemCount: selectedFoods.length);
-                              });
-                            } else {
-                              setState(() {
-                                flexVal = 1;
-                              });
-                            }
+                            setState(() {
+                              flexVal = 1;
+                              createListViewIcon = Icons.arrow_circle_up;
+                            });
                           } else {
                             setState(() {
-                              flexVal = 0;
-                              // selectedFoods.clear();
                               listView = null;
+                              flexVal = 0;
+                              createListViewIcon = Icons.arrow_circle_down;
                             });
                           }
                         },
+                        child: Ink(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(100),
+                              bottomRight: Radius.circular(100),
+                            ),
+                          ),
+                          child: Icon(
+                            createListViewIcon,
+                            color: Colors.deepOrangeAccent[700],
+                            size: 40,
+                          ),
+                        ),
                       ),
                     ),
                     Spacer(
                       flex: 2,
                     ),
-                    FittedBox(
-                      alignment: Alignment.bottomCenter,
-                      child: FloatingActionButton(
-                          heroTag: null,
-                          // backgroundColor: Color(0xFF69C2B0),
-                          // focusColor: Color(0xFF69C2B0),
-                          child: Icon(Icons.done),
-                          onPressed: () {
-                            // print(codeList);
-                            if (fromAddDiet) {
-                              Navigator.pop(context, codeList);
-                            } else {
-                              Navigator.pop(context);
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Colors.deepOrangeAccent[700], width: 2),
+                          borderRadius: BorderRadius.circular(100)),
+                      child: FittedBox(
+                        alignment: Alignment.bottomCenter,
+                        child: FloatingActionButton(
+
+                            // heroTag: null,
+                            // backgroundColor: Color(0xFF69C2B0),
+                            // focusColor: Color(0xFF69C2B0),
+                            child: Icon(Icons.done),
+                            onPressed: () {
+                              // print(codeList);
+                              if (fromAddDiet) {
+                                Navigator.pop(context, codeList);
+                              } else {
+                                Navigator.pop(context);
+                              }
                             }
-                          }
-                          //print(_heightController.text);
-                          ),
+                            //print(_heightController.text);
+                            ),
+                      ),
                     ),
                   ],
                 )
