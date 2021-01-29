@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'db_helper.dart';
 import 'model.dart';
 
@@ -17,8 +18,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
   _LineChartSample2State({this.index});
 
   List<Color> gradientColors = [
-    const Color(0xff23b6e6),
-    const Color(0xff02d39a),
+    Colors.white,
+    Colors.white,
   ];
 
   bool isShowingMainData;
@@ -63,7 +64,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
           maxBmi.add(item.bmiTarget);
           maxMuscle.add(item.muscleMass);
           maxMuscle.add(item.muscleTarget);
-          personTimeInfo.add(item.time);
+          personTimeInfo.add(item.time.split("-").sublist(1, 2).join());
         }
 
         maxWeigt.sort();
@@ -106,38 +107,53 @@ class _LineChartSample2State extends State<LineChartSample2> {
   }
 
   bool showAvg = false;
-
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     print(personTargetBmiSpot);
     return Stack(
       children: <Widget>[
         AspectRatio(
-          aspectRatio: 1.2,
-          child: Container(
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(18),
+          aspectRatio: 1.1,
+          child: FractionallySizedBox(
+              heightFactor: 1.1,
+              widthFactor: 1,
+              child: Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(18),
+                  ),
+                  // color: Color(0xff232d37)
                 ),
-                color: Color(0xff232d37)),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  right: 18.0, left: 12.0, top: 24, bottom: 12),
-              child: personWeightSpot.isEmpty
-                  ? null
-                  : LineChart(mainData(index: index)),
-            ),
-          ),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      right: 15, left: 15, top: 30, bottom: 0),
+                  child: personWeightSpot.isEmpty
+                      ? null
+                      : LineChart(mainData(index: index)),
+                ),
+              )),
         ),
-        Center(
-            child: Container(
+        Positioned(
+            child: ElevatedButton(
+              // color: Colors.deepOrangeAccent[400]
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                  primary: Colors.redAccent[700], onPrimary: Colors.white),
               child: Text(
                 "${graphTitle[index]}",
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15),
               ),
-              decoration: BoxDecoration(color: Colors.white),
             ),
-            heightFactor: 0)
+            width: size.width / 5,
+            top: 20,
+            left: size.width / (5 / 2)
+            // right: 0,
+            )
       ],
     );
   }
@@ -181,7 +197,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
           showTitles: true,
           reservedSize: 22,
           getTextStyles: (value) => const TextStyle(
-              color: Color(0xff68737d),
+              color: Color(0xffA5A0A0),
               fontWeight: FontWeight.bold,
               fontSize: 12),
           getTitles: (value) {
@@ -195,7 +211,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
         leftTitles: SideTitles(
           showTitles: true,
           getTextStyles: (value) => const TextStyle(
-            color: Color(0xff67727d),
+            color: Color(0xffA5A0A0),
             fontWeight: FontWeight.bold,
             fontSize: 12,
           ),
