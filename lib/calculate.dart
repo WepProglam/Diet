@@ -8,7 +8,8 @@ import 'appBar.dart';
 import 'model.dart';
 
 num calculateDensity = 1;
-const targetCalorie = 900;
+//person에서 받아와야 함!!
+const targetCalorie = 2500;
 
 List<dynamic> csvList = [];
 
@@ -70,9 +71,9 @@ num correctness(List<num> ratio, List<num> nutriRatio) {
   num ampNutriRatio = returnAmplitude(nutriRatio);
   //단위원 안에 넣기
   for (int i = 0; i < 3; i++) {
-    if (ampRatio == 0 || ampNutriRatio == 0) {
-      return 0;
-    }
+    // if (ampRatio == 0 || ampNutriRatio == 0) {
+    //   return 0;
+    // }
     ratio[i] = ratio[i] / ampRatio;
     nutriRatio[i] = nutriRatio[i] / ampNutriRatio;
   }
@@ -90,7 +91,7 @@ num correctness(List<num> ratio, List<num> nutriRatio) {
       continue;
     } else {
       // num t = -ratio[direction] / minusV[direction];
-      if (ratio[direction] / minusV[direction] <= 0) {
+      if (minusV[direction] <= 0) {
         break;
       } else {
         continue;
@@ -99,25 +100,25 @@ num correctness(List<num> ratio, List<num> nutriRatio) {
   }
 
   // List<num> plane = normalV;
-  List<num> pointInPlane = new List(3);
+  List<num> pointInPlane = [0, 0, 0];
   switch (direction) {
     case 0: //yz평면 방향으로 갈때
       {
-        pointInPlane[0] = 0;
+        // pointInPlane[0] = 0;
         pointInPlane[1] = sqrt(1 / (pow((normalV[1] / normalV[2]), 2) + 1));
         pointInPlane[2] = sqrt(1 / (pow((normalV[2] / normalV[1]), 2) + 1));
       }
       break;
     case 1: //zx 평면 방향
       {
-        pointInPlane[1] = 0;
+        // pointInPlane[1] = 0;
         pointInPlane[2] = sqrt(1 / (pow((normalV[2] / normalV[0]), 2) + 1));
         pointInPlane[0] = sqrt(1 / (pow((normalV[0] / normalV[2]), 2) + 1));
       }
       break;
     case 2: //xy평면 방향
       {
-        pointInPlane[2] = 0;
+        // pointInPlane[2] = 0;
         pointInPlane[0] = sqrt(1 / (pow((normalV[0] / normalV[1]), 2) + 1));
         pointInPlane[1] = sqrt(1 / (pow((normalV[1] / normalV[0]), 2) + 1));
       }
