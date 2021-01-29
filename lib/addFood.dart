@@ -375,23 +375,21 @@ class _AddFoodSub extends State<AddFoodSub> {
       child: FloatingActionButton(
         onPressed: () async {
           if (_formKey.currentState.validate()) {
+            num serve = double.parse(_servingController.value.text);
             foodClass = Food(
                 code: foodInfo['code'],
                 dbArmy: foodInfo['dbArmy'],
                 foodName: _foodNameController.text,
                 foodKinds: foodInfo['foodKinds'],
-                kcal: double.parse(_ulController.value.text),
-                protein: double.parse(_proController.value.text),
-                carbohydrate: double.parse(_carboController.value.text),
-                fat: double.parse(_fatController.value.text),
+                kcal: double.parse(_ulController.value.text) / serve,
+                protein: double.parse(_proController.value.text) / serve,
+                carbohydrate: double.parse(_carboController.value.text) / serve,
+                fat: double.parse(_fatController.value.text) / serve,
                 isItMine: 'T',
                 selected: foodInfo['selected'],
-                servingSize: double.parse(_servingController.value.text));
+                servingSize: serve);
             //일반적 상황
             if (foodInfo['code'] == null) {
-              var bytes = utf8.encode(foodInfo['foodName']);
-              String codeName = "MY" + md5.convert(bytes).toString() + "custom";
-              foodClass.code = codeName;
               foodClass.selected = 0;
               showAlertDialog(context);
             } else {
@@ -412,18 +410,28 @@ class _AddFoodSub extends State<AddFoodSub> {
     // set up the button
     Widget saveButton = FlatButton(
         child: Text("새로 저장"),
-        onPressed: () {
-          var bytes = utf8.encode(foodInfo['foodName']);
+        onPressed: () async {
+          var bytes = utf8.encode(_foodNameController.text);
           String codeName =
               "MY" + md5.convert(bytes).toString() + DateTime.now().toString();
+          foodClass.code = codeName;
+          foodClass.selected = 0;
+
+          await dbHelper.createData(foodClass);
           Navigator.pop(context);
         });
 
-    Widget updateButton = FlatButton();
+    Widget updateButton = FlatButton(
+        child: Text("업데이트"),
+        onPressed: () async {
+          await dbHelper.updateFood(foodClass);
+          Navigator.pop(context);
+        });
 
     Widget noButton = FlatButton(
       child: Text("취소"),
       onPressed: () {
+        foodClass = Food();
         Navigator.pop(context);
       },
     );
@@ -450,60 +458,19 @@ class _AddFoodSub extends State<AddFoodSub> {
     Widget saveButton = FlatButton(
         child: Text("저장"),
         onPressed: () async {
-          // var bytes = utf8.encode(foodInfo['foodName']);
-          // String codeName = "MY" + md5.convert(bytes).toString();
+          var bytes = utf8.encode(_foodNameController.text);
+          String codeName = "MY" + md5.convert(bytes).toString() + "custom";
+          foodClass.code = codeName;
 
           await dbHelper.createData(foodClass);
 
-          // await dbHelperFood.updateFood(foodClass);
           Navigator.pop(context);
-
-          /* await dbHelperFood.getFood(myFoodInfo['code']).then((value) async {
-            Food dbFoodClass = value;
-            dbFoodClass.selected += 1;
-            Food foodClass = Food(
-                code: myFoodInfo['code'],
-                dbArmy: myFoodInfo['dbArmy'],
-                foodName: myFoodInfo['foodName'],
-                foodKinds: myFoodInfo['foodKinds'],
-                kcal: myFoodInfo['kcal'],
-                protein: myFoodInfo['protein'],
-                carbohydrate: myFoodInfo['carbohydrate'],
-                fat: myFoodInfo['fat'],
-                isItMine: 'T',
-                selected: myFoodInfo['selected'] + 1,
-                servingSize: myFoodInfo['servingSize']); //select 1회 증가
-
-            dbHelperFood.deleteFood(myFoodInfo['code']);
-
-            if (myFoodInfo['isItMine'] == 'T') {
-              await dbHelperFood
-                  .createData(foodClass); //myFoodInfo에 저장된 데이터로 새로 저장
-              //print("new food ${foodClass.toMap()}");
-              Navigator.pop(context);
-            } else {
-              var bytes = utf8.encode(myFoodInfo['foodName']);
-              String codeName = "MY" + md5.convert(bytes).toString();
-              //print(codeName); //코드네임 암호화
-              await dbHelperFood
-                  .createData(dbFoodClass); //기존 db 데이터 저장(선택횟수만 변경)
-              await dbHelperFood.getFood(codeName).then((value) async {
-                if (value is Food) {
-                  Navigator.pop(context);
-                  duplicateAlertDialog(context);
-                } else {
-                  foodClass.code = codeName;
-                  dbHelperFood.createData(foodClass); //새로 저장하는 myfood 데이터
-                  Navigator.pop(context);
-                }
-              }); 
-            }
-          });*/
         });
 
     Widget noButton = FlatButton(
       child: Text("Cancel"),
       onPressed: () {
+        foodClass = Food();
         Navigator.pop(context);
       },
     );
