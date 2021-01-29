@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/addDiet.dart';
 import 'package:flutter_application_1/model.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'db_helper.dart';
 import 'mainStream.dart' as mainStream;
@@ -145,7 +146,8 @@ class _SearchListState extends State<SearchList> {
   @override
   Widget build(BuildContext context) {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
-    print("is searchign $_IsSearching");
+
+    // print("is searchign $_IsSearching");
     return Scaffold(
       // backgroundColor: Colors.black,
       appBar: buildBar(context),
@@ -154,6 +156,7 @@ class _SearchListState extends State<SearchList> {
           // Column(children: [
           //     for (var item in foodDBNameEX) Text("${item.foodName}")
           //   ])
+
           GridView.builder(
               padding: EdgeInsets.all(8),
               itemCount: foodDBNameEX.length,
@@ -181,20 +184,40 @@ class _SearchListState extends State<SearchList> {
 
       floatingActionButton: (args != null)
           ? ((args['pre'] == 'addDiet')
-              ? FloatingActionButton(
-                  // backgroundColor: Color(0xFF69C2B0),
-                  // focusColor: Color(0xFF69C2B0),
-                  child: Icon(Icons.done),
-                  onPressed: () {
-                    // print(codeList);
-                    if (fromAddDiet) {
-                      Navigator.pop(context, codeList);
-                    } else {
-                      Navigator.pop(context);
-                    }
-                  }
-                  //print(_heightController.text);
-                  )
+              ? Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 70.0),
+                      child: IconButton(
+                          alignment: Alignment.topCenter,
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Colors.white,
+                          ),
+                          iconSize: 40,
+                          onPressed: null),
+                    ),
+                    Spacer(),
+                    Container(
+                      alignment: Alignment.bottomCenter,
+                      child: FloatingActionButton(
+
+                          // backgroundColor: Color(0xFF69C2B0),
+                          // focusColor: Color(0xFF69C2B0),
+                          child: Icon(Icons.done),
+                          onPressed: () {
+                            // print(codeList);
+                            if (fromAddDiet) {
+                              Navigator.pop(context, codeList);
+                            } else {
+                              Navigator.pop(context);
+                            }
+                          }
+                          //print(_heightController.text);
+                          ),
+                    ),
+                  ],
+                )
               : null)
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
