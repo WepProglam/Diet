@@ -512,7 +512,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
 
     return Scaffold(
-        backgroundColor: Color(0xFFD7FFF1),
+        // backgroundColor: Color(0xFFD7FFF1),
         appBar: basicAppBar('Main Page', context),
         drawer: NavDrawer(),
         body: SizedBox(
