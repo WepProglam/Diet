@@ -26,6 +26,11 @@ class _LineChartSample2State extends State<LineChartSample2> {
   List<FlSpot> personWeightSpot = [];
   List<FlSpot> personBmiSpot = [];
   List<FlSpot> personMuscleSpot = [];
+
+  List<FlSpot> personTargetWeightSpot = [];
+  List<FlSpot> personTargetBmiSpot = [];
+  List<FlSpot> personTargetMuscleSpot = [];
+
   List<double> maxWeigt = [];
   List<double> maxBmi = [];
   List<double> maxMuscle = [];
@@ -41,17 +46,23 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
   void getInfo() async {
     await dbHelperPerson.getAllPerson().then((value) {
-      print(value);
       personWeightSpot = [];
       personBmiSpot = [];
       personMuscleSpot = [];
       personTimeInfo = [];
 
+      personTargetWeightSpot = [];
+      personTargetBmiSpot = [];
+      personTargetMuscleSpot = [];
+
       setState(() {
-        for (var item in value){
+        for (var item in value) {
           maxWeigt.add(item.weight);
+          maxWeigt.add(item.weightTarget);
           maxBmi.add(item.bmi);
+          maxBmi.add(item.bmiTarget);
           maxMuscle.add(item.muscleMass);
+          maxMuscle.add(item.muscleTarget);
           personTimeInfo.add(item.time);
         }
 
@@ -68,6 +79,15 @@ class _LineChartSample2State extends State<LineChartSample2> {
               myRounder((item.bmi * 8) / maxBmi.last)));
           personMuscleSpot.add(FlSpot(double.parse(i.toString()),
               myRounder((item.muscleMass * 8) / maxMuscle.last)));
+
+          personTargetWeightSpot.add(FlSpot(double.parse(i.toString()),
+              myRounder((item.weightTarget * 8) / maxWeigt.last)));
+
+          personTargetBmiSpot.add(FlSpot(double.parse(i.toString()),
+              myRounder((item.bmiTarget * 8) / maxBmi.last)));
+
+          personTargetMuscleSpot.add(FlSpot(double.parse(i.toString()),
+              myRounder((item.muscleTarget * 8) / maxMuscle.last)));
           i += 1;
         }
         personInfoLength = personWeightSpot.length - 1;
@@ -76,6 +96,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
       // print(personWeightSpot);
     });
   }
+
+  List<String> graphTitle = ["체중", "BMI", "골격근량"];
 
   @override
   void didChangeDependencies() {
@@ -87,6 +109,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
   @override
   Widget build(BuildContext context) {
+    print(personTargetBmiSpot);
     return Stack(
       children: <Widget>[
         AspectRatio(
@@ -106,12 +129,20 @@ class _LineChartSample2State extends State<LineChartSample2> {
             ),
           ),
         ),
+        Center(
+            child: Container(
+              child: Text(
+                "${graphTitle[index]}",
+                style: TextStyle(color: Colors.black),
+              ),
+              decoration: BoxDecoration(color: Colors.white),
+            ),
+            heightFactor: 0)
       ],
     );
   }
 
   double myRounder(num a) {
-    print(a);
     return a.toString().length < 4
         ? a.toDouble()
         : double.parse(a.toString().substring(0, 4));
@@ -154,13 +185,10 @@ class _LineChartSample2State extends State<LineChartSample2> {
               fontWeight: FontWeight.bold,
               fontSize: 12),
           getTitles: (value) {
-            print("+"*10);
-            print(value);
-            if(value.toInt() < personTimeInfo.length){
+            if (value.toInt() < personTimeInfo.length) {
               return personTimeInfo[value.toInt()];
             }
             return "future";
-
           },
           margin: 8,
         ),
@@ -192,6 +220,25 @@ class _LineChartSample2State extends State<LineChartSample2> {
               : index == 1
                   ? personBmiSpot
                   : personMuscleSpot,
+          isCurved: true,
+          colors: gradientColors,
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: FlDotData(
+            show: true,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            colors:
+                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+          ),
+        ),
+        LineChartBarData(
+          spots: index == 0
+              ? personTargetWeightSpot
+              : index == 1
+                  ? personTargetBmiSpot
+                  : personTargetMuscleSpot,
           isCurved: true,
           colors: gradientColors,
           barWidth: 5,
