@@ -417,6 +417,9 @@ class DBHelperDiet {
     getAllMyDiet().then((value) async {
       if (value.isNotEmpty) {
         bool isThere = false;
+        print(value.first.dietName);
+        print(diet.dietName);
+        print("/" * 100);
         for (var item in value) {
           if (diet.dietName == item.dietName) {
             isThere = true;

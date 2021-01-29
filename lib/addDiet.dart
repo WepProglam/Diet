@@ -59,6 +59,7 @@ class _FoodListState extends State<FoodList> {
   List<num> changeList = [];
   String whereFrom;
   int mainPageIndex;
+  String dateTimeInfo;
 
   @override
   void initState() {
@@ -358,6 +359,7 @@ class _FoodListState extends State<FoodList> {
       if (args['pre']['pre'] == "mainPage") {
         whereFrom = "mainPage";
         mainPageIndex = args['pre']['index'];
+        dateTimeInfo = args['pre']['dateTime'];
       }
     } else if (args['myTempoDiet'] is Map) {
       print(3);
@@ -656,12 +658,14 @@ class _FoodListState extends State<FoodList> {
                               //메인페이지에서 접근
                               await formatDiet(
                                       dietName: dietName,
+                                      dietDateName: dateTimeInfo,
                                       foodList: foodList,
                                       mainPageIndex: mainPageIndex,
                                       massList: foodMass)
                                   .then((value) {
                                 diet = value;
                               });
+                              print(diet);
                               mainPageAlertDialog(context, diet);
                             } else {
                               //savedDiet,다른 경로로 접근
@@ -724,7 +728,9 @@ class _FoodListState extends State<FoodList> {
       child: Text("OK"),
       onPressed: () async {
         String mealTime = mainPageReturnMealTime(mainPageIndex);
-        String dietTitle = DateFormat('yyMMdd$mealTime').format(DateTime.now());
+        print(mealTime);
+        String dietTitle = '$dateTimeInfo-$mealTime';
+        print(dietTitle);
         diet.dietName = (diet.dietName.length > 0) ? diet.dietName : dietTitle;
         await dbHelperDiet.createHelper(diet);
         Navigator.pop(context);

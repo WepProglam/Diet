@@ -9,6 +9,7 @@ import 'model.dart';
 
 Future<Diet> formatDiet(
     {String dietName = null,
+    String dietDateName,
     List foodList,
     int mainPageIndex = null,
     List massList}) async {
@@ -26,8 +27,7 @@ Future<Diet> formatDiet(
     print(dietName);
     print(mainPageIndex);
     mealTime = mainPageReturnMealTime(mainPageIndex);
-    dietTitle =
-        ('${DateTime.now().toString().substring(0, 10)}-${mealTime.toUpperCase()}');
+    dietTitle = dietDateName + '-' + mealTime;
   } else if (dietName != null) {
     dietTitle = dietName;
   }
@@ -120,7 +120,8 @@ Future<void> formatDietHistory(
     String kcal,
     String nutri,
     int flag,
-    String dateTime = null}) async {
+    String dateTime,
+    String isItConfirm}) async {
   String dateData;
   String myBreakFast = "null";
   String myLunch = "null";
@@ -130,10 +131,39 @@ Future<void> formatDietHistory(
   final dBHelperDietHistory = DBHelperDietHistory();
   // await dBHelperDietHistory.deleteAllDietHistory();
   DietHistory dietHistory;
+  dateData = dateTime;
 
-  dateData = dateTime == null
-      ? '${DateTime.now().toString().substring(0, 10)}'
-      : dateTime;
+  print(isItConfirm);
+  if (flag == 0) {
+    myBreakFast = jsonEncode({
+      "dietName": dietName,
+      "kcal": kcal,
+      "nutri": nutri,
+      "isItConfirm": isItConfirm
+    });
+  } else if (flag == 1) {
+    myLunch = jsonEncode({
+      "dietName": dietName,
+      "kcal": kcal,
+      "nutri": nutri,
+      "isItConfirm": isItConfirm
+    });
+  } else if (flag == 2) {
+    myDinner = jsonEncode({
+      "dietName": dietName,
+      "kcal": kcal,
+      "nutri": nutri,
+      "isItConfirm": isItConfirm
+    });
+  } else if (flag == 3) {
+    mySnack = jsonEncode({
+      "dietName": dietName,
+      "kcal": kcal,
+      "nutri": nutri,
+      "isItConfirm": isItConfirm
+    });
+  }
+
   await dBHelperDietHistory.getDietHistory(dateData).then((val) {
     if (val != null) {
       dietHistory = val;
@@ -143,19 +173,7 @@ Future<void> formatDietHistory(
     }
   });
 
-  if (flag == 0) {
-    myBreakFast =
-        jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
-  } else if (flag == 1) {
-    myLunch = jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
-  } else if (flag == 2) {
-    myDinner = jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
-  } else if (flag == 3) {
-    mySnack = jsonEncode({"dietName": dietName, "kcal": kcal, "nutri": nutri});
-  }
-
-  print(dietHistory);
-  print(dietHistory is DietHistory);
+  print("1232142141241252135135");
   if (dietHistory != null) {
     print("sadfasdfasd");
     if (flag == 0) {
@@ -168,6 +186,9 @@ Future<void> formatDietHistory(
       dietHistory.snack = mySnack;
     }
     print("update");
+    print(myBreakFast);
+    print(dietHistory.breakFast);
+    print(dietHistory.date);
     await dBHelperDietHistory.updateDietHistory(dietHistory);
   } else {
     print("123423423432");

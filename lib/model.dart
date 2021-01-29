@@ -101,6 +101,7 @@ class Food {
 class Diet {
   String dietName;
   String foodInfo;
+  //일치율 추가 해야함
   /*
   {
     "kcal" : "식단의 칼로리(num 형태로)",
@@ -145,9 +146,10 @@ class DietHistory {
   /*
   breakfast 예시
   {
+    "isItConfirm" : "true", => 확정인가 아닌가
     "dietName" : "식단 이름",
     "kcal" : "칼로리",
-    "nutri" : "영양소 비율"(5:2:3)
+    "nutri" : "영양소 비율"(5:2:3),
   }
   */
   DietHistory({this.date, this.breakFast, this.lunch, this.dinner, this.snack});

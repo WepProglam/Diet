@@ -16,7 +16,8 @@ final dbHelperDietHistory = DBHelperDietHistory();
 final dbHelperDiet = DBHelperDiet();
 final dbHelperPerson = DBHelperPerson();
 final int calenderWidthFlex = 22;
-
+Color listViewColor = Colors.deepOrangeAccent[700];
+Color iconColor = Colors.deepOrangeAccent[400];
 // final dbHelper
 
 class MainPage extends StatelessWidget {
@@ -51,7 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isItCalender = true;
   bool switchControl = false;
   DietHistory dietHistory;
-  DietHistory pastDietHistory;
   Person person;
 
   FocusScopeNode myFocusNode = FocusScopeNode();
@@ -64,7 +64,8 @@ class _MyHomePageState extends State<MyHomePage> {
     [false, false, false, false]
   ];
   List<bool> dietConfirm = [false, false, false, false];
-
+  List<bool> diet = [false, false, false, false];
+  List<bool> dietConfirmConfirm = [false, false, false, false];
   void initDateInfo() {
     dietAdded = [
       [false, false, false, false],
@@ -73,14 +74,15 @@ class _MyHomePageState extends State<MyHomePage> {
       [false, false, false, false]
     ];
     dietConfirm = [false, false, false, false];
+    dietConfirmConfirm = [false, false, false, false];
   }
 
   // +버튼, adddiet로 가는지, savedDiet로 가는지
   List<Map> todayDietList = List<Map>(4);
+  List<Map> anyDietList = List<Map>(4);
   List<Widget> itemList = [];
   List<Widget> itemListPast = [];
   num totalCalorie = 0;
-
   //이게 계속 실행됨
   void getConfirmedIndex(DietHistory myDietHistory) async {
     try {
@@ -88,14 +90,21 @@ class _MyHomePageState extends State<MyHomePage> {
         Map tempDiet = jsonDecode(myDietHistory.breakFast);
         Diet myDiet;
         print(tempDiet);
+        print(tempDiet['dietName']);
         await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
           myDiet = val;
           print(val);
-          dietAdded[0] = [true, true, true, true];
-          dietConfirm[0] = true;
+          if (dietConfirmConfirm[0]) {
+            dietAdded[0] = [true, true, true, true];
+            dietConfirm[0] = true;
+          } else {
+            dietAdded[0] = [true, true, true, false];
+            dietConfirm[0] = false;
+          }
+
           todayDietList[0] = {};
           todayDietList[0]['foodInfo'] = jsonDecode(myDiet.foodInfo);
-
+          todayDietList[0]['dietName'] = myDiet.dietName;
           for (var i = 0;
               i < todayDietList[0]['foodInfo']['foods'].length;
               i++) {
@@ -113,14 +122,20 @@ class _MyHomePageState extends State<MyHomePage> {
           myDiet = val;
           todayDietList[1] = {};
           todayDietList[1]["foodInfo"] = jsonDecode(myDiet.foodInfo);
+          todayDietList[1]['dietName'] = myDiet.dietName;
 
           for (var i = 0;
               i < todayDietList[1]['foodInfo']['foods'].length;
               i++) {
             todayDietList[1]['foodInfo']['foods'][i] =
                 todayDietList[1]['foodInfo']['foods'][i].values.toList();
-            dietAdded[1] = [true, true, true, true];
-            dietConfirm[1] = true;
+            if (dietConfirmConfirm[1]) {
+              dietAdded[1] = [true, true, true, true];
+              dietConfirm[1] = true;
+            } else {
+              dietAdded[1] = [true, true, true, false];
+              dietConfirm[1] = false;
+            }
           }
         }, onError: (e) {
           // print(e);
@@ -134,6 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
         await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
           myDiet = val;
           todayDietList[2]['foodInfo'] = jsonDecode(myDiet.foodInfo);
+          todayDietList[2]['dietName'] = myDiet.dietName;
 
           for (var i = 0;
               i < todayDietList[2]['foodInfo']['foods'].length;
@@ -141,8 +157,13 @@ class _MyHomePageState extends State<MyHomePage> {
             todayDietList[2]['foodInfo']['foods'][i] =
                 todayDietList[2]['foodInfo']['foods'][i].values.toList();
           }
-          dietAdded[2] = [true, true, true, true];
-          dietConfirm[2] = true;
+          if (dietConfirmConfirm[2]) {
+            dietAdded[2] = [true, true, true, true];
+            dietConfirm[2] = true;
+          } else {
+            dietAdded[2] = [true, true, true, false];
+            dietConfirm[2] = false;
+          }
         }, onError: (e) {
           // print(e);
         });
@@ -155,6 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
         await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
           myDiet = val;
           todayDietList[3]['foodInfo'] = jsonDecode(myDiet.foodInfo);
+          todayDietList[3]['dietName'] = myDiet.dietName;
 
           for (var i = 0;
               i < todayDietList[3]['foodInfo']['foods'].length;
@@ -162,8 +184,13 @@ class _MyHomePageState extends State<MyHomePage> {
             todayDietList[3]['foodInfo']['foods'][i] =
                 todayDietList[3]['foodInfo']['foods'][i].values.toList();
           }
-          dietAdded[3] = [true, true, true, true];
-          dietConfirm[3] = true;
+          if (dietConfirmConfirm[3]) {
+            dietAdded[3] = [true, true, true, true];
+            dietConfirm[3] = true;
+          } else {
+            dietAdded[3] = [true, true, true, false];
+            dietConfirm[3] = false;
+          }
         }, onError: (e) {
           // print(e);
         });
@@ -190,7 +217,7 @@ class _MyHomePageState extends State<MyHomePage> {
       person = val;
     });
     await getConfirmedIndex(dietHistory);
-    setState(() {});
+    // setState(() {});
   }
 
   void changeIntToString() {
@@ -216,7 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.didChangeDependencies();
   }
 
-  void makeItemList(int index) async {
+  void makeItemList(int index, {List<num> dateInfo}) async {
     //날짜 정보
     // await getConfirmedIndex();
     // print(dietConfirm);
@@ -227,7 +254,8 @@ class _MyHomePageState extends State<MyHomePage> {
             widthFactor: 1.0,
             heightFactor: 1.0,
             child: Container(
-              decoration: BoxDecoration(color: Colors.yellow),
+              decoration: BoxDecoration(
+                  border: Border.all(color: listViewColor, width: 2)),
               child: Center(
                 child: Column(children: [
                   for (var item in todayDietList[index]['foodInfo']['foods'])
@@ -245,12 +273,22 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       itemList = [
         GestureDetector(
-          child: Center(
-              child: Icon(
-            Icons.add_circle_outline,
-            color: Colors.black,
-            size: 40,
-          )),
+          //border: Border.all(color: listViewColor, width: 2)
+          child: FractionallySizedBox(
+            child: Container(
+              decoration: BoxDecoration(
+                  // borderRadius: BorderRadius.circular(100),
+                  border: Border.all(color: listViewColor, width: 5)),
+              child: Center(
+                  child: Icon(
+                Icons.add_circle_outline,
+                color: Colors.white70,
+                size: 40,
+              )),
+            ),
+            widthFactor: 1,
+            heightFactor: 1,
+          ),
           onTap: () {
             setState(() {
               dietAdded[index][0] = !dietAdded[index][0];
@@ -268,20 +306,27 @@ class _MyHomePageState extends State<MyHomePage> {
                             heightFactor: 1,
                             child: Container(
                                 child: Center(child: Text("식단 추가하기")),
-                                decoration: BoxDecoration(color: Colors.red)),
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    border: Border.all(
+                                        color: listViewColor, width: 2))),
                           ),
-                          onTap: () {
+                          onTap: () async {
                             Navigator.pushNamed(context, '/addDiet',
                                 arguments: <String, Map>{
-                                  "pre": {"pre": "mainPage", "index": index}
-                                }).then((val) {
-                              setState(() {
-                                dietAdded[index][2] =
-                                    val == null ? false : true;
-                                todayDietList[index] = val;
-                              });
+                                  "pre": {
+                                    "pre": "mainPage",
+                                    "index": index,
+                                    "dateTime":
+                                        "$calenderYear-$calenderMonth-$calenderDate"
+                                  }
+                                }).then((val) async {
+                              todayDietList[index] = val;
+
                               todayDietList[index]['foodInfo'] =
                                   jsonDecode(todayDietList[index]['foodInfo']);
+
+                              print(val);
 
                               for (var i = 0;
                                   i <
@@ -293,6 +338,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                         .values
                                         .toList();
                               }
+                              await formatDietHistory(
+                                      dietName: todayDietList[index]
+                                          ['dietName'],
+                                      flag: index,
+                                      kcal: todayDietList[index]['foodInfo']
+                                              ['kcal']
+                                          .toString(),
+                                      nutri: todayDietList[index]['foodInfo']
+                                          ['nutri'],
+                                      dateTime: dateData,
+                                      isItConfirm: "false")
+                                  .then((diet) {});
+                              setState(() {
+                                dietAdded[index][2] =
+                                    val == null ? false : true;
+                              });
                             });
                           })),
                   Expanded(
@@ -305,16 +366,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: Center(child: Text("저장된 식단 불러오기")),
                                 decoration: BoxDecoration(color: Colors.blue)),
                           ),
-                          onTap: () {
-                            Navigator.pushNamed(context, '/searchDiet',
+                          onTap: () async {
+                            await Navigator.pushNamed(context, '/searchDiet',
                                 arguments: <String, String>{
                                   "pre": "mainPage"
-                                }).then((val) {
-                              setState(() {
-                                dietAdded[index][2] =
-                                    val == null ? false : true;
-                                todayDietList[index] = val;
-                              });
+                                }).then((val) async {
+                              todayDietList[index] = val;
+
                               todayDietList[index]['foodInfo'] =
                                   jsonDecode(todayDietList[index]['foodInfo']);
 
@@ -328,6 +386,25 @@ class _MyHomePageState extends State<MyHomePage> {
                                         .values
                                         .toList();
                               }
+                              print("saving...");
+                              print(todayDietList[index]);
+                              print(todayDietList);
+                              await formatDietHistory(
+                                      dietName: todayDietList[index]
+                                          ['dietName'],
+                                      flag: index,
+                                      kcal: todayDietList[index]['foodInfo']
+                                              ['kcal']
+                                          .toString(),
+                                      nutri: todayDietList[index]['foodInfo']
+                                          ['nutri'],
+                                      dateTime: dateData,
+                                      isItConfirm: "false")
+                                  .then((diet) {});
+                              setState(() {
+                                dietAdded[index][2] =
+                                    val == null ? false : true;
+                              });
                             });
                           })),
                 ],
@@ -391,6 +468,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     )),
                 onTap: () {
+                  print(todayDietList[index]);
                   setState(() {
                     dietAdded[index][3] = !dietAdded[index][3];
                   });
@@ -410,9 +488,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           flex: 1,
                           child: RaisedButton(
                             child: Text("먹었"),
-                            onPressed: () {
-                              print(todayDietList[index]);
-                              formatDietHistory(
+                            onPressed: () async {
+                              await formatDietHistory(
                                       dietName: todayDietList[index]
                                           ['dietName'],
                                       flag: index,
@@ -421,14 +498,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                           .toString(),
                                       nutri: todayDietList[index]['foodInfo']
                                           ['nutri'],
-                                      dateTime: dateData)
-                                  .then((_) {
-                                setState(() {
-                                  //확정
-                                  dietConfirm[index] = true;
-                                  dietAdded[index][3] = false;
-                                });
+                                      dateTime: dateData,
+                                      isItConfirm: "true")
+                                  .then((diet) {});
+                              setState(() {
+                                //확정
+
+                                dietConfirm[index] = true;
+                                dietAdded[index][3] = false;
                               });
+                              print(todayDietList[index]);
                             },
                           ),
                         ),
@@ -438,7 +517,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Text("안먹었"),
                             onPressed: () {
                               setState(() {
-                                dietAdded[index] = [true, false, false, false];
+                                dietConfirm[index] = false;
+                                dietAdded[index] = [true, true, true, false];
                               });
                             },
                           ),
@@ -510,7 +590,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
         // backgroundColor: Color(0xFFD7FFF1),
-        appBar: basicAppBar('Main Page', context),
+        appBar: basicAppBar(
+            "$calender_year년 $calender_month월$calender_date일", context),
         drawer: NavDrawer(),
         body: SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -543,7 +624,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         flex: 2,
                                       ),
                                       Expanded(
-                                        flex: 10,
+                                        flex: 13,
                                         child: SizedBox(
                                           width:
                                               MediaQuery.of(context).size.width,
@@ -601,17 +682,25 @@ class _MyHomePageState extends State<MyHomePage> {
                                         flex: 2,
                                       ),
                                       Expanded(
-                                        flex: 10,
+                                        flex: 7,
                                         child: SizedBox(
                                           width:
                                               MediaQuery.of(context).size.width,
                                           child: Swiper(
                                             itemBuilder: (BuildContext context,
                                                 int index) {
-                                              return Container(
-                                                child: Text("추천 식단이 들어갈 자리"),
-                                                // decoration: BoxDecoration(
-                                                //     color: Colors.white),
+                                              return FractionallySizedBox(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: listViewColor,
+                                                          width: 2)),
+                                                  child: Center(
+                                                      child: Text(
+                                                          "추천 식단이 들어갈 자리")),
+                                                ),
+                                                widthFactor: 1,
+                                                heightFactor: 1,
                                               );
                                             },
                                             itemCount: 10,
@@ -632,6 +721,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   child: FractionallySizedBox(
                                                     child: Container(
                                                       // child: Text(),
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color:
+                                                                  listViewColor,
+                                                              width: 2)),
                                                       child: Column(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -664,6 +758,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   flex: 1,
                                                   child: FractionallySizedBox(
                                                     child: Container(
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color:
+                                                                  listViewColor,
+                                                              width: 2)),
+
                                                       child: Column(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -1187,21 +1287,94 @@ class _MyHomePageState extends State<MyHomePage> {
               String dateTime;
               date = int.parse(title.data);
               calender_date = date;
-              if (calender_month.toString().length == 1) {
+              if (calender_month.toString().length == 1 &&
+                  calender_date.toString().length == 1) {
+                dateTime = "$calender_year-0$calender_month-0$date";
+              } else if (calender_month.toString().length != 1 &&
+                  calender_date.toString().length == 1) {
+                dateTime = "$calender_year-$calender_month-0$date";
+              } else if (calender_month.toString().length == 1 &&
+                  calender_date.toString().length != 1) {
                 dateTime = "$calender_year-0$calender_month-$date";
               } else {
                 dateTime = "$calender_year-$calender_month-$date";
               }
+
+              print(dateTime);
+              // await dbHelperDietHistory.getAllMyDietHistory().then((val) {
+              //   for (var item in val) {
+              //     print(item.date);
+              //     print(item.breakFast);
+              //     print(item.lunch);
+              //     print(item.dinner);
+              //   }
+              // });
+
               await dbHelperDietHistory.getDietHistory(dateTime).then((value) {
-                pastDietHistory = value;
-                // print(value);
+                // print(value.breakFast);
+
+                dietHistory = value;
+                print("%" * 100);
+                // print(dietHistory.breakFast);
+                print("%" * 100);
               });
 
               changeIntToString();
-
               initDateInfo();
-              getConfirmedIndex(pastDietHistory);
 
+              if (dietHistory != null) {
+                for (var i = 0; i < 4; i++) {
+                  switch (i) {
+                    case 0:
+                      Map breakfast = jsonDecode(dietHistory.breakFast);
+                      if (breakfast != null) {
+                        if (breakfast['isItConfirm'] == "true") {
+                          dietConfirmConfirm[0] = true;
+                        }
+                      }
+                      print(dietConfirmConfirm);
+
+                      break;
+                    case 1:
+                      Map lunch = jsonDecode(dietHistory.lunch);
+                      if (lunch != null) {
+                        if (lunch['isItConfirm'] == "true") {
+                          dietConfirmConfirm[1] = true;
+                        }
+                      }
+
+                      break;
+                    case 2:
+                      Map dinner = jsonDecode(dietHistory.dinner);
+                      if (dinner != null) {
+                        if (dinner['isItConfirm'] == "true") {
+                          dietConfirmConfirm[2] = true;
+                        }
+                      }
+
+                      break;
+                    case 3:
+                      Map snack = jsonDecode(dietHistory.snack);
+                      if (snack != null) {
+                        if (snack['isItConfirm'] == "true") {
+                          dietConfirmConfirm[3] = true;
+                        }
+                      }
+
+                      break;
+
+                    default:
+                  }
+                }
+              }
+              // print(dietHistory.breakFast);
+
+              await getConfirmedIndex(dietHistory);
+
+              print(dietConfirmConfirm);
+              print("&" * 100);
+              print("&" * 100);
+              print(dietAdded);
               setState(() {
                 dateSelected = !dateSelected;
               });
@@ -1221,30 +1394,30 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  void makeItemListPast(int index) async {
-    //날짜 정보
-    // await getConfirmedIndex();
-    if (pastDietHistory != null) {
-      itemListPast = [
-        FractionallySizedBox(
-            widthFactor: 1.0,
-            heightFactor: 1.0,
-            child: Container(
-              // decoration: BoxDecoration(color: Colors.yellow),
-              child: Center(
-                child: Column(children: [
-                  for (var item in todayDietList[index]['foodInfo']['foods'])
-                    //item[0] : 코드
-                    //item[1] : 음식 이름
-                    //item[2] : 음식 무게
-                    Text("${item[1]}  ${item[2]}g"),
-                  Text(
-                      "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
-                  Text("총 칼로리 : ${todayDietList[index]['foodInfo']['kcal']}"),
-                ]),
-              ),
-            ))
-      ];
-    } else {}
-  }
+  // void makeItemListPast(int index) async {
+  //   //날짜 정보
+  //   // await getConfirmedIndex();
+  //   if (pastDietHistory != null) {
+  //     itemListPast = [
+  //       FractionallySizedBox(
+  //           widthFactor: 1.0,
+  //           heightFactor: 1.0,
+  //           child: Container(
+  //             // decoration: BoxDecoration(color: Colors.yellow),
+  //             child: Center(
+  //               child: Column(children: [
+  //                 for (var item in todayDietList[index]['foodInfo']['foods'])
+  //                   //item[0] : 코드
+  //                   //item[1] : 음식 이름
+  //                   //item[2] : 음식 무게
+  //                   Text("${item[1]}  ${item[2]}g"),
+  //                 Text(
+  //                     "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
+  //                 Text("총 칼로리 : ${todayDietList[index]['foodInfo']['kcal']}"),
+  //               ]),
+  //             ),
+  //           ))
+  //     ];
+  //   } else {}
+  // }
 }
