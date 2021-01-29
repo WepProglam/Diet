@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_application_1/addDiet.dart';
 import 'package:flutter_application_1/dietModelSaver.dart';
 import 'package:flutter_application_1/model.dart';
 import 'package:intl/intl.dart' show DateFormat;
@@ -213,6 +214,8 @@ class _MyHomePageState extends State<MyHomePage> {
       dietHistory = val;
     });
 
+    await checkConfirmDB();
+
     await dbHelperPerson.getLastPerson().then((val) {
       person = val;
     });
@@ -241,6 +244,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     getInfo();
     super.didChangeDependencies();
+  }
+
+  num _myOpacity = 0.0;
+  void _changeOpacity() {
+    setState(() => _myOpacity = 1.0);
   }
 
   void makeItemList(int index, {List<num> dateInfo}) async {
@@ -272,144 +280,161 @@ class _MyHomePageState extends State<MyHomePage> {
       ];
     } else {
       itemList = [
-        GestureDetector(
-          //border: Border.all(color: listViewColor, width: 2)
-          child: FractionallySizedBox(
-            child: Container(
-              decoration: BoxDecoration(
-                  // borderRadius: BorderRadius.circular(100),
-                  border: Border.all(color: listViewColor, width: 5)),
-              child: Center(
-                  child: Icon(
-                Icons.add_circle_outline,
-                color: Colors.white70,
-                size: 40,
-              )),
-            ),
-            widthFactor: 1,
-            heightFactor: 1,
-          ),
-          onTap: () {
-            setState(() {
-              dietAdded[index][0] = !dietAdded[index][0];
-            });
-          },
-        ),
         dietAdded[index][0]
-            ? Row(
-                children: [
-                  Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                          child: FractionallySizedBox(
-                            widthFactor: 1,
-                            heightFactor: 1,
-                            child: Container(
-                                child: Center(child: Text("식단 추가하기")),
-                                decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    border: Border.all(
-                                        color: listViewColor, width: 2))),
-                          ),
-                          onTap: () async {
-                            Navigator.pushNamed(context, '/addDiet',
-                                arguments: <String, Map>{
-                                  "pre": {
-                                    "pre": "mainPage",
-                                    "index": index,
-                                    "dateTime":
-                                        "$calenderYear-$calenderMonth-$calenderDate"
-                                  }
-                                }).then((val) async {
-                              todayDietList[index] = val;
+            ? AnimatedOpacity(
+                opacity: dietAdded[index][0] ? 1.0 : 0.0,
+                duration: Duration(seconds: 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                            child: FractionallySizedBox(
+                              widthFactor: 1,
+                              heightFactor: 1,
+                              child: Container(
+                                  child: Center(child: Text("식단 추가하기")),
+                                  decoration: BoxDecoration(
+                                      // color: Colors.red,
+                                      border: Border.all(
+                                          color: listViewColor, width: 5))),
+                            ),
+                            onTap: () async {
+                              Navigator.pushNamed(context, '/addDiet',
+                                  arguments: <String, Map>{
+                                    "pre": {
+                                      "pre": "mainPage",
+                                      "index": index,
+                                      "dateTime":
+                                          "$calenderYear-$calenderMonth-$calenderDate"
+                                    }
+                                  }).then((val) async {
+                                todayDietList[index] = val;
 
-                              todayDietList[index]['foodInfo'] =
-                                  jsonDecode(todayDietList[index]['foodInfo']);
+                                todayDietList[index]['foodInfo'] = jsonDecode(
+                                    todayDietList[index]['foodInfo']);
 
-                              print(val);
+                                print(val);
 
-                              for (var i = 0;
-                                  i <
+                                for (var i = 0;
+                                    i <
+                                        todayDietList[index]['foodInfo']
+                                                ['foods']
+                                            .length;
+                                    i++) {
+                                  todayDietList[index]['foodInfo']['foods'][i] =
                                       todayDietList[index]['foodInfo']['foods']
-                                          .length;
-                                  i++) {
-                                todayDietList[index]['foodInfo']['foods'][i] =
-                                    todayDietList[index]['foodInfo']['foods'][i]
-                                        .values
-                                        .toList();
-                              }
-                              await formatDietHistory(
-                                      dietName: todayDietList[index]
-                                          ['dietName'],
-                                      flag: index,
-                                      kcal: todayDietList[index]['foodInfo']
-                                              ['kcal']
-                                          .toString(),
-                                      nutri: todayDietList[index]['foodInfo']
-                                          ['nutri'],
-                                      dateTime: dateData,
-                                      isItConfirm: "false")
-                                  .then((diet) {});
-                              setState(() {
-                                dietAdded[index][2] =
-                                    val == null ? false : true;
+                                              [i]
+                                          .values
+                                          .toList();
+                                }
+                                await formatDietHistory(
+                                        dietName: todayDietList[index]
+                                            ['dietName'],
+                                        flag: index,
+                                        kcal: todayDietList[index]['foodInfo']
+                                                ['kcal']
+                                            .toString(),
+                                        nutri: todayDietList[index]['foodInfo']
+                                            ['nutri'],
+                                        dateTime: dateData,
+                                        isItConfirm: "false")
+                                    .then((diet) {});
+                                setState(() {
+                                  dietAdded[index][2] =
+                                      val == null ? false : true;
+                                });
                               });
-                            });
-                          })),
-                  Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                          child: FractionallySizedBox(
-                            widthFactor: 1,
-                            heightFactor: 1,
-                            child: Container(
-                                child: Center(child: Text("저장된 식단 불러오기")),
-                                decoration: BoxDecoration(color: Colors.blue)),
-                          ),
-                          onTap: () async {
-                            await Navigator.pushNamed(context, '/searchDiet',
-                                arguments: <String, String>{
-                                  "pre": "mainPage"
-                                }).then((val) async {
-                              todayDietList[index] = val;
+                            })),
+                    Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                            child: FractionallySizedBox(
+                              widthFactor: 1,
+                              heightFactor: 1,
+                              child: Container(
+                                  child: Center(child: Text("저장된 식단 불러오기")),
+                                  decoration: BoxDecoration(
+                                      // color: Colors.red,
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: listViewColor, width: 5),
+                                          top: BorderSide(
+                                              color: listViewColor, width: 5),
+                                          right: BorderSide(
+                                              color: listViewColor,
+                                              width: 5)))),
+                            ),
+                            onTap: () async {
+                              await Navigator.pushNamed(context, '/searchDiet',
+                                  arguments: <String, String>{
+                                    "pre": "mainPage"
+                                  }).then((val) async {
+                                todayDietList[index] = val;
 
-                              todayDietList[index]['foodInfo'] =
-                                  jsonDecode(todayDietList[index]['foodInfo']);
+                                todayDietList[index]['foodInfo'] = jsonDecode(
+                                    todayDietList[index]['foodInfo']);
 
-                              for (var i = 0;
-                                  i <
+                                for (var i = 0;
+                                    i <
+                                        todayDietList[index]['foodInfo']
+                                                ['foods']
+                                            .length;
+                                    i++) {
+                                  todayDietList[index]['foodInfo']['foods'][i] =
                                       todayDietList[index]['foodInfo']['foods']
-                                          .length;
-                                  i++) {
-                                todayDietList[index]['foodInfo']['foods'][i] =
-                                    todayDietList[index]['foodInfo']['foods'][i]
-                                        .values
-                                        .toList();
-                              }
-                              print("saving...");
-                              print(todayDietList[index]);
-                              print(todayDietList);
-                              await formatDietHistory(
-                                      dietName: todayDietList[index]
-                                          ['dietName'],
-                                      flag: index,
-                                      kcal: todayDietList[index]['foodInfo']
-                                              ['kcal']
-                                          .toString(),
-                                      nutri: todayDietList[index]['foodInfo']
-                                          ['nutri'],
-                                      dateTime: dateData,
-                                      isItConfirm: "false")
-                                  .then((diet) {});
-                              setState(() {
-                                dietAdded[index][2] =
-                                    val == null ? false : true;
+                                              [i]
+                                          .values
+                                          .toList();
+                                }
+                                print("saving...");
+                                print(todayDietList[index]);
+                                print(todayDietList);
+                                await formatDietHistory(
+                                        dietName: todayDietList[index]
+                                            ['dietName'],
+                                        flag: index,
+                                        kcal: todayDietList[index]['foodInfo']
+                                                ['kcal']
+                                            .toString(),
+                                        nutri: todayDietList[index]['foodInfo']
+                                            ['nutri'],
+                                        dateTime: dateData,
+                                        isItConfirm: "false")
+                                    .then((diet) {});
+                                setState(() {
+                                  dietAdded[index][2] =
+                                      val == null ? false : true;
+                                });
                               });
-                            });
-                          })),
-                ],
+                            })),
+                  ],
+                ),
               )
-            : Container(),
+            : GestureDetector(
+                //border: Border.all(color: listViewColor, width: 2)
+                child: FractionallySizedBox(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        // borderRadius: BorderRadius.circular(100),
+                        border: Border.all(color: listViewColor, width: 5)),
+                    child: Center(
+                        child: Icon(
+                      Icons.add_circle_outline,
+                      color: Colors.white70,
+                      size: 40,
+                    )),
+                  ),
+                  widthFactor: 1,
+                  heightFactor: 1,
+                ),
+                onTap: () {
+                  setState(() {
+                    _changeOpacity();
+                    dietAdded[index][0] = !dietAdded[index][0];
+                  });
+                },
+              ),
         dietAdded[index][2] //
             ? GestureDetector(
                 child: FractionallySizedBox(
@@ -815,8 +840,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                       Expanded(
                                         flex: calenderWidthFlex,
                                         child: Container(
-                                            // decoration: BoxDecoration(
-                                            //     color: Color(0x7077AAAD)),
+                                            decoration: BoxDecoration(
+                                                // color: Color(0x774E0D0D),
+                                                border: Border.all(
+                                                    // color: Color(0xFF4E0D0D),
+                                                    width: 5)),
                                             child: isSelected[0]
                                                 ? returnCalender()
                                                 : returnGraph()),
@@ -901,17 +929,27 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget returnCalender() {
-    return Column(
-      children: [
-        calenderDayRow(), //요일
-        calenderRow(1, tag: "first"),
-        calenderRow(1 + daysFirstWeek), //첫주 다 채우고 새로운 주의 첫 일 ( ex) 1월 3일)
-        calenderRow(8 + daysFirstWeek),
-        calenderRow(15 + daysFirstWeek),
-        calenderRow(22 + daysFirstWeek),
-        calenderRow(29 + daysFirstWeek, tag: "end"),
-      ],
-    );
+    return Stack(children: [
+      Column(
+        children: [
+          SizedBox(
+            height: 40,
+          ),
+          calenderDayRow(), //요일
+          calenderRow(1, tag: "first"),
+          calenderRow(1 + daysFirstWeek), //첫주 다 채우고 새로운 주의 첫 일 ( ex) 1월 3일)
+          calenderRow(8 + daysFirstWeek),
+          calenderRow(15 + daysFirstWeek),
+          calenderRow(22 + daysFirstWeek),
+          calenderRow(29 + daysFirstWeek, tag: "end"),
+        ],
+      ),
+      Positioned(
+        child: calenderSwitch(),
+        top: 10,
+        right: 10,
+      )
+    ]);
   }
 
   Widget returnGraph() {
@@ -919,17 +957,26 @@ class _MyHomePageState extends State<MyHomePage> {
       width: MediaQuery.of(context).size.width,
       child: Swiper(
         itemBuilder: (BuildContext context, int index) {
-          return Column(
+          return Stack(
             children: [
-              Spacer(
-                flex: 1,
+              Column(
+                children: [
+                  Spacer(
+                    flex: 1,
+                  ),
+                  LineChartSample2(
+                    index: index,
+                  ),
+                  Spacer(
+                    flex: 2,
+                  ),
+                ],
               ),
-              LineChartSample2(
-                index: index,
-              ),
-              Spacer(
-                flex: 2,
-              ),
+              Positioned(
+                child: calenderSwitch(),
+                top: 10,
+                right: 10,
+              )
             ],
           );
         },
@@ -1026,16 +1073,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       flex: 1,
                     ),
                     Expanded(
-                      flex: 6,
+                      flex: 8,
                       child: Text(
                         "$calender_year년 $calender_month월",
                         style: TextStyle(fontSize: 25),
                       ),
                     ),
                     Spacer(
-                      flex: 4,
+                      flex: 5,
                     ),
-                    calenderSwitch(),
                   ],
                 ),
               ),
@@ -1053,10 +1099,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 flex: calenderWidthFlex,
                 child: Row(
                   children: [
-                    Spacer(
-                      flex: 13,
-                    ),
-                    calenderSwitch(),
+                    // Spacer(
+                    //   flex: 10,
+                    // ),
+                    // calenderSwitch(),
                   ],
                 ),
               ),
@@ -1082,29 +1128,47 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget calenderSwitch() {
-    return Expanded(
-      flex: 5,
-      child: ToggleButtons(
-        children: <Widget>[
-          Icon(Icons.ac_unit),
-          Icon(Icons.call),
-        ],
-        onPressed: (int index) {
-          setState(() {
-            for (int buttonIndex = 0;
-                buttonIndex < isSelected.length;
-                buttonIndex++) {
-              if (buttonIndex == index) {
-                isSelected[buttonIndex] = true;
-              } else {
-                isSelected[buttonIndex] = false;
-              }
-            }
-          });
-        },
-        isSelected: isSelected,
-      ),
-    );
+    return SizedBox(
+        height: 30,
+        width: 100,
+        child: Container(
+          // decoration: BoxDecoration(color: Colors.yellow),
+          child: ToggleButtons(
+            // hoverColor: Colors.white,
+            // highlightColor: Colors.black,
+            // disabledColor: Colors.white,
+            // selectedColor: Colors.black,
+            fillColor: Colors.white70,
+            children: <Widget>[
+              Icon(
+                Icons.ac_unit,
+                color: Colors.white,
+                size: 20,
+              ),
+              Icon(
+                Icons.call,
+                size: 20,
+                color: Colors.white,
+              ),
+            ],
+            onPressed: (int index) {
+              setState(() {
+                for (int buttonIndex = 0;
+                    buttonIndex < isSelected.length;
+                    buttonIndex++) {
+                  if (buttonIndex == index) {
+                    isItCalender = false;
+                    isSelected[buttonIndex] = true;
+                  } else {
+                    isItCalender = true;
+                    isSelected[buttonIndex] = false;
+                  }
+                }
+              });
+            },
+            isSelected: isSelected,
+          ),
+        ));
   }
 
   Widget calenderDayRow() {
@@ -1321,52 +1385,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
               changeIntToString();
               initDateInfo();
+              checkConfirmDB();
 
-              if (dietHistory != null) {
-                for (var i = 0; i < 4; i++) {
-                  switch (i) {
-                    case 0:
-                      Map breakfast = jsonDecode(dietHistory.breakFast);
-                      if (breakfast != null) {
-                        if (breakfast['isItConfirm'] == "true") {
-                          dietConfirmConfirm[0] = true;
-                        }
-                      }
-                      print(dietConfirmConfirm);
-
-                      break;
-                    case 1:
-                      Map lunch = jsonDecode(dietHistory.lunch);
-                      if (lunch != null) {
-                        if (lunch['isItConfirm'] == "true") {
-                          dietConfirmConfirm[1] = true;
-                        }
-                      }
-
-                      break;
-                    case 2:
-                      Map dinner = jsonDecode(dietHistory.dinner);
-                      if (dinner != null) {
-                        if (dinner['isItConfirm'] == "true") {
-                          dietConfirmConfirm[2] = true;
-                        }
-                      }
-
-                      break;
-                    case 3:
-                      Map snack = jsonDecode(dietHistory.snack);
-                      if (snack != null) {
-                        if (snack['isItConfirm'] == "true") {
-                          dietConfirmConfirm[3] = true;
-                        }
-                      }
-
-                      break;
-
-                    default:
-                  }
-                }
-              }
               // print(dietHistory.breakFast);
 
               await getConfirmedIndex(dietHistory);
@@ -1381,6 +1401,54 @@ class _MyHomePageState extends State<MyHomePage> {
             }
           },
         ));
+  }
+
+  void checkConfirmDB() {
+    if (dietHistory != null) {
+      for (var i = 0; i < 4; i++) {
+        switch (i) {
+          case 0:
+            Map breakfast = jsonDecode(dietHistory.breakFast);
+            if (breakfast != null) {
+              if (breakfast['isItConfirm'] == "true") {
+                dietConfirmConfirm[0] = true;
+              }
+            }
+            print(dietConfirmConfirm);
+
+            break;
+          case 1:
+            Map lunch = jsonDecode(dietHistory.lunch);
+            if (lunch != null) {
+              if (lunch['isItConfirm'] == "true") {
+                dietConfirmConfirm[1] = true;
+              }
+            }
+
+            break;
+          case 2:
+            Map dinner = jsonDecode(dietHistory.dinner);
+            if (dinner != null) {
+              if (dinner['isItConfirm'] == "true") {
+                dietConfirmConfirm[2] = true;
+              }
+            }
+
+            break;
+          case 3:
+            Map snack = jsonDecode(dietHistory.snack);
+            if (snack != null) {
+              if (snack['isItConfirm'] == "true") {
+                dietConfirmConfirm[3] = true;
+              }
+            }
+
+            break;
+
+          default:
+        }
+      }
+    }
   }
 
   Widget dietDate(String date) {
