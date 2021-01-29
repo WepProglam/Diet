@@ -1,6 +1,6 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/addDiet.dart';
+// import 'package:flutter_application_1/addDiet.dart';
 import 'package:flutter_application_1/calculate.dart';
 import 'package:flutter_application_1/savedFood.dart';
 import 'appBar.dart';
@@ -12,6 +12,7 @@ import 'mainStream.dart' as mainStream;
 import 'package:crypto/crypto.dart';
 import 'package:convert/convert.dart';
 import 'dart:convert';
+import 'package:provider/provider.dart';
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -86,62 +87,67 @@ class _AddFoodSub extends State<AddFoodSub> {
   Widget build(BuildContext context) {
     // getInfo();
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
-        appBar: basicAppBar('Add Food', context),
-        drawer: NavDrawer(),
-        body: Center(
-            child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Spacer(
-                flex: 2,
-              ),
-              searchBar(),
-              Spacer(
-                flex: 1,
-              ),
-              subBuilderQuestion("음식명", " ", controller: _foodNameController),
-              subBuilderQuestion("1회 제공량", "g", controller: _servingController),
-              subBuilderQuestion("탄수화물", "g", controller: _carboController),
-              subBuilderQuestion(
-                "단백질",
-                "g",
-                controller: _proController,
-              ),
-              subBuilderQuestion("지방", "g",
-                  controller: _fatController,
-                  icon: Icon(Icons.restaurant_outlined)),
-              subBuilderQuestion(
-                "열량",
-                "kcal",
-                controller: _ulController,
-              ),
-              Spacer(
-                flex: 1,
-              ),
-              Row(
-                children: foodList,
-              ),
-              Spacer(
-                flex: 3,
-              ),
-            ],
-          ),
-        )),
-        floatingActionButton: TransFoodFAB(
-          stream: widget.streamMap,
-        ));
+      resizeToAvoidBottomPadding: false,
+      appBar: basicAppBar('Add Food', context),
+      drawer: NavDrawer(),
+      body: Center(
+          child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Spacer(
+              flex: 2,
+            ),
+            searchBar(),
+            Spacer(
+              flex: 1,
+            ),
+            subBuilderQuestion("음식명", " ", controller: _foodNameController),
+            subBuilderQuestion("1회 제공량", "g", controller: _servingController),
+            subBuilderQuestion("탄수화물", "g", controller: _carboController),
+            subBuilderQuestion(
+              "단백질",
+              "g",
+              controller: _proController,
+            ),
+            subBuilderQuestion("지방", "g",
+                controller: _fatController,
+                icon: Icon(Icons.restaurant_outlined)),
+            subBuilderQuestion(
+              "열량",
+              "kcal",
+              controller: _ulController,
+            ),
+            Spacer(
+              flex: 1,
+            ),
+            Row(
+              children: foodList,
+            ),
+            Spacer(
+              flex: 3,
+            ),
+          ],
+        ),
+      )),
+      floatingActionButton: add(),
+      // TransFoodFAB(
+      //   stream: widget.streamMap,
+      // ),
+    );
   }
 
   void getInfo() async {
     final Map<String, Map> args = ModalRoute.of(context).settings.arguments;
+
+    // print(args['myTempoFood']['servingSize']);
     if (args != null) {
       //searchFood에서 넘겼을때
       foodInfo = args["myTempoFood"];
-      tempo = true;
+
       setState(() {
+        tempo = true;
         _carboController.text =
             myRounder(foodInfo['servingSize'] * foodInfo['carbohydrate']);
         _fatController.text =
@@ -157,8 +163,18 @@ class _AddFoodSub extends State<AddFoodSub> {
       // streamController.add(foodInfo);
     } else {
       //일반적인 상황
+      // foodTempInfo = new Map.from(foodInfo);
+      // foodTempInfo['foodName'] = _foodNameController.value.text;
+      // foodTempInfo['isItMine'] = "T";
+      // foodTempInfo['carbohydrate'] = num.tryParse(_carboController.value.text);
+      // foodTempInfo['protein'] = num.tryParse(_proController.value.text);
+      // foodTempInfo['fat'] = num.tryParse(_fatController.value.text);
+      // foodTempInfo['servingSize'] = num.tryParse(_servingController.value.text);
       // foodInfo.clear();
-      tempo = false;
+      setState(() {
+        // foodInfo = foodTempInfo;
+        tempo = false;
+      });
     }
   }
 
@@ -167,10 +183,10 @@ class _AddFoodSub extends State<AddFoodSub> {
     widget.streamMap.listen((info) {
       if (!tempo) {
         if (info.containsKey('fat') == false) {
-          info['carbohydrate'] = 0.0;
-          info['fat'] = 0.0;
-          info['protein'] = 0.0;
-          info['kcal'] = 0.0;
+          info['carbohydrate'] = 0;
+          info['fat'] = 0;
+          info['protein'] = 0;
+          info['kcal'] = 0;
         }
         foodInfo = info;
         mySetState(info);
@@ -184,8 +200,12 @@ class _AddFoodSub extends State<AddFoodSub> {
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
+    // if (tempo) {}
+    print('change');
     getInfo();
+    streamController.add(foodInfo);
+    // print(foodInfo['foodName']);
     super.didChangeDependencies();
   }
 
@@ -305,6 +325,22 @@ class _AddFoodSub extends State<AddFoodSub> {
         if (fieldName != "foodName") {
           foodInfo[fieldName] = double.parse(text) / foodInfo['servingSize'];
         }
+        //   if (fieldName == 'servingSize') {
+        //     setState(() {
+        //       foodInfo[fieldName] = double.parse(text);
+        //     });
+        //   } else {
+        //     setState(() {
+        //       foodInfo[fieldName] =
+        //           double.parse(text) / foodInfo['servingSize'];
+        //     });
+        //   }
+        //   // streamController.add(foodInfo);
+        // } else {
+        //   setState(() {
+        //     foodInfo[fieldName] = text;
+        //   });
+        // }
       },
     );
   }
@@ -331,8 +367,165 @@ class _AddFoodSub extends State<AddFoodSub> {
           ),
         ));
   }
+
+  Food foodClass;
+
+  Widget add() {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: () async {
+          if (_formKey.currentState.validate()) {
+            foodClass = Food(
+                code: foodInfo['code'],
+                dbArmy: foodInfo['dbArmy'],
+                foodName: _foodNameController.text,
+                foodKinds: foodInfo['foodKinds'],
+                kcal: double.parse(_ulController.value.text),
+                protein: double.parse(_proController.value.text),
+                carbohydrate: double.parse(_carboController.value.text),
+                fat: double.parse(_fatController.value.text),
+                isItMine: 'T',
+                selected: foodInfo['selected'],
+                servingSize: double.parse(_servingController.value.text));
+            //일반적 상황
+            if (foodInfo['code'] == null) {
+              var bytes = utf8.encode(foodInfo['foodName']);
+              String codeName = "MY" + md5.convert(bytes).toString() + "custom";
+              foodClass.code = codeName;
+              foodClass.selected = 0;
+              showAlertDialog(context);
+            } else {
+              //업데이트 혹은 하나 더 저장
+              duplicateAlertDialog(context);
+            }
+          }
+        },
+        tooltip: '저장',
+        child: Icon(Icons.add, size: 30),
+        // backgroundColor: Colors.deepOrangeAccent,
+      ),
+    );
+  }
+
+  //searchFood에서 왔을때
+  duplicateAlertDialog(BuildContext context) {
+    // set up the button
+    Widget saveButton = FlatButton(
+        child: Text("새로 저장"),
+        onPressed: () {
+          var bytes = utf8.encode(foodInfo['foodName']);
+          String codeName =
+              "MY" + md5.convert(bytes).toString() + DateTime.now().toString();
+          Navigator.pop(context);
+        });
+
+    Widget updateButton = FlatButton();
+
+    Widget noButton = FlatButton(
+      child: Text("취소"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("from searchFood"),
+      content: Text(""),
+      actions: [saveButton, updateButton, noButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  //그냥 왔을 때
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget saveButton = FlatButton(
+        child: Text("저장"),
+        onPressed: () async {
+          // var bytes = utf8.encode(foodInfo['foodName']);
+          // String codeName = "MY" + md5.convert(bytes).toString();
+
+          await dbHelper.createData(foodClass);
+
+          // await dbHelperFood.updateFood(foodClass);
+          Navigator.pop(context);
+
+          /* await dbHelperFood.getFood(myFoodInfo['code']).then((value) async {
+            Food dbFoodClass = value;
+            dbFoodClass.selected += 1;
+            Food foodClass = Food(
+                code: myFoodInfo['code'],
+                dbArmy: myFoodInfo['dbArmy'],
+                foodName: myFoodInfo['foodName'],
+                foodKinds: myFoodInfo['foodKinds'],
+                kcal: myFoodInfo['kcal'],
+                protein: myFoodInfo['protein'],
+                carbohydrate: myFoodInfo['carbohydrate'],
+                fat: myFoodInfo['fat'],
+                isItMine: 'T',
+                selected: myFoodInfo['selected'] + 1,
+                servingSize: myFoodInfo['servingSize']); //select 1회 증가
+
+            dbHelperFood.deleteFood(myFoodInfo['code']);
+
+            if (myFoodInfo['isItMine'] == 'T') {
+              await dbHelperFood
+                  .createData(foodClass); //myFoodInfo에 저장된 데이터로 새로 저장
+              //print("new food ${foodClass.toMap()}");
+              Navigator.pop(context);
+            } else {
+              var bytes = utf8.encode(myFoodInfo['foodName']);
+              String codeName = "MY" + md5.convert(bytes).toString();
+              //print(codeName); //코드네임 암호화
+              await dbHelperFood
+                  .createData(dbFoodClass); //기존 db 데이터 저장(선택횟수만 변경)
+              await dbHelperFood.getFood(codeName).then((value) async {
+                if (value is Food) {
+                  Navigator.pop(context);
+                  duplicateAlertDialog(context);
+                } else {
+                  foodClass.code = codeName;
+                  dbHelperFood.createData(foodClass); //새로 저장하는 myfood 데이터
+                  Navigator.pop(context);
+                }
+              }); 
+            }
+          });*/
+        });
+
+    Widget noButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("General"),
+      content: Text("저장하시겠습니까?"),
+      actions: [saveButton, noButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 }
 
+//입력 버튼
 class TypeFoodName extends StatefulWidget {
   var controller;
   final Stream<bool> streamBool;
@@ -385,103 +578,104 @@ class _TypeFoodName extends State<TypeFoodName> {
       onPressed: () {
         Navigator.pushNamed(context, '/searchFood',
             arguments: <String, String>{'pre': 'addFood'}).then((code) async {
-          await dbHelperFood.getFood(code).then((food) {
+          await dbHelper.getFood(code).then((food) {
             streamController.add(food.toMap());
           });
         });
       },
-      // onChanged: (text) async {
-      //   if (isItCutom) {
-      //     //작동 X
-      //   } else {
-      //     //text = 바뀐 글
-      //     if (text != "") {
-      //       await dbHelper.filterFoods(text.toString()).then((value) async {
-      //         foodList = [];
-      //         List<int> foodListIndex = [];
-      //         List<Food> favoriteFood = [];
-      //         List<Food> notFavoriteFood = [];
+      /* onChanged: (text) async {
+        if (isItCutom) {
+          //작동 X
+        } else {
+          //text = 바뀐 글
+          if (text != "") {
+            await dbHelper.filterFoods(text.toString()).then((value) async {
+              foodList = [];
+              List<int> foodListIndex = [];
+              List<Food> favoriteFood = [];
+              List<Food> notFavoriteFood = [];
 
-      //         var i = 0;
-      //         favoriteFood
-      //             .addAll(value.where((item) => item.isItMine == "T"));
-      //         notFavoriteFood
-      //             .addAll(value.where((item) => item.isItMine == "F"));
-      //         for (var item in favoriteFood) {
-      //           foodListIndex.add(item.selected);
-      //           foodListIndex.sort((b, a) => a.compareTo(b));
-      //           var index = foodListIndex.indexOf(item.selected);
+              var i = 0;
+              favoriteFood
+                  .addAll(value.where((item) => item.isItMine == "T"));
+              notFavoriteFood
+                  .addAll(value.where((item) => item.isItMine == "F"));
+              for (var item in favoriteFood) {
+                foodListIndex.add(item.selected);
+                foodListIndex.sort((b, a) => a.compareTo(b));
+                var index = foodListIndex.indexOf(item.selected);
 
-      //           foodList.insert(
-      //               index,
-      //               ListTile(
-      //                 title: Text(item.foodName),
-      //                 leading: Icon(
-      //                   Icons.favorite,
-      //                   color: Colors.red,
-      //                   size: 20,
-      //                 ),
-      //                 trailing: Text("${item.selected}"),
-      //                 subtitle: Text(
-      //                     "${myRounder(item.kcal * item.servingSize)} Kcal"),
-      //                 onTap: () {
-      //                   Map foodInfo = {};
-      //                   controller.text = item.foodName;
-      //                   foodInfo = item.toMap();
+                foodList.insert(
+                    index,
+                    ListTile(
+                      title: Text(item.foodName),
+                      leading: Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                        size: 20,
+                      ),
+                      trailing: Text("${item.selected}"),
+                      subtitle: Text(
+                          "${myRounder(item.kcal * item.servingSize)} Kcal"),
+                      onTap: () {
+                        Map foodInfo = {};
+                        controller.text = item.foodName;
+                        foodInfo = item.toMap();
 
-      //                   streamController.add(foodInfo);
-      //                   foodList = [];
-      //                 },
-      //               ));
-      //         }
-      //         for (var item in notFavoriteFood) {
-      //           if (i < 5 - favoriteFood.length) {
-      //             foodList.add(ListTile(
-      //               title: Text(item.foodName),
-      //               leading: Icon(
-      //                 Icons.favorite,
-      //                 size: 20,
-      //               ),
-      //               trailing: Text("${item.selected}"),
-      //               subtitle: Text(
-      //                   "${myRounder(item.kcal * item.servingSize)} Kcal"),
-      //               onTap: () {
-      //                 Map foodInfo = {};
-      //                 controller.text = item.foodName;
-      //                 foodInfo = item.toMap();
-      //                 streamController.add(foodInfo);
-      //                 foodList = [];
-      //               },
-      //             ));
-      //             i += 1;
-      //           } else {
-      //             break;
-      //           }
-      //         }
-      //       }, onError: (e) {
-      //         //print(e);
-      //       });
+                        streamController.add(foodInfo);
+                        foodList = [];
+                      },
+                    ));
+              }
+              for (var item in notFavoriteFood) {
+                if (i < 5 - favoriteFood.length) {
+                  foodList.add(ListTile(
+                    title: Text(item.foodName),
+                    leading: Icon(
+                      Icons.favorite,
+                      size: 20,
+                    ),
+                    trailing: Text("${item.selected}"),
+                    subtitle: Text(
+                        "${myRounder(item.kcal * item.servingSize)} Kcal"),
+                    onTap: () {
+                      Map foodInfo = {};
+                      controller.text = item.foodName;
+                      foodInfo = item.toMap();
+                      streamController.add(foodInfo);
+                      foodList = [];
+                    },
+                  ));
+                  i += 1;
+                } else {
+                  break;
+                }
+              }
+            }, onError: (e) {
+              //print(e);
+            });
 
-      //       foodList.add(ListTile(
-      //         title: Text("나만의 음식 추가"),
-      //         onTap: () {
-      //           _focusNode.unfocus();
-      //           foodList = [];
-      //           Map foodInfo = {};
-      //           foodInfo['foodName'] = controller.text;
-      //           streamController.add(foodInfo);
-      //           setState(() {
-      //             isItCutom = true;
-      //           });
-      //         },
-      //       ));
-      //     }
-      //   }
-      // }
+            foodList.add(ListTile(
+              title: Text("나만의 음식 추가"),
+              onTap: () {
+                _focusNode.unfocus();
+                foodList = [];
+                Map foodInfo = {};
+                foodInfo['foodName'] = controller.text;
+                streamController.add(foodInfo);
+                setState(() {
+                  isItCutom = true;
+                });
+              },
+            ));
+          }
+        }
+      } */
     );
   }
 }
 
+//FAB
 class TransFoodFAB extends StatefulWidget {
   final Function() onPressed;
   final String tooltip;
@@ -506,6 +700,8 @@ class _TransFoodFABState extends State<TransFoodFAB>
   double _fabHeight = 56.0;
   Map myFoodInfo = {};
   bool isItCutom = false;
+  Food returnFood = Food();
+  String returnCode;
 
   @override
   initState() {
@@ -566,6 +762,7 @@ class _TransFoodFABState extends State<TransFoodFAB>
     isOpened = !isOpened;
   }
 
+  //db 읽어오는거(필요없음)
   Widget add() {
     return Container(
       child: FloatingActionButton(
@@ -612,18 +809,31 @@ class _TransFoodFABState extends State<TransFoodFAB>
     return Container(
       child: FloatingActionButton(
         heroTag: null,
+
         onPressed: () async {
-          if (tempo) {
-            await streamControllerBool.add(isItCutom);
-          } else {}
           if (_formKey.currentState.validate()) {
-            if (myFoodInfo.isEmpty) {
-              //커스텀
+            if (tempo) {
+              //커스텀: 코드 새로만들어서 저장
+              // var bytes = utf8.encode();
+              //          returnFood = Food(
+              //             code: ,
+              //   dbArmy: ,
+              //   foodName: ,
+              //   foodKinds: ,
+              // kcal: ,
+              // protein: ,
+              // carbohydrate: ,
+              // fat: ,
+              // isItMine: ,
+              // selected: ,
+              // servingSize:
+              //         );
 
+              // await streamControllerBool.add(isItCutom);
             } else {
-              //검색 정보
-
+              //업데이트 혹은 하나 더 저장
             }
+
             print(myFoodInfo);
             showAlertDialog(context);
           }
