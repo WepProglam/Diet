@@ -132,6 +132,10 @@ class _AddFoodSub extends State<AddFoodSub> {
         ),
       )),
       floatingActionButton: add(),
+      // floatingActionButton: TransFoodFAB(
+      //   stream: widget.streamMap,
+      // ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       // TransFoodFAB(
       //   stream: widget.streamMap,
       // ),
@@ -643,7 +647,7 @@ class _TypeFoodName extends State<TypeFoodName> {
 }
 
 //FAB
-class TransFoodFAB extends StatefulWidget {
+/* class TransFoodFAB extends StatefulWidget {
   final Function() onPressed;
   final String tooltip;
   final IconData icon;
@@ -970,3 +974,4 @@ class _TransFoodFABState extends State<TransFoodFAB>
     );
   }
 }
+ */
