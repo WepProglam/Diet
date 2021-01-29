@@ -10,15 +10,29 @@ import 'model.dart';
 
 num calculateDensity = 1;
 //person에서 받아와야 함!!
-num targetCalorie = 600;
+num targetCalorie;
+List<num> ratio = List(3);
 
 List<dynamic> csvList = [];
-
+int purposeIndex = 0;
 void getPersonKcal(
     {List<num> defaultMassList, List<num> defaultNutriList}) async {
   await dbHelperPerson.getLastPerson().then((val) {
     targetCalorie = val.metabolism;
-    print(targetCalorie);
+    purposeIndex = val.purpose;
+    purposeIndex = 0;
+    switch (purposeIndex) {
+      case 0:
+        ratio = [3, 4, 3];
+        break;
+      case 1:
+        ratio = [4, 4, 2];
+        break;
+      case 2:
+        ratio = [5, 3, 2];
+        break;
+      default:
+    }
     num minus;
     for (var i = 0; i < defaultMassList.length; i++) {
       minus = defaultMassList[i] *
@@ -128,7 +142,6 @@ Future<List<num>> makeCsvFile(
 
 List<dynamic> justCalculateNutri(
     List<num> foodList, num foodLength, num defaultFoodLength) {
-  List<num> ratio = [5, 3, 2];
   num totalFoodLength = defaultFoodLength + foodLength;
   List<num> carbohydrateList = List<num>(totalFoodLength);
   List<num> proteinList = List<num>(totalFoodLength);
