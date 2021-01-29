@@ -140,11 +140,12 @@ class _FoodListState extends State<FoodList> {
               textAlign: TextAlign.center,
 
               onChanged: (text) async {
-                massChangeList = [];
+                massChangeList = List(foodMassController.length);
+                print(foodMassController.length);
                 List<int> index = getIndex();
                 for (var item in index) {
-                  massChangeList.insert(
-                      item, num.tryParse(foodMassController[item].value.text));
+                  massChangeList[item] =
+                      num.tryParse(foodMassController[item].value.text);
                 }
 
                 justCalNutri(foodList, massChangeList).then((val) {

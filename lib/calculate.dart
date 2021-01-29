@@ -3,15 +3,22 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:csv/csv.dart';
+import 'package:flutter_application_1/lineChart.dart';
 import 'package:path_provider/path_provider.dart';
 import 'appBar.dart';
 import 'model.dart';
 
 num calculateDensity = 1;
 //person에서 받아와야 함!!
-const targetCalorie = 2500;
+num targetCalorie = 600;
 
 List<dynamic> csvList = [];
+
+void getPersonKcal() async {
+  await dbHelperPerson.getLastPerson().then((val) {
+    targetCalorie = val.metabolism;
+  });
+}
 
 List<dynamic> justCalculateNutri(List<num> foodList, num foodLength) {
   List<num> ratio = [5, 3, 2];
@@ -241,6 +248,8 @@ List<num> makeForLooP(
 }
 
 Future<List<num>> makeCsvFile({List<Food> foodList}) async {
+  await getPersonKcal();
+  print(targetCalorie);
   int foodLength = 0;
   List<List<num>> massList = [[]];
   calculateDensity = 1;
@@ -248,7 +257,7 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   if (foodLength <= 3) {
     calculateDensity *= 30;
   } else if (foodLength <= 5) {
-    calculateDensity *= 20;
+    calculateDensity *= 10;
   } else if (foodLength <= 7) {
     calculateDensity *= 5;
   } else {
@@ -263,17 +272,21 @@ Future<List<num>> makeCsvFile({List<Food> foodList}) async {
   List<num> nutriInfo = new List(foodLength * 3);
 
   for (var i = 0; i < foodLength; i++) {
-    minMass[i] = foodList[i].servingSize / 4;
+    minMass[i] = foodList[i].servingSize / 2;
     myFoodMassList[i] = minMass[i];
-    maxMass[i] = foodList[i].servingSize * 2;
     calorie[i] = foodList[i].carbohydrate * 4 +
         foodList[i].fat * 9 +
         foodList[i].protein * 4;
+    maxMass[i] = foodList[i].servingSize * 4;
 
+    // (targetCalorie / calorie[i]) * 0.5; //
     nutriInfo[i * 3] = foodList[i].carbohydrate;
     nutriInfo[i * 3 + 1] = foodList[i].protein;
     nutriInfo[i * 3 + 2] = foodList[i].fat;
   }
+  print("calorie : $calorie");
+  print("target : $targetCalorie");
+  print(maxMass);
 
   int tempIndex = 0;
   //일치율
