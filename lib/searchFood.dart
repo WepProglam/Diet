@@ -4,23 +4,54 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/addDiet.dart';
 import 'package:flutter_application_1/model.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+// import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'db_helper.dart';
 import 'mainStream.dart' as mainStream;
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:provider/provider.dart';
 
 StreamController<String> streamControllerString =
     mainStream.streamControllerString;
+
+class SelectedFoods extends ChangeNotifier {
+  List<String> _selectedFoodsList;
+
+  SelectedFoods(this._selectedFoodsList);
+
+  List<String> getFoods() => _selectedFoodsList;
+  setSelectedFoodsList(List<String> foods) => _selectedFoodsList = foods;
+
+  void addSelectedFood(String str) {
+    _selectedFoodsList.add(str);
+    notifyListeners();
+  }
+
+  void removeFood(String str) {
+    _selectedFoodsList.remove(str);
+    notifyListeners();
+  }
+
+  void removeAllFoods() {
+    _selectedFoodsList.clear();
+    notifyListeners();
+  }
+}
 
 class SearchFood extends StatelessWidget {
   final Stream<List> stream;
   SearchFood({this.stream});
   @override
   Widget build(BuildContext context) {
-    return SearchList(
-      streamString: streamControllerString.stream,
-    );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => SelectedFoods([]),
+          ),
+        ],
+        child: SearchList(
+          streamString: streamControllerString.stream,
+        ));
   }
 }
 
@@ -143,9 +174,14 @@ class _SearchListState extends State<SearchList> {
     });
   }
 
+  int flexVal = 0;
+  List<String> selectedFoods = new List();
+  Widget listView = null;
+
   @override
   Widget build(BuildContext context) {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
+    final SelectedFoods foodProvider = Provider.of<SelectedFoods>(context);
 
     // print("is searchign $_IsSearching");
     return Scaffold(
@@ -186,22 +222,83 @@ class _SearchListState extends State<SearchList> {
           ? ((args['pre'] == 'addDiet')
               ? Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 70.0),
-                      child: IconButton(
-                          alignment: Alignment.topCenter,
-                          icon: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: Colors.white,
-                          ),
-                          iconSize: 40,
-                          onPressed: null),
+                    SizedBox(
+                      height: 95,
                     ),
-                    Spacer(),
-                    Container(
+                    Expanded(
+                      flex: flexVal,
+                      child: Row(
+                        children: [
+                          Spacer(),
+                          Expanded(
+                            flex: 2,
+                            child: Container(
+                              // margin: EdgeInsets.only(top: 95),
+                              decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  border: Border(
+                                      left: BorderSide(
+                                          color: Colors.deepOrangeAccent[700],
+                                          width: 1),
+                                      bottom: BorderSide(
+                                          color: Colors.deepOrangeAccent[700],
+                                          width: 1),
+                                      right: BorderSide(
+                                          color: Colors.deepOrangeAccent[700],
+                                          width: 1))),
+                              child: listView,
+                            ),
+                          ),
+                          Spacer(),
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      child: InkWell(
+                        splashColor: Colors.deepOrangeAccent[700],
+                        child: Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Colors.deepOrangeAccent[700],
+                          size: 40,
+                        ),
+                        onTap: () {
+                          // animation
+                          if (flexVal == 0) {
+                            if (selectedFoods != null) {
+                              setState(() {
+                                flexVal = 1;
+                                selectedFoods = foodProvider.getFoods();
+                                listView = ListView.separated(
+                                    itemBuilder: (context, int index) {
+                                      return Center(
+                                          child: Text(selectedFoods[index]));
+                                    },
+                                    separatorBuilder: (context, int index) =>
+                                        const Divider(),
+                                    itemCount: selectedFoods.length);
+                              });
+                            } else {
+                              setState(() {
+                                flexVal = 1;
+                              });
+                            }
+                          } else {
+                            setState(() {
+                              flexVal = 0;
+                              // selectedFoods.clear();
+                              listView = null;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                    Spacer(
+                      flex: 2,
+                    ),
+                    FittedBox(
                       alignment: Alignment.bottomCenter,
                       child: FloatingActionButton(
-
+                          heroTag: null,
                           // backgroundColor: Color(0xFF69C2B0),
                           // focusColor: Color(0xFF69C2B0),
                           child: Icon(Icons.done),
@@ -340,14 +437,14 @@ class _SearchListState extends State<SearchList> {
 
                         setState(() {
                           for (var item in foodList) {
-                            foodDBNameEX.add(item
-                                // Food(
-                                //     code: item.code,
-                                //     foodName: item.foodName,
-                                //     calories: item.kcal,
-                                //     isItFavorite:
-                                //         item.isItMine == "T" ? true : false),
-                                );
+                            foodDBNameEX.add(item);
+                            // Food(
+                            //     code: item.code,
+                            //     foodName: item.foodName,
+                            //     calories: item.kcal,
+                            //     isItFavorite:
+                            //         item.isItMine == "T" ? true : false),
+
                           }
                         });
                       },
@@ -416,6 +513,7 @@ class _UiitemState extends State<Uiitem> {
   @override
   Widget build(BuildContext context) {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
+    final SelectedFoods foodProvider = Provider.of<SelectedFoods>(context);
     return Card(
       // shape: RoundedRectangleBorder(
       //   borderRadius: BorderRadius.circular(20.0),
@@ -443,6 +541,12 @@ class _UiitemState extends State<Uiitem> {
                 if (args != null) {
                   if (args['pre'] == 'addDiet') {
                     streamControllerString.add(building.code);
+                    if (!isItSelected) {
+                      foodProvider.addSelectedFood(building.foodName);
+                    } else {
+                      foodProvider.removeFood(building.foodName);
+                    }
+
                     setState(() {
                       isItSelected = !isItSelected;
                     });
