@@ -82,6 +82,7 @@ class _ActivityPageState extends State<ActivityPage> {
             (13.8 * hint['weight']) +
             (5 * hint['height']) -
             (6.8 * 22)); //23 -> person['age'] - 1 (만나이)
+
         bmrText.text = bmr.toStringAsFixed(1);
         print(hint['nutriRate']);
         print(hint['activity']);
@@ -92,7 +93,7 @@ class _ActivityPageState extends State<ActivityPage> {
             _activityValue = hint['activity'];
           });
         } else {
-          amText.text = (bmr * 1.2).toStringAsFixed(1);
+          amText.text = addOrSubAm((bmr * 1.2)).toStringAsFixed(1);
         }
       } else {
         bmr = (655.1 +
@@ -214,20 +215,20 @@ class _ActivityPageState extends State<ActivityPage> {
                 setState(() {
                   _activityValue = value;
                   if (_activityValue == 1) {
-                    amText.text =
-                        (num.parse(bmrText.text) * 1.2).toStringAsFixed(1);
+                    amText.text = addOrSubAm(num.parse(bmrText.text) * 1.2)
+                        .toStringAsFixed(1);
                   } else if (_activityValue == 2) {
-                    amText.text =
-                        (num.parse(bmrText.text) * 1.375).toStringAsFixed(1);
+                    amText.text = addOrSubAm(num.parse(bmrText.text) * 1.375)
+                        .toStringAsFixed(1);
                   } else if (_activityValue == 3) {
-                    amText.text =
-                        (num.parse(bmrText.text) * 1.555).toStringAsFixed(1);
+                    amText.text = addOrSubAm(num.parse(bmrText.text) * 1.555)
+                        .toStringAsFixed(1);
                   } else if (_activityValue == 4) {
-                    amText.text =
-                        (num.parse(bmrText.text) * 1.725).toStringAsFixed(1);
+                    amText.text = addOrSubAm(num.parse(bmrText.text) * 1.725)
+                        .toStringAsFixed(1);
                   } else if (_activityValue == 5) {
-                    amText.text =
-                        (num.parse(bmrText.text) * 1.9).toStringAsFixed(1);
+                    amText.text = addOrSubAm(num.parse(bmrText.text) * 1.9)
+                        .toStringAsFixed(1);
                   } else if (_activityValue == 6) {
                     amText.text = '';
                   }
@@ -239,6 +240,23 @@ class _ActivityPageState extends State<ActivityPage> {
         ],
       ),
     );
+  }
+
+  num addOrSubAm(num am) {
+    switch (hint['purpose']) {
+      case 0:
+        am -= 500;
+        break;
+      case 1:
+        am += 500;
+        break;
+      case 2:
+        am = am;
+        break;
+      default:
+        break;
+    }
+    return am;
   }
 
   @override

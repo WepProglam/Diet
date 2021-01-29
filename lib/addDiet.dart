@@ -49,6 +49,7 @@ class _FoodListState extends State<FoodList> {
   TextEditingController dietNameController = TextEditingController();
   List<TextEditingController> foodMassController = [];
   List<TextEditingController> foodServingController = [];
+  List<bool> pinPushedList = [];
   num carbohydrateMass, proteinMass, fatMass = 0.0;
   num totalCalorie;
   num correct = 0.0;
@@ -95,9 +96,22 @@ class _FoodListState extends State<FoodList> {
     }
   }
 
+  List<num> passDefaultFoodList() {
+    List<num> defaultFoods = [];
+    for (var i = 0; i < pinPushedList.length; i++) {
+      if (pinPushedList[i]) {
+        defaultFoods.add(num.parse(foodMassController[i].value.text));
+      }
+    }
+
+    return defaultFoods;
+  }
+
   Widget buildFood(ListContents food, int index) {
     TextEditingController _controller = TextEditingController();
     TextEditingController _controllerServing = TextEditingController();
+    bool pinPushed = false;
+
     _controller.text = initialVal(food.mass);
     _controllerServing.text = initialVal(0);
 
@@ -108,12 +122,66 @@ class _FoodListState extends State<FoodList> {
     if (index >= foodServingController.length) {
       foodServingController.add(_controllerServing);
     }
+    if (index >= pinPushedList.length) {
+      pinPushedList.add(pinPushed);
+    }
     //받는 매게변수 index 추가
     return Center(
       child: Row(
         children: [
-          Spacer(
+          // Spacer(
+          //   flex: 1,
+          // ),
+          Expanded(
             flex: 1,
+            child: IconButton(
+              icon: Icon(
+                Icons.push_pin,
+                color: pinPushedList[index] ? iconColor : Colors.grey,
+              ),
+              onPressed: () {
+                print("///" * 100);
+                print(foodMassController.length);
+                print(foodServingController.length);
+                print("///" * 100);
+
+                ListContents temp = foodList[index];
+                bool tempBool = pinPushedList[index];
+                TextEditingController _controller = foodMassController[index];
+                TextEditingController _controllerServing =
+                    foodServingController[index];
+                foodList.removeAt(index);
+                pinPushedList.removeAt(index);
+                foodMassController.removeAt(index);
+                foodServingController.removeAt(index);
+                if (tempBool) {
+                  tempBool = !tempBool;
+                  setState(() {
+                    foodList.add(temp);
+
+                    pinPushedList.add(tempBool);
+
+                    foodMassController.add(_controller);
+
+                    foodServingController.add(_controllerServing);
+                    // foodList.insert(index, temp);
+                  });
+                } else {
+                  setState(() {
+                    tempBool = !tempBool;
+
+                    foodList.insert(0, temp);
+
+                    pinPushedList.insert(0, tempBool);
+
+                    foodMassController.insert(0, _controller);
+
+                    foodServingController.insert(0, _controllerServing);
+                    // foodList.insert(index, temp);
+                  });
+                }
+              },
+            ),
           ),
           Expanded(
             flex: 3,
@@ -415,53 +483,71 @@ class _FoodListState extends State<FoodList> {
                           color: iconColor,
                         ),
                         onPressed: () async {
-                          // if (changeNumOfMass() == 0) {
-                          //음식 무게 입력되어있는 칸이 있을땐 빼고 계산하는 기능 추가 필요
-                          //그람은 반올림해서 표시 필요
-                          //음식 옆에 검정색 x표 버튼 외에 버튼 하나 더 추가 => 누르면 해당 음식의 텍스트필드 값이 0으로 바뀜
+                          List<num> defaultFood = passDefaultFoodList();
                           List<num> servingSize = [];
-                          await getFoodInfo(foodList).then((value) {
-                            makeCsvFile(foodList: value).then((val) {
-                              List<num> sendData = [];
-                              List<num> nutriInfo = new List(value.length * 3);
-                              for (var i = 0; i < value.length; i++) {
-                                servingSize.add(value[i].servingSize);
-                                nutriInfo[i * 3] = value[i].carbohydrate;
-                                nutriInfo[i * 3 + 1] = value[i].protein;
-                                nutriInfo[i * 3 + 2] = value[i].fat;
+
+                          if (foodList.isNotEmpty) {
+                            await getFoodInfo(foodList).then((value) {
+                              List<Map> defaultFoodList = [];
+                              for (var i = 0; i < defaultFood.length; i++) {
+                                defaultFoodList.add(
+                                    {"food": value[i], "mass": defaultFood[i]});
                               }
-
-                              sendData.addAll(nutriInfo);
-                              sendData.addAll(val);
-
-                              try {
-                                List<dynamic> carProFat = justCalculateNutri(
-                                    sendData, foodList.length);
-                                num total = carProFat[3] * 4 +
-                                    carProFat[4] * 4 +
-                                    carProFat[5] * 9;
-                                // assert(total < 600 * 1.2 && total > 600 * 0.8); //이 칼로리 조합이 아니면 단 하나의 경우도 케이스 통과 X
-
-                                setState(() {
-                                  correct = carProFat[1];
-                                  carbohydrateMass = carProFat[3];
-                                  proteinMass = carProFat[4];
-                                  fatMass = carProFat[5];
-                                });
-                                for (var i = 0; i < foodList.length; i++) {
-                                  foodMassController[i].text =
-                                      val[i].toStringAsFixed(0);
-                                  foodServingController[i].text =
-                                      "${(val[i] / servingSize[i]).toStringAsFixed(1)}인분";
+                              print(defaultFoodList);
+                              makeCsvFile(
+                                      defaultFoodList: defaultFoodList,
+                                      foodList:
+                                          value.sublist(defaultFood.length))
+                                  .then((val) {
+                                List<num> sendData = [];
+                                List<num> nutriInfo =
+                                    new List(value.length * 3);
+                                for (var i = 0; i < value.length; i++) {
+                                  servingSize.add(value[i].servingSize);
+                                  nutriInfo[i * 3] = value[i].carbohydrate;
+                                  nutriInfo[i * 3 + 1] = value[i].protein;
+                                  nutriInfo[i * 3 + 2] = value[i].fat;
                                 }
-                              } catch (e) {
-                                print(e);
-                                var snackBar =
-                                    buildSnackBar('음식 조합이 매우 부적합합니다.');
-                                Scaffold.of(context).showSnackBar(snackBar);
-                              }
+                                print("val=="); //여기서 val을 텍스트필드에 넣으면 될듯
+
+                                print(val);
+
+                                sendData.addAll(nutriInfo);
+                                sendData.addAll(val);
+
+                                try {
+                                  List<dynamic> carProFat = justCalculateNutri(
+                                      sendData,
+                                      foodList.length - defaultFood.length,
+                                      defaultFood.length);
+                                  num total = carProFat[3] * 4 +
+                                      carProFat[4] * 4 +
+                                      carProFat[5] * 9;
+                                  // assert(total < 600 * 1.2 && total > 600 * 0.8); //이 칼로리 조합이 아니면 단 하나의 경우도 케이스 통과 X
+
+                                  for (var i = 0; i < foodList.length; i++) {
+                                    foodMassController[i].text =
+                                        val[i].toStringAsFixed(0);
+                                    foodServingController[i].text =
+                                        "${(val[i] / servingSize[i]).toStringAsFixed(1)}인분";
+                                  }
+                                  print(carProFat);
+                                  setState(() {
+                                    correct = carProFat[1];
+                                    carbohydrateMass = carProFat[3];
+                                    proteinMass = carProFat[4];
+                                    fatMass = carProFat[5];
+                                  });
+                                } catch (e) {
+                                  print(e);
+                                  var snackBar =
+                                      buildSnackBar('음식 조합이 매우 부적합합니다.');
+                                  Scaffold.of(context).showSnackBar(snackBar);
+                                }
+                              });
                             });
-                          });
+                          }
+
                           // } else {
                           //   if (foodList.length - changeNumOfMass() == 3) {
                           //     //should add change calorie
@@ -620,7 +706,7 @@ class _FoodListState extends State<FoodList> {
               protein: proteinMass * 4,
               totalCalorie:
                   carbohydrateMass * 4 + fatMass * 9 + proteinMass * 4,
-              correct: correct,
+              correct: correct.toDouble(),
             ),
           ),
 
