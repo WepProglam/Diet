@@ -561,10 +561,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     Expanded(
                                                       flex: 1,
                                                       child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                color: Colors
-                                                                    .black),
+                                                        // decoration:
+                                                        //     BoxDecoration(
+                                                        //         color: Colors
+                                                        //             .black),
                                                         child: Center(
                                                             child: Text(
                                                           mealList[listIndex],
@@ -584,15 +584,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                                               child: Stack(
                                                             children: itemList,
                                                           )),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  color: Colors
-                                                                      .white),
+                                                          // decoration:
+                                                          //     BoxDecoration(
+                                                          //         color: Colors
+                                                          //             .white),
                                                         ))
                                                   ],
                                                 ),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white),
+                                                // decoration: BoxDecoration(
+                                                //     color: Colors.white),
                                               );
                                             },
                                             itemCount: 4,
@@ -613,8 +613,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 int index) {
                                               return Container(
                                                 child: Text("추천 식단이 들어갈 자리"),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white),
+                                                // decoration: BoxDecoration(
+                                                //     color: Colors.white),
                                               );
                                             },
                                             itemCount: 10,
@@ -657,8 +657,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                     "골격근량    ${person.muscleMass}"),
                                                               ],
                                                       ),
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.red),
+                                                      // decoration: BoxDecoration(
+                                                      //     color: Colors.red),
                                                     ),
                                                     widthFactor: 1,
                                                     heightFactor: 1,
@@ -689,8 +689,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                     "목표    ${person.purpose}"),
                                                               ],
                                                       ),
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.blue),
+                                                      // decoration: BoxDecoration(
+                                                      //     color: Colors.blue),
                                                     ),
                                                     widthFactor: 1,
                                                     heightFactor: 1,
@@ -718,8 +718,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                       Expanded(
                                         flex: calenderWidthFlex,
                                         child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Color(0x7077AAAD)),
+                                            // decoration: BoxDecoration(
+                                            //     color: Color(0x7077AAAD)),
                                             child: isSelected[0]
                                                 ? returnCalender()
                                                 : returnGraph()),
@@ -743,10 +743,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     Expanded(
                                                       flex: 1,
                                                       child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                color: Colors
-                                                                    .black),
+                                                        // decoration:
+                                                        //     BoxDecoration(
+                                                        //         color: Colors
+                                                        //             .black),
                                                         child: Center(
                                                             child: Text(
                                                           mealList[listIndex],
@@ -766,15 +766,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                                               child: Stack(
                                                             children: itemList,
                                                           )),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  color: Colors
-                                                                      .white),
+                                                          // decoration:
+                                                          //     BoxDecoration(
+                                                          //         color: Colors
+                                                          //             .white),
                                                         ))
                                                   ],
                                                 ),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white),
+                                                // decoration: BoxDecoration(
+                                                //     color: Colors.white),
                                               );
                                             },
                                             itemCount: 4,
@@ -1235,7 +1235,7 @@ class _MyHomePageState extends State<MyHomePage> {
             widthFactor: 1.0,
             heightFactor: 1.0,
             child: Container(
-              decoration: BoxDecoration(color: Colors.yellow),
+              // decoration: BoxDecoration(color: Colors.yellow),
               child: Center(
                 child: Column(children: [
                   for (var item in todayDietList[index]['foodInfo']['foods'])
