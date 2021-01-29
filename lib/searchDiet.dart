@@ -300,46 +300,51 @@ class _UiitemState extends State<Uiitem> {
     }
 
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
+      // shape: RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.circular(20.0),
+      // ),
       margin: EdgeInsets.all(8),
       // color: Colors.deepOrangeAccent,
-      child: Stack(
-        children: [
-          InkWell(
-            // splashColor: Colors.white,
-            //여기다 눌렀을 때 기능 넣기
-            onTap: () async {
-              react(whereFrom);
-            },
-            child: Center(
-              child: Text(
-                widget.diet.dietName,
-                textScaleFactor: 1.5,
-                maxLines: 1,
-                // style: TextStyle(fontSize: 30),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 10,
-            right: 10,
-            child: GestureDetector(
+      child: Container(
+        decoration: BoxDecoration(
+            border:
+                Border.all(color: Colors.deepOrangeAccent[700], width: 1.2)),
+        child: Stack(
+          children: [
+            InkWell(
+              // splashColor: Colors.white,
+              //여기다 눌렀을 때 기능 넣기
               onTap: () async {
-                await dbHelperDiet.deleteDiet(widget.diet.dietName);
-                listProvider.removeDiet(widget.diet);
-                // dietNameEX.removeWhere(
-                //     (item) => item.dietName == widget.diet.dietName);
-                // );
+                react(whereFrom);
               },
-              child: Icon(
-                Icons.delete,
-                size: 20,
+              child: Center(
+                child: Text(
+                  widget.diet.dietName,
+                  textScaleFactor: 1.5,
+                  maxLines: 1,
+                  // style: TextStyle(fontSize: 30),
+                ),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              top: 10,
+              right: 10,
+              child: GestureDetector(
+                onTap: () async {
+                  await dbHelperDiet.deleteDiet(widget.diet.dietName);
+                  listProvider.removeDiet(widget.diet);
+                  // dietNameEX.removeWhere(
+                  //     (item) => item.dietName == widget.diet.dietName);
+                  // );
+                },
+                child: Icon(
+                  Icons.delete,
+                  size: 20,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

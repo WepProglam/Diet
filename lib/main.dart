@@ -22,7 +22,6 @@ void main() {
   runApp(MaterialApp(
     theme: ThemeData(
       brightness: Brightness.dark,
-
       scaffoldBackgroundColor: Colors.black,
       // canvasColor: Colors.black,
       // backgroundColor: Colors.deepOrangeAccent,
@@ -32,12 +31,10 @@ void main() {
       // iconTheme: IconThemeData(
       //   color: Colors.deepOrangeAccent[700],
       // ),
-      cardColor: Colors.deepOrangeAccent[700],
-
+      // cardColor: Colors.deepOrangeAccent[700],
+      cardColor: Colors.black,
       accentColor: accColor,
-      splashColor: accColor == Colors.white
-          ? Colors.deepOrangeAccent[700]
-          : Colors.white,
+      splashColor: Colors.deepOrangeAccent[400],
 
       // textSelectionColor: Colors.white,
       // textTheme: TextTheme(

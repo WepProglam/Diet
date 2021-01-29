@@ -84,7 +84,7 @@ class _ActivityPageState extends State<ActivityPage> {
             (6.8 * 22)); //23 -> person['age'] - 1 (만나이)
 
         bmrText.text = bmr.toStringAsFixed(1);
-        print(hint['nutriRate']);
+        // print(hint['nutriRate']);
         print(hint['activity']);
         if (hint['metabolism'] != null) {
           amText.text = hint['metabolism'].toString();
@@ -163,7 +163,7 @@ class _ActivityPageState extends State<ActivityPage> {
     );
   }
 
-  Widget nutriRate() {
+  /* Widget nutriRate() {
     return Center(
       child: Row(
         children: [
@@ -192,7 +192,7 @@ class _ActivityPageState extends State<ActivityPage> {
         ],
       ),
     );
-  }
+  } */
 
   Widget selActivity() {
     return Center(
@@ -281,8 +281,8 @@ class _ActivityPageState extends State<ActivityPage> {
               Spacer(
                 flex: 1,
               ),
-              nutriRate(),
-              Text('탄수화물, 단백질, 지방의 열량 비율을 선택해주세요'),
+              // nutriRate(),
+              // Text('탄수화물, 단백질, 지방의 열량 비율을 선택해주세요'),
               Spacer(
                 flex: 1,
               ),

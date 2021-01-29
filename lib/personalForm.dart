@@ -68,7 +68,9 @@ class _PersonalForm extends State<PersonalForm> {
       hint1['time'] = value.isNotEmpty ? value.last.time : null;
       hint1['muscleMass'] = value.isNotEmpty ? value.last.muscleMass : null;
       hint1['purpose'] = value.isNotEmpty ? value.last.purpose : null;
-      hint1['metabolism'] = value.isNotEmpty ? value.last.metabolism : null;
+      hint1['metabolism'] = value.isNotEmpty
+          ? resetMetabolism(value.last.metabolism, hint1['purpose'])
+          : null;
       hint1['activity'] = value.isNotEmpty ? value.last.activity : null;
       hint1['nutriRate'] = value.isNotEmpty ? value.last.nutriRate : null;
       hint1['weightTarget'] = value.isNotEmpty ? value.last.weightTarget : null;
@@ -86,6 +88,36 @@ class _PersonalForm extends State<PersonalForm> {
       hint1['muscleTarget'] = null;
     });
     return hint1;
+  }
+
+  num resetMetabolism(num metabolism, int purpose) {
+    switch (purpose) {
+      case 0:
+        metabolism += 500;
+        break;
+      case 1:
+        metabolism -= 500;
+        break;
+      case 2:
+        break;
+      default:
+    }
+    return metabolism;
+  }
+
+  num setMetabolism(num metabolism, int purpose) {
+    switch (purpose) {
+      case 0:
+        metabolism -= 500;
+        break;
+      case 1:
+        metabolism += 500;
+        break;
+      case 2:
+        break;
+      default:
+    }
+    return metabolism;
   }
 
   void getHintGet() async {
@@ -223,6 +255,7 @@ class _PersonalForm extends State<PersonalForm> {
                                                     setState(() {
                                                       // typeStart = true;
                                                       // purpose_index = value;
+
                                                       _selValue = value;
                                                       print(_selValue);
                                                     });
@@ -278,11 +311,10 @@ class _PersonalForm extends State<PersonalForm> {
                                                     purpose: _selValue,
                                                     time: time,
                                                     achieve: 0.0,
-                                                    metabolism:
-                                                        hint['metabolism'],
+                                                    metabolism: setMetabolism(
+                                                        hint['metabolism'], _selValue),
                                                     activity: hint['activity'],
-                                                    nutriRate:
-                                                        hint['nutriRate'],
+                                                    nutriRate: hint['nutriRate'],
                                                     weightTarget: double.parse(_weightTargetController.value.text),
                                                     bmiTarget: double.parse(_bmiTargetController.value.text),
                                                     muscleTarget: double.parse(_muscleTargetController.value.text));

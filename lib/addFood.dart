@@ -1,18 +1,21 @@
+// import 'package:excel/excel.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 // import 'package:flutter_application_1/addDiet.dart';
-import 'package:flutter_application_1/calculate.dart';
-import 'package:flutter_application_1/savedFood.dart';
+// import 'package:flutter_application_1/calculate.dart';
+// import 'package:flutter_application_1/savedFood.dart';
 import 'appBar.dart';
 import 'db_helper.dart';
-import 'package:flutter/services.dart' show ByteData, rootBundle;
+// import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:async';
 import 'model.dart';
 import 'mainStream.dart' as mainStream;
 import 'package:crypto/crypto.dart';
-import 'package:convert/convert.dart';
+// import 'package:convert/convert.dart';
 import 'dart:convert';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -241,16 +244,74 @@ class _AddFoodSub extends State<AddFoodSub> {
         child: Row(
       children: [
         Spacer(
-          flex: 2,
+          flex: 3,
         ),
         Expanded(
-            flex: 3,
-            child: TypeFoodName(
+          flex: 4,
+          child: Card(
+            color: Colors.deepOrangeAccent[400],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100.0),
+            ),
+            child: InkWell(
+              splashColor: Colors.white,
+              focusNode: _focusNode,
+              child: AspectRatio(
+                aspectRatio: 20 / 8,
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 5),
+                        padding: EdgeInsets.all(2),
+                        child: Icon(
+                          Icons.search,
+                          size: 40,
+                          // color: Colors.deepOrangeAccent[400],
+                        ),
+                        decoration: BoxDecoration(
+                            color: Colors.deepOrangeAccent[400],
+                            shape: BoxShape.circle),
+                      ),
+                      // SizedBox(
+                      //   width: 15,
+                      // ),
+                      Container(
+                        margin: EdgeInsets.only(left: 10),
+                        padding: EdgeInsets.only(top: 0),
+                        child: AutoSizeText(
+                          " 불러오기",
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // color: Colors.deepOrangeAccent[700],
+              onTap: () {
+                Navigator.pushNamed(context, '/searchFood',
+                        arguments: <String, String>{'pre': 'addFood'})
+                    .then((code) async {
+                  await dbHelper.getFood(code).then((food) {
+                    streamController.add(food.toMap());
+                  });
+                });
+              },
+            ),
+          ),
+          /* TypeFoodName(
               controller: _foodNameController,
               streamBool: widget.streamBool,
-            )),
+            ) */
+        ),
         Spacer(
-          flex: 2,
+          flex: 3,
         )
       ],
     ));
@@ -268,7 +329,9 @@ class _AddFoodSub extends State<AddFoodSub> {
             ),
             // spacer_icon(icon: icon),
             spacer_question(question),
+            // Spacer(),
             Expanded(flex: 5, child: questionForm(controller, value, question)),
+            Spacer(),
             spacer_unit(unit),
             Spacer(
               flex: 2,
@@ -357,7 +420,12 @@ class _AddFoodSub extends State<AddFoodSub> {
     return Expanded(
         flex: 4,
         child: Center(
-          child: Text(question),
+          child: AutoSizeText(
+            question,
+            maxLines: 1,
+            maxFontSize: 20,
+            style: TextStyle(fontSize: 16),
+          ),
         ));
   }
 
@@ -365,9 +433,11 @@ class _AddFoodSub extends State<AddFoodSub> {
     return Expanded(
         flex: 1,
         child: Center(
-          child: Text(
+          child: AutoSizeText(
             unit,
             maxLines: 1,
+            maxFontSize: 20,
+            style: TextStyle(fontSize: 16),
           ),
         ));
   }
@@ -376,7 +446,9 @@ class _AddFoodSub extends State<AddFoodSub> {
 
   Widget add() {
     return Container(
+      // color: Colors.deepOrangeAccent[700],
       child: FloatingActionButton(
+        backgroundColor: Colors.deepOrangeAccent[400],
         onPressed: () async {
           if (_formKey.currentState.validate()) {
             num serve = double.parse(_servingController.value.text);
@@ -403,8 +475,11 @@ class _AddFoodSub extends State<AddFoodSub> {
           }
         },
         tooltip: '저장',
-        child: Icon(Icons.add, size: 30),
-        // backgroundColor: Colors.deepOrangeAccent,
+        child: Icon(
+          Icons.add,
+          size: 40,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -496,6 +571,7 @@ class _AddFoodSub extends State<AddFoodSub> {
   }
 }
 
+/* 
 //입력 버튼
 class TypeFoodName extends StatefulWidget {
   var controller;
@@ -536,7 +612,7 @@ class _TypeFoodName extends State<TypeFoodName> {
       // enabled: !isItSelected,
       // controller: controller,
       focusNode: _focusNode,
-      child: Text("입력하기"),
+      child: Text("저장된 음식 불러오기"),
       // decoration: const InputDecoration(hintText: 'Type Food Name'),
       // textAlign: TextAlign.center,
       // validator: (value) {
@@ -644,7 +720,7 @@ class _TypeFoodName extends State<TypeFoodName> {
       } */
     );
   }
-}
+} */
 
 //FAB
 /* class TransFoodFAB extends StatefulWidget {
