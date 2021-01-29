@@ -21,38 +21,39 @@ var accColor = Colors.white;
 void main() {
   runApp(MaterialApp(
     theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: Colors.black,
-        // canvasColor: Colors.black,
-        // backgroundColor: Colors.deepOrangeAccent,
-        primaryColor: Colors.deepOrangeAccent[700],
-        appBarTheme: AppBarTheme(color: Colors.black),
-        buttonColor: Colors.deepOrangeAccent[400],
-        // iconTheme: IconThemeData(
-        //   color: Colors.deepOrangeAccent[700],
-        // ),
-        cardColor: Colors.deepOrangeAccent[700],
-        accentColor: accColor,
-        splashColor: Colors.deepOrangeAccent[400]
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: Colors.black,
+      // canvasColor: Colors.black,
+      // backgroundColor: Colors.deepOrangeAccent,
+      primaryColor: Colors.deepOrangeAccent[700],
+      appBarTheme: AppBarTheme(color: Colors.black),
+      buttonColor: Colors.deepOrangeAccent[400],
+      // iconTheme: IconThemeData(
+      //   color: Colors.deepOrangeAccent[700],
+      // ),
+      // cardColor: Colors.deepOrangeAccent[700],
+      cardColor: Colors.black,
+      accentColor: accColor,
+      splashColor: Colors.deepOrangeAccent[400],
 
-        // textSelectionColor: Colors.white,
-        // textTheme: TextTheme(
-        //   headline1:
-        //       TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        //   headline2:
-        //       TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        //   headline3:
-        //       TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        //   bodyText1: TextStyle(
-        //     color: Colors.white,
-        //     fontWeight: FontWeight.normal,
-        //   ),
-        //   bodyText2: TextStyle(
-        //     color: Colors.white,
-        //     fontWeight: FontWeight.normal,
-        //   ),
-        // )
-        ),
+      // textSelectionColor: Colors.white,
+      // textTheme: TextTheme(
+      //   headline1:
+      //       TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      //   headline2:
+      //       TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      //   headline3:
+      //       TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      //   bodyText1: TextStyle(
+      //     color: Colors.white,
+      //     fontWeight: FontWeight.normal,
+      //   ),
+      //   bodyText2: TextStyle(
+      //     color: Colors.white,
+      //     fontWeight: FontWeight.normal,
+      //   ),
+      // )
+    ),
     initialRoute: '/mainPage',
     routes: {
       '/': (context) => InitPage(),
