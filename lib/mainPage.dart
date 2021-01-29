@@ -8,7 +8,6 @@ import 'package:flutter_application_1/model.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'appBar.dart';
 import 'db_helper.dart';
-import 'mainStream.dart' as mainStream;
 import 'lineChart.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
@@ -19,8 +18,6 @@ final dbHelperPerson = DBHelperPerson();
 final int calenderWidthFlex = 22;
 
 // final dbHelper
-StreamController<bool> streamControllerMainPage =
-    mainStream.streamControllerMainPage;
 
 class MainPage extends StatelessWidget {
   @override
@@ -975,13 +972,11 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         switchControl = true;
         isItCalender = false;
-        streamControllerMainPage.add(isItCalender);
       });
     } else {
       setState(() {
         switchControl = false;
         isItCalender = true;
-        streamControllerMainPage.add(isItCalender);
       });
     }
   }
