@@ -7,8 +7,10 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_application_1/addDiet.dart';
 import 'package:flutter_application_1/dietModelSaver.dart';
 import 'package:flutter_application_1/model.dart';
+import 'package:flutter_application_1/piChart.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'appBar.dart';
+import 'calculate.dart';
 import 'db_helper.dart';
 import 'lineChart.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -246,7 +248,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void didChangeDependencies() async {
     changeIntToString();
     initDateInfo();
-
+    getToday();
     getInfo();
     super.didChangeDependencies();
   }
@@ -588,8 +590,13 @@ class _MyHomePageState extends State<MyHomePage> {
     temp_date = calender_date;
     changeIntToString();
     getInfo();
+    getToday();
 
     super.initState();
+  }
+
+  void getToday() async {
+    await getTodayCalroie();
   }
 
   @override
@@ -653,64 +660,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ? Column(
                                     children: [
                                       //page 1
-                                      Spacer(
-                                        flex: 2,
-                                      ),
-                                      Expanded(
-                                        flex: 13,
-                                        child: SizedBox(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Swiper(
-                                            duration: 1500,
-                                            itemBuilder: (BuildContext context,
-                                                int listIndex) {
-                                              makeItemList(listIndex);
-                                              return Container(
-                                                child: Column(
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: Container(
-                                                        // decoration:
-                                                        //     BoxDecoration(
-                                                        //         color: Colors
-                                                        //             .black),
-                                                        child: Center(
-                                                            child: Text(
-                                                          mealList[listIndex],
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700),
-                                                        )),
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                        flex: 5,
-                                                        child: Container(
-                                                          child: Center(
-                                                              child: Stack(
-                                                            children: itemList,
-                                                          )),
-                                                          // decoration:
-                                                          //     BoxDecoration(
-                                                          //         color: Colors
-                                                          //             .white),
-                                                        ))
-                                                  ],
-                                                ),
-                                                // decoration: BoxDecoration(
-                                                //     color: Colors.white),
-                                              );
-                                            },
-                                            itemCount: 4,
-                                            pagination: new SwiperPagination(),
-                                          ),
-                                        ),
-                                      ),
+
+                                      // Expanded(
+                                      //   flex: 13,
+                                      // ),
                                       Spacer(
                                         flex: 2,
                                       ),
@@ -829,6 +782,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                           )),
                                       Spacer(
                                         flex: 2,
+                                      ),
+                                      Expanded(
+                                          flex: 13,
+                                          child: PieChartSample2(
+                                            carbohydrate: todayCar,
+                                            protein: todayPro,
+                                            fat: todayFat,
+                                            totalCalorie: todaykcal,
+                                            correct: correct,
+                                          )
+                                          // child:
+                                          ),
+                                      Spacer(
+                                        flex: 2,
                                       )
                                     ],
                                   )
@@ -934,6 +901,83 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ));
+  }
+
+  num todayCar;
+  num todayPro;
+  num todayFat;
+  num todaykcal;
+  num correct;
+  void getTodayCalroie() async {
+    print("strat" * 100);
+    String now = DateTime.now().toString().substring(0, 10);
+    Map todayDietInfo = {};
+    // todayCar = 0.0;
+    // todayPro = 0.0;
+    // todayFat = 0.0;
+    // todaykcal = 0.0;
+    // print(todayDietInfo);
+    // print(todaykcal);
+    // print("$todayCar $todayPro $todayFat");
+    await dbHelperDietHistory.getDietHistory(now).then((val) {
+      if (val != null) {
+        todayDietInfo["b"] =
+            val.breakFast != "null" ? jsonDecode(val.breakFast) : null;
+        todayDietInfo["l"] = val.lunch != "null" ? jsonDecode(val.lunch) : null;
+        todayDietInfo["d"] =
+            val.dinner != "null" ? jsonDecode(val.dinner) : null;
+        todayDietInfo["s"] = val.snack != "null" ? jsonDecode(val.snack) : null;
+      }
+    });
+    var keys = todayDietInfo.keys;
+    todayCar = 0.0;
+    todayPro = 0.0;
+    todayFat = 0.0;
+    todaykcal = 0.0;
+    for (var item in keys) {
+      if (todayDietInfo[item] != null) {
+        List<String> nutriString = todayDietInfo[item]["nutri"].split(":");
+        List<num> nutri = List(3);
+
+        print(nutri);
+        for (var i = 0; i < 3; i++) {
+          nutri[i] = num.parse(nutriString[i]);
+        }
+        // nutri = [num.parse(nutri[0]), num.parse(nutri[1]), num.parse(nutri[2])];
+        num nutriTotal = nutri[0] + nutri[1] + nutri[2];
+        todaykcal += num.parse(todayDietInfo[item]["kcal"]);
+        todayCar +=
+            nutri[0] / nutriTotal * num.parse(todayDietInfo[item]["kcal"]);
+        todayPro +=
+            nutri[1] / nutriTotal * num.parse(todayDietInfo[item]["kcal"]);
+        todayFat +=
+            nutri[2] / nutriTotal * num.parse(todayDietInfo[item]["kcal"]);
+      }
+    }
+    List<num> targetNutri = [3, 4, 3]; //디폴트
+    if (person != null) {
+      switch (person.nutriRate) {
+        case 0:
+          targetNutri = [3, 4, 3];
+          break;
+        case 1:
+          targetNutri = [4, 4, 2];
+
+          break;
+        case 2:
+          targetNutri = [5, 3, 2];
+          break;
+        default:
+          targetNutri = [3, 4, 3];
+          break;
+      }
+    }
+    correct = correctness(targetNutri, [todayCar, todayPro, todayFat]);
+
+    print(todayDietInfo);
+    print(todaykcal);
+    print("$todayCar $todayPro $todayFat");
+    print(todayCar + todayPro + todayFat);
   }
 
   Widget returnCalender() {
@@ -1413,6 +1457,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 dateSelected = !dateSelected;
               });
             }
+            // setState(() {});
           },
         ));
   }
