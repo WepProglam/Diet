@@ -518,6 +518,26 @@ class DBHelperDietHistory {
     return list;
   }
 
+  Future<List<DietHistory>> getMonthlyDietHistory({int month}) async {
+    final db = await database;
+    var res =
+        await db.rawQuery("SELECT * FROM $tableName WHERE month = '$month'");
+    List<DietHistory> list = res.isNotEmpty
+        ? res
+            .map((c) => DietHistory(
+                date: c['date'],
+                breakFast: c['breakFast'],
+                lunch: c['lunch'],
+                dinner: c['dinner'],
+                snack: c['snack'],
+                year: c['year'],
+                month: c['month'],
+                complete: c['complete']))
+            .toList()
+        : [];
+    return list;
+  }
+
   createData(DietHistory dietHistory) async {
     final db = await database;
     await db.insert(

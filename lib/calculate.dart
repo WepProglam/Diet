@@ -359,6 +359,9 @@ List<List<num>> selectRow(List<List<num>> matrix, int x, int y, int z) {
 num correctness(List<num> ratio, List<num> nutriRatio) {
   num ampRatio = returnAmplitude(ratio);
   num ampNutriRatio = returnAmplitude(nutriRatio);
+  if (ampNutriRatio == 0.0) {
+    return 0;
+  }
   //단위원 안에 넣기
   for (int i = 0; i < 3; i++) {
     // if (ampRatio == 0 || ampNutriRatio == 0) {
