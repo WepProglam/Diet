@@ -6,7 +6,6 @@ import 'db_helper.dart';
 import 'model.dart';
 import 'appBar.dart';
 import 'package:flutter/material.dart';
-
 import 'barChar.dart';
 
 class Activity extends StatelessWidget {
@@ -275,8 +274,9 @@ class _ActivityPageState extends State<ActivityPage> {
                 // color: Colors.yellow,
                 child: metabolicRate('BMR', bmrText),
               ),
-              BarChartSample5(),
 
+              Spacer(flex: 3),
+              BarChartSample5(),
               Spacer(
                 flex: 1,
               ),

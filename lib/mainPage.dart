@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_application_1/addDiet.dart';
@@ -1196,11 +1197,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget dayText(String day) {
-    return Text(
+    return AutoSizeText(
       day,
       style: TextStyle(fontSize: 15),
+      maxLines: 1,
     );
   }
+
+  num fontSize = 15.0;
 
   Widget dateText(String date) {
     var targetDay =
@@ -1209,31 +1213,31 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (date == DateTime.now().day.toString() &&
         calender_month == DateTime.now().month) {
-      return Text(
+      return AutoSizeText(
         date,
         style: TextStyle(
-          fontSize: 15,
+          fontSize: fontSize,
           color: Colors.green,
           fontWeight: FontWeight.w900,
         ),
         maxLines: 1,
       );
     } else if (day == "Sunday") {
-      return Text(
+      return AutoSizeText(
         date,
-        style: TextStyle(fontSize: 15, color: Colors.red),
+        style: TextStyle(fontSize: fontSize, color: Colors.red),
         maxLines: 1,
       );
     } else if (day == "Saturday") {
-      return Text(
+      return AutoSizeText(
         date,
-        style: TextStyle(fontSize: 15, color: Colors.blue),
+        style: TextStyle(fontSize: fontSize, color: Colors.blue),
         maxLines: 1,
       );
     } else {
-      return Text(
+      return AutoSizeText(
         date,
-        style: TextStyle(fontSize: 15),
+        style: TextStyle(fontSize: fontSize),
         maxLines: 1,
       );
     }
@@ -1314,14 +1318,14 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget calenderBlock(Text title, bool isitDay) {
+  Widget calenderBlock(AutoSizeText title, bool isitDay) {
     bool dateSelected = false;
     return Expanded(
         flex: 3,
-        child: FlatButton(
-          shape: isitDay
-              ? null
-              : Border(top: BorderSide(color: Colors.blueAccent, width: 1)),
+        child: GestureDetector(
+          // shape: isitDay
+          //     ? null
+          //     : Border(top: BorderSide(color: Colors.blueAccent, width: 1)),
           child: Container(
             alignment: isitDay ? null : Alignment(-1.0, -1.0),
             margin: EdgeInsets.only(top: 5.0),
@@ -1344,7 +1348,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Spacer(flex: 1),
                       ]),
           ),
-          onPressed: () async {
+          onTap: () async {
             if (!isitDay) {
               todayDietList = List<Map>(4);
               initDateInfo();
