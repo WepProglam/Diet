@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model.dart';
@@ -6,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'db_helper.dart';
 import 'mainStream.dart' as mainStream;
+import 'package:auto_size_text/auto_size_text.dart';
 
 class DietList extends ChangeNotifier {
   List<Diet> dietNameEX;
@@ -291,6 +293,8 @@ class _UiitemState extends State<Uiitem> {
   Widget build(BuildContext context) {
     final DietList listProvider = Provider.of<DietList>(context);
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
+    final tempDietInfo = jsonDecode(widget.diet.foodInfo);
+    final List nutriRate = tempDietInfo['nutri'].split(':');
 
     if (args == null) {
     } else if (args['pre'] == "calcDiet") {
@@ -318,18 +322,107 @@ class _UiitemState extends State<Uiitem> {
                 react(whereFrom);
               },
               child: Center(
-                child: Text(
-                  widget.diet.dietName,
-                  textScaleFactor: 1.5,
-                  maxLines: 1,
-                  // style: TextStyle(fontSize: 30),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            top: 30, bottom: 40, left: 8, right: 8),
+                        child: AutoSizeText(
+                          widget.diet.dietName,
+                          // textScaleFactor: 2,
+                          maxLines: 1,
+                          style: TextStyle(fontSize: 40),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 20, top: 20, left: 4, right: 4),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            AutoSizeText(
+                              '${tempDietInfo['kcal'].toStringAsFixed(0)}' +
+                                  ' kcal',
+                              maxLines: 1,
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            AutoSizeText(
+                              num.parse(nutriRate[0]).toStringAsFixed(0) +
+                                  ' : ' +
+                                  num.parse(nutriRate[1]).toStringAsFixed(0) +
+                                  ' : ' +
+                                  num.parse(nutriRate[2]).toStringAsFixed(0),
+                              maxLines: 1,
+                            ),
+                            SizedBox(
+                              height: 6,
+                            ),
+                            SizedBox(
+                              // maxWidth: 20,
+                              height: 68,
+                              child: ListView.builder(
+                                  padding: const EdgeInsets.only(
+                                    top: 8,
+                                    bottom: 8,
+                                    left: 8,
+                                    right: 8,
+                                  ),
+                                  itemCount: tempDietInfo['foods'].length,
+                                  itemBuilder: (context, int index) {
+                                    return Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 5,
+                                          child: AutoSizeText(
+                                            tempDietInfo['foods'][index]
+                                                ['foodName'],
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                        Container(
+                                          child: SizedBox(
+                                            width: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  right: BorderSide(
+                                                      color: Colors.white,
+                                                      width: 1))),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: AutoSizeText(
+                                            tempDietInfo['foods'][index]
+                                                        ['foodMass']
+                                                    .toStringAsFixed(0) +
+                                                'g',
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
             Positioned(
               top: 10,
               right: 10,
-              child: GestureDetector(
+              child: InkWell(
+                splashColor: Colors.deepOrangeAccent[700],
                 onTap: () async {
                   await dbHelperDiet.deleteDiet(widget.diet.dietName);
                   listProvider.removeDiet(widget.diet);
