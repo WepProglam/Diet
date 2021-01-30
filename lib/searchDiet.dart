@@ -11,19 +11,33 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 class DietList extends ChangeNotifier {
   List<Diet> dietNameEX;
+  List<Diet> fillteredDiets;
 
-  DietList(this.dietNameEX);
+  DietList(this.dietNameEX, this.fillteredDiets);
 
   getDietList() => dietNameEX;
   setDietList(List<Diet> diets) => dietNameEX = diets;
+
+  getFillteredDietList() => fillteredDiets;
+  setFillteredDietList(List<Diet> diets) => fillteredDiets = diets;
 
   void addDiet(Diet diet) {
     dietNameEX.add(diet);
     notifyListeners();
   }
 
+  void addFillteredDiet(Diet diet) {
+    fillteredDiets.add(diet);
+    notifyListeners();
+  }
+
   void removeDiet(Diet diet) {
     dietNameEX.removeWhere((element) => element.dietName == diet.dietName);
+    notifyListeners();
+  }
+
+  void removeFillteredDiet(Diet diet) {
+    fillteredDiets.removeWhere((element) => element.dietName == diet.dietName);
     notifyListeners();
   }
 }
@@ -35,7 +49,7 @@ class SearchDiet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => DietList([]),
+      create: (context) => DietList([], []),
       child: SearchList(),
     );
   }
@@ -63,6 +77,9 @@ class _SearchListState extends State<SearchList> {
   // List<Diet> _list;
   List<Diet> _searchList = List();
   List<Diet> dietNameEX = [];
+  List<Diet> fillteredDiet = [];
+
+  bool _Isfilltered = false;
 
   bool _IsSearching = false;
   String _searchText = "";
@@ -89,24 +106,57 @@ class _SearchListState extends State<SearchList> {
 
   List<Diet> _buildSearchList() {
     if (_searchText.isEmpty) {
-      return _searchList = dietNameEX;
+      if (_Isfilltered) {
+        return _searchList = fillteredDiet;
+      } else {
+        return _searchList = dietNameEX;
+      }
     } else {
-      _searchList = dietNameEX
-          .where((element) => //여기다가 검색될 요소 추가 가능
-              element.dietName
-                  .toLowerCase()
-                  .contains(_searchText.toLowerCase()))
-          .toList();
-      // print('${_searchList.length}');
-      return _searchList;
+      if (_Isfilltered) {
+        _searchList = fillteredDiet
+            .where((element) => //여기다가 검색될 요소 추가 가능
+                element.dietName
+                    .toLowerCase()
+                    .contains(_searchText.toLowerCase()))
+            .toList();
+
+        return _searchList;
+      } else {
+        _searchList = dietNameEX
+            .where((element) => //여기다가 검색될 요소 추가 가능
+                element.dietName
+                    .toLowerCase()
+                    .contains(_searchText.toLowerCase()))
+            .toList();
+
+        return _searchList;
+      }
     }
   }
 
   void getInfo() async {
     await dbHelperDiet.getAllMyDiet().then((val) {
       dietNameEX = [];
+      fillteredDiet = [];
       for (var item in val) {
         dietNameEX.add(item);
+        var splitted = item.dietName.split("-");
+
+        if (splitted.length == 4) {
+          if (splitted[1].length == 1) {
+            splitted[1] = '0' + splitted[1];
+            if (splitted[2].length == 1) {
+              splitted[2] = '0' + splitted[2];
+            }
+          } else if (splitted[2].length == 1) {
+            splitted[2] = '0' + splitted[2];
+          }
+        }
+        print(DateTime.tryParse(splitted[0] + splitted[1] + splitted[2]));
+        if (DateTime.tryParse(splitted[0] + splitted[1] + splitted[2]) ==
+            null) {
+          fillteredDiet.add(item);
+        }
       }
     });
     setState(() {});
@@ -123,7 +173,24 @@ class _SearchListState extends State<SearchList> {
     //     Diet(dietName: item.dietName, foodInfo: item.foodInfo),
     //   );
     // }
-    _searchList = dietNameEX;
+    if (_Isfilltered) {
+      _searchList = fillteredDiet;
+    } else {
+      _searchList = dietNameEX;
+    }
+    // var splitted = dietNameEX[0].dietName.split("-");
+    // if (splitted.length == 4) {
+    //   if (splitted[1].length == 1) {
+    //     splitted[1] = '0' + splitted[1];
+    //     if (splitted[2].length == 1) {
+    //       splitted[2] = '0' + splitted[2];
+    //     }
+    //   } else if (splitted[2].length == 1) {
+    //     splitted[2] = '0' + splitted[2];
+    //   }
+    // }
+    // String mayDate = splitted[0] + splitted[1] + splitted[2];
+    // print(DateTime.tryParse(mayDate));
   }
 
   //init
@@ -192,40 +259,58 @@ class _SearchListState extends State<SearchList> {
     // color: Colors.orange,
   );
 
+  var filterColor = Colors.deepOrangeAccent[700];
+
   Widget buildBar(BuildContext context) {
-    return AppBar(centerTitle: true, title: appBarTitle,
-        // iconTheme: IconThemeData(color: Colors.white),
-        // backgroundColor: Color(0xFF69C2B0),
-        // backgroundColor: Colors.black87,
-        actions: <Widget>[
-          IconButton(
-            icon: actionIcon,
-            onPressed: () {
-              setState(() {
-                if (this.actionIcon.icon == Icons.search) {
-                  this.actionIcon = Icon(
-                    Icons.close,
+    return AppBar(centerTitle: true, title: appBarTitle, actions: <Widget>[
+      IconButton(
+          icon: Icon(Icons.date_range),
+          color: filterColor,
+          onPressed: () {
+            setState(() {
+              if (filterColor == Colors.deepOrangeAccent[700]) {
+                filterColor = Colors.white;
+                _searchList = fillteredDiet;
+                setState(() {
+                  _Isfilltered = !_Isfilltered;
+                });
+              } else {
+                filterColor = Colors.deepOrangeAccent[700];
+                _searchList = dietNameEX;
+                setState(() {
+                  _Isfilltered = !_Isfilltered;
+                });
+              }
+            });
+          }),
+      IconButton(
+        icon: actionIcon,
+        onPressed: () {
+          setState(() {
+            if (this.actionIcon.icon == Icons.search) {
+              this.actionIcon = Icon(
+                Icons.close,
+                // color: Colors.white,
+              );
+              this.appBarTitle = TextField(
+                // autocorrect: true,
+                autofocus: true,
+                controller: _searchQuery,
+                style: TextStyle(
                     // color: Colors.white,
-                  );
-                  this.appBarTitle = TextField(
-                    // autocorrect: true,
-                    autofocus: true,
-                    controller: _searchQuery,
-                    style: TextStyle(
-                        // color: Colors.white,
-                        ),
-                    decoration: InputDecoration(
-                        hintText: "식단 이름을 입력하세요...",
-                        hintStyle: TextStyle(color: Colors.white)),
-                  );
-                  _handleSearchStart();
-                } else {
-                  _handleSearchEnd();
-                }
-              });
-            },
-          ),
-        ]);
+                    ),
+                decoration: InputDecoration(
+                    hintText: "식단 이름을 입력하세요...",
+                    hintStyle: TextStyle(color: Colors.white)),
+              );
+              _handleSearchStart();
+            } else {
+              _handleSearchEnd();
+            }
+          });
+        },
+      ),
+    ]);
   }
 
   void _handleSearchStart() {
@@ -337,7 +422,7 @@ class _UiitemState extends State<Uiitem> {
                       alignment: Alignment.topCenter,
                       child: Padding(
                         padding: const EdgeInsets.only(
-                            top: 30, bottom: 40, left: 8, right: 8),
+                            top: 40, bottom: 40, left: 8, right: 8),
                         child: AutoSizeText(
                           widget.diet.dietName,
                           // textScaleFactor: 2,
