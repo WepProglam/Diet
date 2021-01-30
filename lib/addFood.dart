@@ -260,7 +260,7 @@ class _AddFoodSub extends State<AddFoodSub> {
                 aspectRatio: 20 / 8,
                 child: Center(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Container(
                         margin: EdgeInsets.only(left: 5),
@@ -277,8 +277,9 @@ class _AddFoodSub extends State<AddFoodSub> {
                       // SizedBox(
                       //   width: 15,
                       // ),
+                      Spacer(),
                       Container(
-                        margin: EdgeInsets.only(left: 10),
+                        margin: EdgeInsets.only(left: 10, right: 10),
                         padding: EdgeInsets.only(top: 0),
                         child: AutoSizeText(
                           " 불러오기",
@@ -289,6 +290,7 @@ class _AddFoodSub extends State<AddFoodSub> {
                           ),
                         ),
                       ),
+                      Spacer(),
                     ],
                   ),
                 ),
