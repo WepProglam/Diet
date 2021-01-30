@@ -810,7 +810,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                             protein: todayPro,
                                             fat: todayFat,
                                             totalCalorie: todaykcal,
-                                            correct: correct,
+                                            correct:
+                                                correct == null ? 0.0 : correct,
                                           )
                                           // child:
                                           ),
