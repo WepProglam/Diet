@@ -537,10 +537,11 @@ class _AddFoodSub extends State<AddFoodSub> {
     Widget saveButton = FlatButton(
         child: Text("저장"),
         onPressed: () async {
-          var bytes = utf8.encode(_foodNameController.text);
+          var bytes = utf8.encode(_foodNameController.value.text);
           String codeName = "MY" + md5.convert(bytes).toString() + "custom";
           foodClass.code = codeName;
 
+          // print(foodClass.code);
           await dbHelper.createData(foodClass);
 
           Navigator.pop(context);

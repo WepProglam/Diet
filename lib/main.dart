@@ -17,7 +17,7 @@ import 'activityPage.dart';
 StreamController<Map> streamController = StreamController<Map>.broadcast();
 StreamController<bool> streamControllerBool =
     StreamController<bool>.broadcast();
-var accColor = Colors.white;
+// var accColor = Colors.white;
 void main() {
   runApp(MaterialApp(
     theme: ThemeData(
@@ -33,7 +33,7 @@ void main() {
       // ),
       // cardColor: Colors.deepOrangeAccent[700],
       cardColor: Colors.black,
-      accentColor: accColor,
+      accentColor: Colors.white,
       splashColor: Colors.deepOrangeAccent[400],
 
       // textSelectionColor: Colors.white,

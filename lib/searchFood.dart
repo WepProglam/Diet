@@ -178,7 +178,7 @@ class _SearchListState extends State<SearchList> {
   @override
   void didChangeDependencies() {
     SelectedFoods foodProvider = Provider.of<SelectedFoods>(context);
-    if (foodProvider._selectedFoodsList.isNotEmpty) {
+    if (foodProvider.getFoods().isNotEmpty) {
       setState(() {
         selectedFoods = foodProvider.getFoods();
         listView = ListView.separated(
@@ -202,6 +202,7 @@ class _SearchListState extends State<SearchList> {
 
     // print("is searchign $_IsSearching");
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       // backgroundColor: Colors.black,
       appBar: buildBar(context),
       body: _IsSearching
@@ -283,10 +284,26 @@ class _SearchListState extends State<SearchList> {
                         onTap: () {
                           // animation
                           if (flexVal == 0) {
-                            setState(() {
-                              flexVal = 1;
-                              createListViewIcon = Icons.arrow_circle_up;
-                            });
+                            if (selectedFoods != null) {
+                              setState(() {
+                                listView = ListView.separated(
+                                    itemBuilder: (context, int index) {
+                                      return Center(
+                                          child: Text(selectedFoods[index]));
+                                    },
+                                    separatorBuilder: (context, int index) =>
+                                        const Divider(),
+                                    itemCount: selectedFoods.length);
+
+                                flexVal = 1;
+                                createListViewIcon = Icons.arrow_circle_up;
+                              });
+                            } else {
+                              setState(() {
+                                flexVal = 1;
+                                createListViewIcon = Icons.arrow_circle_up;
+                              });
+                            }
                           } else {
                             setState(() {
                               listView = null;
@@ -536,51 +553,70 @@ class _UiitemState extends State<Uiitem> {
   _UiitemState(this.building);
   bool isItSelected = false;
 
+  var materialColor = Colors.black;
+  var inkWellSplashColor = Colors.deepOrange[400];
+
   @override
   Widget build(BuildContext context) {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
     final SelectedFoods foodProvider = Provider.of<SelectedFoods>(context);
+
     return Card(
       // shape: RoundedRectangleBorder(
       //   borderRadius: BorderRadius.circular(20.0),
       // ),
       margin: EdgeInsets.all(8),
-      color: isItSelected
-          ? Colors.deepOrangeAccent[700]
-          // : Colors.deepOrangeAccent[700],
-          : Colors.black,
+
       child: Container(
         decoration: BoxDecoration(
             border:
                 Border.all(color: Colors.deepOrangeAccent[700], width: 1.2)),
         child: Stack(
           children: [
-            InkWell(
-              splashColor: isItSelected
-                  ? Colors.white
-                  // : Colors.deepOrangeAccent[700],
-                  : Colors.deepOrangeAccent[400],
-              //여기다 눌렀을 때 기능 넣기
-              onTap: () {
-                //add Diet 페이지에서 넘어왔을 경우
-                // 이거 수정해서 음식 데이터 보낼 거임
-                if (args != null) {
-                  if (args['pre'] == 'addDiet') {
-                    streamControllerString.add(building.code);
-                    if (!isItSelected) {
-                      foodProvider.addSelectedFood(building.foodName);
-                    } else {
-                      foodProvider.removeFood(building.foodName);
-                    }
+            Material(
+              color: materialColor,
+              child: InkWell(
+                splashColor: inkWellSplashColor,
+                //여기다 눌렀을 때 기능 넣기
+                splashFactory: InkRipple.splashFactory,
+                onTap: () {
+                  //add Diet 페이지에서 넘어왔을 경우
+                  // 이거 수정해서 음식 데이터 보낼 거임
+                  if (args != null) {
+                    if (args['pre'] == 'addDiet') {
+                      streamControllerString.add(building.code);
+                      if (!isItSelected) {
+                        foodProvider.addSelectedFood(building.foodName);
+                        setState(() async {
+                          isItSelected = !isItSelected;
+                          materialColor = Colors.deepOrangeAccent[700];
+                          inkWellSplashColor = Colors.white;
+                        });
+                      } else {
+                        foodProvider.removeFood(building.foodName);
+                        setState(() async {
+                          isItSelected = !isItSelected;
 
-                    setState(() {
-                      isItSelected = !isItSelected;
-                    });
-                  }
-                  // 그 외 일반적인 경우
-                  else if (args['pre'] == 'addFood') {
-                    Navigator.pop(context, building.code);
-                    print(building.code);
+                          materialColor = Colors.black;
+                          inkWellSplashColor = Colors.deepOrange[400];
+                        });
+                      }
+                      // Future.delayed(Duration(seconds: 1));
+
+                    }
+                    // 그 외 일반적인 경우
+                    else if (args['pre'] == 'addFood') {
+                      Navigator.pop(context, building.code);
+                      print(building.code);
+                    } else {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/addFood',
+                          arguments: <String, Map>{
+                            "myTempoFood": building.toMap()
+                          });
+
+                      print(building.code);
+                    }
                   } else {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/addFood',
@@ -590,46 +626,40 @@ class _UiitemState extends State<Uiitem> {
 
                     print(building.code);
                   }
-                } else {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/addFood',
-                      arguments: <String, Map>{
-                        "myTempoFood": building.toMap()
-                      });
-
-                  print(building.code);
-                }
-              },
-              child: Center(
-                child: Column(
-                  children: [
-                    Spacer(
-                      flex: 2,
+                },
+                child: Ink(
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Spacer(
+                          flex: 2,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AutoSizeText(
+                            this.building.foodName,
+                            style: TextStyle(
+                                fontFamily: 'Raleway',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                            maxLines: 1,
+                          ),
+                        ),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        AutoSizeText(
+                          (this.building.kcal * this.building.servingSize)
+                                  .toStringAsFixed(1) +
+                              ' kcal',
+                          // style: TextStyle(fontFamily: 'Roboto'),
+                        ),
+                        Spacer(
+                          flex: 1,
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AutoSizeText(
-                        this.building.foodName,
-                        style: TextStyle(
-                            fontFamily: 'Raleway',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                        maxLines: 1,
-                      ),
-                    ),
-                    Spacer(
-                      flex: 1,
-                    ),
-                    AutoSizeText(
-                      (this.building.kcal * this.building.servingSize)
-                              .toStringAsFixed(1) +
-                          ' kcal',
-                      // style: TextStyle(fontFamily: 'Roboto'),
-                    ),
-                    Spacer(
-                      flex: 1,
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
