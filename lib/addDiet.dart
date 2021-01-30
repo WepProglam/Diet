@@ -615,66 +615,75 @@ class _FoodListState extends State<FoodList> {
                           List<num> defaultFood = passDefaultFoodList();
                           List<num> servingSize = [];
 
-                          if (foodList.isNotEmpty) {
-                            await getFoodInfo(foodList).then((value) {
-                              List<Map> defaultFoodList = [];
-                              for (var i = 0; i < defaultFood.length; i++) {
-                                defaultFoodList.add(
-                                    {"food": value[i], "mass": defaultFood[i]});
-                              }
-                              print(defaultFoodList);
-                              makeCsvFile(
-                                      defaultFoodList: defaultFoodList,
-                                      foodList:
-                                          value.sublist(defaultFood.length))
-                                  .then((val) {
-                                List<num> sendData = [];
-                                List<num> nutriInfo =
-                                    new List(value.length * 3);
-                                for (var i = 0; i < value.length; i++) {
-                                  servingSize.add(value[i].servingSize);
-                                  nutriInfo[i * 3] = value[i].carbohydrate;
-                                  nutriInfo[i * 3 + 1] = value[i].protein;
-                                  nutriInfo[i * 3 + 2] = value[i].fat;
-                                }
-                                print("val=="); //여기서 val을 텍스트필드에 넣으면 될듯
-
-                                print(val);
-
-                                sendData.addAll(nutriInfo);
-                                sendData.addAll(val);
-
-                                try {
-                                  List<dynamic> carProFat = justCalculateNutri(
-                                      sendData,
-                                      foodList.length - defaultFood.length,
-                                      defaultFood.length);
-                                  num total = carProFat[3] * 4 +
-                                      carProFat[4] * 4 +
-                                      carProFat[5] * 9;
-                                  // assert(total < 600 * 1.2 && total > 600 * 0.8); //이 칼로리 조합이 아니면 단 하나의 경우도 케이스 통과 X
-
-                                  for (var i = 0; i < foodList.length; i++) {
-                                    foodMassController[i].text =
-                                        val[i].toStringAsFixed(0);
-                                    foodServingController[i].text =
-                                        "${(val[i] / servingSize[i]).toStringAsFixed(1)}인분";
-                                  }
-                                  print(carProFat);
-                                  setState(() {
-                                    correct = carProFat[1];
-                                    carbohydrateMass = carProFat[3];
-                                    proteinMass = carProFat[4];
-                                    fatMass = carProFat[5];
+                          if (await DBHelperPerson().getLastPerson() == null) {
+                            var snackBar = buildSnackBar('신체 정보가 비어있습니다!!');
+                            Scaffold.of(context).showSnackBar(snackBar);
+                          } else {
+                            if (foodList.isNotEmpty) {
+                              await getFoodInfo(foodList).then((value) {
+                                List<Map> defaultFoodList = [];
+                                for (var i = 0; i < defaultFood.length; i++) {
+                                  defaultFoodList.add({
+                                    "food": value[i],
+                                    "mass": defaultFood[i]
                                   });
-                                } catch (e) {
-                                  print(e);
-                                  var snackBar =
-                                      buildSnackBar('음식 조합이 매우 부적합합니다.');
-                                  Scaffold.of(context).showSnackBar(snackBar);
                                 }
+                                print(defaultFoodList);
+                                makeCsvFile(
+                                        defaultFoodList: defaultFoodList,
+                                        foodList:
+                                            value.sublist(defaultFood.length))
+                                    .then((val) {
+                                  List<num> sendData = [];
+                                  List<num> nutriInfo =
+                                      new List(value.length * 3);
+                                  for (var i = 0; i < value.length; i++) {
+                                    servingSize.add(value[i].servingSize);
+                                    nutriInfo[i * 3] = value[i].carbohydrate;
+                                    nutriInfo[i * 3 + 1] = value[i].protein;
+                                    nutriInfo[i * 3 + 2] = value[i].fat;
+                                  }
+                                  print("val=="); //여기서 val을 텍스트필드에 넣으면 될듯
+
+                                  print(val);
+
+                                  sendData.addAll(nutriInfo);
+                                  sendData.addAll(val);
+
+                                  try {
+                                    List<dynamic> carProFat =
+                                        justCalculateNutri(
+                                            sendData,
+                                            foodList.length -
+                                                defaultFood.length,
+                                            defaultFood.length);
+                                    num total = carProFat[3] * 4 +
+                                        carProFat[4] * 4 +
+                                        carProFat[5] * 9;
+                                    // assert(total < 600 * 1.2 && total > 600 * 0.8); //이 칼로리 조합이 아니면 단 하나의 경우도 케이스 통과 X
+
+                                    for (var i = 0; i < foodList.length; i++) {
+                                      foodMassController[i].text =
+                                          val[i].toStringAsFixed(0);
+                                      foodServingController[i].text =
+                                          "${(val[i] / servingSize[i]).toStringAsFixed(1)}인분";
+                                    }
+                                    print(carProFat);
+                                    setState(() {
+                                      correct = carProFat[1];
+                                      carbohydrateMass = carProFat[3];
+                                      proteinMass = carProFat[4];
+                                      fatMass = carProFat[5];
+                                    });
+                                  } catch (e) {
+                                    print(e);
+                                    var snackBar =
+                                        buildSnackBar('음식 조합이 매우 부적합합니다.');
+                                    Scaffold.of(context).showSnackBar(snackBar);
+                                  }
+                                });
                               });
-                            });
+                            }
                           }
 
                           // } else {

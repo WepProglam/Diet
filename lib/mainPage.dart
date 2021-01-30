@@ -1010,11 +1010,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 ? returnCalender()
                                                 : returnGraph()),
                                       ),
-                                      Spacer(
-                                        flex: 1,
-                                      ),
+                                      // Spacer(
+                                      //   flex: 1,
+                                      // ),
                                       Expanded(
-                                        flex: 15,
+                                        flex: 16,
                                         child: SizedBox(
                                           width:
                                               MediaQuery.of(context).size.width,
@@ -1081,9 +1081,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ],
                                   ));
                           }))),
-              // Spacer(
-              //   flex: 1,
-              // )
+              Spacer(
+                flex: 1,
+              )
             ],
           ),
         ));
@@ -1389,13 +1389,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return Container(
       // decoration: BoxDecoration(color: Colors.yellow),
       child: Padding(
-        padding: const EdgeInsets.only(top: 3.0, right: 3),
+        padding: const EdgeInsets.only(top: 3.0, right: 0),
         child: ToggleButtons(
           // hoverColor: Colors.white,
           // highlightColor: Colors.black,
           // disabledColor: Colors.white,
-          // selectedColor: Colors.black,
-          // fillColor: Colors.white70,
+          selectedColor: Colors.black,
+          fillColor: Colors.black,
 
           children: <Widget>[
             Icon(
