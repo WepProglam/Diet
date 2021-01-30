@@ -44,6 +44,10 @@ class _MyHomePageState extends State<MyHomePage> {
   var calender_year = DateTime.now().year; //달력 상 표기 되는 달력
   var calender_month = DateTime.now().month;
   var calender_date = DateTime.now().day;
+
+  num temp_year;
+  num temp_month;
+  num temp_date;
   String calenderYear;
   String calenderMonth;
   String calenderDate;
@@ -307,7 +311,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       "pre": "mainPage",
                                       "index": index,
                                       "dateTime":
-                                          "$calenderYear-$calenderMonth-$calenderDate"
+                                          "$calender_year-$calender_month-$calender_date"
                                     }
                                   }).then((val) async {
                                 todayDietList[index] = val;
@@ -579,6 +583,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    temp_year = calender_year;
+    temp_month = calender_month;
+    temp_date = calender_date;
     changeIntToString();
     getInfo();
 
@@ -608,10 +615,10 @@ class _MyHomePageState extends State<MyHomePage> {
     int curIndex = 0;
     // SwiperController swiperController = new SwiperController();
     List<String> mealList = [
-      "$calender_month월$calender_date일 아침",
-      "$calender_month월$calender_date일 점심",
-      "$calender_month월$calender_date일 저녁",
-      "$calender_month월$calender_date일 간식"
+      "$temp_month월$temp_date일 아침",
+      "$temp_month월$temp_date일 점심",
+      "$temp_month월$temp_date일 저녁",
+      "$temp_month월$temp_date일 간식"
     ];
 
     return Scaffold(
@@ -642,7 +649,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           //   }
                           // },
                           itemBuilder: (BuildContext context, int index) {
-                            return index == 0
+                            return index == 1
                                 ? Column(
                                     children: [
                                       //page 1
@@ -854,7 +861,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         flex: 2,
                                       ),
                                       Expanded(
-                                        flex: 10,
+                                        flex: 15,
                                         child: SizedBox(
                                           width:
                                               MediaQuery.of(context).size.width,
@@ -1355,6 +1362,9 @@ class _MyHomePageState extends State<MyHomePage> {
               String dateTime;
               date = int.parse(title.data);
               calender_date = date;
+              temp_year = calender_year;
+              temp_month = calender_month;
+              temp_date = calender_date;
               if (calender_month.toString().length == 1 &&
                   calender_date.toString().length == 1) {
                 dateTime = "$calender_year-0$calender_month-0$date";
