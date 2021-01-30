@@ -119,6 +119,9 @@ class _MyHomePageState extends State<MyHomePage> {
           todayDietList[0] = {};
           todayDietList[0]['foodInfo'] = jsonDecode(myDiet.foodInfo);
           todayDietList[0]['dietName'] = myDiet.dietName;
+
+          todayDietList[0]["kcal"] = num.parse(tempDiet["kcal"]);
+
           for (var i = 0;
               i < todayDietList[0]['foodInfo']['foods'].length;
               i++) {
@@ -137,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
           todayDietList[1] = {};
           todayDietList[1]["foodInfo"] = jsonDecode(myDiet.foodInfo);
           todayDietList[1]['dietName'] = myDiet.dietName;
-
+          todayDietList[1]["kcal"] = num.parse(tempDiet["kcal"]);
           for (var i = 0;
               i < todayDietList[1]['foodInfo']['foods'].length;
               i++) {
@@ -164,6 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
           myDiet = val;
           todayDietList[2]['foodInfo'] = jsonDecode(myDiet.foodInfo);
           todayDietList[2]['dietName'] = myDiet.dietName;
+          todayDietList[2]["kcal"] = num.parse(tempDiet["kcal"]);
 
           for (var i = 0;
               i < todayDietList[2]['foodInfo']['foods'].length;
@@ -191,6 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
           myDiet = val;
           todayDietList[3]['foodInfo'] = jsonDecode(myDiet.foodInfo);
           todayDietList[3]['dietName'] = myDiet.dietName;
+          todayDietList[3]["kcal"] = num.parse(tempDiet["kcal"]);
 
           for (var i = 0;
               i < todayDietList[3]['foodInfo']['foods'].length;
@@ -213,7 +218,6 @@ class _MyHomePageState extends State<MyHomePage> {
       // print(e);
     }
     // print("/");
-    // print(todayDietList);
     // print("/");
 
     setState(() {});
@@ -367,7 +371,7 @@ class _MyHomePageState extends State<MyHomePage> {
             break;
           default:
         }
-        print([item.date, nutriRatio, car, pro, fat]);
+        // print([item.date, nutriRatio, car, pro, fat]);
         num correctNutri = correctness(nutriRatio, [car, pro, fat]);
         num correct =
             (1 - ((person.metabolism - totalCal) / person.metabolism).abs()) *
@@ -380,7 +384,7 @@ class _MyHomePageState extends State<MyHomePage> {
         monthlyAchieveNutri.add([num.parse(item.date.split('-')[2]), 0]);
       }
     }
-    print(monthlyAchieveKcal);
+    // print(monthlyAchieveKcal);
   }
 
   num _myOpacity = 0.0;
@@ -393,6 +397,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // await getConfirmedIndex();
     // print(dietConfirm);
     // print(dietAdded);
+
     if (dietConfirm[index]) {
       itemList = [
         FractionallySizedBox(
@@ -408,9 +413,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     //item[1] : 음식 이름
                     //item[2] : 음식 무게
                     Text("${item[1]}  ${item[2]}g"),
-                  Text(
-                      "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
-                  Text("총 칼로리 : ${todayDietList[index]['foodInfo']['kcal']}"),
+                  Text("영양성분 비율 : ${todayDietList[index]['nutri']}"),
+                  Text("총 칼로리 : ${todayDietList[index]['kcal']}"),
                 ]),
               ),
             ))
@@ -453,8 +457,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                 double percent = todayDietList[index]["rate"] /
                                     100; //80 => 0.8
 
+                                print(percent);
+
                                 todayDietList[index]['foodInfo']['kcal'] *=
                                     percent;
+
+                                print(todayDietList[index]['foodInfo']['kcal']);
                                 // print(val);
 
                                 // print((todayDietList[index]['foodInfo']
@@ -632,7 +640,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   : FontWeight.bold,
                             ),
                             child: Text(
-                                "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
+                                "영양성분 비율 : ${todayDietList[index]['nutri']}"),
                           ),
                           AnimatedDefaultTextStyle(
                             duration: const Duration(milliseconds: 300),
@@ -645,8 +653,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ? FontWeight.w100
                                   : FontWeight.bold,
                             ),
-                            child: Text(
-                                "총 칼로리 : ${todayDietList[index]['foodInfo']['kcal']}"),
+                            child:
+                                Text("총 칼로리 : ${todayDietList[index]['kcal']}"),
                           ),
                         ]),
                       ),
@@ -673,6 +681,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: RaisedButton(
                             child: Text("먹었"),
                             onPressed: () async {
+                              print(todayDietList[index]['foodInfo']);
                               await formatDietHistory(
                                       dietName: todayDietList[index]
                                           ['dietName'],
@@ -1237,11 +1246,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   List<num> indicateCompleteDate(List<dynamic> dates) {
-    print(dates);
+    // print(dates);
     for (var item in dates) {
       completedDates.add(num.parse(item.split('-').last));
     }
-    print(completedDates);
+    // print(completedDates);
   }
 
   Widget calender() {
