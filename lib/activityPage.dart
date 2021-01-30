@@ -275,6 +275,8 @@ class _ActivityPageState extends State<ActivityPage> {
                 // color: Colors.yellow,
                 child: metabolicRate('BMR', bmrText),
               ),
+              BarChartSample5(),
+
               Spacer(
                 flex: 1,
               ),
@@ -283,7 +285,6 @@ class _ActivityPageState extends State<ActivityPage> {
               Spacer(
                 flex: 1,
               ),
-              BarChartSample5(),
               // nutriRate(),
               // Text('탄수화물, 단백질, 지방의 열량 비율을 선택해주세요'),
               Spacer(
