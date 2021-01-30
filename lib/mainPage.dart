@@ -1596,7 +1596,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             title,
                             Spacer(flex: 5),
                             AutoSizeText(
-                              '${kcalArchieve.toStringAsFixed(2)}%', //칼로리 성취율
+                              '${kcalArchieve.toStringAsFixed(2)}%    ', //칼로리 성취율
                               style: TextStyle(
                                   // fontSize: 7,
                                   ),
