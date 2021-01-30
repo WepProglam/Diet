@@ -196,58 +196,69 @@ class _FoodListState extends State<FoodList> {
           // ),
           Expanded(
             flex: 1,
-            child: IconButton(
-              icon: Icon(
-                Icons.push_pin,
-                color: pinPushedList[index] ? iconColor : Colors.grey,
-              ),
-              onPressed: () {
-                print("///" * 100);
-                print(foodMassController.length);
-                print(foodServingController.length);
-                print("///" * 100);
+            child: Material(
+              color: Colors.black,
+              child: InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Ink(
+                    child: Icon(
+                      Icons.push_pin,
+                      color: pinPushedList[index] ? iconColor : Colors.grey,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  print("///" * 100);
+                  print(foodMassController.length);
+                  print(foodServingController.length);
+                  print("///" * 100);
 
-                ListContents temp = foodList[index];
-                bool tempBool = pinPushedList[index];
-                TextEditingController _controller = foodMassController[index];
-                TextEditingController _controllerServing =
-                    foodServingController[index];
-                foodList.removeAt(index);
-                pinPushedList.removeAt(index);
-                foodMassController.removeAt(index);
-                foodServingController.removeAt(index);
-                if (tempBool) {
-                  tempBool = !tempBool;
-                  setState(() {
-                    foodList.add(temp);
-
-                    pinPushedList.add(tempBool);
-
-                    foodMassController.add(_controller);
-
-                    foodServingController.add(_controllerServing);
-                    // foodList.insert(index, temp);
-                  });
-                } else {
-                  setState(() {
+                  ListContents temp = foodList[index];
+                  bool tempBool = pinPushedList[index];
+                  TextEditingController _controller = foodMassController[index];
+                  TextEditingController _controllerServing =
+                      foodServingController[index];
+                  foodList.removeAt(index);
+                  pinPushedList.removeAt(index);
+                  foodMassController.removeAt(index);
+                  foodServingController.removeAt(index);
+                  if (tempBool) {
                     tempBool = !tempBool;
+                    setState(() {
+                      foodList.add(temp);
 
-                    foodList.insert(0, temp);
+                      pinPushedList.add(tempBool);
 
-                    pinPushedList.insert(0, tempBool);
+                      foodMassController.add(_controller);
 
-                    foodMassController.insert(0, _controller);
+                      foodServingController.add(_controllerServing);
+                      // foodList.insert(index, temp);
+                    });
+                  } else {
+                    setState(() {
+                      tempBool = !tempBool;
 
-                    foodServingController.insert(0, _controllerServing);
-                    // foodList.insert(index, temp);
-                  });
-                }
-              },
+                      foodList.insert(0, temp);
+
+                      pinPushedList.insert(0, tempBool);
+
+                      foodMassController.insert(0, _controller);
+
+                      foodServingController.insert(0, _controllerServing);
+                      // foodList.insert(index, temp);
+                    });
+                  }
+                },
+              ),
             ),
           ),
           Expanded(
             flex: 3,
-            child: Text('${food.foodName}'),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 6.0),
+              child: Text('${food.foodName}'),
+            ),
           ),
           Expanded(
             flex: 2,
@@ -261,7 +272,7 @@ class _FoodListState extends State<FoodList> {
             ),
           ),
           Expanded(
-            flex: 3,
+            flex: 2,
             child: TextFormField(
               // initialValue: initialVal(food.mass),
               controller: foodMassController[index],
@@ -289,26 +300,36 @@ class _FoodListState extends State<FoodList> {
               },
             ),
           ),
-          Text('g'),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Text('g'),
+          ),
           Expanded(
             flex: 1,
-            child: FlatButton(
-              child: Icon(
-                Icons.cancel,
-                color: iconColor,
+            child: Material(
+              color: Colors.black,
+              child: InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                  child: Ink(
+                    child: Icon(
+                      Icons.cancel,
+                      color: iconColor,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  setState(() {
+                    foodList.removeAt(index);
+                    foodMassController.removeAt(index);
+                    // for (var item in foodMassController) {
+                    //   item.text = "";
+                    // }
+                  });
+                },
               ),
-              onPressed: () {
-                setState(() {
-                  foodList.removeAt(index);
-                  foodMassController[index].text = "";
-                  // for (var item in foodMassController) {
-                  //   item.text = "";
-                  // }
-                });
-              },
             ),
           ),
-          Spacer(),
         ],
       ),
     );

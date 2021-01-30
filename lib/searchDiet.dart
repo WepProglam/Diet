@@ -321,8 +321,7 @@ class _UiitemState extends State<Uiitem> {
       // color: Colors.deepOrangeAccent,
       child: Container(
         decoration: BoxDecoration(
-            border:
-                Border.all(color: Colors.deepOrangeAccent[700], width: 1.2)),
+            border: Border.all(color: Colors.deepOrangeAccent[700], width: 2)),
         child: Stack(
           children: [
             InkWell(
@@ -343,7 +342,10 @@ class _UiitemState extends State<Uiitem> {
                           widget.diet.dietName,
                           // textScaleFactor: 2,
                           maxLines: 1,
-                          style: TextStyle(fontSize: 40),
+                          style: TextStyle(
+                              fontSize: 50,
+                              color: Colors.deepOrangeAccent[700],
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -398,13 +400,13 @@ class _UiitemState extends State<Uiitem> {
                                         ),
                                         Container(
                                           child: SizedBox(
-                                            width: 4,
+                                            width: 3,
                                           ),
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  right: BorderSide(
-                                                      color: Colors.white,
-                                                      width: 1))),
+                                          // decoration: BoxDecoration(
+                                          //     border: Border(
+                                          //         right: BorderSide(
+                                          //             color: Colors.white,
+                                          //             width: 1))),
                                         ),
                                         Expanded(
                                           flex: 2,

@@ -260,7 +260,7 @@ class _AddFoodSub extends State<AddFoodSub> {
                 aspectRatio: 20 / 8,
                 child: Center(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Container(
                         margin: EdgeInsets.only(left: 5),
@@ -277,8 +277,9 @@ class _AddFoodSub extends State<AddFoodSub> {
                       // SizedBox(
                       //   width: 15,
                       // ),
+                      Spacer(),
                       Container(
-                        margin: EdgeInsets.only(left: 10),
+                        margin: EdgeInsets.only(left: 10, right: 10),
                         padding: EdgeInsets.only(top: 0),
                         child: AutoSizeText(
                           " 불러오기",
@@ -289,6 +290,7 @@ class _AddFoodSub extends State<AddFoodSub> {
                           ),
                         ),
                       ),
+                      Spacer(),
                     ],
                   ),
                 ),
@@ -517,8 +519,8 @@ class _AddFoodSub extends State<AddFoodSub> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("from searchFood"),
-      content: Text(""),
+      title: Text("음식 저장/수정"),
+      content: Text("새 음식을 저장하시려면 새로 저장,\n\n기존 데이터를 수정하시려면 업데이트를 눌러주세요"),
       actions: [saveButton, updateButton, noButton],
     );
 
@@ -538,7 +540,8 @@ class _AddFoodSub extends State<AddFoodSub> {
         child: Text("저장"),
         onPressed: () async {
           var bytes = utf8.encode(_foodNameController.value.text);
-          String codeName = "MY" + md5.convert(bytes).toString() + "custom";
+          String codeName =
+              "MY" + md5.convert(bytes).toString() + DateTime.now().toString();
           foodClass.code = codeName;
 
           // print(foodClass.code);

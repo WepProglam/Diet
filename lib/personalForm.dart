@@ -294,10 +294,10 @@ class _PersonalForm extends State<PersonalForm> {
                                                 children: [
                                                   Spacer(),
                                                   Container(
-                                                    child: Icon(Icons.send),
+                                                    child: Icon(Icons.save),
                                                   ),
                                                   Spacer(),
-                                                  AutoSizeText("제출",
+                                                  AutoSizeText("저장",
                                                       maxLines: 1,
                                                       style: TextStyle(
                                                           fontSize: 20)),
