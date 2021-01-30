@@ -509,11 +509,12 @@ class DBHelperDietHistory {
     }, onUpgrade: (db, oldVersion, newVersion) {});
   }
 
-  Future<List<String>> getIncompleteDietHistory({int year, int month}) async {
+  Future<List<dynamic>> getCompleteDietHistory({int year, int month}) async {
     final db = await database;
     var res = await db.rawQuery(
-        "SELECT date FROM $tableName WHERE year = '$year' AND month = '$month' AND complete = 'false'");
-    List<String> list = res.isNotEmpty ? res.map((c) => c).toList() : [];
+        "SELECT date FROM $tableName WHERE year = '$year' AND month = '$month' AND complete = 'true'");
+    List<dynamic> list =
+        res.isNotEmpty ? res.map((c) => c['date']).toList() : [];
     return list;
   }
 

@@ -71,6 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
     [false, false, false, false],
     [false, false, false, false]
   ];
+  List<num> completedDates = [];
+
   List<bool> dietConfirm = [false, false, false, false];
   List<bool> diet = [false, false, false, false];
   List<bool> dietConfirmConfirm = [false, false, false, false];
@@ -1097,6 +1099,23 @@ class _MyHomePageState extends State<MyHomePage> {
     return Expanded(flex: 2, child: calender());
   }
 
+  void getCompleteDate() async {
+    completedDates = [];
+    await dbHelperDietHistory
+        .getCompleteDietHistory(month: calender_month, year: calender_year)
+        .then((val) {
+      indicateCompleteDate(val);
+    });
+  }
+
+  List<num> indicateCompleteDate(List<dynamic> dates) {
+    print(dates);
+    for (var item in dates) {
+      completedDates.add(num.parse(item.split('-').last));
+    }
+    print(completedDates);
+  }
+
   Widget calender() {
     return isItCalender
         ? Row(
@@ -1115,15 +1134,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         icon: Icon(Icons.arrow_back_ios),
                         onPressed: () {
                           if (calender_month == 1) {
-                            setState(() {
-                              calender_year -= 1;
-                              calender_month = 12;
-                            });
+                            calender_year -= 1;
+                            calender_month = 12;
                           } else {
-                            setState(() {
-                              calender_month -= 1;
-                            });
+                            calender_month -= 1;
                           }
+                          getCompleteDate();
+                          setState(() {});
                         },
                       ),
                     ),
@@ -1133,15 +1150,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         icon: Icon(Icons.arrow_forward_ios),
                         onPressed: () {
                           if (calender_month == 12) {
-                            setState(() {
-                              calender_year += 1;
-                              calender_month = 1;
-                            });
+                            calender_year += 1;
+                            calender_month = 1;
                           } else {
-                            setState(() {
-                              calender_month += 1;
-                            });
+                            calender_month += 1;
                           }
+                          getCompleteDate();
+                          setState(() {});
                         },
                       ),
                     ),
@@ -1258,13 +1273,13 @@ class _MyHomePageState extends State<MyHomePage> {
             //   flex: 1,
             // ),
             calenderBlock(
-                dayText('일'), true), //true면 border 없이, flase면 border 있이
-            calenderBlock(dayText('월'), true),
-            calenderBlock(dayText('화'), true),
-            calenderBlock(dayText('수'), true),
-            calenderBlock(dayText('목'), true),
-            calenderBlock(dayText('금'), true),
-            calenderBlock(dayText('토'), true),
+                dayText('일'), true, 0), //true면 border 없이, flase면 border 있이
+            calenderBlock(dayText('월'), true, 0),
+            calenderBlock(dayText('화'), true, 0),
+            calenderBlock(dayText('수'), true, 0),
+            calenderBlock(dayText('목'), true, 0),
+            calenderBlock(dayText('금'), true, 0),
+            calenderBlock(dayText('토'), true, 0),
             // Spacer(
             //   flex: 1,
             // ),
@@ -1360,7 +1375,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (tag == "first") {
       for (var i = 0; i < weekTotalDays; i++) {
         if (i >= weekTotalDays - datesFirst) {
-          children.add(calenderBlock(dateText(dt.toString()), false));
+          children.add(calenderBlock(dateText(dt.toString()), false, dt));
           dt += 1;
         } else {
           children.add(Spacer(
@@ -1371,7 +1386,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else if (tag == "end") {
       for (var i = 0; i < weekTotalDays; i++) {
         if (i < weekTotalDays - datesEnd) {
-          children.add(calenderBlock(dateText(dt.toString()), false));
+          children.add(calenderBlock(dateText(dt.toString()), false, dt));
           dt += 1;
         } else {
           children.add(Spacer(
@@ -1382,7 +1397,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       for (var i = 0; i < weekTotalDays; i++) {
         var dt = date + i;
-        children.add(calenderBlock(dateText(dt.toString()), false));
+        children.add(calenderBlock(dateText(dt.toString()), false, dt));
       }
     }
 
@@ -1394,7 +1409,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget calenderBlock(AutoSizeText title, bool isitDay) {
+  Widget calenderBlock(AutoSizeText title, bool isitDay, int date) {
     bool dateSelected = false;
     return Expanded(
         flex: 3,
@@ -1405,7 +1420,8 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Container(
             alignment: isitDay ? null : Alignment(-1.0, -1.0),
             margin: EdgeInsets.only(top: 5.0),
-            decoration: BoxDecoration(),
+            decoration: BoxDecoration(
+                color: completedDates.contains(date) ? Colors.red : null),
             child: isitDay
                 ? title
                 : Column(
