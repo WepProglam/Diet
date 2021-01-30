@@ -426,6 +426,7 @@ class _ActivityPageState extends State<ActivityPage> {
                           } else if (intVal == 10) {
                             return "100";
                           } else {
+                            return '';
                             // return '';
                           }
                         },
@@ -613,15 +614,15 @@ class _ActivityPageState extends State<ActivityPage> {
                   // nutriRate(),
                   // Text('탄수화물, 단백질, 지방의 열량 비율을 선택해주세요'),
                   Spacer(
-                    flex: 1,
+                    flex: 2,
                   ),
                   Container(
                     // color: Colors.yellow,
                     child: metabolicRate('AM', amText),
                   ),
-                  Spacer(
-                    flex: 1,
-                  ),
+                  // Spacer(
+                  //   flex: 1,
+                  // ),
                   // FloatingActionButton(
                   //     child: Icon(Icons.done),
                   //     // backgroundColor: Color(0xFF7EE0CC),
@@ -672,7 +673,6 @@ class _ActivityPageState extends State<ActivityPage> {
               achieve: hint['achieve'],
               metabolism: num.parse(amText.value.text),
               activity: _activityValue,
-              nutriRate: _nutriRateValue,
               weightTarget: hint['weightTarget'],
               bmiTarget: hint['bmiTarget'],
               muscleTarget: hint['muscleTarget'],

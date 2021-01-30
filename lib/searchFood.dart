@@ -78,7 +78,8 @@ class SearchList extends StatefulWidget {
   _SearchListState createState() => _SearchListState();
 }
 
-class _SearchListState extends State<SearchList> {
+class _SearchListState extends State<SearchList>
+    with SingleTickerProviderStateMixin {
   final key = GlobalKey<ScaffoldState>();
   final _searchQuery = TextEditingController();
   List<Food> _list;
@@ -252,33 +253,28 @@ class _SearchListState extends State<SearchList> {
                     SizedBox(
                       height: 95,
                     ),
-                    Expanded(
-                      flex: flexVal,
-                      child: Row(
-                        children: [
-                          Spacer(),
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              // margin: EdgeInsets.only(top: 95),
-                              decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  border: Border(
-                                      left: BorderSide(
-                                          color: Colors.deepOrangeAccent[700],
-                                          width: 1),
-                                      bottom: BorderSide(
-                                          color: Colors.deepOrangeAccent[700],
-                                          width: 1),
-                                      right: BorderSide(
-                                          color: Colors.deepOrangeAccent[700],
-                                          width: 1))),
-                              child: listView,
-                            ),
-                          ),
-                          Spacer(),
-                        ],
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 1000),
+                      curve: Curves.fastLinearToSlowEaseIn,
+                      child: Container(
+                        // margin: EdgeInsets.only(top: 95),
+                        height: flexVal == 0 ? 0 : 200,
+                        width: 300,
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            border: Border(
+                                left: BorderSide(
+                                    color: Colors.deepOrangeAccent[700],
+                                    width: 1),
+                                bottom: BorderSide(
+                                    color: Colors.deepOrangeAccent[700],
+                                    width: 1),
+                                right: BorderSide(
+                                    color: Colors.deepOrangeAccent[700],
+                                    width: 1))),
+                        child: listView,
                       ),
+                      vsync: this,
                     ),
                     Material(
                       shape: RoundedRectangleBorder(
@@ -305,7 +301,6 @@ class _SearchListState extends State<SearchList> {
                                     itemCount: selectedFoods.length);
                                 flexVal = 1;
                               });
-
                               createListViewIcon = Icons.arrow_circle_up;
                             } else {
                               setState(() {

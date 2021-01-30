@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'savedDiet.dart';
 import 'appBar.dart';
 import 'package:intl/intl.dart';
 import 'model.dart';
@@ -20,6 +19,8 @@ class _PersonalForm extends State<PersonalForm> {
   final _weightController = TextEditingController();
   final _bmiController = TextEditingController();
   final _strengthController = TextEditingController();
+  final _sexController = TextEditingController();
+
   final _weightTargetController = TextEditingController();
   final _bmiTargetController = TextEditingController();
   final _muscleTargetController = TextEditingController();
@@ -36,6 +37,7 @@ class _PersonalForm extends State<PersonalForm> {
     // DropdownMenuItem(child: Center(child: Text('휴가 직장인')), value: 9)
   ];
   int _selValue = 0;
+  int _sexValue = 0;
   // int purpose_index = 1;
   var dbHelper = DBHelperPerson();
   var hint = {};
@@ -72,10 +74,10 @@ class _PersonalForm extends State<PersonalForm> {
           ? resetMetabolism(value.last.metabolism, value.last.purpose)
           : null;
       hint1['activity'] = value.isNotEmpty ? value.last.activity : null;
-      hint1['nutriRate'] = value.isNotEmpty ? value.last.nutriRate : null;
       hint1['weightTarget'] = value.isNotEmpty ? value.last.weightTarget : null;
       hint1['bmiTarget'] = value.isNotEmpty ? value.last.bmiTarget : null;
       hint1['muscleTarget'] = value.isNotEmpty ? value.last.muscleTarget : null;
+      hint1['sex'] = value.isNotEmpty ? value.last.sex : null;
     }, onError: (e) {
       hint1['height'] = null;
       hint1['weight'] = null;
@@ -86,23 +88,26 @@ class _PersonalForm extends State<PersonalForm> {
       hint1['weightTarget'] = null;
       hint1['bmiTarget'] = null;
       hint1['muscleTarget'] = null;
+      hint1['sex'] = null;
     });
     return hint1;
   }
 
   num resetMetabolism(num metabolism, int purpose) {
-    switch (purpose) {
-      case 0: //다이어트
-        metabolism += 500;
-        break;
-      case 1: //벌크업
-        metabolism -= 500;
-        break;
-      case 2: //린매스업(일반)
-        break;
-      default:
+    if (metabolism != null) {
+      switch (purpose) {
+        case 0: //다이어트
+          metabolism += 500;
+          break;
+        case 1: //벌크업
+          metabolism -= 500;
+          break;
+        case 2: //린매스업(일반)
+          break;
+        default:
+      }
+      return metabolism;
     }
-    return metabolism;
   }
 
   num setMetabolism(num metabolism, int purpose) {
@@ -138,6 +143,8 @@ class _PersonalForm extends State<PersonalForm> {
             hint['bmiTarget'] == null ? "" : hint['bmiTarget'].toString();
         _muscleTargetController.text =
             hint['muscleTarget'] == null ? "" : hint['muscleTarget'].toString();
+
+        _sexController.text = hint['sex'] == null ? "" : hint['sex'].toString();
       });
     }
   }
@@ -152,18 +159,20 @@ class _PersonalForm extends State<PersonalForm> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
-          currentFocus.unfocus();
-          print('curIndex $curIndex');
+          // FocusScopeNode currentFocus = FocusScope.of(context);
+          // currentFocus.unfocus();
+          // print('curIndex $curIndex');
           if (_formKey.currentState.validate()) {
-            swiperController.next(animation: true);
+            if (curIndex == 0) {
+              swiperController.next(animation: true);
+            }
           }
         },
         child: Scaffold(
           // backgroundColor: Color(0xFFFFFEF5),
           resizeToAvoidBottomPadding: false,
-          appBar: basicAppBar('Personal Form', context),
-          drawer: NavDrawer(),
+          appBar: AppBar(
+              centerTitle: true, title: Text("신체 정보"), actions: <Widget>[]),
           body: Center(
             child: Form(
               key: _formKey,
@@ -195,6 +204,58 @@ class _PersonalForm extends State<PersonalForm> {
                                   subBuilderQuestion("골격근량", "kg",
                                       controller: _strengthController,
                                       hint: hint['muscleMass']),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Center(
+                                          child: Row(
+                                        children: [
+                                          Spacer(
+                                            flex: 2,
+                                          ),
+                                          spacer_question('성별'),
+                                          Expanded(
+                                            flex: 8,
+                                            child: DropdownButtonFormField(
+                                              value: _sexValue,
+                                              items: [
+                                                DropdownMenuItem(
+                                                  child:
+                                                      Center(child: Text('남성')),
+                                                  value: 0,
+                                                ),
+                                                DropdownMenuItem(
+                                                  child:
+                                                      Center(child: Text('여성')),
+                                                  value: 1,
+                                                ),
+                                              ],
+                                              decoration:
+                                                  InputDecoration(hintText: ""),
+                                              validator: (value) {
+                                                if (value > 2) {
+                                                  return 'Select Number 1-3';
+                                                }
+                                                return null;
+                                              },
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  // typeStart = true;
+                                                  // purpose_index = value;
+
+                                                  _sexValue = value;
+                                                  print(_sexValue);
+                                                });
+                                              },
+                                              // onSaved: (value) {
+                                              //   // print(purpose_index);
+                                              // },
+                                            ),
+                                          ),
+                                          Spacer(
+                                            flex: 3,
+                                          ),
+                                        ],
+                                      ))),
                                   Spacer(
                                     flex: 1,
                                   ),
@@ -315,30 +376,40 @@ class _PersonalForm extends State<PersonalForm> {
                                                         .toString();
 
                                                 var person = Person(
-                                                    height: double.parse(
-                                                        _heightController
-                                                            .value.text),
-                                                    weight: double.parse(
-                                                        _weightController
-                                                            .value.text),
-                                                    bmi: double.parse(
-                                                        _bmiController
-                                                            .value.text),
-                                                    muscleMass: double.parse(
-                                                        _strengthController
-                                                            .value.text),
-                                                    purpose: _selValue,
-                                                    time: time,
-                                                    achieve: 0.0,
-                                                    metabolism:
-                                                        hint['metabolism'] != null
-                                                            ? setMetabolism(hint['metabolism'], _selValue)
-                                                            : null,
-                                                    activity: hint['activity'],
-                                                    nutriRate: hint['nutriRate'],
-                                                    weightTarget: double.parse(_weightTargetController.value.text),
-                                                    bmiTarget: double.parse(_bmiTargetController.value.text),
-                                                    muscleTarget: double.parse(_muscleTargetController.value.text));
+                                                  height: double.parse(
+                                                      _heightController
+                                                          .value.text),
+                                                  weight: double.parse(
+                                                      _weightController
+                                                          .value.text),
+                                                  bmi: double.parse(
+                                                      _bmiController
+                                                          .value.text),
+                                                  muscleMass: double.parse(
+                                                      _strengthController
+                                                          .value.text),
+                                                  purpose: _selValue,
+                                                  sex: _sexValue,
+                                                  time: time,
+                                                  achieve: 0.0,
+                                                  metabolism:
+                                                      hint['metabolism'] != null
+                                                          ? setMetabolism(
+                                                              hint[
+                                                                  'metabolism'],
+                                                              _selValue)
+                                                          : null,
+                                                  activity: hint['activity'],
+                                                  weightTarget: double.parse(
+                                                      _weightTargetController
+                                                          .value.text),
+                                                  bmiTarget: double.parse(
+                                                      _bmiTargetController
+                                                          .value.text),
+                                                  muscleTarget: double.parse(
+                                                      _muscleTargetController
+                                                          .value.text),
+                                                );
 
                                                 await dbHelper
                                                     .createHelper(person);

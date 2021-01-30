@@ -14,11 +14,12 @@ class Person {
 
   num metabolism; //총 에너지 대사량
   num activity; //1, 2, 3, 4, 5, 6
-  num nutriRate; //1, 2, 3
 
   num weightTarget;
   num bmiTarget;
   num muscleTarget;
+
+  num sex; //0 남자 1 여자
 
   Person(
       {this.height,
@@ -30,10 +31,10 @@ class Person {
       this.achieve,
       this.metabolism,
       this.activity,
-      this.nutriRate,
       this.weightTarget,
       this.bmiTarget,
-      this.muscleTarget});
+      this.muscleTarget,
+      this.sex});
 
   Map<String, dynamic> toMap() {
     return {
@@ -46,10 +47,10 @@ class Person {
       'achieve': achieve,
       'metabolism': metabolism,
       'activity': activity,
-      'nutriRate': nutriRate,
       'weightTarget': weightTarget,
       'bmiTarget': bmiTarget,
-      'muscleTarget': muscleTarget
+      'muscleTarget': muscleTarget,
+      'sex': sex
     };
   }
 }

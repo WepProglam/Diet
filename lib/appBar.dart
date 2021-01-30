@@ -68,48 +68,8 @@ class NavDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.input),
-            title: Text('mainPage'),
-            onTap: () {
-              // print(ModalRoute.of(context).settings.name);
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/mainPage');
-              print(ModalRoute.of(context).settings.name);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.input),
-            title: Text('addFood'),
-            onTap: () {
-              // print(ModalRoute.of(context).settings.name);
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/addFood');
-              print(ModalRoute.of(context).settings.name);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.input),
-            title: Text('addDiet'),
-            onTap: () {
-              // print(ModalRoute.of(context).settings.name);
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/addDiet');
-              print(ModalRoute.of(context).settings.name);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.verified_user),
-            title: Text('personalForm'),
-            onTap: () {
-              // print(ModalRoute.of(context).settings.name);
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/personalForm');
-              print(ModalRoute.of(context).settings.name);
-            },
-          ),
-          ListTile(
             leading: Icon(Icons.settings),
-            title: Text('searchDiet'),
+            title: Text('내 식단'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
               Navigator.pop(context);
@@ -119,7 +79,7 @@ class NavDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.border_color),
-            title: Text('searchFood'),
+            title: Text('내 음식'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
               Navigator.pop(context);
@@ -128,22 +88,32 @@ class NavDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.border_color),
-            title: Text('Calculate'),
+            leading: Icon(Icons.input),
+            title: Text('식단 추가'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/calculate');
+              Navigator.pushNamed(context, '/addDiet');
               print(ModalRoute.of(context).settings.name);
             },
           ),
           ListTile(
-            leading: Icon(Icons.border_color),
-            title: Text('Activity Page'),
+            leading: Icon(Icons.verified_user),
+            title: Text('신체 정보'),
             onTap: () {
               // print(ModalRoute.of(context).settings.name);
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/activityPage');
+              Navigator.pushNamed(context, '/personalForm');
+              print(ModalRoute.of(context).settings.name);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.input),
+            title: Text('음식 추가'),
+            onTap: () {
+              // print(ModalRoute.of(context).settings.name);
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/addFood');
               print(ModalRoute.of(context).settings.name);
             },
           ),
