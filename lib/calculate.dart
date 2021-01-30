@@ -20,7 +20,7 @@ void getPersonKcal(
   await dbHelperPerson.getLastPerson().then((val) {
     targetCalorie = val.metabolism;
     purposeIndex = val.purpose;
-    purposeIndex = 0;
+    // purposeIndex = 0;
     switch (purposeIndex) {
       case 0:
         ratio = [3, 4, 3];
