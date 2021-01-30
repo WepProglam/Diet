@@ -7,6 +7,8 @@ import 'model.dart';
 import 'appBar.dart';
 import 'package:flutter/material.dart';
 
+import 'barChar.dart';
+
 class Activity extends StatelessWidget {
   const Activity({Key key}) : super(key: key);
 
@@ -281,6 +283,7 @@ class _ActivityPageState extends State<ActivityPage> {
               Spacer(
                 flex: 1,
               ),
+              BarChartSample5(),
               // nutriRate(),
               // Text('탄수화물, 단백질, 지방의 열량 비율을 선택해주세요'),
               Spacer(
