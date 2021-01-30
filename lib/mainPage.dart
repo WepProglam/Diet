@@ -4,6 +4,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_application_1/addDiet.dart';
 import 'package:flutter_application_1/dietModelSaver.dart';
 import 'package:flutter_application_1/model.dart';
@@ -72,6 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
     [false, false, false, false]
   ];
   List<num> completedDates = [];
+  num completedMonth = 0;
 
   List<bool> dietConfirm = [false, false, false, false];
   List<bool> diet = [false, false, false, false];
@@ -987,25 +989,26 @@ class _MyHomePageState extends State<MyHomePage> {
                                     // },
                                     child: Column(
                                     children: [
-                                      Spacer(
-                                        flex: 2,
-                                      ),
+                                      // Spacer(
+                                      //   flex: 1,
+                                      // ),
                                       //달력
                                       calenderMonthChange(),
                                       Expanded(
                                         flex: calenderWidthFlex,
                                         child: Container(
                                             decoration: BoxDecoration(
-                                                // color: Color(0x774E0D0D),
-                                                border: Border.all(
-                                                    // color: Color(0xFF4E0D0D),
-                                                    width: 5)),
+                                              // color: Color(0x774E0D0D),
+                                              border: Border.all(
+                                                  // color: Color(0xFF4E0D0D),
+                                                  width: 5),
+                                            ),
                                             child: isSelected[0]
                                                 ? returnCalender()
                                                 : returnGraph()),
                                       ),
                                       Spacer(
-                                        flex: 2,
+                                        flex: 1,
                                       ),
                                       Expanded(
                                         flex: 15,
@@ -1075,9 +1078,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ],
                                   ));
                           }))),
-              Spacer(
-                flex: 1,
-              )
+              // Spacer(
+              //   flex: 1,
+              // )
             ],
           ),
         ));
@@ -1161,27 +1164,21 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget returnCalender() {
-    return Stack(children: [
-      Column(
-        children: [
-          SizedBox(
-            height: 40,
-          ),
-          calenderDayRow(), //요일
-          calenderRow(1, tag: "first"),
-          calenderRow(1 + daysFirstWeek), //첫주 다 채우고 새로운 주의 첫 일 ( ex) 1월 3일)
-          calenderRow(8 + daysFirstWeek),
-          calenderRow(15 + daysFirstWeek),
-          calenderRow(22 + daysFirstWeek),
-          calenderRow(29 + daysFirstWeek, tag: "end"),
-        ],
-      ),
-      Positioned(
-        child: calenderSwitch(),
-        top: 10,
-        right: 10,
-      )
-    ]);
+    return Column(
+      children: [
+        //이걸로 달력 윗부분 조절
+        SizedBox(
+          height: 10,
+        ),
+        calenderDayRow(), //요일
+        calenderRow(1, tag: "first"),
+        calenderRow(1 + daysFirstWeek), //첫주 다 채우고 새로운 주의 첫 일 ( ex) 1월 3일)
+        calenderRow(8 + daysFirstWeek),
+        calenderRow(15 + daysFirstWeek),
+        calenderRow(22 + daysFirstWeek),
+        calenderRow(29 + daysFirstWeek, tag: "end"),
+      ],
+    );
   }
 
   Widget returnGraph() {
@@ -1193,22 +1190,20 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Column(
                 children: [
-                  Spacer(
-                    flex: 1,
+                  // Spacer(
+                  //   flex: 1,
+                  // ),
+                  SizedBox(
+                    height: 20,
                   ),
                   LineChartSample2(
                     index: index,
                   ),
-                  Spacer(
-                    flex: 2,
-                  ),
+                  // Spacer(
+                  //   flex: 2,
+                  // ),
                 ],
               ),
-              Positioned(
-                child: calenderSwitch(),
-                top: 10,
-                right: 10,
-              )
             ],
           );
         },
@@ -1250,7 +1245,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget calenderMonthChange() {
     //월 이동 함수
-    return Expanded(flex: 2, child: calender());
+    return Expanded(flex: 3, child: calender());
   }
 
   void getCompleteDate() async {
@@ -1274,6 +1269,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget calender() {
     return isItCalender
         ? Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Spacer(
                 flex: 1,
@@ -1282,12 +1278,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 flex: calenderWidthFlex,
                 child: Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+
                   children: [
-                    Expanded(
-                      flex: 1,
-                      child: IconButton(
-                        icon: Icon(Icons.arrow_back_ios),
-                        onPressed: () {
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: InkWell(
+                        child: Ink(
+                            child:
+                                Icon(Icons.arrow_back_ios_outlined, size: 25)),
+                        onTap: () {
                           if (calender_month == 1) {
                             calender_year -= 1;
                             calender_month = 12;
@@ -1299,11 +1300,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: IconButton(
-                        icon: Icon(Icons.arrow_forward_ios),
-                        onPressed: () {
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: InkWell(
+                        child: Ink(
+                            child: Icon(
+                          Icons.arrow_forward_ios_outlined,
+                          size: 25,
+                        )),
+                        onTap: () {
                           if (calender_month == 12) {
                             calender_year += 1;
                             calender_month = 1;
@@ -1315,19 +1320,22 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                       ),
                     ),
-                    Spacer(
-                      flex: 1,
-                    ),
-                    Expanded(
-                      flex: 8,
-                      child: Text(
+                    // Spacer(
+                    //   flex: 1,
+                    // ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: AutoSizeText(
                         "$calender_year년 $calender_month월",
                         style: TextStyle(fontSize: 25),
+                        maxLines: 1,
                       ),
                     ),
-                    Spacer(
-                      flex: 5,
-                    ),
+                    Spacer(),
+                    calenderSwitch(),
+                    // Spacer(
+                    //   flex: 5,
+                    // ),
                   ],
                 ),
               ),
@@ -1345,10 +1353,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 flex: calenderWidthFlex,
                 child: Row(
                   children: [
-                    // Spacer(
-                    //   flex: 10,
-                    // ),
-                    // calenderSwitch(),
+                    Spacer(flex: 10),
+                    calenderSwitch(),
                   ],
                 ),
               ),
@@ -1374,10 +1380,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget calenderSwitch() {
-    return FittedBox(
-        // height: 30,
-        // width: 100,
-        child: Container(
+    return Container(
       // decoration: BoxDecoration(color: Colors.yellow),
       child: ToggleButtons(
         // hoverColor: Colors.white,
@@ -1415,7 +1418,7 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         isSelected: isSelected,
       ),
-    ));
+    );
   }
 
   Widget calenderDayRow() {
@@ -1586,37 +1589,50 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Container(
                 alignment: isitDay ? null : Alignment(-1.0, -1.0),
-                margin: EdgeInsets.only(top: 5.0),
+                // margin: EdgeInsets.only(top: 5.0),
                 child: isitDay
                     ? title
                     : Column(
+                        mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                             title,
-                            Spacer(flex: 5),
-                            AutoSizeText(
-                              '${kcalArchieve.toStringAsFixed(2)}%    ', //칼로리 성취율
-                              style: TextStyle(
-                                  // fontSize: 7,
-                                  ),
-                              maxFontSize: 100,
-                              maxLines: 1,
+                            // Spacer(flex: 5),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              padding:
+                                  const EdgeInsets.only(top: 4.0, right: 5),
+                              child: AutoSizeText(
+                                kcalArchieve != 0
+                                    ? '${kcalArchieve.toStringAsFixed(1)}%'
+                                    : '', //칼로리 성취율
+                                style: TextStyle(
+                                  fontSize: 7,
+                                ),
+                                maxLines: 1,
+                              ),
                             ), //성취도
-                            AutoSizeText(
-                              '${nutriArchieve.toStringAsFixed(2)}%', //비율 성취율
-                              style: TextStyle(
-                                  // fontSize: ,
-                                  ),
-                              maxLines: 1,
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              padding: const EdgeInsets.only(right: 5),
+                              child: AutoSizeText(
+                                nutriArchieve != 0
+                                    ? '${nutriArchieve.toStringAsFixed(1)}%'
+                                    : '', //비율 성취율
+                                style: TextStyle(
+                                  fontSize: 7,
+                                ),
+                                maxLines: 1,
+                              ),
                             ),
-                            Spacer(flex: 1),
+                            // Spacer(flex: 1),
                           ]),
               ),
               completedDates.contains(date)
                   ? Positioned(
                       top: 0,
-                      right: 25,
+                      right: 3,
                       child: DotsIndicator(
                         dotsCount: 1,
                         decorator: DotsDecorator(
@@ -1740,16 +1756,17 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Widget dietDate(String date) {
-    return Container(
-        height: 50,
-        child: Center(
-          child: Text(
-            "$date일",
-            style: TextStyle(fontSize: 30),
-          ),
-        ));
-  }
+  // Widget dietDate(String date) {
+  //   return Container(
+  //       height: 50,
+  //       child: Center(
+  //         child: AutoSizeText(
+  //           "$date일",
+  //           style: TextStyle(fontSize: 30),
+  //           maxLines: 1,
+  //         ),
+  //       ));
+  // }
 
   // void makeItemListPast(int index) async {
   //   //날짜 정보
