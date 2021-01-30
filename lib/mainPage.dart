@@ -1204,47 +1204,48 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget calenderSwitch() {
-    return SizedBox(
-        height: 30,
-        width: 100,
+    return FittedBox(
+        // height: 30,
+        // width: 100,
         child: Container(
-          // decoration: BoxDecoration(color: Colors.yellow),
-          child: ToggleButtons(
-            // hoverColor: Colors.white,
-            // highlightColor: Colors.black,
-            // disabledColor: Colors.white,
-            // selectedColor: Colors.black,
-            fillColor: Colors.white70,
-            children: <Widget>[
-              Icon(
-                Icons.ac_unit,
-                color: Colors.white,
-                size: 20,
-              ),
-              Icon(
-                Icons.call,
-                size: 20,
-                color: Colors.white,
-              ),
-            ],
-            onPressed: (int index) {
-              setState(() {
-                for (int buttonIndex = 0;
-                    buttonIndex < isSelected.length;
-                    buttonIndex++) {
-                  if (buttonIndex == index) {
-                    isItCalender = false;
-                    isSelected[buttonIndex] = true;
-                  } else {
-                    isItCalender = true;
-                    isSelected[buttonIndex] = false;
-                  }
-                }
-              });
-            },
-            isSelected: isSelected,
+      // decoration: BoxDecoration(color: Colors.yellow),
+      child: ToggleButtons(
+        // hoverColor: Colors.white,
+        // highlightColor: Colors.black,
+        // disabledColor: Colors.white,
+        // selectedColor: Colors.black,
+
+        fillColor: Colors.white70,
+        children: <Widget>[
+          Icon(
+            Icons.ac_unit,
+            color: Colors.white,
+            size: 20,
           ),
-        ));
+          Icon(
+            Icons.call,
+            size: 20,
+            color: Colors.white,
+          ),
+        ],
+        onPressed: (int index) {
+          setState(() {
+            for (int buttonIndex = 0;
+                buttonIndex < isSelected.length;
+                buttonIndex++) {
+              if (buttonIndex == index) {
+                isItCalender = false;
+                isSelected[buttonIndex] = true;
+              } else {
+                isItCalender = true;
+                isSelected[buttonIndex] = false;
+              }
+            }
+          });
+        },
+        isSelected: isSelected,
+      ),
+    ));
   }
 
   Widget calenderDayRow() {
