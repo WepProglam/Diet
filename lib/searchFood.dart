@@ -99,7 +99,7 @@ class _SearchListState extends State<SearchList> {
   int flexVal = 0;
   List<String> selectedFoods = null;
   Widget listView = null;
-  var createListViewIcon = Icons.arrow_circle_down;
+  var createListViewIcon = Icons.cancel;
 
   // _SearchListState() {
   //   _searchQuery.addListener(() async {
@@ -133,7 +133,7 @@ class _SearchListState extends State<SearchList> {
     if (scrollController.offset >=
             scrollController.position.maxScrollExtent * 0.6 &&
         !scrollController.position.outOfRange) {
-      print("end");
+      // print("end");
       offset += 50;
       await getInfo();
     }
@@ -178,16 +178,25 @@ class _SearchListState extends State<SearchList> {
   @override
   void didChangeDependencies() {
     SelectedFoods foodProvider = Provider.of<SelectedFoods>(context);
+
     if (foodProvider.getFoods().isNotEmpty) {
       setState(() {
+        if (listView != null) {
+          listView = ListView.separated(
+              itemBuilder: (context, int index) {
+                return Center(child: Text(selectedFoods[index]));
+              },
+              separatorBuilder: (context, int index) => const Divider(),
+              itemCount: selectedFoods.length);
+        }
+
         selectedFoods = foodProvider.getFoods();
-        listView = ListView.separated(
-            itemBuilder: (context, int index) {
-              return Center(child: Text(selectedFoods[index]));
-            },
-            separatorBuilder: (context, int index) => const Divider(),
-            itemCount: selectedFoods.length);
       });
+      if (createListViewIcon == Icons.cancel) {
+        setState(() {
+          createListViewIcon = Icons.arrow_circle_down;
+        });
+      }
     } else {
       selectedFoods = null;
       listView = null;
@@ -294,22 +303,29 @@ class _SearchListState extends State<SearchList> {
                                     separatorBuilder: (context, int index) =>
                                         const Divider(),
                                     itemCount: selectedFoods.length);
-
                                 flexVal = 1;
-                                createListViewIcon = Icons.arrow_circle_up;
                               });
+
+                              createListViewIcon = Icons.arrow_circle_up;
                             } else {
                               setState(() {
-                                flexVal = 1;
-                                createListViewIcon = Icons.arrow_circle_up;
+                                createListViewIcon = Icons.cancel;
                               });
                             }
+                            // else {
+                            //   setState(() {
+                            //     flexVal = 1;
+                            //   });
+
+                            //   createListViewIcon = Icons.arrow_circle_up;
+                            // }
                           } else {
                             setState(() {
                               listView = null;
                               flexVal = 0;
-                              createListViewIcon = Icons.arrow_circle_down;
                             });
+
+                            createListViewIcon = Icons.arrow_circle_down;
                           }
                         },
                         child: Ink(
@@ -391,7 +407,7 @@ class _SearchListState extends State<SearchList> {
                 _searchQuery.text = "";
 
                 if (!_IsSearching) {
-                  print("scroll");
+                  // print("scroll");
                   init();
 
                   scrollController.jumpTo(
@@ -433,9 +449,9 @@ class _SearchListState extends State<SearchList> {
                             foodList.add(item);
                           }
                         }, onError: (e) {
-                          print(e);
+                          // print(e);
                         });
-                        print(foodList);
+                        // print(foodList);
 
                         setState(() {
                           for (var item in foodList) {
@@ -474,9 +490,9 @@ class _SearchListState extends State<SearchList> {
                             foodList.add(item);
                           }
                         }, onError: (e) {
-                          print(e);
+                          // print(e);
                         });
-                        print(foodList);
+                        // print(foodList);
 
                         setState(() {
                           for (var item in foodList) {
@@ -587,19 +603,14 @@ class _UiitemState extends State<Uiitem> {
                       streamControllerString.add(building.code);
                       if (!isItSelected) {
                         foodProvider.addSelectedFood(building.foodName);
-                        setState(() async {
-                          isItSelected = !isItSelected;
-                          materialColor = Colors.deepOrangeAccent[700];
-                          inkWellSplashColor = Colors.white;
-                        });
+                        isItSelected = !isItSelected;
+                        materialColor = Colors.deepOrangeAccent[700];
+                        inkWellSplashColor = Colors.white;
                       } else {
                         foodProvider.removeFood(building.foodName);
-                        setState(() async {
-                          isItSelected = !isItSelected;
-
-                          materialColor = Colors.black;
-                          inkWellSplashColor = Colors.deepOrange[400];
-                        });
+                        isItSelected = !isItSelected;
+                        materialColor = Colors.black;
+                        inkWellSplashColor = Colors.deepOrange[400];
                       }
                       // Future.delayed(Duration(seconds: 1));
 
@@ -607,7 +618,7 @@ class _UiitemState extends State<Uiitem> {
                     // 그 외 일반적인 경우
                     else if (args['pre'] == 'addFood') {
                       Navigator.pop(context, building.code);
-                      print(building.code);
+                      // print(building.code);
                     } else {
                       Navigator.pop(context);
                       Navigator.pushNamed(context, '/addFood',
@@ -615,7 +626,7 @@ class _UiitemState extends State<Uiitem> {
                             "myTempoFood": building.toMap()
                           });
 
-                      print(building.code);
+                      // print(building.code);
                     }
                   } else {
                     Navigator.pop(context);
@@ -624,7 +635,7 @@ class _UiitemState extends State<Uiitem> {
                           "myTempoFood": building.toMap()
                         });
 
-                    print(building.code);
+                    // print(building.code);
                   }
                 },
                 child: Ink(
