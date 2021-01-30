@@ -413,7 +413,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     //item[1] : 음식 이름
                     //item[2] : 음식 무게
                     Text("${item[1]}  ${item[2]}g"),
-                  Text("영양성분 비율 : ${todayDietList[index]['nutri']}"),
+                  Text(
+                      "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
                   Text("총 칼로리 : ${todayDietList[index]['kcal']}"),
                 ]),
               ),
@@ -463,6 +464,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                     percent;
 
                                 print(todayDietList[index]['foodInfo']['kcal']);
+
+                                todayDietList[index]["kcal"] =
+                                    todayDietList[index]['foodInfo']['kcal'];
+
+                                todayDietList[index]["nutri"] =
+                                    todayDietList[index]['foodInfo']['nutri'];
                                 // print(val);
 
                                 // print((todayDietList[index]['foodInfo']
@@ -538,6 +545,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                 todayDietList[index]['foodInfo']['kcal'] *=
                                     percent;
+
+                                todayDietList[index]["kcal"] =
+                                    todayDietList[index]['foodInfo']['kcal'];
+
+                                todayDietList[index]["nutri"] =
+                                    todayDietList[index]['foodInfo']['nutri'];
                                 // print(val);
 
                                 // print((todayDietList[index]['foodInfo']
@@ -640,7 +653,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   : FontWeight.bold,
                             ),
                             child: Text(
-                                "영양성분 비율 : ${todayDietList[index]['nutri']}"),
+                                "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
                           ),
                           AnimatedDefaultTextStyle(
                             duration: const Duration(milliseconds: 300),
@@ -694,6 +707,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                       dateTime: dateData,
                                       isItConfirm: "true")
                                   .then((diet) {});
+                              await getInfo();
+                              await getToday();
+                              print("wait finish");
                               setState(() {
                                 //확정
 
@@ -1241,6 +1257,7 @@ class _MyHomePageState extends State<MyHomePage> {
     await dbHelperDietHistory
         .getCompleteDietHistory(month: calender_month, year: calender_year)
         .then((val) {
+      print(val);
       indicateCompleteDate(val);
     });
   }
