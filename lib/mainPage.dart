@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -19,7 +19,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 final dbHelperDietHistory = DBHelperDietHistory();
 final dbHelperDiet = DBHelperDiet();
 final dbHelperPerson = DBHelperPerson();
-final int calenderWidthFlex = 22;
+int calenderWidthFlex = 35;
 Color listViewColor = Colors.deepOrangeAccent[700];
 Color iconColor = Colors.deepOrangeAccent[400];
 // final dbHelper
@@ -76,6 +76,10 @@ class _MyHomePageState extends State<MyHomePage> {
   List<bool> dietConfirm = [false, false, false, false];
   List<bool> diet = [false, false, false, false];
   List<bool> dietConfirmConfirm = [false, false, false, false];
+  List<DietHistory> monthlyDietHistory = [];
+  List<List<num>> monthlyAchieveKcal = [];
+  List<List<num>> monthlyAchieveNutri = [];
+
   void initDateInfo() {
     dietAdded = [
       [false, false, false, false],
@@ -115,6 +119,9 @@ class _MyHomePageState extends State<MyHomePage> {
           todayDietList[0] = {};
           todayDietList[0]['foodInfo'] = jsonDecode(myDiet.foodInfo);
           todayDietList[0]['dietName'] = myDiet.dietName;
+
+          todayDietList[0]["kcal"] = num.parse(tempDiet["kcal"]);
+
           for (var i = 0;
               i < todayDietList[0]['foodInfo']['foods'].length;
               i++) {
@@ -133,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
           todayDietList[1] = {};
           todayDietList[1]["foodInfo"] = jsonDecode(myDiet.foodInfo);
           todayDietList[1]['dietName'] = myDiet.dietName;
-
+          todayDietList[1]["kcal"] = num.parse(tempDiet["kcal"]);
           for (var i = 0;
               i < todayDietList[1]['foodInfo']['foods'].length;
               i++) {
@@ -160,6 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
           myDiet = val;
           todayDietList[2]['foodInfo'] = jsonDecode(myDiet.foodInfo);
           todayDietList[2]['dietName'] = myDiet.dietName;
+          todayDietList[2]["kcal"] = num.parse(tempDiet["kcal"]);
 
           for (var i = 0;
               i < todayDietList[2]['foodInfo']['foods'].length;
@@ -187,6 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
           myDiet = val;
           todayDietList[3]['foodInfo'] = jsonDecode(myDiet.foodInfo);
           todayDietList[3]['dietName'] = myDiet.dietName;
+          todayDietList[3]["kcal"] = num.parse(tempDiet["kcal"]);
 
           for (var i = 0;
               i < todayDietList[3]['foodInfo']['foods'].length;
@@ -209,7 +218,6 @@ class _MyHomePageState extends State<MyHomePage> {
       // print(e);
     }
     // print("/");
-    // print(todayDietList);
     // print("/");
 
     setState(() {});
@@ -222,6 +230,11 @@ class _MyHomePageState extends State<MyHomePage> {
     await dbHelperDietHistory.getDietHistory(dateData).then((val) {
       dietHistory = val;
     });
+    await dbHelperDietHistory
+        .getMonthlyDietHistory(month: calender_month)
+        .then((val) {
+      monthlyDietHistory = val;
+    });
 
     await checkConfirmDB();
 
@@ -229,6 +242,8 @@ class _MyHomePageState extends State<MyHomePage> {
       person = val;
     });
     await getConfirmedIndex(dietHistory);
+
+    await calculatekcalAchieve();
     // setState(() {});
   }
 
@@ -252,7 +267,124 @@ class _MyHomePageState extends State<MyHomePage> {
     initDateInfo();
     getToday();
     getInfo();
+    getCompleteDate();
     super.didChangeDependencies();
+  }
+
+  void calculatekcalAchieve() {
+    monthlyAchieveKcal = [];
+    monthlyAchieveNutri = [];
+    for (var item in monthlyDietHistory) {
+      num totalCal = 0;
+      num car = 0;
+      num pro = 0;
+      num fat = 0;
+      if (item != null) {
+        for (var i = 0; i < 4; i++) {
+          switch (i) {
+            case 0:
+              Map breakfast = jsonDecode(item.breakFast);
+              if (breakfast != "null" && breakfast != null) {
+                if (breakfast['isItConfirm'] == "true") {
+                  totalCal += num.parse(breakfast['kcal']);
+                  num carRatio =
+                      num.parse(breakfast["nutri"].split(":")[0]) / 100;
+                  num proRatio =
+                      num.parse(breakfast["nutri"].split(":")[1]) / 100;
+                  num fatRatio =
+                      num.parse(breakfast["nutri"].split(":")[2]) / 100;
+
+                  car += carRatio * num.parse(breakfast['kcal']);
+                  pro += proRatio * num.parse(breakfast['kcal']);
+                  fat += fatRatio * num.parse(breakfast['kcal']);
+                }
+              }
+              // print(dietConfirmConfirm);
+
+              break;
+            case 1:
+              Map lunch = jsonDecode(item.lunch);
+              if (lunch != "null" && lunch != null) {
+                if (lunch['isItConfirm'] == "true") {
+                  totalCal += num.parse(lunch['kcal']);
+
+                  num carRatio = num.parse(lunch["nutri"].split(":")[0]) / 100;
+                  num proRatio = num.parse(lunch["nutri"].split(":")[1]) / 100;
+                  num fatRatio = num.parse(lunch["nutri"].split(":")[2]) / 100;
+
+                  car += carRatio * num.parse(lunch['kcal']);
+                  pro += proRatio * num.parse(lunch['kcal']);
+                  fat += fatRatio * num.parse(lunch['kcal']);
+                }
+              }
+
+              break;
+            case 2:
+              Map dinner = jsonDecode(item.dinner);
+              if (dinner != "null" && dinner != null) {
+                if (dinner['isItConfirm'] == "true") {
+                  totalCal += num.parse(dinner['kcal']);
+
+                  num carRatio = num.parse(dinner["nutri"].split(":")[0]) / 100;
+                  num proRatio = num.parse(dinner["nutri"].split(":")[1]) / 100;
+                  num fatRatio = num.parse(dinner["nutri"].split(":")[2]) / 100;
+
+                  car += carRatio * num.parse(dinner['kcal']);
+                  pro += proRatio * num.parse(dinner['kcal']);
+                  fat += fatRatio * num.parse(dinner['kcal']);
+                }
+              }
+
+              break;
+            case 3:
+              Map snack = jsonDecode(item.snack);
+              if (snack != "null" && snack != null) {
+                if (snack['isItConfirm'] == "true") {
+                  totalCal += num.parse(snack['kcal']);
+
+                  num carRatio = num.parse(snack["nutri"].split(":")[0]) / 100;
+                  num proRatio = num.parse(snack["nutri"].split(":")[1]) / 100;
+                  num fatRatio = num.parse(snack["nutri"].split(":")[2]) / 100;
+
+                  car += carRatio * num.parse(snack['kcal']);
+                  pro += proRatio * num.parse(snack['kcal']);
+                  fat += fatRatio * num.parse(snack['kcal']);
+                }
+              }
+
+              break;
+
+            default:
+          }
+        }
+        List<num> nutriRatio;
+        switch (person.purpose) {
+          case 0: //다이어트
+            nutriRatio = [5, 3, 2];
+            break;
+          case 1: //벌크업
+            nutriRatio = [4, 4, 2];
+
+            break;
+          case 2: //릴매스업
+            nutriRatio = [3, 4, 3];
+            break;
+          default:
+        }
+        // print([item.date, nutriRatio, car, pro, fat]);
+        num correctNutri = correctness(nutriRatio, [car, pro, fat]);
+        num correct =
+            (1 - ((person.metabolism - totalCal) / person.metabolism).abs()) *
+                100;
+        monthlyAchieveKcal.add([num.parse(item.date.split('-')[2]), correct]);
+        monthlyAchieveNutri
+            .add([num.parse(item.date.split('-')[2]), correctNutri]);
+      } else {
+        monthlyAchieveKcal.add([num.parse(item.date.split('-')[2]), 0]);
+        monthlyAchieveNutri.add([num.parse(item.date.split('-')[2]), 0]);
+      }
+    }
+    // print(monthlyAchieveKcal);
   }
 
   num _myOpacity = 0.0;
@@ -265,6 +397,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // await getConfirmedIndex();
     // print(dietConfirm);
     // print(dietAdded);
+
     if (dietConfirm[index]) {
       itemList = [
         FractionallySizedBox(
@@ -282,7 +415,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Text("${item[1]}  ${item[2]}g"),
                   Text(
                       "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
-                  Text("총 칼로리 : ${todayDietList[index]['foodInfo']['kcal']}"),
+                  Text("총 칼로리 : ${todayDietList[index]['kcal']}"),
                 ]),
               ),
             ))
@@ -325,8 +458,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                 double percent = todayDietList[index]["rate"] /
                                     100; //80 => 0.8
 
+                                print(percent);
+
                                 todayDietList[index]['foodInfo']['kcal'] *=
                                     percent;
+
+                                print(todayDietList[index]['foodInfo']['kcal']);
+
+                                todayDietList[index]["kcal"] =
+                                    todayDietList[index]['foodInfo']['kcal'];
+
+                                todayDietList[index]["nutri"] =
+                                    todayDietList[index]['foodInfo']['nutri'];
                                 // print(val);
 
                                 // print((todayDietList[index]['foodInfo']
@@ -402,6 +545,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                 todayDietList[index]['foodInfo']['kcal'] *=
                                     percent;
+
+                                todayDietList[index]["kcal"] =
+                                    todayDietList[index]['foodInfo']['kcal'];
+
+                                todayDietList[index]["nutri"] =
+                                    todayDietList[index]['foodInfo']['nutri'];
                                 // print(val);
 
                                 // print((todayDietList[index]['foodInfo']
@@ -517,8 +666,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ? FontWeight.w100
                                   : FontWeight.bold,
                             ),
-                            child: Text(
-                                "총 칼로리 : ${todayDietList[index]['foodInfo']['kcal']}"),
+                            child:
+                                Text("총 칼로리 : ${todayDietList[index]['kcal']}"),
                           ),
                         ]),
                       ),
@@ -545,6 +694,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: RaisedButton(
                             child: Text("먹었"),
                             onPressed: () async {
+                              print(todayDietList[index]['foodInfo']);
                               await formatDietHistory(
                                       dietName: todayDietList[index]
                                           ['dietName'],
@@ -557,6 +707,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                       dateTime: dateData,
                                       isItConfirm: "true")
                                   .then((diet) {});
+                              getInfo();
+                              getToday();
+                              getCompleteDate();
+                              print("wait finish");
                               setState(() {
                                 //확정
 
@@ -615,7 +769,7 @@ class _MyHomePageState extends State<MyHomePage> {
     changeIntToString();
     getInfo();
     getToday();
-
+    getCompleteDate();
     super.initState();
   }
 
@@ -1104,16 +1258,17 @@ class _MyHomePageState extends State<MyHomePage> {
     await dbHelperDietHistory
         .getCompleteDietHistory(month: calender_month, year: calender_year)
         .then((val) {
+      print(val);
       indicateCompleteDate(val);
     });
   }
 
   List<num> indicateCompleteDate(List<dynamic> dates) {
-    print(dates);
+    // print(dates);
     for (var item in dates) {
       completedDates.add(num.parse(item.split('-').last));
     }
-    print(completedDates);
+    // print(completedDates);
   }
 
   Widget calender() {
@@ -1411,34 +1566,68 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget calenderBlock(AutoSizeText title, bool isitDay, int date) {
     bool dateSelected = false;
+    num kcalArchieve = 0;
+    num nutriArchieve = 0;
+    for (var item in monthlyAchieveKcal) {
+      if (date == item[0]) {
+        kcalArchieve = item[1];
+      }
+    }
+    for (var item in monthlyAchieveNutri) {
+      if (date == item[0]) {
+        nutriArchieve = item[1];
+      }
+    }
     return Expanded(
         flex: 3,
         child: GestureDetector(
-          // shape: isitDay
-          //     ? null
-          //     : Border(top: BorderSide(color: Colors.blueAccent, width: 1)),
-          child: Container(
-            alignment: isitDay ? null : Alignment(-1.0, -1.0),
-            margin: EdgeInsets.only(top: 5.0),
-            decoration: BoxDecoration(
-                color: completedDates.contains(date) ? Colors.red : null),
-            child: isitDay
-                ? title
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                        title,
-                        Spacer(flex: 2),
-                        Text(
-                          '100%',
-                          style: TextStyle(
-                            fontSize: 7,
-                          ),
-                          maxLines: 1,
-                        ), //성취도
-                        Spacer(flex: 1),
-                      ]),
+          //다 적은날은 띄우기 완료
+          child: Stack(
+            children: [
+              Container(
+                alignment: isitDay ? null : Alignment(-1.0, -1.0),
+                margin: EdgeInsets.only(top: 5.0),
+                child: isitDay
+                    ? title
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                            title,
+                            Spacer(flex: 5),
+                            AutoSizeText(
+                              '${kcalArchieve.toStringAsFixed(2)}%    ', //칼로리 성취율
+                              style: TextStyle(
+                                  // fontSize: 7,
+                                  ),
+                              maxFontSize: 100,
+                              maxLines: 1,
+                            ), //성취도
+                            AutoSizeText(
+                              '${nutriArchieve.toStringAsFixed(2)}%', //비율 성취율
+                              style: TextStyle(
+                                  // fontSize: ,
+                                  ),
+                              maxLines: 1,
+                            ),
+                            Spacer(flex: 1),
+                          ]),
+              ),
+              completedDates.contains(date)
+                  ? Positioned(
+                      top: 0,
+                      right: 25,
+                      child: DotsIndicator(
+                        dotsCount: 1,
+                        decorator: DotsDecorator(
+                          size: Size.fromRadius(0),
+                          // color: Colors.black87, // Inactive color
+                          activeColor: Colors.green,
+                        ),
+                        // position: currentIndexPage
+                      ))
+                  : Container()
+            ],
           ),
           onTap: () async {
             if (!isitDay) {

@@ -881,14 +881,18 @@ class _FoodListState extends State<FoodList> {
       backgroundColor: Colors.black,
       title: Text("저장하기"),
       content: new SizedBox(
-        height: MediaQuery.of(context).size.height / 10,
+        height: MediaQuery.of(context).size.height / 5,
         child: Column(
           children: [
-            Text("오늘 전체 식사량 중 몇프로로 섭취할지 골라주세요",
+            Text("하루 전체 식사량 중 몇프로를 섭취할지 골라주세요.\n",
                 style: TextStyle(color: Colors.white), maxLines: 1),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 60,
+            Text(
+              "\n권장되는 비율은 아침 점심 저녁 간식 순 3:4:2:1입니다.\n",
+              style: TextStyle(fontSize: 10),
+              // maxLines: 2,
             ),
+            Text(
+                "\n현재까지 ${(100 - rangeSliderMaxValue).toStringAsFixed(1)}% 선택하셨습니다."),
             RangeSlider()
           ],
         ),
