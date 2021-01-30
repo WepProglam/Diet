@@ -7,6 +7,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_application_1/addDiet.dart';
 import 'package:flutter_application_1/dietModelSaver.dart';
+import 'package:flutter_application_1/indicator.dart';
 import 'package:flutter_application_1/model.dart';
 import 'package:flutter_application_1/piChart.dart';
 import 'package:intl/intl.dart' show DateFormat;
@@ -1381,44 +1382,54 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  var calenderIconColor = Colors.deepOrangeAccent[700];
+  var graphIconColor = Colors.white;
+
   Widget calenderSwitch() {
     return Container(
       // decoration: BoxDecoration(color: Colors.yellow),
-      child: ToggleButtons(
-        // hoverColor: Colors.white,
-        // highlightColor: Colors.black,
-        // disabledColor: Colors.white,
-        // selectedColor: Colors.black,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 3.0, right: 3),
+        child: ToggleButtons(
+          // hoverColor: Colors.white,
+          // highlightColor: Colors.black,
+          // disabledColor: Colors.white,
+          // selectedColor: Colors.black,
+          // fillColor: Colors.white70,
 
-        fillColor: Colors.white70,
-        children: <Widget>[
-          Icon(
-            Icons.ac_unit,
-            color: Colors.white,
-            size: 20,
-          ),
-          Icon(
-            Icons.call,
-            size: 20,
-            color: Colors.white,
-          ),
-        ],
-        onPressed: (int index) {
-          setState(() {
-            for (int buttonIndex = 0;
-                buttonIndex < isSelected.length;
-                buttonIndex++) {
-              if (buttonIndex == index) {
-                isItCalender = false;
-                isSelected[buttonIndex] = true;
-              } else {
-                isItCalender = true;
-                isSelected[buttonIndex] = false;
+          children: <Widget>[
+            Icon(
+              Icons.date_range,
+              color: calenderIconColor,
+              size: 25,
+            ),
+            Icon(
+              Icons.stacked_line_chart,
+              size: 25,
+              color: graphIconColor,
+            ),
+          ],
+          onPressed: (int index) {
+            setState(() {
+              for (int buttonIndex = 0;
+                  buttonIndex < isSelected.length;
+                  buttonIndex++) {
+                if (buttonIndex == index) {
+                  isItCalender = false;
+                  isSelected[buttonIndex] = true;
+                  calenderIconColor = Colors.white;
+                  graphIconColor = Colors.deepOrangeAccent[700];
+                } else {
+                  isItCalender = true;
+                  isSelected[buttonIndex] = false;
+                  calenderIconColor = Colors.deepOrangeAccent[700];
+                  graphIconColor = Colors.white;
+                }
               }
-            }
-          });
-        },
-        isSelected: isSelected,
+            });
+          },
+          isSelected: isSelected,
+        ),
       ),
     );
   }
@@ -1494,6 +1505,26 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Widget colorIndicator() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Indicator(
+          color: Colors.deepOrangeAccent[400],
+          isSquare: true,
+          size: 10,
+          text: '열량 성취도',
+        ),
+        Indicator(
+          color: Colors.deepOrangeAccent,
+          isSquare: true,
+          size: 10,
+          text: '영양성분 성취도',
+        ),
+      ],
+    );
+  }
+
   Widget calenderRow(int date, {String tag = null}) {
     /*한 줄 단위로 표시 (주 X) 
     ex) 금 토
@@ -1508,8 +1539,11 @@ class _MyHomePageState extends State<MyHomePage> {
     int weekTotalDays = 7;
 
     if (date > totalDays) {
-      return Spacer(
-        flex: 2,
+      children = Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [colorIndicator()],
       );
     } else if (date + 7 > totalDays) {
       children = returnWeek(date, tag: "end");
@@ -1537,6 +1571,19 @@ class _MyHomePageState extends State<MyHomePage> {
         if (i >= weekTotalDays - datesFirst) {
           children.add(calenderBlock(dateText(dt.toString()), false, dt));
           dt += 1;
+        } else {
+          children.add(Spacer(
+            flex: 3,
+          ));
+        }
+      }
+    } else if (tag == "end" && date > 29) {
+      for (var i = 0; i < weekTotalDays; i++) {
+        if (i < weekTotalDays - datesEnd) {
+          children.add(calenderBlock(dateText(dt.toString()), false, dt));
+          dt += 1;
+        } else if (i == 6) {
+          children.add(colorIndicator());
         } else {
           children.add(Spacer(
             flex: 3,
@@ -1610,6 +1657,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ? '${kcalArchieve.toStringAsFixed(1)}%'
                                     : '', //칼로리 성취율
                                 style: TextStyle(
+                                  color: Colors.deepOrangeAccent[400],
                                   fontSize: 7,
                                 ),
                                 maxLines: 1,
@@ -1623,6 +1671,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ? '${nutriArchieve.toStringAsFixed(1)}%'
                                     : '', //비율 성취율
                                 style: TextStyle(
+                                  color: Colors.deepOrangeAccent,
                                   fontSize: 7,
                                 ),
                                 maxLines: 1,

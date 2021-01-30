@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -136,24 +137,30 @@ class _LineChartSample2State extends State<LineChartSample2> {
               )),
         ),
         Positioned(
-            child: ElevatedButton(
-              // color: Colors.deepOrangeAccent[400]
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.redAccent[700], onPrimary: Colors.white),
-              child: Text(
-                "${graphTitle[index]}",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15),
-              ),
-            ),
-            width: size.width / 5,
-            top: 20,
-            left: size.width / (5 / 2)
-            // right: 0,
-            )
+          child: AutoSizeText(
+            "${graphTitle[index]}",
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.w900, fontSize: 20),
+            maxLines: 1,
+          ),
+          // child: ElevatedButton(
+          //   // color: Colors.deepOrangeAccent[400]
+          //   onPressed: () {},
+          //   style: ElevatedButton.styleFrom(
+          //       primary: Colors.redAccent[700], onPrimary: Colors.white),
+          //   child: Text(
+          //     "${graphTitle[index]}",
+          //     style: TextStyle(
+          //         color: Colors.white,
+          //         fontWeight: FontWeight.w700,
+          //         fontSize: 15),
+          //   ),
+          // ),
+          // width: size.width / 5,
+          top: 0,
+          right: 30,
+          // right: 0,
+        )
       ],
     );
   }
