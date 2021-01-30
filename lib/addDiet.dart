@@ -300,7 +300,7 @@ class _FoodListState extends State<FoodList> {
               onPressed: () {
                 setState(() {
                   foodList.removeAt(index);
-                  foodMassController[index].text = "";
+                  foodMassController.removeAt(index);
                   // for (var item in foodMassController) {
                   //   item.text = "";
                   // }
