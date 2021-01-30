@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_application_1/addDiet.dart';
@@ -43,6 +44,10 @@ class _MyHomePageState extends State<MyHomePage> {
   var calender_year = DateTime.now().year; //달력 상 표기 되는 달력
   var calender_month = DateTime.now().month;
   var calender_date = DateTime.now().day;
+
+  num temp_year;
+  num temp_month;
+  num temp_date;
   String calenderYear;
   String calenderMonth;
   String calenderDate;
@@ -306,7 +311,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       "pre": "mainPage",
                                       "index": index,
                                       "dateTime":
-                                          "$calenderYear-$calenderMonth-$calenderDate"
+                                          "$calender_year-$calender_month-$calender_date"
                                     }
                                   }).then((val) async {
                                 todayDietList[index] = val;
@@ -578,6 +583,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    temp_year = calender_year;
+    temp_month = calender_month;
+    temp_date = calender_date;
     changeIntToString();
     getInfo();
 
@@ -607,10 +615,10 @@ class _MyHomePageState extends State<MyHomePage> {
     int curIndex = 0;
     // SwiperController swiperController = new SwiperController();
     List<String> mealList = [
-      "$calender_month월$calender_date일 아침",
-      "$calender_month월$calender_date일 점심",
-      "$calender_month월$calender_date일 저녁",
-      "$calender_month월$calender_date일 간식"
+      "$temp_month월$temp_date일 아침",
+      "$temp_month월$temp_date일 점심",
+      "$temp_month월$temp_date일 저녁",
+      "$temp_month월$temp_date일 간식"
     ];
 
     return Scaffold(
@@ -641,7 +649,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           //   }
                           // },
                           itemBuilder: (BuildContext context, int index) {
-                            return index == 0
+                            return index == 1
                                 ? Column(
                                     children: [
                                       //page 1
@@ -853,7 +861,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         flex: 2,
                                       ),
                                       Expanded(
-                                        flex: 10,
+                                        flex: 15,
                                         child: SizedBox(
                                           width:
                                               MediaQuery.of(context).size.width,
@@ -1196,11 +1204,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget dayText(String day) {
-    return Text(
+    return AutoSizeText(
       day,
       style: TextStyle(fontSize: 15),
+      maxLines: 1,
     );
   }
+
+  num fontSize = 15.0;
 
   Widget dateText(String date) {
     var targetDay =
@@ -1209,31 +1220,31 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (date == DateTime.now().day.toString() &&
         calender_month == DateTime.now().month) {
-      return Text(
+      return AutoSizeText(
         date,
         style: TextStyle(
-          fontSize: 15,
+          fontSize: fontSize,
           color: Colors.green,
           fontWeight: FontWeight.w900,
         ),
         maxLines: 1,
       );
     } else if (day == "Sunday") {
-      return Text(
+      return AutoSizeText(
         date,
-        style: TextStyle(fontSize: 15, color: Colors.red),
+        style: TextStyle(fontSize: fontSize, color: Colors.red),
         maxLines: 1,
       );
     } else if (day == "Saturday") {
-      return Text(
+      return AutoSizeText(
         date,
-        style: TextStyle(fontSize: 15, color: Colors.blue),
+        style: TextStyle(fontSize: fontSize, color: Colors.blue),
         maxLines: 1,
       );
     } else {
-      return Text(
+      return AutoSizeText(
         date,
-        style: TextStyle(fontSize: 15),
+        style: TextStyle(fontSize: fontSize),
         maxLines: 1,
       );
     }
@@ -1314,14 +1325,14 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget calenderBlock(Text title, bool isitDay) {
+  Widget calenderBlock(AutoSizeText title, bool isitDay) {
     bool dateSelected = false;
     return Expanded(
         flex: 3,
-        child: FlatButton(
-          shape: isitDay
-              ? null
-              : Border(top: BorderSide(color: Colors.blueAccent, width: 1)),
+        child: GestureDetector(
+          // shape: isitDay
+          //     ? null
+          //     : Border(top: BorderSide(color: Colors.blueAccent, width: 1)),
           child: Container(
             alignment: isitDay ? null : Alignment(-1.0, -1.0),
             margin: EdgeInsets.only(top: 5.0),
@@ -1344,13 +1355,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         Spacer(flex: 1),
                       ]),
           ),
-          onPressed: () async {
+          onTap: () async {
             if (!isitDay) {
               todayDietList = List<Map>(4);
               initDateInfo();
               String dateTime;
               date = int.parse(title.data);
               calender_date = date;
+              temp_year = calender_year;
+              temp_month = calender_month;
+              temp_date = calender_date;
               if (calender_month.toString().length == 1 &&
                   calender_date.toString().length == 1) {
                 dateTime = "$calender_year-0$calender_month-0$date";
