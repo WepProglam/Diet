@@ -17,6 +17,8 @@ double _currentSliderValue = 0;
 double rangeSliderMaxValue = 100;
 final dbHelperFood = DBHelperFood();
 
+var filterColor = Colors.deepOrangeAccent[700];
+
 class AddDiet extends StatelessWidget {
   const AddDiet({Key key}) : super(key: key);
 
@@ -24,8 +26,8 @@ class AddDiet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Color(0xFFFFFEF5),
-      appBar: basicAppBar('Add Diet', context),
-      drawer: NavDrawer(),
+      appBar:
+          AppBar(centerTitle: true, title: Text("식단 추가"), actions: <Widget>[]),
       body: FoodList(),
     );
   }
@@ -563,7 +565,10 @@ class _FoodListState extends State<FoodList> {
                             height: 40,
                             width: 120,
                             child: FloatingActionButton.extended(
-                              icon: Icon(Icons.add),
+                              icon: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
                               // backgroundColor: Color(0xFF69C2B0),
                               backgroundColor: iconColor,
                               splashColor: Colors.white,
@@ -571,7 +576,13 @@ class _FoodListState extends State<FoodList> {
                                 _navigateAndDisplaySelection(context);
                                 isGraphShowed = false;
                               },
-                              label: Text('음식 추가'),
+                              label: Text(
+                                '음식 추가',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w900),
+                              ),
                             ),
                           ),
                         ),

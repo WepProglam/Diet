@@ -236,14 +236,16 @@ class _MyHomePageState extends State<MyHomePage> {
       monthlyDietHistory = val;
     });
 
-    await checkConfirmDB();
+    try {
+      await checkConfirmDB();
+      await dbHelperPerson.getLastPerson().then((val) {
+        person = val;
+      });
+      await getConfirmedIndex(dietHistory);
 
-    await dbHelperPerson.getLastPerson().then((val) {
-      person = val;
-    });
-    await getConfirmedIndex(dietHistory);
+      await calculatekcalAchieve();
+    } catch (e) {}
 
-    await calculatekcalAchieve();
     // setState(() {});
   }
 
@@ -1134,9 +1136,9 @@ class _MyHomePageState extends State<MyHomePage> {
             nutri[2] / nutriTotal * num.parse(todayDietInfo[item]["kcal"]);
       }
     }
-    List<num> targetNutri = [3, 4, 3]; //디폴트
+    List<num> targetNutri = [3, 4, 3]; //디폴트(다이어트)
     if (person != null) {
-      switch (person.nutriRate) {
+      switch (person.purpose) {
         case 0:
           targetNutri = [3, 4, 3];
           break;

@@ -91,8 +91,8 @@ class _AddFoodSub extends State<AddFoodSub> {
     // getInfo();
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar: basicAppBar('Add Food', context),
-      drawer: NavDrawer(),
+      appBar:
+          AppBar(centerTitle: true, title: Text("음식 추가"), actions: <Widget>[]),
       body: Center(
           child: Form(
         key: _formKey,
@@ -219,15 +219,19 @@ class _AddFoodSub extends State<AddFoodSub> {
   void mySetState(Map info) {
     if (this.mounted) {
       setState(() {
-        _carboController.text =
-            myRounder(foodInfo['servingSize'] * info['carbohydrate']);
-        _fatController.text = myRounder(foodInfo['servingSize'] * info['fat']);
-        _proController.text =
-            myRounder(foodInfo['servingSize'] * info['protein']);
-        _ulController.text = myRounder(foodInfo['servingSize'] * info['kcal']);
-        _servingController.text = myRounder(foodInfo['servingSize']);
+        try {
+          _carboController.text =
+              myRounder(foodInfo['servingSize'] * info['carbohydrate']);
+          _fatController.text =
+              myRounder(foodInfo['servingSize'] * info['fat']);
+          _proController.text =
+              myRounder(foodInfo['servingSize'] * info['protein']);
+          _ulController.text =
+              myRounder(foodInfo['servingSize'] * info['kcal']);
+          _servingController.text = myRounder(foodInfo['servingSize']);
 
-        _foodNameController.text = foodInfo['foodName'];
+          _foodNameController.text = foodInfo['foodName'];
+        } catch (e) {}
       });
     }
     foodInfo = info;

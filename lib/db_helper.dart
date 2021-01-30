@@ -36,10 +36,10 @@ class DBHelperPerson {
             achieve REAL,
             metabolism REAL,
             activity INT,
-            nutriRate INT,
             weightTarget REAL,
             bmiTarget REAL,
-            muscleTarget REAL
+            muscleTarget REAL,
+            sex INT
             )
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
@@ -88,10 +88,10 @@ class DBHelperPerson {
             achieve: res.first['achieve'],
             metabolism: res.first['metabolism'],
             activity: res.first['activity'],
-            nutriRate: res.first['nutriRate'],
             weightTarget: res.first['weightTarget'],
             bmiTarget: res.first['bmiTarget'],
-            muscleTarget: res.first['muscleTarget'])
+            muscleTarget: res.first['muscleTarget'],
+            sex: res.first['sex'])
         : null;
   }
 
@@ -110,11 +110,11 @@ class DBHelperPerson {
             achieve: res.last['achieve'],
             metabolism: res.last['metabolism'],
             activity: res.last['activity'],
-            nutriRate: res.last['nutriRate'],
             weightTarget: res.last['weightTarget'],
             bmiTarget: res.last['bmiTarget'],
-            muscleTarget: res.last['muscleTarget'])
-        : Null;
+            muscleTarget: res.last['muscleTarget'],
+            sex: res.last['sex'])
+        : null;
   }
 
   //Read All
@@ -134,10 +134,10 @@ class DBHelperPerson {
                   achieve: c['achieve'],
                   metabolism: c['metabolism'],
                   activity: c['activity'],
-                  nutriRate: c['nutriRate'],
                   weightTarget: c['weightTarget'],
                   bmiTarget: c['bmiTarget'],
-                  muscleTarget: c['muscleTarget']),
+                  muscleTarget: c['muscleTarget'],
+                  sex: c['sex']),
             )
             .toList()
         : [];
