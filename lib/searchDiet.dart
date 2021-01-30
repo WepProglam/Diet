@@ -378,7 +378,7 @@ class _UiitemState extends State<Uiitem> {
                             ),
                             SizedBox(
                               // maxWidth: 20,
-                              height: 68,
+                              height: MediaQuery.of(context).size.height / 11,
                               child: ListView.builder(
                                   padding: const EdgeInsets.only(
                                     top: 8,
