@@ -140,7 +140,9 @@ class _SearchListState extends State<SearchList> {
       fillteredDiet = [];
       for (var item in val) {
         dietNameEX.add(item);
+
         var splitted = item.dietName.split("-");
+        String mayDate = '';
 
         if (splitted.length == 4) {
           if (splitted[1].length == 1) {
@@ -151,10 +153,9 @@ class _SearchListState extends State<SearchList> {
           } else if (splitted[2].length == 1) {
             splitted[2] = '0' + splitted[2];
           }
+          mayDate = (splitted[0] + splitted[1] + splitted[2]);
         }
-        print(DateTime.tryParse(splitted[0] + splitted[1] + splitted[2]));
-        if (DateTime.tryParse(splitted[0] + splitted[1] + splitted[2]) ==
-            null) {
+        if (DateTime.tryParse(mayDate) == null) {
           fillteredDiet.add(item);
         }
       }
