@@ -276,7 +276,9 @@ class _ActivityPageState extends State<ActivityPage> {
               ),
 
               Spacer(flex: 3),
-              BarChartSample5(),
+              BarChartSample5(
+                purpose: hint['purpose'],
+              ),
               Spacer(
                 flex: 1,
               ),
