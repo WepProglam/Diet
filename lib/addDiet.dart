@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/dietModelSaver.dart';
+import 'package:flutter_application_1/mainPage.dart';
 import 'package:flutter_application_1/model.dart';
 import 'package:intl/intl.dart';
 import 'appBar.dart';
@@ -11,7 +13,8 @@ import 'calculate.dart';
 
 Color listViewColor = Colors.deepOrangeAccent;
 Color iconColor = Colors.deepOrangeAccent[400];
-
+double _currentSliderValue = 0;
+double rangeSliderMaxValue = 100;
 final dbHelperFood = DBHelperFood();
 
 class AddDiet extends StatelessWidget {
@@ -87,6 +90,62 @@ class _FoodListState extends State<FoodList> {
     setState(() {
       foodList += food;
     });
+  }
+
+  void getHowMuchPercentLeft(String dateInfo) async {
+    num todaykcal = 0.0;
+    String now = DateTime.now().toString().substring(0, 10);
+    Map todayDietInfo = {};
+    Person person;
+    String calender_year = dateInfo.split("-")[0];
+    String calender_month = dateInfo.split("-")[1];
+    String calender_date = dateInfo.split("-")[2];
+    String dateTime;
+    if (calender_month.length == 1 && calender_date.length == 1) {
+      dateTime = "$calender_year-0$calender_month-0$calender_date";
+    } else if (calender_month.length != 1 && calender_date.length == 1) {
+      dateTime = "$calender_year-$calender_month-0$calender_date";
+    } else if (calender_month.length == 1 && calender_date.length != 1) {
+      dateTime = "$calender_year-0$calender_month-$calender_date";
+    } else {
+      dateTime = "$calender_year-$calender_month-$calender_date";
+    }
+    print(dateTime);
+    await dbHelperPerson.getPerson(dateTime).then((val) async {
+      if (val != null) {
+        person = val;
+      } else {
+        await dbHelperPerson.getLastPerson().then((value) {
+          person = value;
+        });
+      }
+    });
+    // print("&" * 10000);
+    print(person.metabolism);
+    // print("&" * 10000);
+    print(dateTime);
+    await dbHelperDietHistory.getDietHistory(dateTime).then((val) {
+      if (val != null) {
+        todayDietInfo["b"] =
+            val.breakFast != "null" ? jsonDecode(val.breakFast) : null;
+        todayDietInfo["l"] = val.lunch != "null" ? jsonDecode(val.lunch) : null;
+        todayDietInfo["d"] =
+            val.dinner != "null" ? jsonDecode(val.dinner) : null;
+        todayDietInfo["s"] = val.snack != "null" ? jsonDecode(val.snack) : null;
+      }
+    });
+    print(todayDietInfo);
+    var keys = todayDietInfo.keys;
+    for (var item in keys) {
+      if (todayDietInfo[item] != null) {
+        if (todayDietInfo[item]["isItConfirm"] == "true") {
+          todaykcal += num.parse(todayDietInfo[item]["kcal"]);
+        }
+      }
+    }
+    print(todaykcal);
+    rangeSliderMaxValue = (1 - todaykcal / person.metabolism) * 100;
+    print(rangeSliderMaxValue);
   }
 
   String initialVal(num mass) {
@@ -355,11 +414,13 @@ class _FoodListState extends State<FoodList> {
 
       whereFrom = null;
     } else if (args.containsKey('pre')) {
-      print(2);
+      print("*****" * 900);
       if (args['pre']['pre'] == "mainPage") {
         whereFrom = "mainPage";
         mainPageIndex = args['pre']['index'];
         dateTimeInfo = args['pre']['dateTime'];
+        getHowMuchPercentLeft(dateTimeInfo);
+        print(rangeSliderMaxValue);
       }
     } else if (args['myTempoDiet'] is Map) {
       print(3);
@@ -725,7 +786,7 @@ class _FoodListState extends State<FoodList> {
   mainPageAlertDialog(BuildContext context, Diet diet) {
     // set up the button
     Widget okButton = FlatButton(
-      child: Text("OK"),
+      child: Text("저장"),
       onPressed: () async {
         String mealTime = mainPageReturnMealTime(mainPageIndex);
         print(mealTime);
@@ -733,16 +794,38 @@ class _FoodListState extends State<FoodList> {
         print(dietTitle);
         diet.dietName = (diet.dietName.length > 0) ? diet.dietName : dietTitle;
         await dbHelperDiet.createHelper(diet);
+        Map passingData = diet.toMap();
+        passingData["rate"] = _currentSliderValue;
         Navigator.pop(context);
-        Navigator.pop(context, diet.toMap());
+        Navigator.pop(context, passingData);
+      },
+    );
+
+    Widget noButton = FlatButton(
+      child: Text("취소"),
+      onPressed: () {
+        Navigator.pop(context);
       },
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("음식 저장"),
-      content: Text("저장하시겠습니까?"),
-      actions: [okButton],
+      backgroundColor: Colors.black,
+      title: Text("저장하기"),
+      content: new SizedBox(
+        height: MediaQuery.of(context).size.height / 10,
+        child: Column(
+          children: [
+            Text("오늘 전체 식사량 중 몇프로로 섭취할지 골라주세요",
+                style: TextStyle(color: Colors.white), maxLines: 1),
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 60,
+            ),
+            RangeSlider()
+          ],
+        ),
+      ),
+      actions: [okButton, noButton],
     );
 
     // show the dialog
@@ -962,5 +1045,35 @@ class _FoodListState extends State<FoodList> {
       fat += food.fat * mass[i];
     }
     return [carbohydrate, protein, fat];
+  }
+}
+
+class RangeSlider extends StatefulWidget {
+  RangeSlider({Key key}) : super(key: key);
+
+  @override
+  RangeSliderState createState() => RangeSliderState();
+}
+
+/// This is the private State class that goes with MyStatefulWidget.
+class RangeSliderState extends State<RangeSlider> {
+  @override
+  Widget build(BuildContext context) {
+    return Slider(
+      value: _currentSliderValue,
+      min: 0,
+      max: 100,
+      divisions: 20,
+      label: _currentSliderValue.round().toString(),
+      onChanged: (double value) {
+        if (value > rangeSliderMaxValue) {
+          //몇프로 남았는지 계산해야함
+        } else {
+          setState(() {
+            _currentSliderValue = value;
+          });
+        }
+      },
+    );
   }
 }

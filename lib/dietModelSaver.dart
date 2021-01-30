@@ -128,6 +128,10 @@ Future<void> formatDietHistory(
   String myDinner = "null";
   String mySnack = "null";
 
+  print("here is formatdiethistory");
+  print(dateTime);
+  print(kcal);
+
   final dBHelperDietHistory = DBHelperDietHistory();
   // await dBHelperDietHistory.deleteAllDietHistory();
   DietHistory dietHistory;
