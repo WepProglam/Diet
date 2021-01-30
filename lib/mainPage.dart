@@ -820,7 +820,7 @@ class _MyHomePageState extends State<MyHomePage> {
           width: MediaQuery.of(context).size.width,
           child: Row(
             children: [
-              Spacer(flex: 1),
+              // Spacer(flex: 1),
               Expanded(
                   flex: 20,
                   child: SizedBox(
@@ -1081,9 +1081,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ],
                                   ));
                           }))),
-              Spacer(
-                flex: 1,
-              )
+              // Spacer(
+              //   flex: 1,
+              // )
             ],
           ),
         ));
@@ -1439,6 +1439,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Expanded(
         flex: 2,
         child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Spacer(
             //   flex: 1,
@@ -1643,10 +1645,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 alignment: isitDay ? null : Alignment(-1.0, -1.0),
                 // margin: EdgeInsets.only(top: 5.0),
                 child: isitDay
-                    ? title
+                    ? Center(child: title)
                     : Column(
                         mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                             title,
