@@ -707,8 +707,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                       dateTime: dateData,
                                       isItConfirm: "true")
                                   .then((diet) {});
-                              await getInfo();
-                              await getToday();
+                              getInfo();
+                              getToday();
+                              getCompleteDate();
                               print("wait finish");
                               setState(() {
                                 //확정
@@ -1595,7 +1596,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             title,
                             Spacer(flex: 5),
                             AutoSizeText(
-                              '$kcalArchieve%', //칼로리 성취율
+                              '${kcalArchieve.toStringAsFixed(2)}%', //칼로리 성취율
                               style: TextStyle(
                                   // fontSize: 7,
                                   ),
@@ -1603,7 +1604,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               maxLines: 1,
                             ), //성취도
                             AutoSizeText(
-                              '$nutriArchieve%', //비율 성취율
+                              '${nutriArchieve.toStringAsFixed(2)}%', //비율 성취율
                               style: TextStyle(
                                   // fontSize: ,
                                   ),
