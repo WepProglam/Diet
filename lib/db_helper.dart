@@ -92,7 +92,7 @@ class DBHelperPerson {
             weightTarget: res.first['weightTarget'],
             bmiTarget: res.first['bmiTarget'],
             muscleTarget: res.first['muscleTarget'])
-        : Null;
+        : null;
   }
 
   //ReadLast
