@@ -278,83 +278,79 @@ class _PersonalForm extends State<PersonalForm> {
                                         height:
                                             MediaQuery.of(context).size.height /
                                                 10,
-                                        child: Expanded(
-                                          flex: 1,
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(100.0),
-                                            ),
-                                            color: Colors.deepOrangeAccent[700],
-                                            child: InkWell(
-                                              splashColor: Colors.white,
-                                              child: Ink(
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Spacer(),
-                                                    Container(
-                                                      child: Icon(Icons.send),
-                                                    ),
-                                                    Spacer(),
-                                                    AutoSizeText("제출",
-                                                        maxLines: 1,
-                                                        style: TextStyle(
-                                                            fontSize: 20)),
-                                                    Spacer(),
-                                                  ],
-                                                ),
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(100.0),
+                                          ),
+                                          color: Colors.deepOrangeAccent[700],
+                                          child: InkWell(
+                                            splashColor: Colors.white,
+                                            child: Ink(
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Spacer(),
+                                                  Container(
+                                                    child: Icon(Icons.send),
+                                                  ),
+                                                  Spacer(),
+                                                  AutoSizeText("제출",
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                          fontSize: 20)),
+                                                  Spacer(),
+                                                ],
                                               ),
-                                              onTap: () async {
-                                                if (_formKey.currentState
-                                                    .validate()) {
-                                                  // dbHelper.deleteAllPerson();
-                                                  String time = DateFormat(
-                                                          'yyyy-MM-dd')
-                                                      .format(DateTime.now())
-                                                      .toString();
-
-                                                  var person = Person(
-                                                      height: double.parse(
-                                                          _heightController
-                                                              .value.text),
-                                                      weight: double.parse(
-                                                          _weightController
-                                                              .value.text),
-                                                      bmi: double.parse(
-                                                          _bmiController
-                                                              .value.text),
-                                                      muscleMass: double.parse(
-                                                          _strengthController
-                                                              .value.text),
-                                                      purpose: _selValue,
-                                                      time: time,
-                                                      achieve: 0.0,
-                                                      metabolism: hint['metabolism'] != null
-                                                          ? setMetabolism(hint['metabolism'], _selValue)
-                                                          : null,
-                                                      activity: hint['activity'],
-                                                      nutriRate: hint['nutriRate'],
-                                                      weightTarget: double.parse(_weightTargetController.value.text),
-                                                      bmiTarget: double.parse(_bmiTargetController.value.text),
-                                                      muscleTarget: double.parse(_muscleTargetController.value.text));
-
-                                                  await dbHelper
-                                                      .createHelper(person);
-                                                  Navigator.pushNamed(
-                                                      context, '/activityPage',
-                                                      arguments: <String,
-                                                          Person>{
-                                                        'person': person
-                                                      });
-                                                }
-
-                                                //print(_heightController.text);
-                                              },
                                             ),
+                                            onTap: () async {
+                                              if (_formKey.currentState
+                                                  .validate()) {
+                                                // dbHelper.deleteAllPerson();
+                                                String time =
+                                                    DateFormat('yyyy-MM-dd')
+                                                        .format(DateTime.now())
+                                                        .toString();
+
+                                                var person = Person(
+                                                    height: double.parse(
+                                                        _heightController
+                                                            .value.text),
+                                                    weight: double.parse(
+                                                        _weightController
+                                                            .value.text),
+                                                    bmi: double.parse(
+                                                        _bmiController
+                                                            .value.text),
+                                                    muscleMass: double.parse(
+                                                        _strengthController
+                                                            .value.text),
+                                                    purpose: _selValue,
+                                                    time: time,
+                                                    achieve: 0.0,
+                                                    metabolism:
+                                                        hint['metabolism'] != null
+                                                            ? setMetabolism(hint['metabolism'], _selValue)
+                                                            : null,
+                                                    activity: hint['activity'],
+                                                    nutriRate: hint['nutriRate'],
+                                                    weightTarget: double.parse(_weightTargetController.value.text),
+                                                    bmiTarget: double.parse(_bmiTargetController.value.text),
+                                                    muscleTarget: double.parse(_muscleTargetController.value.text));
+
+                                                await dbHelper
+                                                    .createHelper(person);
+                                                Navigator.pushNamed(
+                                                    context, '/activityPage',
+                                                    arguments: <String, Person>{
+                                                      'person': person
+                                                    });
+                                              }
+
+                                              //print(_heightController.text);
+                                            },
                                           ),
                                         ),
                                       ),
