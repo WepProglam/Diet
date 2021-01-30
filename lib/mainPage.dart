@@ -316,14 +316,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                           "$calender_year-$calender_month-$calender_date"
                                     }
                                   }).then((val) async {
-                                print("+++++++++++++++++++");
-
-                                print("+++++++++++++++++++");
-                                print("+++++++++++++++++++");
-                                print("+++++++++++++++++++");
-                                print("+++++++++++++++++++");
-                                print("+++++++++++++++++++");
-
                                 todayDietList[index] = val;
 
                                 todayDietList[index]['foodInfo'] = jsonDecode(
@@ -391,13 +383,28 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             onTap: () async {
                               await Navigator.pushNamed(context, '/searchDiet',
-                                  arguments: <String, String>{
-                                    "pre": "mainPage"
+                                  arguments: <String, Map>{
+                                    "pre": {
+                                      "pre": "mainPage",
+                                      "index": index,
+                                      "dateTime":
+                                          "$calender_year-$calender_month-$calender_date"
+                                    }
                                   }).then((val) async {
                                 todayDietList[index] = val;
 
                                 todayDietList[index]['foodInfo'] = jsonDecode(
                                     todayDietList[index]['foodInfo']);
+                                double percent = todayDietList[index]["rate"] /
+                                    100; //80 => 0.8
+
+                                todayDietList[index]['foodInfo']['kcal'] *=
+                                    percent;
+                                print(val);
+
+                                print((todayDietList[index]['foodInfo']
+                                        ['kcal'] *
+                                    percent));
 
                                 for (var i = 0;
                                     i <
@@ -411,18 +418,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                           .values
                                           .toList();
                                 }
-                                print("saving...");
-                                print(todayDietList[index]);
-                                print(todayDietList);
-                                double percent = todayDietList[index]["rate"] /
-                                    100; //80 => 0.8
+
                                 await formatDietHistory(
                                         dietName: todayDietList[index]
                                             ['dietName'],
                                         flag: index,
-                                        kcal: (todayDietList[index]['foodInfo']
-                                                    ['kcal'] *
-                                                percent)
+                                        kcal: todayDietList[index]['foodInfo']
+                                                ['kcal']
                                             .toString(),
                                         nutri: todayDietList[index]['foodInfo']
                                             ['nutri'],
@@ -570,7 +572,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             onPressed: () {
                               setState(() {
                                 dietConfirm[index] = false;
-                                dietAdded[index] = [true, true, true, false];
+                                dietAdded[index] = [true, false, false, false];
                               });
                             },
                           ),

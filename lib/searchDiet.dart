@@ -28,6 +28,9 @@ class DietList extends ChangeNotifier {
   }
 }
 
+int mealIndex;
+String mealTime;
+
 class SearchDiet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -269,7 +272,12 @@ class _UiitemState extends State<Uiitem> {
 
   void reactWhenMain() {
     // print(widget.diet.toMap());
-    Navigator.pop(context, widget.diet.toMap());
+    Navigator.pushNamed(context, "/addDiet", arguments: <String, Map>{
+      "myTempoDiet": widget.diet.toMap(),
+      "pre": {"pre": "searchDiet", "index": mealIndex, "dateTime": mealTime}
+    }).then((value) {
+      Navigator.pop(context, value);
+    });
   }
 
   void reactWhenAdd() {
@@ -292,15 +300,17 @@ class _UiitemState extends State<Uiitem> {
 
   Widget build(BuildContext context) {
     final DietList listProvider = Provider.of<DietList>(context);
-    final Map<String, String> args = ModalRoute.of(context).settings.arguments;
+    final Map<String, Map> args = ModalRoute.of(context).settings.arguments;
     final tempDietInfo = jsonDecode(widget.diet.foodInfo);
     final List nutriRate = tempDietInfo['nutri'].split(':');
 
     if (args == null) {
-    } else if (args['pre'] == "calcDiet") {
-      whereFrom = "calcDiet";
-    } else if (args['pre'] == "mainPage") {
+    } else if (args['pre']["pre"] == "mainPage") {
       whereFrom = "mainPage";
+      print(args['pre']);
+      print(args['pre'] is Map);
+      mealIndex = args['pre']["index"];
+      mealTime = args['pre']['dateTime'];
     }
 
     return Card(
