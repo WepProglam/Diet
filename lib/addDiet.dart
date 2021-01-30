@@ -145,7 +145,9 @@ class _FoodListState extends State<FoodList> {
     }
     print(todaykcal);
     rangeSliderMaxValue = (1 - todaykcal / person.metabolism) * 100;
+    print("********************" * 999);
     print(rangeSliderMaxValue);
+    print("********************" * 999);
   }
 
   String initialVal(num mass) {
@@ -414,9 +416,41 @@ class _FoodListState extends State<FoodList> {
 
       whereFrom = null;
     } else if (args.containsKey('pre')) {
-      print("*****" * 900);
       if (args['pre']['pre'] == "mainPage") {
         whereFrom = "mainPage";
+        mainPageIndex = args['pre']['index'];
+        dateTimeInfo = args['pre']['dateTime'];
+        getHowMuchPercentLeft(dateTimeInfo);
+        print("***************");
+        print(rangeSliderMaxValue);
+      } else if (args['pre']['pre'] == "searchDiet") {
+        dietInfo = args["myTempoDiet"];
+        String dietName = dietInfo['dietName'];
+
+        Map foodInfo = jsonDecode(dietInfo['foodInfo']);
+        print(foodInfo['foods'][0]['code']);
+
+        for (var item in foodInfo['foods']) {
+          changeList.add(item['foodMass']);
+          foodList.add(ListContents(
+              foodName: item['foodName'],
+              code: item['code'],
+              mass: item['foodMass']));
+        }
+
+        justCalNutri(foodList, changeList).then((val) {
+          print(val);
+          setState(() {
+            carbohydrateMass = val[0];
+            proteinMass = val[1];
+            fatMass = val[2];
+          });
+        });
+
+        setState(() {
+          dietNameController.text = dietInfo['dietName'];
+        });
+        whereFrom = "searchDietMainPage";
         mainPageIndex = args['pre']['index'];
         dateTimeInfo = args['pre']['dateTime'];
         getHowMuchPercentLeft(dateTimeInfo);
@@ -728,6 +762,18 @@ class _FoodListState extends State<FoodList> {
                               });
                               print(diet);
                               mainPageAlertDialog(context, diet);
+                            } else if (whereFrom == "searchDietMainPage") {
+                              await formatDiet(
+                                      dietName: dietName,
+                                      dietDateName: dateTimeInfo,
+                                      foodList: foodList,
+                                      mainPageIndex: mainPageIndex,
+                                      massList: foodMass)
+                                  .then((value) {
+                                diet = value;
+                              });
+                              print(diet);
+                              mainPageAlertDialog(context, diet);
                             } else {
                               //savedDiet,다른 경로로 접근
                               bool flag =
@@ -796,6 +842,7 @@ class _FoodListState extends State<FoodList> {
         await dbHelperDiet.createHelper(diet);
         Map passingData = diet.toMap();
         passingData["rate"] = _currentSliderValue;
+        _currentSliderValue = 0;
         Navigator.pop(context);
         Navigator.pop(context, passingData);
       },
