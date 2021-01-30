@@ -739,11 +739,11 @@ class _MyHomePageState extends State<MyHomePage> {
             : Container(),
         dietAdded[index][0]
             ? Positioned(
-                left: 0,
+                left: 10,
                 child: GestureDetector(
                   child: Icon(
-                    Icons.keyboard_backspace,
-                    size: 20,
+                    Icons.undo,
+                    size: 35,
                   ),
                   onTap: () {
                     // print("123213123");
