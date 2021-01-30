@@ -1506,22 +1506,25 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget colorIndicator() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Indicator(
-          color: Colors.deepOrangeAccent[400],
-          isSquare: true,
-          size: 10,
-          text: '열량 성취도',
-        ),
-        Indicator(
-          color: Colors.deepOrangeAccent,
-          isSquare: true,
-          size: 10,
-          text: '영양성분 성취도',
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(right: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Indicator(
+            color: Colors.deepOrangeAccent[400],
+            isSquare: true,
+            size: 10,
+            text: '열량 성취도',
+          ),
+          Indicator(
+            color: Colors.deepOrangeAccent,
+            isSquare: true,
+            size: 10,
+            text: '영양성분 성취도',
+          ),
+        ],
+      ),
     );
   }
 
