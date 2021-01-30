@@ -10,6 +10,7 @@ import 'package:flutter_application_1/model.dart';
 import 'package:flutter_application_1/piChart.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'appBar.dart';
+import 'calculate.dart';
 import 'db_helper.dart';
 import 'lineChart.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -789,6 +790,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             protein: todayPro,
                                             fat: todayFat,
                                             totalCalorie: todaykcal,
+                                            correct: correct,
                                           )
                                           // child:
                                           ),
@@ -905,7 +907,7 @@ class _MyHomePageState extends State<MyHomePage> {
   num todayPro;
   num todayFat;
   num todaykcal;
-
+  num correct;
   void getTodayCalroie() async {
     print("strat" * 100);
     String now = DateTime.now().toString().substring(0, 10);
@@ -952,6 +954,25 @@ class _MyHomePageState extends State<MyHomePage> {
             nutri[2] / nutriTotal * num.parse(todayDietInfo[item]["kcal"]);
       }
     }
+    List<num> targetNutri = [3, 4, 3]; //디폴트
+    if (person != null) {
+      switch (person.nutriRate) {
+        case 0:
+          targetNutri = [3, 4, 3];
+          break;
+        case 1:
+          targetNutri = [4, 4, 2];
+
+          break;
+        case 2:
+          targetNutri = [5, 3, 2];
+          break;
+        default:
+          targetNutri = [3, 4, 3];
+          break;
+      }
+    }
+    correct = correctness(targetNutri, [todayCar, todayPro, todayFat]);
 
     print(todayDietInfo);
     print(todaykcal);
