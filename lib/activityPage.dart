@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'model.dart';
 import 'appBar.dart';
 import 'package:flutter/material.dart';
 import 'barChar.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class Activity extends StatelessWidget {
   const Activity({Key key}) : super(key: key);
@@ -16,7 +18,7 @@ class Activity extends StatelessWidget {
     return Scaffold(
       appBar: basicAppBar('Activity Page', context),
       drawer: NavDrawer(),
-      body: ActivityPage(),
+      body: SingleChildScrollView(child: ActivityPage()),
     );
   }
 }
@@ -134,33 +136,53 @@ class _ActivityPageState extends State<ActivityPage> {
 
   Widget metabolicRate(String mr, TextEditingController controller) {
     String title = '';
+    bool focusBool;
+    var fontWeight;
+    var fontColor;
+    double fontSize;
 
     if (mr == 'BMR') {
       title = '기초대사량(BMR)';
+      focusBool = false;
+      fontWeight = FontWeight.normal;
+      fontColor = Colors.white;
+      fontSize = 30;
     } else if (mr == 'AM') {
       title = '1일 총 에너지 대사량';
+      focusBool = true;
+      fontWeight = FontWeight.bold;
+      fontColor = Colors.deepOrangeAccent[700];
+      fontSize = 60;
     }
 
-    return Column(
-      children: [
-        Text(
-          title,
-          style: TextStyle(fontSize: 15),
-        ),
-        TextFormField(
-            autofocus: false,
-            controller: controller,
-            style: TextStyle(
-              fontSize: 40,
-            ),
-            textAlign: TextAlign.center,
-            keyboardType: TextInputType.number,
-            readOnly: (mr == 'AM' && _activityValue == 6) ? false : true),
-        Text(
-          'kcal',
-          style: TextStyle(fontSize: 15),
-        ),
-      ],
+    return Container(
+      padding: EdgeInsets.only(top: 6),
+      decoration: BoxDecoration(
+          border: Border(top: BorderSide(width: 1, color: Colors.white38))),
+      child: Column(
+        children: [
+          AutoSizeText(
+            title,
+            style: TextStyle(fontSize: 15),
+            maxLines: 1,
+          ),
+          TextFormField(
+              autofocus: focusBool,
+              controller: controller,
+              style: TextStyle(
+                color: fontColor,
+                fontSize: fontSize,
+                fontWeight: fontWeight,
+              ),
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              readOnly: (mr == 'AM' && _activityValue == 6) ? false : true),
+          AutoSizeText(
+            'kcal',
+            style: TextStyle(fontSize: 15),
+          ),
+        ],
+      ),
     );
   }
 
@@ -202,39 +224,52 @@ class _ActivityPageState extends State<ActivityPage> {
           Spacer(
             flex: 1,
           ),
-          DropdownButton(
-              value: _activityValue,
-              items: [
-                DropdownMenuItem(child: Text('적은 활동 및 운동 X'), value: 1),
-                DropdownMenuItem(child: Text('가벼운 활동 및 주 1~3일 운동'), value: 2),
-                DropdownMenuItem(child: Text('보통 활동 및 주 3~5일 운동'), value: 3),
-                DropdownMenuItem(child: Text('적극적인 활동 및 주 6~7일 운동'), value: 4),
-                DropdownMenuItem(child: Text('매우 적극적인 활동 및 선수급 운동'), value: 5),
-                DropdownMenuItem(child: Text('직접 설정'), value: 6),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _activityValue = value;
-                  if (_activityValue == 1) {
-                    amText.text = addOrSubAm(num.parse(bmrText.text) * 1.2)
-                        .toStringAsFixed(1);
-                  } else if (_activityValue == 2) {
-                    amText.text = addOrSubAm(num.parse(bmrText.text) * 1.375)
-                        .toStringAsFixed(1);
-                  } else if (_activityValue == 3) {
-                    amText.text = addOrSubAm(num.parse(bmrText.text) * 1.555)
-                        .toStringAsFixed(1);
-                  } else if (_activityValue == 4) {
-                    amText.text = addOrSubAm(num.parse(bmrText.text) * 1.725)
-                        .toStringAsFixed(1);
-                  } else if (_activityValue == 5) {
-                    amText.text = addOrSubAm(num.parse(bmrText.text) * 1.9)
-                        .toStringAsFixed(1);
-                  } else if (_activityValue == 6) {
-                    amText.text = '';
-                  }
-                });
-              }),
+          Center(
+            child: DropdownButton(
+                value: _activityValue,
+                items: [
+                  DropdownMenuItem(
+                      child: Center(child: AutoSizeText('적은 활동 및 운동 X')),
+                      value: 1),
+                  DropdownMenuItem(
+                      child: Center(child: AutoSizeText('가벼운 활동 및 주 1~3일 운동')),
+                      value: 2),
+                  DropdownMenuItem(
+                      child: Center(child: AutoSizeText('보통 활동 및 주 3~5일 운동')),
+                      value: 3),
+                  DropdownMenuItem(
+                      child: Center(child: AutoSizeText('적극적인 활동 및 주 6~7일 운동')),
+                      value: 4),
+                  DropdownMenuItem(
+                      child: Center(child: AutoSizeText('매우 적극적인 활동 및 선수급 운동')),
+                      value: 5),
+                  DropdownMenuItem(
+                      child: Center(child: AutoSizeText('직접 설정')), value: 6),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _activityValue = value;
+                    if (_activityValue == 1) {
+                      amText.text = addOrSubAm(num.parse(bmrText.text) * 1.2)
+                          .toStringAsFixed(1);
+                    } else if (_activityValue == 2) {
+                      amText.text = addOrSubAm(num.parse(bmrText.text) * 1.375)
+                          .toStringAsFixed(1);
+                    } else if (_activityValue == 3) {
+                      amText.text = addOrSubAm(num.parse(bmrText.text) * 1.555)
+                          .toStringAsFixed(1);
+                    } else if (_activityValue == 4) {
+                      amText.text = addOrSubAm(num.parse(bmrText.text) * 1.725)
+                          .toStringAsFixed(1);
+                    } else if (_activityValue == 5) {
+                      amText.text = addOrSubAm(num.parse(bmrText.text) * 1.9)
+                          .toStringAsFixed(1);
+                    } else if (_activityValue == 6) {
+                      amText.text = '';
+                    }
+                  });
+                }),
+          ),
           Spacer(
             flex: 1,
           ),
@@ -282,7 +317,11 @@ class _ActivityPageState extends State<ActivityPage> {
               Spacer(
                 flex: 1,
               ),
-              selActivity(),
+              Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                          top: BorderSide(width: 1, color: Colors.white38))),
+                  child: selActivity()),
               Text('주로 하는 활동을 선택해주세요'),
               Spacer(
                 flex: 1,
