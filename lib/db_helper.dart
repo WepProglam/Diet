@@ -500,10 +500,21 @@ class DBHelperDietHistory {
             breakFast TEXT,
             lunch TEXT,
             dinner TEXT,
-            snack TEXT
+            snack TEXT,
+            year INT,
+            month INT,
+            complete TEXT
             )
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
+  }
+
+  Future<List<String>> getIncompleteDietHistory({int year, int month}) async {
+    final db = await database;
+    var res = await db.rawQuery(
+        "SELECT date FROM $tableName WHERE year = '$year' AND month = '$month' AND complete = 'false'");
+    List<String> list = res.isNotEmpty ? res.map((c) => c).toList() : [];
+    return list;
   }
 
   createData(DietHistory dietHistory) async {
@@ -525,7 +536,7 @@ class DBHelperDietHistory {
     );
   }
 
-  createHelper(DietHistory dietHistory) {
+  Future<List<int>> createHelper(DietHistory dietHistory) {
     getAllMyDietHistory().then((value) async {
       if (value.isNotEmpty) {
         bool isThere = false;
@@ -558,7 +569,10 @@ class DBHelperDietHistory {
             breakFast: res.first['breakFast'],
             lunch: res.first['lunch'],
             dinner: res.first['dinner'],
-            snack: res.first['snack'])
+            snack: res.first['snack'],
+            year: res.first['year'],
+            month: res.first['month'],
+            complete: res.first['complete'])
         : null;
   }
 
@@ -572,7 +586,10 @@ class DBHelperDietHistory {
                 breakFast: c['breakFast'],
                 lunch: c['lunch'],
                 dinner: c['dinner'],
-                snack: c['snack']))
+                snack: c['snack'],
+                year: c['year'],
+                month: c['month'],
+                complete: c['complete']))
             .toList()
         : [];
     return list;

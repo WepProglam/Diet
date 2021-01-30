@@ -409,7 +409,7 @@ class _FoodListState extends State<FoodList> {
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     final Map<String, Map> args = ModalRoute.of(context).settings.arguments;
     if (args == null) {
       print(1);
@@ -438,16 +438,16 @@ class _FoodListState extends State<FoodList> {
               mass: item['foodMass']));
         }
 
-        justCalNutri(foodList, changeList).then((val) {
-          print(val);
-          setState(() {
-            carbohydrateMass = val[0];
-            proteinMass = val[1];
-            fatMass = val[2];
-          });
+        List<num> tempVal;
+
+        await justCalNutri(foodList, changeList).then((val) {
+          tempVal = val;
         });
 
         setState(() {
+          carbohydrateMass = tempVal[0];
+          proteinMass = tempVal[1];
+          fatMass = tempVal[2];
           dietNameController.text = dietInfo['dietName'];
         });
         whereFrom = "searchDietMainPage";

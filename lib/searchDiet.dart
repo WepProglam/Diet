@@ -288,7 +288,7 @@ class _UiitemState extends State<Uiitem> {
 
   void react(String whereFrom) {
     // print(flag);
-    print(whereFrom);
+    // print(whereFrom);
     if (whereFrom == "calcDiet") {
       reactWhenCalc();
     } else if (whereFrom == "mainPage") {
@@ -307,8 +307,8 @@ class _UiitemState extends State<Uiitem> {
     if (args == null) {
     } else if (args['pre']["pre"] == "mainPage") {
       whereFrom = "mainPage";
-      print(args['pre']);
-      print(args['pre'] is Map);
+      // print(args['pre']);
+      // print(args['pre'] is Map);
       mealIndex = args['pre']["index"];
       mealTime = args['pre']['dateTime'];
     }

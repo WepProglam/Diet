@@ -137,11 +137,14 @@ class Diet {
 }
 
 class DietHistory {
-  String date;
+  String date; //2020-01-30
   String breakFast;
   String lunch;
   String dinner;
   String snack;
+  int year; //2021
+  int month; //1 9 10
+  String complete; //"true" "false"
 
   /*
   breakfast 예시
@@ -152,14 +155,25 @@ class DietHistory {
     "nutri" : "영양소 비율"(5:2:3),
   }
   */
-  DietHistory({this.date, this.breakFast, this.lunch, this.dinner, this.snack});
+  DietHistory(
+      {this.date,
+      this.breakFast,
+      this.lunch,
+      this.dinner,
+      this.snack,
+      this.year,
+      this.month,
+      this.complete});
   Map<String, dynamic> toMap() {
     return {
       "date": date,
       "breakFast": breakFast,
       "lunch": lunch,
       "dinner": dinner,
-      "snack": snack
+      "snack": snack,
+      "year": year,
+      "month": month,
+      "complete": complete
     };
   }
 }

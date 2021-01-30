@@ -97,11 +97,11 @@ class _MyHomePageState extends State<MyHomePage> {
       if (myDietHistory.breakFast != "null") {
         Map tempDiet = jsonDecode(myDietHistory.breakFast);
         Diet myDiet;
-        print(tempDiet);
-        print(tempDiet['dietName']);
+        // print(tempDiet);
+        // print(tempDiet['dietName']);
         await dbHelperDiet.getDiet(tempDiet['dietName']).then((val) {
           myDiet = val;
-          print(val);
+          // print(val);
           if (dietConfirmConfirm[0]) {
             dietAdded[0] = [true, true, true, true];
             dietConfirm[0] = true;
@@ -206,9 +206,9 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       // print(e);
     }
-    print("/");
-    print(todayDietList);
-    print("/");
+    // print("/");
+    // print(todayDietList);
+    // print("/");
 
     setState(() {});
   }
@@ -325,11 +325,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                 todayDietList[index]['foodInfo']['kcal'] *=
                                     percent;
-                                print(val);
+                                // print(val);
 
-                                print((todayDietList[index]['foodInfo']
-                                        ['kcal'] *
-                                    percent));
+                                // print((todayDietList[index]['foodInfo']
+                                //         ['kcal'] *
+                                //     percent));
 
                                 for (var i = 0;
                                     i <
@@ -400,11 +400,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                 todayDietList[index]['foodInfo']['kcal'] *=
                                     percent;
-                                print(val);
+                                // print(val);
 
-                                print((todayDietList[index]['foodInfo']
-                                        ['kcal'] *
-                                    percent));
+                                // print((todayDietList[index]['foodInfo']
+                                //         ['kcal'] *
+                                //     percent));
 
                                 for (var i = 0;
                                     i <
@@ -522,7 +522,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     )),
                 onTap: () {
-                  print(todayDietList[index]);
+                  // print(todayDietList[index]);
                   setState(() {
                     dietAdded[index][3] = !dietAdded[index][3];
                   });
@@ -561,7 +561,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 dietConfirm[index] = true;
                                 dietAdded[index][3] = false;
                               });
-                              print(todayDietList[index]);
+                              // print(todayDietList[index]);
                             },
                           ),
                         ),
@@ -590,7 +590,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     size: 20,
                   ),
                   onTap: () {
-                    print("123213123");
+                    // print("123213123");
                     setState(() {
                       dietAdded[index] = dietAdded[index][2] == true
                           ? [true, false, false, false]
@@ -808,13 +808,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                       Expanded(
                                           flex: 13,
                                           child: PieChartSample2(
-                                            carbohydrate: todayCar,
-                                            protein: todayPro,
-                                            fat: todayFat,
-                                            totalCalorie: todaykcal,
-                                            correct:
-                                                correct == null ? 0.0 : correct,
-                                          )
+                                              carbohydrate: todayCar,
+                                              protein: todayPro,
+                                              fat: todayFat,
+                                              totalCalorie: todaykcal,
+                                              correct: correct == null ||
+                                                      (correct == 0)
+                                                  ? 0.0
+                                                  : correct.toDouble())
                                           // child:
                                           ),
                                       Spacer(
@@ -932,7 +933,7 @@ class _MyHomePageState extends State<MyHomePage> {
   num todaykcal;
   num correct;
   void getTodayCalroie() async {
-    print("strat" * 100);
+    // print("strat" * 100);
     String now = DateTime.now().toString().substring(0, 10);
     Map todayDietInfo = {};
     // todayCar = 0.0;
@@ -962,7 +963,7 @@ class _MyHomePageState extends State<MyHomePage> {
         List<String> nutriString = todayDietInfo[item]["nutri"].split(":");
         List<num> nutri = List(3);
 
-        print(nutri);
+        // print(nutri);
         for (var i = 0; i < 3; i++) {
           nutri[i] = num.parse(nutriString[i]);
         }
@@ -997,10 +998,10 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     correct = correctness(targetNutri, [todayCar, todayPro, todayFat]);
 
-    print(todayDietInfo);
-    print(todaykcal);
-    print("$todayCar $todayPro $todayFat");
-    print(todayCar + todayPro + todayFat);
+    // print(todayDietInfo);
+    // print(todaykcal);
+    // print("$todayCar $todayPro $todayFat");
+    // print(todayCar + todayPro + todayFat);
   }
 
   Widget returnCalender() {
@@ -1445,7 +1446,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 dateTime = "$calender_year-$calender_month-$date";
               }
 
-              print(dateTime);
+              // print(dateTime);
               // await dbHelperDietHistory.getAllMyDietHistory().then((val) {
               //   for (var item in val) {
               //     print(item.date);
@@ -1459,9 +1460,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 // print(value.breakFast);
 
                 dietHistory = value;
-                print("%" * 100);
+                // print("%" * 100);
                 // print(dietHistory.breakFast);
-                print("%" * 100);
+                // print("%" * 100);
               });
 
               changeIntToString();
@@ -1472,10 +1473,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
               await getConfirmedIndex(dietHistory);
 
-              print(dietConfirmConfirm);
-              print("&" * 100);
-              print("&" * 100);
-              print(dietAdded);
+              // print(dietConfirmConfirm);
+              // print("&" * 100);
+              // print("&" * 100);
+              // print(dietAdded);
               setState(() {
                 dateSelected = !dateSelected;
               });
@@ -1496,7 +1497,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 dietConfirmConfirm[0] = true;
               }
             }
-            print(dietConfirmConfirm);
+            // print(dietConfirmConfirm);
 
             break;
           case 1:

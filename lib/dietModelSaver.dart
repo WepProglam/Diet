@@ -136,8 +136,12 @@ Future<void> formatDietHistory(
   // await dBHelperDietHistory.deleteAllDietHistory();
   DietHistory dietHistory;
   dateData = dateTime;
-
+  int year = num.parse(dateTime.split('-')[0]);
+  int month = num.parse(dateTime.split('-')[1]);
+  print(year);
+  print(month);
   print(isItConfirm);
+  int complete = 0;
   if (flag == 0) {
     myBreakFast = jsonEncode({
       "dietName": dietName,
@@ -171,13 +175,22 @@ Future<void> formatDietHistory(
   await dBHelperDietHistory.getDietHistory(dateData).then((val) {
     if (val != null) {
       dietHistory = val;
-      print(dietHistory);
+      // dietHistory.year = year == null ? dietHistory.year : year;
+      // dietHistory.month = month == null ? dietHistory.month : month;
+      print("readdb");
+      print(val.year);
+      print("readdb");
     } else {
       dietHistory = null;
     }
   });
 
-  print("1232142141241252135135");
+  await isDateCompleted(dateData).then((val) {
+    complete = val;
+  });
+
+  String completeString = complete == 4 ? "true" : "false";
+
   if (dietHistory != null) {
     print("sadfasdfasd");
     if (flag == 0) {
@@ -190,19 +203,72 @@ Future<void> formatDietHistory(
       dietHistory.snack = mySnack;
     }
     print("update");
-    print(myBreakFast);
-    print(dietHistory.breakFast);
-    print(dietHistory.date);
+    dietHistory.complete = completeString;
+    print(dietHistory.year);
+
     await dBHelperDietHistory.updateDietHistory(dietHistory);
   } else {
     print("123423423432");
+    print("rwriteb");
+    print(year);
+    print("rwriteb");
+
     dietHistory = DietHistory(
         date: dateData,
         breakFast: myBreakFast,
         lunch: myLunch,
         dinner: myDinner,
-        snack: mySnack);
+        snack: mySnack,
+        year: year,
+        month: month,
+        complete: completeString);
 
     await dBHelperDietHistory.createData(dietHistory);
   }
+}
+
+Future<int> isDateCompleted(String dateTime) async {
+  final dBHelperDietHistory = DBHelperDietHistory();
+  DietHistory diteHistory;
+  Map dietHistoryMap = {};
+  await dBHelperDietHistory.getDietHistory(dateTime).then((val) {
+    if (val != null) {
+      diteHistory = val;
+      dietHistoryMap = diteHistory.toMap();
+      print(dietHistoryMap);
+    } else {
+      diteHistory = null;
+    }
+  });
+  int tag = 0;
+
+  if (diteHistory == null) {
+    return 0;
+  } else {
+    if (dietHistoryMap.containsKey("breakFast")) {
+      if (dietHistoryMap["breakFast"] != "null") {
+        tag += 1;
+      }
+    }
+    if (dietHistoryMap.containsKey("lunch")) {
+      if (dietHistoryMap["lunch"] != "null") {
+        tag += 1;
+      }
+    }
+    if (dietHistoryMap.containsKey("dinner")) {
+      if (dietHistoryMap["dinner"] != "null") {
+        tag += 1;
+      }
+    }
+    if (dietHistoryMap.containsKey("snack")) {
+      if (dietHistoryMap["snack"] != "null") {
+        tag += 1;
+      }
+    }
+  }
+
+  print("this is tag");
+  print(tag);
+
+  return tag;
 }
