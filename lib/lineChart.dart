@@ -7,9 +7,40 @@ import 'model.dart';
 
 final dbHelperPerson = DBHelperPerson();
 
+//성취도 함수
+
+List<String> myPersonTimeArchieveInfo = [];
+List<num> myKcalArchieve = [];
+List<num> myNutriArchieve = [];
+
+List<num> myMaxKcalArchieve = [];
+List<num> myMaxNutriArchieve = [];
+
 class LineChartSample2 extends StatefulWidget {
   int index = 0;
-  LineChartSample2({this.index});
+  //성취도 함수
+  List<String> personTimeArchieveInfo = [];
+  List<num> kcalArchieve = [];
+  List<num> nutriArchieve = [];
+
+  LineChartSample2({
+    this.index,
+    this.personTimeArchieveInfo,
+    this.kcalArchieve,
+    this.nutriArchieve,
+  }) {
+    if (kcalArchieve != null) {
+      if (kcalArchieve.isNotEmpty) {
+        myPersonTimeArchieveInfo = personTimeArchieveInfo;
+        myKcalArchieve = kcalArchieve;
+        myNutriArchieve = nutriArchieve;
+      } else {
+        myPersonTimeArchieveInfo = [];
+        myKcalArchieve = [];
+        nutriArchieve = [];
+      }
+    }
+  }
   @override
   _LineChartSample2State createState() => _LineChartSample2State(index: index);
 }
@@ -47,56 +78,75 @@ class _LineChartSample2State extends State<LineChartSample2> {
   }
 
   void getInfo() async {
-    await dbHelperPerson.getAllPerson().then((value) {
-      personWeightSpot = [];
-      personBmiSpot = [];
-      personMuscleSpot = [];
-      personTimeInfo = [];
-
-      personTargetWeightSpot = [];
-      personTargetBmiSpot = [];
-      personTargetMuscleSpot = [];
-
-      setState(() {
-        for (var item in value) {
-          maxWeigt.add(item.weight);
-          maxWeigt.add(item.weightTarget);
-          maxBmi.add(item.bmi);
-          maxBmi.add(item.bmiTarget);
-          maxMuscle.add(item.muscleMass);
-          maxMuscle.add(item.muscleTarget);
-          personTimeInfo.add(item.time.split("-").sublist(1, 2).join());
+    print("get info in getinfo");
+    print(myKcalArchieve);
+    if (index == -1) {
+      if (myKcalArchieve != null && myKcalArchieve.isNotEmpty) {
+        for (var i = 0; i < myKcalArchieve.length; i++) {
+          myMaxKcalArchieve.add(myKcalArchieve[i]);
+          myMaxNutriArchieve.add(myNutriArchieve[i]);
         }
+        myMaxKcalArchieve.sort();
+        myMaxNutriArchieve.sort();
 
-        maxWeigt.sort();
-        maxBmi.sort();
-        maxMuscle.sort();
+        print("get info in getinfo");
+      } else {
+        print("empty!!!");
+        // myKcalArchieveSpot = [FlSpot.nullSpot];
+        // myNutriArchieveSpot = [FlSpot.nullSpot];
+      }
+    } else {
+      await dbHelperPerson.getAllPerson().then((value) {
+        personWeightSpot = [];
+        personBmiSpot = [];
+        personMuscleSpot = [];
+        personTimeInfo = [];
 
-        int i = 0;
+        personTargetWeightSpot = [];
+        personTargetBmiSpot = [];
+        personTargetMuscleSpot = [];
 
-        for (var item in value) {
-          personWeightSpot.add(FlSpot(double.parse(i.toString()),
-              myRounder((item.weight * 8) / maxWeigt.last)));
-          personBmiSpot.add(FlSpot(double.parse(i.toString()),
-              myRounder((item.bmi * 8) / maxBmi.last)));
-          personMuscleSpot.add(FlSpot(double.parse(i.toString()),
-              myRounder((item.muscleMass * 8) / maxMuscle.last)));
+        setState(() {
+          for (var item in value) {
+            maxWeigt.add(item.weight);
+            maxWeigt.add(item.weightTarget);
+            maxBmi.add(item.bmi);
+            maxBmi.add(item.bmiTarget);
+            maxMuscle.add(item.muscleMass);
+            maxMuscle.add(item.muscleTarget);
+            personTimeInfo.add(item.time.split("-").sublist(1, 2).join());
+          }
 
-          personTargetWeightSpot.add(FlSpot(double.parse(i.toString()),
-              myRounder((item.weightTarget * 8) / maxWeigt.last)));
+          maxWeigt.sort();
+          maxBmi.sort();
+          maxMuscle.sort();
 
-          personTargetBmiSpot.add(FlSpot(double.parse(i.toString()),
-              myRounder((item.bmiTarget * 8) / maxBmi.last)));
+          int i = 0;
 
-          personTargetMuscleSpot.add(FlSpot(double.parse(i.toString()),
-              myRounder((item.muscleTarget * 8) / maxMuscle.last)));
-          i += 1;
-        }
-        personInfoLength = personWeightSpot.length - 1;
+          for (var item in value) {
+            personWeightSpot.add(FlSpot(double.parse(i.toString()),
+                myRounder((item.weight * 8) / maxWeigt.last)));
+            personBmiSpot.add(FlSpot(double.parse(i.toString()),
+                myRounder((item.bmi * 8) / maxBmi.last)));
+            personMuscleSpot.add(FlSpot(double.parse(i.toString()),
+                myRounder((item.muscleMass * 8) / maxMuscle.last)));
+
+            personTargetWeightSpot.add(FlSpot(double.parse(i.toString()),
+                myRounder((item.weightTarget * 8) / maxWeigt.last)));
+
+            personTargetBmiSpot.add(FlSpot(double.parse(i.toString()),
+                myRounder((item.bmiTarget * 8) / maxBmi.last)));
+
+            personTargetMuscleSpot.add(FlSpot(double.parse(i.toString()),
+                myRounder((item.muscleTarget * 8) / maxMuscle.last)));
+            i += 1;
+          }
+          personInfoLength = personWeightSpot.length - 1;
+        });
+
+        // print(personWeightSpot);
       });
-
-      // print(personWeightSpot);
-    });
+    }
   }
 
   List<String> graphTitle = ["체중", "BMI", "골격근량"];
@@ -111,7 +161,10 @@ class _LineChartSample2State extends State<LineChartSample2> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    var a;
+    try {
+      a = LineChart(archieveData());
+    } catch (e) {}
     print(personTargetBmiSpot);
     return Stack(
       children: <Widget>[
@@ -130,37 +183,43 @@ class _LineChartSample2State extends State<LineChartSample2> {
                 child: Padding(
                   padding: const EdgeInsets.only(
                       right: 15, left: 15, top: 30, bottom: 0),
-                  child: personWeightSpot.isEmpty
-                      ? null
-                      : LineChart(mainData(index: index)),
+                  child: index == -1
+                      ? a
+                      : personWeightSpot.isEmpty
+                          ? null
+                          : LineChart(mainData(index: index)),
                 ),
               )),
         ),
-        Positioned(
-          child: AutoSizeText(
-            "${graphTitle[index]}",
-            style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.w900, fontSize: 20),
-            maxLines: 1,
-          ),
-          // child: ElevatedButton(
-          //   // color: Colors.deepOrangeAccent[400]
-          //   onPressed: () {},
-          //   style: ElevatedButton.styleFrom(
-          //       primary: Colors.redAccent[700], onPrimary: Colors.white),
-          //   child: Text(
-          //     "${graphTitle[index]}",
-          //     style: TextStyle(
-          //         color: Colors.white,
-          //         fontWeight: FontWeight.w700,
-          //         fontSize: 15),
-          //   ),
-          // ),
-          // width: size.width / 5,
-          top: 0,
-          right: 30,
-          // right: 0,
-        )
+        index == -1
+            ? Container()
+            : Positioned(
+                child: AutoSizeText(
+                  "${graphTitle[index]}",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 20),
+                  maxLines: 1,
+                ),
+                // child: ElevatedButton(
+                //   // color: Colors.deepOrangeAccent[400]
+                //   onPressed: () {},
+                //   style: ElevatedButton.styleFrom(
+                //       primary: Colors.redAccent[700], onPrimary: Colors.white),
+                //   child: Text(
+                //     "${graphTitle[index]}",
+                //     style: TextStyle(
+                //         color: Colors.white,
+                //         fontWeight: FontWeight.w700,
+                //         fontSize: 15),
+                //   ),
+                // ),
+                // width: size.width / 5,
+                top: 0,
+                right: 30,
+                // right: 0,
+              )
       ],
     );
   }
@@ -279,7 +338,27 @@ class _LineChartSample2State extends State<LineChartSample2> {
     );
   }
 
-  LineChartData avgData() {
+  LineChartData archieveData() {
+    print("here is archie graph");
+    List<FlSpot> myKcalArchieveSpot = [];
+    List<FlSpot> myNutriArchieveSpot = [];
+    print("create var");
+    print(myKcalArchieve);
+    print(myMaxKcalArchieve);
+
+    print(myKcalArchieve.length);
+    for (var k = 0; k < myKcalArchieve.length; k++) {
+      print(k);
+      myKcalArchieveSpot.add(FlSpot(k.toDouble(), myKcalArchieve[k] * 0.008));
+      myNutriArchieveSpot.add(FlSpot(
+          k.toDouble(),
+          myRounder((myNutriArchieve[k] *
+              0.008)))); //myKcalMaxArcheive.last가 최대값 => 최대값으로 나누고 *8로 해서 띄워야함
+
+    }
+
+    setState(() {});
+    print(myKcalArchieveSpot);
     return LineChartData(
       lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
@@ -308,14 +387,14 @@ class _LineChartSample2State extends State<LineChartSample2> {
               fontWeight: FontWeight.bold,
               fontSize: 16),
           getTitles: (value) {
-            switch (value.toInt()) {
-              case 2:
-                return 'MAR';
-              case 5:
-                return 'JUN';
-              case 8:
-                return 'SEP';
-            }
+            // switch (value.toInt()) {
+            //   case 2:
+            //     return 'MAR';
+            //   case 5:
+            //     return 'JUN';
+            //   case 8:
+            //     return 'SEP';
+            // }
             return '';
           },
           margin: 8,
@@ -329,12 +408,12 @@ class _LineChartSample2State extends State<LineChartSample2> {
           ),
           getTitles: (value) {
             switch (value.toInt()) {
-              case 1:
-                return '10k';
-              case 3:
-                return '30k';
-              case 5:
-                return '50k';
+              // case 1:
+              //   return '10k';
+              // case 3:
+              //   return '30k';
+              // case 5:
+              //   return '50k';
             }
             return '';
           },
@@ -351,15 +430,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
       maxY: 6,
       lineBarsData: [
         LineChartBarData(
-          spots: [
-            FlSpot(0, 3.44),
-            FlSpot(2.6, 3.44),
-            FlSpot(4.9, 3.44),
-            FlSpot(6.8, 3.44),
-            FlSpot(8, 3.44),
-            FlSpot(9.5, 3.44),
-            FlSpot(11, 3.44),
-          ],
+          spots: myKcalArchieveSpot,
           isCurved: true,
           colors: [
             ColorTween(begin: gradientColors[0], end: gradientColors[1])
@@ -370,7 +441,31 @@ class _LineChartSample2State extends State<LineChartSample2> {
           barWidth: 5,
           isStrokeCapRound: true,
           dotData: FlDotData(
-            show: false,
+            show: true,
+          ),
+          belowBarData: BarAreaData(show: true, colors: [
+            ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                .lerp(0.2)
+                .withOpacity(0.1),
+            ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                .lerp(0.2)
+                .withOpacity(0.1),
+          ]),
+        ),
+        LineChartBarData(
+          spots: myNutriArchieveSpot,
+          isCurved: true,
+          colors: [
+            Colors.red
+            // ColorTween(begin: gradientColors[0], end: gradientColors[1])
+            //     .lerp(0.2),
+            // ColorTween(begin: gradientColors[0], end: gradientColors[1])
+            //     .lerp(0.2),
+          ],
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: FlDotData(
+            show: true,
           ),
           belowBarData: BarAreaData(show: true, colors: [
             ColorTween(begin: gradientColors[0], end: gradientColors[1])

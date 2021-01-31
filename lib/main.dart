@@ -11,6 +11,7 @@ import 'searchFood.dart';
 import 'addDiet.dart';
 import 'calculate.dart';
 import 'activityPage.dart';
+import 'archieve.dart';
 
 StreamController<Map> streamController = StreamController<Map>.broadcast();
 StreamController<bool> streamControllerBool =
@@ -62,7 +63,8 @@ void main() {
       '/searchFood': (context) => SearchFood(),
       '/addDiet': (context) => AddDiet(),
       '/calculate': (context) => Calculate(),
-      '/activityPage': (context) => Activity()
+      '/activityPage': (context) => Activity(),
+      '/archieve': (context) => Archieve()
     },
   ));
 }
