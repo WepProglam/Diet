@@ -37,7 +37,7 @@ class LineChartSample2 extends StatefulWidget {
       } else {
         myPersonTimeArchieveInfo = [];
         myKcalArchieve = [];
-        nutriArchieve = [];
+        myNutriArchieve = [];
       }
     }
   }
@@ -80,15 +80,11 @@ class _LineChartSample2State extends State<LineChartSample2> {
   void getInfo() async {
     print("get info in getinfo");
     print(myKcalArchieve);
+    myPersonTimeArchieveInfo = [];
+    myKcalArchieve = [];
+    myNutriArchieve = [];
     if (index == -1) {
       if (myKcalArchieve != null && myKcalArchieve.isNotEmpty) {
-        for (var i = 0; i < myKcalArchieve.length; i++) {
-          myMaxKcalArchieve.add(myKcalArchieve[i]);
-          myMaxNutriArchieve.add(myNutriArchieve[i]);
-        }
-        myMaxKcalArchieve.sort();
-        myMaxNutriArchieve.sort();
-
         print("get info in getinfo");
       } else {
         print("empty!!!");
@@ -343,22 +339,32 @@ class _LineChartSample2State extends State<LineChartSample2> {
     List<FlSpot> myKcalArchieveSpot = [];
     List<FlSpot> myNutriArchieveSpot = [];
     print("create var");
-    print(myKcalArchieve);
-    print(myMaxKcalArchieve);
+    // print(myKcalArchieve);
+    // print(myMaxKcalArchieve);
 
-    print(myKcalArchieve.length);
+    // print(myKcalArchieve.length);
+
+    for (var j = 0; j < myKcalArchieve.length; j++) {
+      myMaxKcalArchieve.add(myKcalArchieve[j]);
+      myMaxNutriArchieve.add(myNutriArchieve[j]);
+    }
+    myMaxKcalArchieve.sort();
+    myMaxNutriArchieve.sort();
+
     for (var k = 0; k < myKcalArchieve.length; k++) {
       print(k);
-      myKcalArchieveSpot.add(FlSpot(k.toDouble(), myKcalArchieve[k] * 0.008));
+      myKcalArchieveSpot.add(
+          FlSpot(k.toDouble(), myKcalArchieve[k] * 8 / myMaxKcalArchieve.last));
       myNutriArchieveSpot.add(FlSpot(
           k.toDouble(),
           myRounder((myNutriArchieve[k] *
-              0.008)))); //myKcalMaxArcheive.last가 최대값 => 최대값으로 나누고 *8로 해서 띄워야함
+              8 /
+              myMaxNutriArchieve
+                  .last)))); //myKcalMaxArcheive.last가 최대값 => 최대값으로 나누고 *8로 해서 띄워야함
 
     }
 
-    setState(() {});
-    print(myKcalArchieveSpot);
+    // setState(() {});
     return LineChartData(
       lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
@@ -425,9 +431,9 @@ class _LineChartSample2State extends State<LineChartSample2> {
           show: true,
           border: Border.all(color: const Color(0xff37434d), width: 1)),
       minX: 0,
-      maxX: 11,
+      maxX: myMaxKcalArchieve.length.toDouble(),
       minY: 0,
-      maxY: 6,
+      maxY: 10,
       lineBarsData: [
         LineChartBarData(
           spots: myKcalArchieveSpot,

@@ -189,7 +189,7 @@ List<dynamic> justCalculateNutri(
     mass,
     // (1 - degree / (pi / 2)) * 100,
     correctRate,
-    "1 : ${myRounder(protein / carbohydrate)} : ${myRounder(fat * 9 / (carbohydrate * 4))}",
+    " ",
     carbohydrate,
     protein,
     fat

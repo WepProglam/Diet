@@ -1,21 +1,16 @@
-import 'dart:async';
 import 'dart:convert';
-import 'package:dots_indicator/dots_indicator.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_application_1/addDiet.dart';
-import 'package:flutter_application_1/dietModelSaver.dart';
+
 import 'package:flutter_application_1/indicator.dart';
 import 'package:flutter_application_1/model.dart';
-import 'package:flutter_application_1/piChart.dart';
-import 'package:intl/intl.dart' show DateFormat;
+
 import 'appBar.dart';
 import 'calculate.dart';
 import 'db_helper.dart';
 import 'lineChart.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 
 //그래프 표시 버튼 위치 달력 우측 하단
 final dbHelperDietHistory = DBHelperDietHistory();
@@ -58,11 +53,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void didChangeDependencies() async {
+    allAchieveKcal = [];
+    allAchieveNutri = [];
+    sendingAchieveNutri = [];
+    sendingArchievedate = [];
+    sendingArchieveKcal = [];
     await getInfo();
     super.didChangeDependencies();
   }
 
   void getAllDietHistory() async {
+    allDietHistory = [];
+    allAchieveKcal = [];
+    allAchieveNutri = [];
     await dbHelperDietHistory.getAllMyDietHistory().then((val) {
       allDietHistory = val;
     });
@@ -217,6 +220,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    allAchieveKcal = [];
+    allAchieveNutri = [];
+    sendingAchieveNutri = [];
+    sendingArchievedate = [];
+    sendingArchieveKcal = [];
     getInfo();
 
     super.initState();
@@ -398,8 +406,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget returnGraph() {
     // getInfo();
-    // print("sendign");
-    // print(sendingAchieveNutri);
+    print("sendign");
+    print(sendingArchieveKcal);
     return SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Stack(
