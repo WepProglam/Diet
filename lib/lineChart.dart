@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'db_helper.dart';
 import 'model.dart';
+import "indicator.dart";
 
 final dbHelperPerson = DBHelperPerson();
 
@@ -48,6 +49,16 @@ class LineChartSample2 extends StatefulWidget {
 class _LineChartSample2State extends State<LineChartSample2> {
   int index = 0;
   _LineChartSample2State({this.index});
+
+  List<Color> gradientColorsKcal = [
+    Colors.deepOrangeAccent[400],
+    Colors.deepOrangeAccent[400]
+  ];
+
+  List<Color> gradientColorsNutri = [
+    Colors.deepOrangeAccent,
+    Colors.deepOrangeAccent
+  ];
 
   List<Color> gradientColors = [
     Colors.white,
@@ -162,60 +173,102 @@ class _LineChartSample2State extends State<LineChartSample2> {
       a = LineChart(archieveData());
     } catch (e) {}
     print(personTargetBmiSpot);
-    return Stack(
-      children: <Widget>[
-        AspectRatio(
-          aspectRatio: 1.1,
-          child: FractionallySizedBox(
-              heightFactor: 1.1,
-              widthFactor: 1,
-              child: Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(18),
-                  ),
-                  // color: Color(0xff232d37)
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      right: 15, left: 15, top: 30, bottom: 0),
-                  child: index == -1
-                      ? a
-                      : personWeightSpot.isEmpty
-                          ? null
-                          : LineChart(mainData(index: index)),
-                ),
-              )),
+    return Column(
+      children: [
+        Stack(
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 1.5,
+              child: FractionallySizedBox(
+                  heightFactor: 1.1,
+                  widthFactor: 1,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(18),
+                      ),
+                      // color: Color(0xff232d37)
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          right: 15, left: 15, top: 30, bottom: 0),
+                      child: index == -1
+                          ? a
+                          : personWeightSpot.isEmpty
+                              ? null
+                              : LineChart(mainData(index: index)),
+                    ),
+                  )),
+            ),
+            index == -1
+                ? Container()
+                : Positioned(
+                    child: AutoSizeText(
+                      "${graphTitle[index]}",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 20),
+                      maxLines: 1,
+                    ),
+                    // child: ElevatedButton(
+                    //   // color: Colors.deepOrangeAccent[400]
+                    //   onPressed: () {},
+                    //   style: ElevatedButton.styleFrom(
+                    //       primary: Colors.redAccent[700], onPrimary: Colors.white),
+                    //   child: Text(
+                    //     "${graphTitle[index]}",
+                    //     style: TextStyle(
+                    //         color: Colors.white,
+                    //         fontWeight: FontWeight.w700,
+                    //         fontSize: 15),
+                    //   ),
+                    // ),
+                    // width: size.width / 5,
+                    top: 0,
+                    right: 30,
+                    // right: 0,
+                  )
+          ],
         ),
         index == -1
-            ? Container()
-            : Positioned(
-                child: AutoSizeText(
-                  "${graphTitle[index]}",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 20),
-                  maxLines: 1,
-                ),
-                // child: ElevatedButton(
-                //   // color: Colors.deepOrangeAccent[400]
-                //   onPressed: () {},
-                //   style: ElevatedButton.styleFrom(
-                //       primary: Colors.redAccent[700], onPrimary: Colors.white),
-                //   child: Text(
-                //     "${graphTitle[index]}",
-                //     style: TextStyle(
-                //         color: Colors.white,
-                //         fontWeight: FontWeight.w700,
-                //         fontSize: 15),
-                //   ),
-                // ),
-                // width: size.width / 5,
-                top: 0,
-                right: 30,
-                // right: 0,
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Spacer(flex: 1),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Indicator(
+                        // color: Color(0xfff8b250),
+                        color: Colors.deepOrangeAccent[400],
+                        text: '열량 성취도',
+                        textColor: Colors.white,
+                        fontSize: 12,
+                        isSquare: true,
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Indicator(
+                        // color: Color(0xfff8b250),
+                        color: Colors.deepOrangeAccent[100],
+                        text: '영양성분 성취도',
+                        textColor: Colors.white,
+                        fontSize: 12,
+                        isSquare: true,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                    ],
+                  ),
+                ],
               )
+            : Container()
       ],
     );
   }
@@ -433,38 +486,40 @@ class _LineChartSample2State extends State<LineChartSample2> {
           show: true,
           border: Border.all(color: const Color(0xff37434d), width: 1)),
       minX: 0,
-      maxX: myKcalArchieveSpot.length.toDouble() - 1,
+      maxX: (myKcalArchieveSpot.length.toDouble() - 1) * 1.1,
       minY: 0,
       maxY: 12,
       lineBarsData: [
         LineChartBarData(
           spots: myKcalArchieveSpot,
           isCurved: false,
-          colors: gradientColors,
+          colors: gradientColorsKcal,
           barWidth: 5,
           isStrokeCapRound: true,
           dotData: FlDotData(
             show: true,
           ),
           belowBarData: BarAreaData(
-            show: true,
-            colors:
-                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+            show: false,
+            colors: gradientColorsKcal
+                .map((color) => color.withOpacity(0.3))
+                .toList(),
           ),
         ),
         LineChartBarData(
           spots: myNutriArchieveSpot,
           isCurved: false,
-          colors: gradientColors,
+          colors: gradientColorsNutri,
           barWidth: 5,
           isStrokeCapRound: true,
           dotData: FlDotData(
             show: true,
           ),
           belowBarData: BarAreaData(
-            show: true,
-            colors:
-                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+            show: false,
+            colors: gradientColorsNutri
+                .map((color) => color.withOpacity(0.3))
+                .toList(),
           ),
         ),
       ],

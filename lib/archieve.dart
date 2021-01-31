@@ -262,102 +262,98 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     // getInfo();
-    return Scaffold(
-        // backgroundColor: Color(0xFFD7FFF1),
-        appBar: basicAppBar("성취도 그래프", context),
-        drawer: NavDrawer(),
-        body: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Row(children: [
-              // Spacer(flex: 1),
-              Expanded(
-                  flex: 20,
-                  child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      child: GestureDetector(
-                          // onVerticalDragUpdate: (details) {
-                          //   print(details);
-                          // },
-                          child: Column(
-                        children: [
-                          // Spacer(
-                          //   flex: 1,
-                          // ),
+    return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Row(children: [
+          // Spacer(flex: 1),
+          Expanded(
+              flex: 20,
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: GestureDetector(
+                      // onVerticalDragUpdate: (details) {
+                      //   print(details);
+                      // },
+                      child: Column(
+                    children: [
+                      // Spacer(
+                      //   flex: 1,
+                      // ),
 
-                          //달력
+                      //달력
 
-                          Expanded(
-                            flex: calenderWidthFlex,
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  // color: Color(0x774E0D0D),
-                                  border: Border.all(
-                                      // color: Color(0xFF4E0D0D),
-                                      width: 5),
-                                ),
-                                child: returnGraph()),
-                          ),
-                          // Spacer(
-                          //   flex: 1,
-                          // ),
+                      Expanded(
+                        flex: calenderWidthFlex,
+                        child: Container(
+                            decoration: BoxDecoration(
+                              // color: Color(0x774E0D0D),
+                              border: Border.all(
+                                  // color: Color(0xFF4E0D0D),
+                                  width: 5),
+                            ),
+                            child: returnGraph()),
+                      ),
+                      // Spacer(
+                      //   flex: 1,
+                      // ),
 
-                          //식단
-                          Expanded(
-                              flex: 16,
-                              child: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Container(
-                                    child: Column(
-                                      children: [
-                                        Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            // decoration:
-                                            //     BoxDecoration(
-                                            //         color: Colors
-                                            //             .black),
-                                            child: Center(
-                                                child: Text(
-                                              "",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w700),
-                                            )),
-                                          ),
-                                        ),
-                                        Expanded(
-                                            flex: 5,
-                                            child: Container(
-                                              child: Center(
-                                                  child: Stack(
-                                                children: [],
-                                              )),
-                                              // decoration:
-                                              //     BoxDecoration(
-                                              //         color: Colors
-                                              //             .white),
-                                            ))
-                                      ],
+                      //식단
+                      Expanded(
+                          flex: 16,
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: Container(
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        // decoration:
+                                        //     BoxDecoration(
+                                        //         color: Colors
+                                        //             .black),
+                                        child: Center(
+                                            child: Text(
+                                          "",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w700),
+                                        )),
+                                      ),
                                     ),
-                                  ))
-                              // decoration: BoxDecoration(
-                              //     color: Colors.white),
+                                    Expanded(
+                                        flex: 5,
+                                        child: Container(
+                                          child: Center(
+                                              child: Stack(
+                                            children: [],
+                                          )),
+                                          // decoration:
+                                          //     BoxDecoration(
+                                          //         color: Colors
+                                          //             .white),
+                                        ))
+                                  ],
+                                ),
+                              ))
+                          // decoration: BoxDecoration(
+                          //     color: Colors.white),
 
-                              ),
-                          // Spacer(
-                          //   flex: 2,
-                          // ),
-                          // Spacer(
-                          //   flex: 10,
-                          // ),
-                          Spacer(
-                            flex: 2,
                           ),
-                          //달력
-                        ],
-                      ))))
-            ])));
+                      // Spacer(
+                      //   flex: 2,
+                      // ),
+                      // Spacer(
+                      //   flex: 10,
+                      // ),
+                      Spacer(
+                        flex: 2,
+                      ),
+                      //달력
+                    ],
+                  ))))
+        ]));
   }
 
   num todayCar;
