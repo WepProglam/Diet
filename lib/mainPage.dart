@@ -247,7 +247,9 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       await checkConfirmDB();
       await dbHelperPerson.getLastPerson().then((val) {
-        person = val;
+        setState(() {
+          person = val;
+        });
       });
       await getConfirmedIndex(dietHistory);
 
@@ -279,9 +281,18 @@ class _MyHomePageState extends State<MyHomePage> {
     getInfo();
     getCompleteDate();
     getTodayCalroie();
+    calculatekcalAchieve();
     await dbHelperPerson.getLastPerson().then((value) => setState(() {
           try {
             targetKcal = value.metabolism;
+            person = value;
+            if (value.purpose == 0) {
+              nutriRatioCopy = [3, 4, 3];
+            } else if (value.purpose == 1) {
+              nutriRatioCopy = [4, 4, 2];
+            } else {
+              nutriRatioCopy = [5, 3, 2];
+            }
           } catch (e) {}
           // person = value;
         }));
@@ -377,17 +388,29 @@ class _MyHomePageState extends State<MyHomePage> {
         List<num> nutriRatio;
         switch (person.purpose) {
           case 0: //다이어트
-            nutriRatio = [3, 4, 3];
-            nutriRatioCopy = [3, 4, 3];
+            setState(() {
+              nutriRatio = [3, 4, 3];
+
+              nutriRatioCopy = nutriRatio;
+            });
+
             break;
           case 1: //벌크업
-            nutriRatio = [4, 4, 2];
-            nutriRatioCopy = [4, 4, 2];
+
+            setState(() {
+              nutriRatio = [4, 4, 2];
+
+              nutriRatioCopy = nutriRatio;
+            });
 
             break;
           case 2: //릴매스업
-            nutriRatio = [5, 3, 2];
-            nutriRatioCopy = [5, 3, 2];
+
+            setState(() {
+              nutriRatio = [5, 3, 2];
+
+              nutriRatioCopy = nutriRatio;
+            });
             break;
           default:
         }
