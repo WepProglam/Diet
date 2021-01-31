@@ -14,7 +14,7 @@ import 'calculate.dart';
 Color listViewColor = Colors.deepOrangeAccent;
 Color iconColor = Colors.deepOrangeAccent[400];
 double _currentSliderValue = 0;
-double rangeSliderMaxValue = 100;
+int rangeSliderMaxValue = 100;
 final dbHelperFood = DBHelperFood();
 
 var filterColor = Colors.deepOrangeAccent[700];
@@ -112,7 +112,7 @@ class _FoodListState extends State<FoodList> {
     } else {
       dateTime = "$calender_year-$calender_month-$calender_date";
     }
-    print(dateTime);
+
     await dbHelperPerson.getPerson(dateTime).then((val) async {
       if (val != null) {
         person = val;
@@ -122,10 +122,7 @@ class _FoodListState extends State<FoodList> {
         });
       }
     });
-    // print("&" * 10000);
-    print(person.metabolism);
-    // print("&" * 10000);
-    print(dateTime);
+
     await dbHelperDietHistory.getDietHistory(dateTime).then((val) {
       if (val != null) {
         todayDietInfo["b"] =
@@ -136,7 +133,7 @@ class _FoodListState extends State<FoodList> {
         todayDietInfo["s"] = val.snack != "null" ? jsonDecode(val.snack) : null;
       }
     });
-    print(todayDietInfo);
+
     var keys = todayDietInfo.keys;
     for (var item in keys) {
       if (todayDietInfo[item] != null) {
@@ -145,11 +142,13 @@ class _FoodListState extends State<FoodList> {
         }
       }
     }
-    print(todaykcal);
-    rangeSliderMaxValue = (1 - todaykcal / person.metabolism) * 100;
-    print("********************" * 999);
-    print(rangeSliderMaxValue);
-    print("********************" * 999);
+
+    // print("today kcal = $todaykcal");
+
+    rangeSliderMaxValue = ((1 - todaykcal / person.metabolism) * 100).round();
+    // print("1-${todaykcal}/ ${person.metabolism}= ${rangeSliderMaxValue / 100}");
+
+    // print("this is rangeslider max value = $rangeSliderMaxValue");
   }
 
   String initialVal(num mass) {
@@ -211,11 +210,6 @@ class _FoodListState extends State<FoodList> {
                   ),
                 ),
                 onTap: () {
-                  print("///" * 100);
-                  print(foodMassController.length);
-                  print(foodServingController.length);
-                  print("///" * 100);
-
                   ListContents temp = foodList[index];
                   bool tempBool = pinPushedList[index];
                   TextEditingController _controller = foodMassController[index];
@@ -284,7 +278,7 @@ class _FoodListState extends State<FoodList> {
 
               onChanged: (text) async {
                 massChangeList = List(foodMassController.length);
-                print(foodMassController.length);
+
                 List<int> index = getIndex();
                 for (var item in index) {
                   massChangeList[item] =
@@ -292,7 +286,6 @@ class _FoodListState extends State<FoodList> {
                 }
 
                 justCalNutri(foodList, massChangeList).then((val) {
-                  print(val);
                   setState(() {
                     carbohydrateMass = val[0];
                     proteinMass = val[1];
@@ -399,7 +392,7 @@ class _FoodListState extends State<FoodList> {
       }
       k += 1;
     }
-    print("return $n");
+
     return n;
   }
 
@@ -409,12 +402,12 @@ class _FoodListState extends State<FoodList> {
       dynamic j = num.tryParse(item.value.text);
       if (j != null) {
         // if (j != 0) {
-        print("j is $j");
+
         n++;
         // }
       }
     }
-    print("return $n");
+
     return n;
   }
 
@@ -435,8 +428,6 @@ class _FoodListState extends State<FoodList> {
   void didChangeDependencies() async {
     final Map<String, Map> args = ModalRoute.of(context).settings.arguments;
     if (args == null) {
-      print(1);
-
       whereFrom = null;
     } else if (args.containsKey('pre')) {
       if (args['pre']['pre'] == "mainPage") {
@@ -444,14 +435,11 @@ class _FoodListState extends State<FoodList> {
         mainPageIndex = args['pre']['index'];
         dateTimeInfo = args['pre']['dateTime'];
         getHowMuchPercentLeft(dateTimeInfo);
-        print("***************");
-        print(rangeSliderMaxValue);
       } else if (args['pre']['pre'] == "searchDiet") {
         dietInfo = args["myTempoDiet"];
         String dietName = dietInfo['dietName'];
 
         Map foodInfo = jsonDecode(dietInfo['foodInfo']);
-        print(foodInfo['foods'][0]['code']);
 
         for (var item in foodInfo['foods']) {
           changeList.add(item['foodMass']);
@@ -477,11 +465,8 @@ class _FoodListState extends State<FoodList> {
         mainPageIndex = args['pre']['index'];
         dateTimeInfo = args['pre']['dateTime'];
         getHowMuchPercentLeft(dateTimeInfo);
-        print(rangeSliderMaxValue);
       }
     } else if (args['myTempoDiet'] is Map) {
-      print(3);
-
       //diet db 문제
       whereFrom = "savedDiet";
       dietInfo = args["myTempoDiet"];
@@ -493,7 +478,6 @@ class _FoodListState extends State<FoodList> {
       String dietName = dietInfo['dietName'];
 
       Map foodInfo = jsonDecode(dietInfo['foodInfo']);
-      print(foodInfo['foods'][0]['code']);
 
       // Map foodInfo = jsonDecode(dietInfo['foodInfo']);
       // Map foods = Map<String, dynamic>.from(foodInfo[dietInfo['dietName']]);
@@ -509,7 +493,6 @@ class _FoodListState extends State<FoodList> {
       }
 
       justCalNutri(foodList, changeList).then((val) {
-        print(val);
         setState(() {
           carbohydrateMass = val[0];
           proteinMass = val[1];
@@ -628,7 +611,7 @@ class _FoodListState extends State<FoodList> {
                                     "mass": defaultFood[i]
                                   });
                                 }
-                                print(defaultFoodList);
+
                                 makeCsvFile(
                                         defaultFoodList: defaultFoodList,
                                         foodList:
@@ -643,9 +626,6 @@ class _FoodListState extends State<FoodList> {
                                     nutriInfo[i * 3 + 1] = value[i].protein;
                                     nutriInfo[i * 3 + 2] = value[i].fat;
                                   }
-                                  print("val=="); //여기서 val을 텍스트필드에 넣으면 될듯
-
-                                  print(val);
 
                                   sendData.addAll(nutriInfo);
                                   sendData.addAll(val);
@@ -668,7 +648,7 @@ class _FoodListState extends State<FoodList> {
                                       foodServingController[i].text =
                                           "${(val[i] / servingSize[i]).toStringAsFixed(1)}인분";
                                     }
-                                    print(carProFat);
+
                                     setState(() {
                                       correct = carProFat[1];
                                       carbohydrateMass = carProFat[3];
@@ -676,7 +656,6 @@ class _FoodListState extends State<FoodList> {
                                       fatMass = carProFat[5];
                                     });
                                   } catch (e) {
-                                    print(e);
                                     var snackBar =
                                         buildSnackBar('음식 조합이 매우 부적합합니다.');
                                     Scaffold.of(context).showSnackBar(snackBar);
@@ -762,8 +741,7 @@ class _FoodListState extends State<FoodList> {
                             for (var item in foodMassController) {
                               print(item.value.text);
                             }
-                            print(changeNumOfMass());
-                            print(foodMassController.length);
+
                             var snackBar = buildSnackBar('빈칸이 있습니다.');
                             Scaffold.of(context).showSnackBar(snackBar);
                           } else {
@@ -775,12 +753,6 @@ class _FoodListState extends State<FoodList> {
                                             null
                                     ? null
                                     : dietNameController.value.text.trim();
-
-                            print("/" * 100);
-                            print(dietName);
-                            print(dietNameController.value.text);
-                            print(dietNameController.value.text.trim());
-                            print("/" * 100);
 
                             List<num> foodMass = [];
                             Diet diet;
@@ -801,7 +773,7 @@ class _FoodListState extends State<FoodList> {
                                   .then((value) {
                                 diet = value;
                               });
-                              print(diet);
+
                               mainPageAlertDialog(context, diet);
                             } else if (whereFrom == "searchDietMainPage") {
                               await formatDiet(
@@ -813,7 +785,7 @@ class _FoodListState extends State<FoodList> {
                                   .then((value) {
                                 diet = value;
                               });
-                              print(diet);
+
                               mainPageAlertDialog(context, diet);
                             } else {
                               //savedDiet,다른 경로로 접근
@@ -876,9 +848,9 @@ class _FoodListState extends State<FoodList> {
       child: Text("저장"),
       onPressed: () async {
         String mealTime = mainPageReturnMealTime(mainPageIndex);
-        print(mealTime);
+
         String dietTitle = '$dateTimeInfo-$mealTime';
-        print(dietTitle);
+
         diet.dietName = (diet.dietName.length > 0) ? diet.dietName : dietTitle;
         await dbHelperDiet.createHelper(diet);
         Map passingData = diet.toMap();
@@ -886,6 +858,9 @@ class _FoodListState extends State<FoodList> {
         _currentSliderValue = 0;
         Navigator.pop(context);
         Navigator.pop(context, passingData);
+        setState(() {
+          _currentSliderValue = 0;
+        });
       },
     );
 
@@ -1028,7 +1003,7 @@ class _FoodListState extends State<FoodList> {
     num x, y, z; //각 음식별 무게
     for (var i = 0; i < foodList.length; i++) {
       Food food = await dbHelperFood.getFood(foodList[i].code);
-      print(foodList[i].code);
+
       if (defaultMass != null) {
         if (defaultMass.contains(i)) {
           totalCalorie -= food.carbohydrate *
@@ -1049,10 +1024,7 @@ class _FoodListState extends State<FoodList> {
         fat.add(food.fat);
       }
     }
-    print(carbohydrate);
-    print(protein);
-    print(fat);
-    print("totalcalorie $totalCalorie");
+
     unit = totalCalorie / 50;
     /*
     탄수화물  단백질     지방
@@ -1122,10 +1094,7 @@ class _FoodListState extends State<FoodList> {
 
     List<num> index = [];
     index = getIndex();
-    print("*" * 100);
-    print(foodList.length);
-    print(mass.length);
-    print("*" * 100);
+
     for (var i = 0; i < foodList.length; i++) {
       Food food = await dbHelperFood.getFood(foodList[i].code);
       print(mass[i]);
@@ -1155,7 +1124,7 @@ class RangeSliderState extends State<RangeSlider> {
       value: _currentSliderValue,
       min: 0,
       max: 100,
-      divisions: 20,
+      divisions: 100,
       label: _currentSliderValue.round().toString(),
       onChanged: (double value) {
         if (value > rangeSliderMaxValue) {
