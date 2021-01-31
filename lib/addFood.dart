@@ -35,6 +35,8 @@ class AddFood extends StatefulWidget {
   _AddFoodState createState() => _AddFoodState();
 }
 
+ScrollController _controller;
+
 class _AddFoodState extends State<AddFood> {
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,11 @@ class _AddFoodState extends State<AddFood> {
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
           currentFocus.unfocus();
+          Future.delayed(Duration.zero, () {
+            _controller.animateTo(0.0,
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.fastOutSlowIn);
+          });
         },
         child: AddFoodSub(
           streamMap: streamController.stream,
@@ -82,6 +89,7 @@ class _AddFoodSub extends State<AddFoodSub> {
     _ulController.dispose();
     _servingController.dispose();
     _foodNameController.dispose();
+
     //_purposeController.dispose();
     super.dispose();
     isDisposed = true;
@@ -97,42 +105,49 @@ class _AddFoodSub extends State<AddFoodSub> {
       body: Center(
           child: Form(
         key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Spacer(
-              flex: 2,
+        child: SingleChildScrollView(
+          controller: _controller,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 1.1,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Spacer(
+                  flex: 2,
+                ),
+                searchBar(),
+                Spacer(
+                  flex: 1,
+                ),
+                subBuilderQuestion("음식명", " ", controller: _foodNameController),
+                subBuilderQuestion("1회 제공량", "g",
+                    controller: _servingController),
+                subBuilderQuestion("탄수화물", "g", controller: _carboController),
+                subBuilderQuestion(
+                  "단백질",
+                  "g",
+                  controller: _proController,
+                ),
+                subBuilderQuestion("지방", "g",
+                    controller: _fatController,
+                    icon: Icon(Icons.restaurant_outlined)),
+                subBuilderQuestion(
+                  "열량",
+                  "kcal",
+                  controller: _ulController,
+                ),
+                Spacer(
+                  flex: 1,
+                ),
+                Row(
+                  children: foodList,
+                ),
+                Spacer(
+                  flex: 3,
+                ),
+              ],
             ),
-            searchBar(),
-            Spacer(
-              flex: 1,
-            ),
-            subBuilderQuestion("음식명", " ", controller: _foodNameController),
-            subBuilderQuestion("1회 제공량", "g", controller: _servingController),
-            subBuilderQuestion("탄수화물", "g", controller: _carboController),
-            subBuilderQuestion(
-              "단백질",
-              "g",
-              controller: _proController,
-            ),
-            subBuilderQuestion("지방", "g",
-                controller: _fatController,
-                icon: Icon(Icons.restaurant_outlined)),
-            subBuilderQuestion(
-              "열량",
-              "kcal",
-              controller: _ulController,
-            ),
-            Spacer(
-              flex: 1,
-            ),
-            Row(
-              children: foodList,
-            ),
-            Spacer(
-              flex: 3,
-            ),
-          ],
+          ),
         ),
       )),
       floatingActionButton: add(),
@@ -206,6 +221,7 @@ class _AddFoodSub extends State<AddFoodSub> {
       //print("listen cutom $foodInfo");
       streamController.add(foodInfo);
     });
+    _controller = ScrollController();
     super.initState();
   }
 
@@ -314,7 +330,6 @@ class _AddFoodSub extends State<AddFoodSub> {
                   //   print("finisj");
                   // });
 
-
                   Navigator.popAndPushNamed(context, '/searchFood',
                           arguments: <String, String>{'pre': 'addFood'})
                       .then((code) async {
@@ -322,7 +337,6 @@ class _AddFoodSub extends State<AddFoodSub> {
                       streamController.add(food.toMap());
                     });
                   });
-
                 }),
           ),
           /* TypeFoodName(
@@ -407,6 +421,21 @@ class _AddFoodSub extends State<AddFoodSub> {
           return 'Please enter info';
         }
         return null;
+      },
+      onEditingComplete: () {
+        Future.delayed(Duration.zero, () {
+          _controller.animateTo(_controller.offset - 200,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut);
+          FocusScope.of(context).unfocus();
+        });
+      },
+      onTap: () {
+        Future.delayed(Duration.zero, () {
+          _controller.animateTo(_controller.offset + 200,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut);
+        });
       },
       onChanged: (text) {
         if (fieldName != "foodName") {

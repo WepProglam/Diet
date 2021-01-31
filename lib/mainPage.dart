@@ -419,7 +419,7 @@ class _MyHomePageState extends State<MyHomePage> {
         num correct =
             (1 - ((person.metabolism - totalCal) / person.metabolism).abs()) *
                 100;
-        print([correctNutri, correct, item.date]);
+        // print([correctNutri, correct, item.date]);
         monthlyAchieveKcal.add([num.parse(item.date.split('-')[2]), correct]);
         monthlyAchieveNutri
             .add([num.parse(item.date.split('-')[2]), correctNutri]);
@@ -569,12 +569,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                 double percent = todayDietList[index]["rate"] /
                                     100; //80 => 0.8
 
-                                print(percent);
+                                // print(percent);
 
                                 todayDietList[index]['foodInfo']['kcal'] =
                                     person.metabolism * percent;
 
-                                print(todayDietList[index]['foodInfo']['kcal']);
+                                // print(todayDietList[index]['foodInfo']['kcal']);
 
                                 todayDietList[index]["kcal"] =
                                     todayDietList[index]['foodInfo']['kcal'];
@@ -890,7 +890,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   maxLines: 1,
                                 ),
                                 onPressed: () async {
-                                  print(todayDietList[index]['foodInfo']);
+                                  // print(todayDietList[index]['foodInfo']);
                                   await formatDietHistory(
                                           dietName: todayDietList[index]
                                               ['dietName'],
@@ -906,7 +906,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   getInfo();
                                   getToday();
                                   getCompleteDate();
-                                  print("wait finish");
+                                  // print("wait finish");
                                   setState(() {
                                     //확정
 
@@ -1039,6 +1039,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
         // backgroundColor: Color(0xFFD7FFF1),
+        resizeToAvoidBottomPadding: false,
         appBar: basicAppBar("GOLDEN RATIO", context),
         drawer: NavDrawer(),
         body: SizedBox(
@@ -1599,7 +1600,7 @@ class _MyHomePageState extends State<MyHomePage> {
     await dbHelperDietHistory
         .getCompleteDietHistory(month: calender_month, year: calender_year)
         .then((val) {
-      print(val);
+      // print(val);
       indicateCompleteDate(val);
     });
   }

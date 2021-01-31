@@ -24,8 +24,8 @@ Future<Diet> formatDiet(
     // 있을 수 없는 경우(saveddiet에선 무조건 식단 이름입력)
     return null;
   } else if (dietName == null && mainPageIndex is int) {
-    print(dietName);
-    print(mainPageIndex);
+    // print(dietName);
+    // print(mainPageIndex);
     mealTime = mainPageReturnMealTime(mainPageIndex);
     dietTitle = dietDateName + '-' + mealTime;
   } else if (dietName != null) {
@@ -94,13 +94,13 @@ Future<List<num>> justCalNutri(
   num protein = 0.0;
   num fat = 0.0;
 
-  print("*" * 100);
-  print(foodList.length);
-  print(mass.length);
-  print("*" * 100);
+  // print("*" * 100);
+  // print(foodList.length);
+  // print(mass.length);
+  // print("*" * 100);
   for (var i = 0; i < foodList.length; i++) {
     Food food = await dbHelperFood.getFood(foodList[i].code);
-    print(mass[i]);
+    // print(mass[i]);
     if (mass[i] == null || mass.length - 1 < i) {
       mass[i] = 0;
     }
@@ -114,8 +114,6 @@ Future<List<num>> justCalNutri(
 String myRounder(num a) {
   return a.toString().length < 4 ? a.toString() : a.toString().substring(0, 4);
 }
-
-
 
 Future<void> formatDietHistory(
     {String dietName,
@@ -131,11 +129,9 @@ Future<void> formatDietHistory(
   String mySnack = "null";
   DietHistory dietHistory;
 
-
-
-  print("here is formatdiethistory");
-  print(dateTime);
-  print(kcal);
+  // print("here is formatdiethistory");
+  // print(dateTime);
+  // print(kcal);
 
   final dBHelperDietHistory = DBHelperDietHistory();
   // await dBHelperDietHistory.deleteAllDietHistory();
@@ -143,9 +139,9 @@ Future<void> formatDietHistory(
   dateData = dateTime;
   int year = num.parse(dateTime.split('-')[0]);
   int month = num.parse(dateTime.split('-')[1]);
-  print(year);
-  print(month);
-  print(isItConfirm);
+  // print(year);
+  // print(month);
+  // print(isItConfirm);
   int complete = 0;
   if (flag == 0) {
     myBreakFast = jsonEncode({
@@ -189,17 +185,17 @@ Future<void> formatDietHistory(
     complete = val;
   });
 
-
-
   String completeString = complete == 4 ? "true" : "false";
-  if(completeString == "false"){
-    completeString = calculatekcalAchieve(dietHistory,num.parse(kcal)) >= 90 ? "true" : "false";
+  if (completeString == "false") {
+    completeString = calculatekcalAchieve(dietHistory, num.parse(kcal)) >= 90
+        ? "true"
+        : "false";
   }
 
-  print("kcal archieve = ${calculatekcalAchieve(dietHistory,num.parse(kcal))}");
+  // print("kcal archieve = ${calculatekcalAchieve(dietHistory,num.parse(kcal))}");
 
   if (dietHistory != null) {
-    print("sadfasdfasd");
+    // print("sadfasdfasd");
     if (flag == 0) {
       dietHistory.breakFast = myBreakFast;
     } else if (flag == 1) {
@@ -209,14 +205,12 @@ Future<void> formatDietHistory(
     } else if (flag == 3) {
       dietHistory.snack = mySnack;
     }
-    print("update");
+    // print("update");
     dietHistory.complete = completeString;
-    print(dietHistory.year);
+    // print(dietHistory.year);
 
     await dBHelperDietHistory.updateDietHistory(dietHistory);
   } else {
-
-
     dietHistory = DietHistory(
         date: dateData,
         breakFast: myBreakFast,
@@ -239,7 +233,7 @@ Future<int> isDateCompleted(String dateTime) async {
     if (val != null) {
       diteHistory = val;
       dietHistoryMap = diteHistory.toMap();
-      print(dietHistoryMap);
+      // print(dietHistoryMap);
     } else {
       diteHistory = null;
     }
@@ -271,14 +265,14 @@ Future<int> isDateCompleted(String dateTime) async {
     }
   }
 
-  print("this is tag");
-  print(tag);
+  // print("this is tag");
+  // print(tag);
 
   return tag;
 }
 
-num calculatekcalAchieve(DietHistory dietHistory,num existKcal) {
-  num archieve=0.0;
+num calculatekcalAchieve(DietHistory dietHistory, num existKcal) {
+  num archieve = 0.0;
 
   num totalCal = 0;
   num car = 0;
@@ -292,12 +286,9 @@ num calculatekcalAchieve(DietHistory dietHistory,num existKcal) {
           if (breakfast != "null" && breakfast != null) {
             if (breakfast['isItConfirm'] == "true") {
               totalCal += num.parse(breakfast['kcal']);
-              num carRatio =
-                  num.parse(breakfast["nutri"].split(":")[0]) / 100;
-              num proRatio =
-                  num.parse(breakfast["nutri"].split(":")[1]) / 100;
-              num fatRatio =
-                  num.parse(breakfast["nutri"].split(":")[2]) / 100;
+              num carRatio = num.parse(breakfast["nutri"].split(":")[0]) / 100;
+              num proRatio = num.parse(breakfast["nutri"].split(":")[1]) / 100;
+              num fatRatio = num.parse(breakfast["nutri"].split(":")[2]) / 100;
 
               car += carRatio * num.parse(breakfast['kcal']);
               pro += proRatio * num.parse(breakfast['kcal']);
@@ -363,16 +354,15 @@ num calculatekcalAchieve(DietHistory dietHistory,num existKcal) {
       }
     }
 
+    num correct = (1 -
+            ((person.metabolism - (totalCal + existKcal)) / person.metabolism)
+                .abs()) *
+        100;
 
-    num correct =
-        (1 - ((person.metabolism - (totalCal+existKcal)) / person.metabolism).abs()) *
-            100;
-
-    archieve=correct;
-
+    archieve = correct;
   } else {
-    archieve=0.0;
+    archieve = 0.0;
   }
 // print(monthlyAchieveKcal);
-return archieve;
+  return archieve;
 }
