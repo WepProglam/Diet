@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/initPage.dart';
@@ -40,112 +41,127 @@ class PieChart2State extends State {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1.3,
-      child: Container(
-        // color: Color(0xFFFFFEF5),
-        child: Row(
-          children: <Widget>[
-            // SizedBox(
-            //   height: 18,
-            // ),
-            // Spacer(),
-            Expanded(
-              flex: 10,
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: PieChart(
-                  PieChartData(
-                      pieTouchData:
-                          PieTouchData(touchCallback: (pieTouchResponse) {
-                        setState(() {
-                          if (pieTouchResponse.touchInput is FlLongPressEnd ||
-                              pieTouchResponse.touchInput is FlPanEnd) {
-                            touchedIndex = -1;
-                          } else {
-                            touchedIndex = pieTouchResponse.touchedSectionIndex;
-                          }
-                        });
-                      }),
-                      borderData: FlBorderData(
-                        show: false,
-                      ),
-                      sectionsSpace: 0,
-                      centerSpaceRadius: 30,
-                      sections: showingSections()),
-                ),
-              ),
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
+        children: [
+          Container(
+            // padding: EdgeInsets.only(top: 10),
+            // color: Color(0xFFFFFEF5),
+            child: Row(
               children: <Widget>[
-                Spacer(
-                  flex: 2,
+                // SizedBox(
+                //   height: 18,
+                // ),
+                // Spacer(),
+                Expanded(
+                  flex: 10,
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: PieChart(
+                      PieChartData(
+                          pieTouchData:
+                              PieTouchData(touchCallback: (pieTouchResponse) {
+                            setState(() {
+                              if (pieTouchResponse.touchInput
+                                      is FlLongPressEnd ||
+                                  pieTouchResponse.touchInput is FlPanEnd) {
+                                touchedIndex = -1;
+                              } else {
+                                touchedIndex =
+                                    pieTouchResponse.touchedSectionIndex;
+                              }
+                            });
+                          }),
+                          borderData: FlBorderData(
+                            show: false,
+                          ),
+                          sectionsSpace: 0,
+                          centerSpaceRadius: 30,
+                          sections: showingSections()),
+                    ),
+                  ),
                 ),
-                Indicator(
-                  // color: Color(0xff0293ee),
-                  color: Colors.deepOrangeAccent[700],
-                  text: ' 탄수화물',
-                  textColor: Colors.white,
-                  fontSize: 12,
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  // color: Color(0xfff8b250),
-                  color: Colors.deepOrangeAccent,
-                  text: ' 단백질',
-                  textColor: Colors.white,
-                  fontSize: 12,
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  // color: Color(0xff845bef),
-                  color: Colors.deepOrangeAccent[100],
-                  text: ' 지방',
-                  textColor: Colors.white,
-                  isSquare: true,
-                  fontSize: 12,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  // color: Colors.black,
-                  color: Colors.deepOrange[100],
-                  text: " ${myRounder(myTotalCalroie)}Kcal",
-                  textColor: Colors.white,
-                  isSquare: true,
-                  fontSize: 12,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  // color: Colors.black,
-                  color: Colors.deepOrange[100],
-                  text: " ${myRounder(myCorrect)}% 일치",
-                  textColor: Colors.white,
-                  isSquare: true,
-                  fontSize: 12,
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Spacer(
+                      flex: 2,
+                    ),
+                    Indicator(
+                      // color: Color(0xff0293ee),
+                      color: Colors.deepOrangeAccent[700],
+                      text: ' 탄수화물',
+                      textColor: Colors.white,
+                      fontSize: 12,
+                      isSquare: true,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Indicator(
+                      // color: Color(0xfff8b250),
+                      color: Colors.deepOrangeAccent,
+                      text: ' 단백질',
+                      textColor: Colors.white,
+                      fontSize: 12,
+                      isSquare: true,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Indicator(
+                      // color: Color(0xff845bef),
+                      color: Colors.deepOrangeAccent[100],
+                      text: ' 지방',
+                      textColor: Colors.white,
+                      isSquare: true,
+                      fontSize: 12,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Indicator(
+                      // color: Colors.black,
+                      color: Colors.deepOrange[100],
+                      text: " ${myRounder(myTotalCalroie)}Kcal",
+                      textColor: Colors.white,
+                      isSquare: true,
+                      fontSize: 12,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Indicator(
+                      // color: Colors.black,
+                      color: Colors.deepOrange[100],
+                      text: " ${myRounder(myCorrect)}% 일치",
+                      textColor: Colors.white,
+                      isSquare: true,
+                      fontSize: 12,
+                    ),
+                    Spacer(),
+                    // SizedBox(
+                    //   height: 40,
+                    // ),
+                  ],
                 ),
                 Spacer(),
-                // SizedBox(
-                //   height: 40,
+                // const SizedBox(
+                //   width: 20,
                 // ),
               ],
             ),
-            Spacer(),
-            // const SizedBox(
-            //   width: 20,
-            // ),
-          ],
-        ),
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: AutoSizeText(
+              '식단 총 열량 비율',
+              maxLines: 1,
+              style: TextStyle(fontSize: 15),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -64,6 +64,8 @@ class _MyHomePageState extends State<MyHomePage> {
   DietHistory dietHistory;
   Person person;
 
+  List<num> nutriRatioCopy = [3, 4, 3];
+
   FocusScopeNode myFocusNode = FocusScopeNode();
   // ScrollController _controller = new ScrollController();
   List<bool> isSelected = [true, false];
@@ -275,8 +277,10 @@ class _MyHomePageState extends State<MyHomePage> {
     getToday();
     getInfo();
     getCompleteDate();
+    getTodayCalroie();
     await dbHelperPerson.getLastPerson().then((value) => setState(() {
           targetKcal = value.metabolism;
+          // person = value;
         }));
     super.didChangeDependencies();
   }
@@ -370,14 +374,17 @@ class _MyHomePageState extends State<MyHomePage> {
         List<num> nutriRatio;
         switch (person.purpose) {
           case 0: //다이어트
-            nutriRatio = [5, 3, 2];
+            nutriRatio = [3, 4, 3];
+            nutriRatioCopy = [3, 4, 3];
             break;
           case 1: //벌크업
             nutriRatio = [4, 4, 2];
+            nutriRatioCopy = [4, 4, 2];
 
             break;
           case 2: //릴매스업
-            nutriRatio = [3, 4, 3];
+            nutriRatio = [5, 3, 2];
+            nutriRatioCopy = [5, 3, 2];
             break;
           default:
         }
@@ -998,6 +1005,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       Spacer(
                                         flex: 2,
                                       ),
+
                                       Expanded(
                                         flex: 7,
                                         child: SizedBox(
@@ -1027,6 +1035,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ),
                                       ),
                                       Spacer(flex: 2),
+                                      Expanded(
+                                          flex: 13,
+                                          child: PieChartSample2(
+                                              carbohydrate: todayCar,
+                                              protein: todayPro,
+                                              fat: todayFat,
+                                              totalCalorie: todaykcal,
+                                              correct: correct == null ||
+                                                      (correct == 0)
+                                                  ? 0.0
+                                                  : correct.toDouble())
+                                          // child:
+                                          ),
+                                      Spacer(
+                                        flex: 1,
+                                      ),
                                       // diet(date.toString()),
                                       // dietBox(mealTime, date),
                                       Expanded(
@@ -1049,20 +1073,42 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                 .center,
                                                         children: person == null
                                                             ? [
-                                                                Text("키"),
-                                                                Text("몸무게"),
-                                                                Text("체지방률"),
-                                                                Text("골격근량"),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
+                                                                    "키"),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
+                                                                    "몸무게"),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
+                                                                    "체지방률"),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
+                                                                    "골격근량"),
+                                                                SizedBox(
+                                                                    height: 10),
                                                               ]
                                                             : [
-                                                                Text(
+                                                                AutoSizeText(
                                                                     "키    ${person.height}"),
-                                                                Text(
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
                                                                     "몸무게    ${person.weight}"),
-                                                                Text(
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
                                                                     "체지방률    ${person.bmi}"),
-                                                                Text(
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
                                                                     "골격근량    ${person.muscleMass}"),
+                                                                SizedBox(
+                                                                    height: 10),
                                                               ],
                                                       ),
                                                       // decoration: BoxDecoration(
@@ -1087,20 +1133,48 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                 .center,
                                                         children: person == null
                                                             ? [
-                                                                Text("목표 몸무게"),
-                                                                Text("목표 체지방률"),
-                                                                Text("목표 골격근량"),
-                                                                Text("목표"),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
+                                                                    "목표 몸무게"),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
+                                                                    "목표 체지방률"),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
+                                                                    "목표 골격근량"),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
+                                                                    "목표"),
+                                                                SizedBox(
+                                                                    height: 10),
                                                               ]
                                                             : [
-                                                                Text(
-                                                                    "목표 몸무게   ${person.weightTarget}"),
-                                                                Text(
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                Container(
+                                                                  child: AutoSizeText(
+                                                                      "목표 몸무게   ${person.weightTarget}"),
+                                                                ),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
                                                                     "목표 체지방률    ${person.bmiTarget}"),
-                                                                Text(
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
                                                                     "목표 골격근량   ${person.muscleTarget}"),
-                                                                Text(
-                                                                    "목표    ${person.purpose}"),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                AutoSizeText(
+                                                                  "목표    ${nutriRatioCopy[0]} : ${nutriRatioCopy[1]} : ${nutriRatioCopy[2]}",
+                                                                  maxLines: 1,
+                                                                ),
+                                                                SizedBox(
+                                                                    height: 10),
                                                               ],
                                                       ),
                                                       // decoration: BoxDecoration(
@@ -1114,22 +1188,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                       Spacer(
                                         flex: 2,
                                       ),
-                                      Expanded(
-                                          flex: 13,
-                                          child: PieChartSample2(
-                                              carbohydrate: todayCar,
-                                              protein: todayPro,
-                                              fat: todayFat,
-                                              totalCalorie: todaykcal,
-                                              correct: correct == null ||
-                                                      (correct == 0)
-                                                  ? 0.0
-                                                  : correct.toDouble())
-                                          // child:
-                                          ),
-                                      Spacer(
-                                        flex: 2,
-                                      )
                                     ],
                                   )
                                 :
@@ -1292,11 +1350,14 @@ class _MyHomePageState extends State<MyHomePage> {
             nutri[2] / nutriTotal * num.parse(todayDietInfo[item]["kcal"]);
       }
     }
-    List<num> targetNutri = [3, 4, 3]; //디폴트(다이어트)
+
+    List<num> targetNutri = [3, 4, 3];
+    //디폴트(다이어트)
     if (person != null) {
       switch (person.purpose) {
         case 0:
           targetNutri = [3, 4, 3];
+
           break;
         case 1:
           targetNutri = [4, 4, 2];
@@ -1741,11 +1802,29 @@ class _MyHomePageState extends State<MyHomePage> {
           children.add(calenderBlock(dateText(dt.toString()), false, dt));
           dt += 1;
         } else if (i == 6) {
-          children.add(colorIndicator());
+          if (weekTotalDays - datesEnd == 1) {
+            children.add(Expanded(
+                flex: 18,
+                child: Row(
+                  children: [
+                    Spacer(),
+                    colorIndicator(),
+                  ],
+                )));
+          } else {
+            children.add(Expanded(
+                flex: 15,
+                child: Row(
+                  children: [
+                    Spacer(),
+                    colorIndicator(),
+                  ],
+                )));
+          }
         } else {
-          children.add(Spacer(
-            flex: 3,
-          ));
+          // children.add(Spacer(
+          //   flex: 3,
+          // ));
         }
       }
     } else if (tag == "end") {
@@ -1840,7 +1919,7 @@ class _MyHomePageState extends State<MyHomePage> {
               completedDates.contains(date)
                   ? Positioned(
                       top: 0,
-                      right: 3,
+                      right: 0,
                       child: DotsIndicator(
                         dotsCount: 1,
                         decorator: DotsDecorator(

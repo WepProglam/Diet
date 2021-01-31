@@ -26,9 +26,9 @@ class _PersonalForm extends State<PersonalForm> {
   final _muscleTargetController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _purposeList = [
-    DropdownMenuItem(child: Center(child: Text('다이어트')), value: 1),
-    DropdownMenuItem(child: Center(child: Text('벌크업')), value: 2),
-    DropdownMenuItem(child: Center(child: Text('린매스업')), value: 3),
+    DropdownMenuItem(child: Center(child: Text('다이어트')), value: 0),
+    DropdownMenuItem(child: Center(child: Text('벌크업')), value: 1),
+    DropdownMenuItem(child: Center(child: Text('린매스업')), value: 2),
     // DropdownMenuItem(child: Center(child: Text('빈둥빈둥')), value: 4),
     // DropdownMenuItem(child: Center(child: Text('좌식업무')), value: 5),
     // DropdownMenuItem(child: Center(child: Text('돌아다니는 업무')), value: 6),
@@ -113,8 +113,8 @@ class _PersonalForm extends State<PersonalForm> {
   }
 
   num setMetabolism(num metabolism, int purpose) {
-    print(purpose);
-    print("hi");
+    // print(purpose);
+    // print("hi");
     switch (purpose) {
       case 0:
         metabolism -= 500;
@@ -311,8 +311,8 @@ class _PersonalForm extends State<PersonalForm> {
                                                   decoration: InputDecoration(
                                                       hintText: ""),
                                                   validator: (value) {
-                                                    if (value > 3) {
-                                                      return 'Select Number 1-3';
+                                                    if (value > 2) {
+                                                      return 'Select Number 0-2';
                                                     }
                                                     return null;
                                                   },
@@ -320,7 +320,6 @@ class _PersonalForm extends State<PersonalForm> {
                                                     setState(() {
                                                       // typeStart = true;
                                                       // purpose_index = value;
-
                                                       _selValue = value;
                                                       print(_selValue);
                                                     });

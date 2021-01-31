@@ -122,7 +122,7 @@ class _ActivityPageState extends State<ActivityPage> {
 
         bmrText.text = bmr.toStringAsFixed(1);
         // print(hint['nutriRate']);
-        print(hint['activity']);
+        // print(hint['activity']);
         if (hint['metabolism'] != null) {
           amText.text = addOrSubAm(amTextSetting(hint['activity'], bmr))
               .toStringAsFixed(1);
