@@ -670,6 +670,7 @@ class _ActivityPageState extends State<ActivityPage> {
             await savingInformation();
             Navigator.pop(context);
             Navigator.pop(context);
+            Navigator.popAndPushNamed(context, '/mainPage');
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
