@@ -17,7 +17,7 @@ import 'dart:convert';
 // import 'package:provider/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
-final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 // StreamController<Map> streamController = StreamController<Map>.broadcast();
 // StreamController<bool> streamControllerBool =
@@ -72,6 +72,7 @@ class _AddFoodSub extends State<AddFoodSub> {
   OverlayEntry _overLayEntry;
   bool isDisposed = true;
   Map foodTempInfo = {};
+  String whereFrom;
 
   @override
   void dispose() {
@@ -151,6 +152,8 @@ class _AddFoodSub extends State<AddFoodSub> {
     // print(args['myTempoFood']['servingSize']);
     if (args != null) {
       //searchFood에서 넘겼을때
+      whereFrom = "searchFood";
+      print("form search food");
       foodInfo = args["myTempoFood"];
 
       setState(() {
@@ -258,58 +261,64 @@ class _AddFoodSub extends State<AddFoodSub> {
               borderRadius: BorderRadius.circular(100.0),
             ),
             child: InkWell(
-              splashColor: Colors.white,
-              focusNode: _focusNode,
-              child: AspectRatio(
-                aspectRatio: 20 / 8,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 5),
-                        padding: EdgeInsets.all(2),
-                        child: Icon(
-                          Icons.search,
-                          size: 40,
-                          // color: Colors.deepOrangeAccent[400],
+                splashColor: Colors.white,
+                focusNode: _focusNode,
+                child: AspectRatio(
+                  aspectRatio: 20 / 8,
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 5),
+                          padding: EdgeInsets.all(2),
+                          child: Icon(
+                            Icons.search,
+                            size: 40,
+                            // color: Colors.deepOrangeAccent[400],
+                          ),
+                          decoration: BoxDecoration(
+                              color: Colors.deepOrangeAccent[400],
+                              shape: BoxShape.circle),
                         ),
-                        decoration: BoxDecoration(
-                            color: Colors.deepOrangeAccent[400],
-                            shape: BoxShape.circle),
-                      ),
-                      // SizedBox(
-                      //   width: 15,
-                      // ),
-                      Spacer(),
-                      Container(
-                        margin: EdgeInsets.only(left: 10, right: 10),
-                        padding: EdgeInsets.only(top: 0),
-                        child: AutoSizeText(
-                          " 불러오기",
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
+                        // SizedBox(
+                        //   width: 15,
+                        // ),
+                        Spacer(),
+                        Container(
+                          margin: EdgeInsets.only(left: 10, right: 10),
+                          padding: EdgeInsets.only(top: 0),
+                          child: AutoSizeText(
+                            " 불러오기",
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                            ),
                           ),
                         ),
-                      ),
-                      Spacer(),
-                    ],
+                        Spacer(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              // color: Colors.deepOrangeAccent[700],
-              onTap: () {
-                Navigator.pushNamed(context, '/searchFood',
-                        arguments: <String, String>{'pre': 'addFood'})
-                    .then((code) async {
-                  await dbHelper.getFood(code).then((food) {
-                    streamController.add(food.toMap());
+                // color: Colors.deepOrangeAccent[700],
+                onTap: () {
+                  // print(whereFrom);
+                  // if (whereFrom == "searchFood") {
+                  //   Navigator.pop(context, {"pre": "addFood"});
+                  //   // Navigator.pop(context);
+                  // } else {
+                    
+                 Navigator.popAndPushNamed(context, '/searchFood',
+                          arguments: <String, String>{'pre': 'addFood'})
+                      .then((code) async {
+                    await dbHelper.getFood(code).then((food) {
+                      streamController.add(food.toMap());
+                    });
                   });
-                });
-              },
-            ),
+                  // }
+                }),
           ),
           /* TypeFoodName(
               controller: _foodNameController,
