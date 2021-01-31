@@ -19,6 +19,10 @@ void getPersonKcal(
     {List<num> defaultMassList, List<num> defaultNutriList}) async {
   await dbHelperPerson.getLastPerson().then((val) {
     targetCalorie = val.metabolism;
+    print("adsfdfs");
+    print(val.metabolism);
+    print("adsfdfs");
+    print("adsfdfs");
     purposeIndex = val.purpose;
     // purposeIndex = 0;
     switch (purposeIndex) {
