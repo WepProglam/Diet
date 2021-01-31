@@ -30,7 +30,7 @@ Color iconColor = Colors.deepOrangeAccent[400];
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MyHomePage(title: 'Main Page');
+    return MyHomePage(title: 'GOLDEN RATIO');
   }
 }
 
@@ -1014,8 +1014,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
         // backgroundColor: Color(0xFFD7FFF1),
-        appBar: basicAppBar(
-            "$calender_year년 $calender_month월$calender_date일", context),
+        appBar: basicAppBar("GOLDEN RATIO", context),
         drawer: NavDrawer(),
         body: SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -1229,9 +1228,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                             // },
                                             child: Column(
                                             children: [
-                                              // Spacer(
-                                              //   flex: 1,
-                                              // ),
+                                              SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height /
+                                                    30,
+                                              ),
 
                                               //달력
                                               calenderMonthChange(),
@@ -1527,7 +1529,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget calenderMonthChange() {
     //월 이동 함수
-    return Expanded(flex: 3, child: calender());
+    return Expanded(flex: 2, child: calender());
   }
 
   void getCompleteDate() async {
@@ -1568,8 +1570,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.only(top: 4.0),
                       child: InkWell(
                         child: Ink(
-                            child:
-                                Icon(Icons.arrow_back_ios_outlined, size: 25)),
+                            child: Icon(Icons.arrow_back_ios_outlined,
+                                size: 25, color: Colors.white60)),
                         onTap: () async {
                           if (calender_month == 1) {
                             calender_year -= 1;
@@ -1589,10 +1591,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.only(top: 4.0),
                       child: InkWell(
                         child: Ink(
-                            child: Icon(
-                          Icons.arrow_forward_ios_outlined,
-                          size: 25,
-                        )),
+                            child: Icon(Icons.arrow_forward_ios_outlined,
+                                size: 25, color: Colors.white60)),
                         onTap: () async {
                           if (calender_month == 12) {
                             calender_year += 1;
@@ -1614,7 +1614,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.only(left: 10.0),
                       child: AutoSizeText(
                         "$calender_year년 $calender_month월",
-                        style: TextStyle(fontSize: 25),
+                        style: TextStyle(fontSize: 25, color: Colors.white60),
                         maxLines: 1,
                       ),
                     ),

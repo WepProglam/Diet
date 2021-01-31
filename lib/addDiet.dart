@@ -28,8 +28,8 @@ class AddDiet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Color(0xFFFFFEF5),
-      appBar:
-          AppBar(centerTitle: true, title: Text("식단 추가"), actions: <Widget>[]),
+      appBar: AppBar(
+          centerTitle: true, title: Text("ADD DIET"), actions: <Widget>[]),
       body: FoodList(),
     );
   }
@@ -940,19 +940,22 @@ class _FoodListState extends State<FoodList> {
     AlertDialog alert = AlertDialog(
       backgroundColor: Colors.black,
       title: Text("저장하기"),
-      content: new SizedBox(
-        height: MediaQuery.of(context).size.height / 5,
+      content: FittedBox(
+        // height: MediaQuery.of(context).size.height / 4,
         child: Column(
           children: [
             Text("하루 전체 식사량 중 몇프로를 섭취할지 골라주세요.\n",
                 style: TextStyle(color: Colors.white), maxLines: 1),
             Text(
               "\n권장되는 비율은 아침 점심 저녁 간식 순 3:4:2:1입니다.\n",
-              style: TextStyle(fontSize: 10),
+              style: TextStyle(fontSize: 15),
               // maxLines: 2,
             ),
-            Text(
-                "\n오늘 총 칼로리 중 ${(100 - rangeSliderMaxValue).toStringAsFixed(1)}%를 이미 사용하셨습니다."),
+            Padding(
+              padding: EdgeInsets.only(bottom: 10),
+              child: Text(
+                  "\n오늘 총 칼로리 중 ${(100 - rangeSliderMaxValue).toStringAsFixed(1)}%를 이미 사용하셨습니다."),
+            ),
             RangeSlider()
           ],
         ),

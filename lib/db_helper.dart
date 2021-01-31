@@ -39,7 +39,8 @@ class DBHelperPerson {
             weightTarget REAL,
             bmiTarget REAL,
             muscleTarget REAL,
-            sex INT
+            sex INTEGER,
+            age INTEGER
             )
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
@@ -90,7 +91,8 @@ class DBHelperPerson {
             weightTarget: res.first['weightTarget'],
             bmiTarget: res.first['bmiTarget'],
             muscleTarget: res.first['muscleTarget'],
-            sex: res.first['sex'])
+            sex: res.first['sex'],
+            age: res.first['age'])
         : null;
   }
 
@@ -112,7 +114,8 @@ class DBHelperPerson {
             weightTarget: res.last['weightTarget'],
             bmiTarget: res.last['bmiTarget'],
             muscleTarget: res.last['muscleTarget'],
-            sex: res.last['sex'])
+            sex: res.last['sex'],
+            age: res.last['age'])
         : null;
   }
 
@@ -136,7 +139,8 @@ class DBHelperPerson {
                   weightTarget: c['weightTarget'],
                   bmiTarget: c['bmiTarget'],
                   muscleTarget: c['muscleTarget'],
-                  sex: c['sex']),
+                  sex: c['sex'],
+                  age: c['age']),
             )
             .toList()
         : [];
@@ -243,7 +247,8 @@ class DBHelperFood {
             fat: res.first['fat'],
             isItMine: res.first['isItMine'],
             selected: res.first['selected'],
-            servingSize: res.first['servingSize'])
+            servingSize: res.first['servingSize'],
+          )
         : Null;
   }
 

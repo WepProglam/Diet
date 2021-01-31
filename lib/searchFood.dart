@@ -377,7 +377,7 @@ class _SearchListState extends State<SearchList>
 
   Widget appBarTitle = AutoSizeText(
     // "Search Food",
-    "Foods",
+    "MY FOOD",
     maxLines: 1,
     // style: TextStyle(color: Colors.white),
   );
@@ -516,7 +516,7 @@ class _SearchListState extends State<SearchList>
                     // color: Colors.orange,
                   );
                   this.appBarTitle = AutoSizeText(
-                    "Foods",
+                    "MY FOOD",
                     maxLines: 1,
                     // style: TextStyle(color: Colors.white),
                   );

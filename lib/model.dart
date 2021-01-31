@@ -83,7 +83,8 @@ class Food {
       this.fat,
       this.isItMine,
       this.selected,
-      this.servingSize});
+      this.servingSize,
+      age});
 
   Map<String, dynamic> toMap() {
     return {

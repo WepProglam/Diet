@@ -91,8 +91,8 @@ class _AddFoodSub extends State<AddFoodSub> {
     // getInfo();
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar:
-          AppBar(centerTitle: true, title: Text("음식 추가"), actions: <Widget>[]),
+      appBar: AppBar(
+          centerTitle: true, title: Text("ADD FOOD"), actions: <Widget>[]),
       body: Center(
           child: Form(
         key: _formKey,

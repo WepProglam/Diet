@@ -26,98 +26,116 @@ import 'package:flutter/material.dart';
 // }
 
 Widget basicAppBar(String title, BuildContext context) {
-  return AppBar(
-    //color
-    // backgroundColor: Colors.deepOrangeAccent,
-    iconTheme: IconThemeData(color: Colors.white),
+  if (title == "GOLDEN RATIO") {
+    return AppBar(
+      //color
+      // backgroundColor: Colors.deepOrangeAccent,
+      iconTheme: IconThemeData(color: Colors.white),
 
-    //앱 이름
-    centerTitle: true,
-    title: Text(
-      title, /* style: TextStyle(color: Colors.white) */
-    ),
-    //마이페이지
-    actions: <Widget>[
-      IconButton(
-        icon: Icon(
-          Icons.person,
+      //앱 이름
+      centerTitle: true,
+      title: Text(title,
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.w900, fontSize: 25)),
+      //마이페이지
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.person,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, '/personalForm');
+          },
         ),
-        onPressed: () {
-          Navigator.pushNamed(context, '/personalForm');
-        },
+      ],
+    );
+  } else {
+    return AppBar(
+      //color
+      // backgroundColor: Colors.deepOrangeAccent,
+      iconTheme: IconThemeData(color: Colors.white),
+
+      //앱 이름
+      centerTitle: true,
+      title: Text(
+        title, /* style: TextStyle(color: Colors.white) */
       ),
-    ],
-  );
+      //마이페이지
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.person,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, '/personalForm');
+          },
+        ),
+      ],
+    );
+  }
 }
 
 class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.all(5),
-        children: <Widget>[
-          Container(
-            height: 150,
-            child: DrawerHeader(
-              child: Text(
-                'Side menu',
-                style: TextStyle(fontSize: 25),
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.55,
+      child: Drawer(
+        child: ListView(
+          padding: EdgeInsets.all(5),
+          children: <Widget>[
+            Container(
+              height: 150,
+              child: DrawerHeader(
+                child: Text(
+                  'Side menu',
+                  style: TextStyle(fontSize: 25),
+                ),
+                // decoration: BoxDecoration(color: Colors.deepOrangeAccent),
               ),
-              // decoration: BoxDecoration(color: Colors.deepOrangeAccent),
             ),
-          ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('내 식단'),
-            onTap: () {
-              // print(ModalRoute.of(context).settings.name);
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/searchDiet');
-              print(ModalRoute.of(context).settings.name);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.border_color),
-            title: Text('내 음식'),
-            onTap: () {
-              // print(ModalRoute.of(context).settings.name);
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/searchFood');
-              print(ModalRoute.of(context).settings.name);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.input),
-            title: Text('식단 추가'),
-            onTap: () {
-              // print(ModalRoute.of(context).settings.name);
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/addDiet');
-              print(ModalRoute.of(context).settings.name);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.verified_user),
-            title: Text('신체 정보'),
-            onTap: () {
-              // print(ModalRoute.of(context).settings.name);
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/personalForm');
-              print(ModalRoute.of(context).settings.name);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.input),
-            title: Text('음식 추가'),
-            onTap: () {
-              // print(ModalRoute.of(context).settings.name);
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/addFood');
-              print(ModalRoute.of(context).settings.name);
-            },
-          ),
-        ],
+            ListTile(
+              leading: Icon(Icons.input),
+              title: Text('Add Diet'),
+              onTap: () {
+                // print(ModalRoute.of(context).settings.name);
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/addDiet');
+                print(ModalRoute.of(context).settings.name);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.input),
+              title: Text('Add Food'),
+              onTap: () {
+                // print(ModalRoute.of(context).settings.name);
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/addFood');
+                print(ModalRoute.of(context).settings.name);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('My Diet'),
+              onTap: () {
+                // print(ModalRoute.of(context).settings.name);
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/searchDiet');
+                print(ModalRoute.of(context).settings.name);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.border_color),
+              title: Text('My Food'),
+              onTap: () {
+                // print(ModalRoute.of(context).settings.name);
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/searchFood');
+                print(ModalRoute.of(context).settings.name);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
