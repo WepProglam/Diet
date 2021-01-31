@@ -178,7 +178,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
         Stack(
           children: <Widget>[
             AspectRatio(
-              aspectRatio: index == -1 ? 1.3 : 1.1,
+              aspectRatio: index == -1 ? size.width / size.height * 3 : 1.1,
               child: FractionallySizedBox(
                   heightFactor: 1.1,
                   widthFactor: 1,
@@ -239,9 +239,9 @@ class _LineChartSample2State extends State<LineChartSample2> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: 50,
-                      ),
+                      // SizedBox(
+                      //   height: 50,
+                      // ),
                       Indicator(
                         // color: Color(0xfff8b250),
                         color: Colors.deepOrangeAccent[400],

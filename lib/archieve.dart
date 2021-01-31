@@ -262,98 +262,95 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     // getInfo();
-    return SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Row(children: [
+    return Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
           // Spacer(flex: 1),
           Expanded(
               flex: 20,
-              child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  child: GestureDetector(
-                      // onVerticalDragUpdate: (details) {
-                      //   print(details);
-                      // },
-                      child: Column(
-                    children: [
-                      // Spacer(
-                      //   flex: 1,
-                      // ),
+              child: GestureDetector(
+                  // onVerticalDragUpdate: (details) {
+                  //   print(details);
+                  // },
+                  child: Column(
+                children: [
+                  Spacer(
+                    flex: 1,
+                  ),
 
-                      //달력
+                  //달력
 
-                      Expanded(
-                        flex: calenderWidthFlex,
-                        child: Container(
-                            decoration: BoxDecoration(
-                              // color: Color(0x774E0D0D),
-                              border: Border.all(
-                                  // color: Color(0xFF4E0D0D),
-                                  width: 5),
-                            ),
-                            child: returnGraph()),
-                      ),
-                      // Spacer(
-                      //   flex: 1,
-                      // ),
+                  Expanded(
+                    flex: calenderWidthFlex,
+                    child: Container(
+                        decoration: BoxDecoration(
+                          // color: Color(0x774E0D0D),
+                          border: Border.all(
+                              // color: Color(0xFF4E0D0D),
+                              width: 0),
+                        ),
+                        child: Center(child: returnGraph())),
+                  ),
+                  Spacer(
+                    flex: 1,
+                  ),
 
-                      //식단
-                      Expanded(
-                          flex: 16,
-                          child: SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: Container(
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        // decoration:
-                                        //     BoxDecoration(
-                                        //         color: Colors
-                                        //             .black),
-                                        child: Center(
-                                            child: Text(
-                                          "",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w700),
-                                        )),
-                                      ),
-                                    ),
-                                    Expanded(
-                                        flex: 5,
-                                        child: Container(
-                                          child: Center(
-                                              child: Stack(
-                                            children: [],
-                                          )),
-                                          // decoration:
-                                          //     BoxDecoration(
-                                          //         color: Colors
-                                          //             .white),
-                                        ))
-                                  ],
-                                ),
-                              ))
-                          // decoration: BoxDecoration(
-                          //     color: Colors.white),
+                  // //식단
+                  // Expanded(
+                  //     flex: 16,
+                  //     child: Container(
+                  //       child: Column(
+                  //         children: [
+                  //           Expanded(
+                  //             flex: 1,
+                  //             child: Container(
+                  //               // decoration:
+                  //               //     BoxDecoration(
+                  //               //         color: Colors
+                  //               //             .black),
+                  //               child: Center(
+                  //                   child: Text(
+                  //                 "",
+                  //                 style: TextStyle(
+                  //                     color: Colors.white,
+                  //                     fontWeight: FontWeight.w700),
+                  //               )),
+                  //             ),
+                  //           ),
+                  //           Expanded(
+                  //               flex: 5,
+                  //               child: Container(
+                  //                 child: Center(
+                  //                     child: Stack(
+                  //                   children: [],
+                  //                 )),
+                  //                 // decoration:
+                  //                 //     BoxDecoration(
+                  //                 //         color: Colors
+                  //                 //             .white),
+                  //               ))
+                  //         ],
+                  //       ),
+                  //     )
+                  //     // decoration: BoxDecoration(
+                  //     //     color: Colors.white),
 
-                          ),
-                      // Spacer(
-                      //   flex: 2,
-                      // ),
-                      // Spacer(
-                      //   flex: 10,
-                      // ),
-                      Spacer(
-                        flex: 2,
-                      ),
-                      //달력
-                    ],
-                  ))))
-        ]));
+                  //     ),
+                  // // Spacer(
+                  //   flex: 2,
+                  // ),
+                  // Spacer(
+                  //   flex: 10,
+                  // ),
+                  // Spacer(
+                  //   flex: 2,
+                  // ),
+                  //달력
+                ],
+              )))
+        ]);
   }
 
   num todayCar;
@@ -428,31 +425,29 @@ class _MyHomePageState extends State<MyHomePage> {
     // getInfo();
     // print("sendign");
     // print(sendingArchieveKcal);
-    return SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Stack(
+    return Stack(
+      children: [
+        Column(
           children: [
-            Column(
-              children: [
-                // Spacer(
-                //   flex: 1,
-                // ),
-                SizedBox(
-                  height: 20,
-                ),
-                LineChartSample2(
-                  index: -1,
-                  kcalArchieve: sendingArchieveKcal,
-                  nutriArchieve: sendingAchieveNutri,
-                  personTimeArchieveInfo: sendingArchievedate,
-                ),
-                // Spacer(
-                //   flex: 2,
-                // ),
-              ],
+            // Spacer(
+            //   flex: 1,
+            // ),
+            // SizedBox(
+            //   height: 20,
+            // ),
+            LineChartSample2(
+              index: -1,
+              kcalArchieve: sendingArchieveKcal,
+              nutriArchieve: sendingAchieveNutri,
+              personTimeArchieveInfo: sendingArchievedate,
             ),
+            // Spacer(
+            //   flex: 2,
+            // ),
           ],
-        ));
+        ),
+      ],
+    );
   }
 
   var graphIconColor = Colors.white;

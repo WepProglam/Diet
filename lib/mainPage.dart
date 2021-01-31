@@ -1330,19 +1330,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                             ],
                                           ));
                                   })
-                              : Column(
-                                  children: [
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              3 /
-                                              4,
-                                      child: Archieve(),
-                                    ),
-                                    SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                4,
+
+                              //성취도 그래프
+                              : SizedBox(
+                                  width: MediaQuery.of(context).size.height,
+                                  height: MediaQuery.of(context).size.height,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(flex: 4, child: Archieve()),
+                                      Expanded(
+                                        flex: 3,
                                         child: PieChartSample2(
                                             carbohydrate: todayCar,
                                             protein: todayPro,
@@ -1351,10 +1352,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                             correct: correct == null ||
                                                     (correct == 0)
                                                 ? 0.0
-                                                : correct.toDouble())
-                                        // child:
-                                        ),
-                                  ],
+                                                : correct.toDouble()),
+                                      ),
+                                    ],
+                                  ),
                                 );
                         },
                       ))),
