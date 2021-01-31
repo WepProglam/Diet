@@ -7,7 +7,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="flutter_application_1"
+        android:label="GoldenRatio"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -36,8 +36,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-                <data android:host="oauth"
-                android:scheme="kakao95999b99c7e646e06ec5988f6687540e" />
+
             </intent-filter>
         </activity>
 

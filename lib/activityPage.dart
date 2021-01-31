@@ -118,7 +118,7 @@ class _ActivityPageState extends State<ActivityPage> {
         bmr = (66.5 +
             (13.8 * hint['weight']) +
             (5 * hint['height']) -
-            (6.8 * 22)); //23 -> person['age'] - 1 (만나이)
+            (6.8 * (hint['age'] - 1))); //23 -> person['age'] - 1 (만나이)
 
         bmrText.text = bmr.toStringAsFixed(1);
         // print(hint['nutriRate']);
@@ -139,7 +139,7 @@ class _ActivityPageState extends State<ActivityPage> {
         bmr = (655.1 +
             (9.6 * hint['weight']) +
             (1.8 * hint['height']) -
-            (4.7 * 22));
+            (4.7 * (hint['age'] - 1)));
         bmrText.text = bmr.toStringAsFixed(1);
         if (hint['metabolism'] != null) {
           amText.text = addOrSubAm(amTextSetting(hint['activity'], bmr))
@@ -693,19 +693,20 @@ class _ActivityPageState extends State<ActivityPage> {
                 DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
 
             var person = Person(
-              height: hint['height'],
-              weight: hint['weight'],
-              bmi: hint['bmi'],
-              muscleMass: hint['muscleMass'],
-              purpose: hint['purpose'],
-              time: time,
-              achieve: hint['achieve'],
-              metabolism: num.parse(amText.value.text),
-              activity: _activityValue,
-              weightTarget: hint['weightTarget'],
-              bmiTarget: hint['bmiTarget'],
-              muscleTarget: hint['muscleTarget'],
-            );
+                height: hint['height'],
+                weight: hint['weight'],
+                bmi: hint['bmi'],
+                muscleMass: hint['muscleMass'],
+                purpose: hint['purpose'],
+                time: time,
+                achieve: hint['achieve'],
+                metabolism: num.parse(amText.value.text),
+                activity: _activityValue,
+                weightTarget: hint['weightTarget'],
+                bmiTarget: hint['bmiTarget'],
+                muscleTarget: hint['muscleTarget'],
+                age: hint['age'],
+                sex: hint['sex']);
             // print(person.metabolism);
             await dbHelperPerson.createHelper(person);
 
