@@ -303,21 +303,26 @@ class _AddFoodSub extends State<AddFoodSub> {
                   ),
                 ),
                 // color: Colors.deepOrangeAccent[700],
-                onTap: () {
+                onTap: () async {
                   // print(whereFrom);
                   // if (whereFrom == "searchFood") {
                   //   Navigator.pop(context, {"pre": "addFood"});
                   //   // Navigator.pop(context);
                   // } else {
-                    
-                 Navigator.popAndPushNamed(context, '/searchFood',
+
+                  // await dbHelper.initDB().then((_){
+                  //   print("finisj");
+                  // });
+
+
+                  Navigator.popAndPushNamed(context, '/searchFood',
                           arguments: <String, String>{'pre': 'addFood'})
                       .then((code) async {
                     await dbHelper.getFood(code).then((food) {
                       streamController.add(food.toMap());
                     });
                   });
-                  // }
+
                 }),
           ),
           /* TypeFoodName(

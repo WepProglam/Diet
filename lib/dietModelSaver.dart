@@ -115,6 +115,8 @@ String myRounder(num a) {
   return a.toString().length < 4 ? a.toString() : a.toString().substring(0, 4);
 }
 
+
+
 Future<void> formatDietHistory(
     {String dietName,
     String kcal,
@@ -127,6 +129,9 @@ Future<void> formatDietHistory(
   String myLunch = "null";
   String myDinner = "null";
   String mySnack = "null";
+  DietHistory dietHistory;
+
+
 
   print("here is formatdiethistory");
   print(dateTime);
@@ -134,7 +139,7 @@ Future<void> formatDietHistory(
 
   final dBHelperDietHistory = DBHelperDietHistory();
   // await dBHelperDietHistory.deleteAllDietHistory();
-  DietHistory dietHistory;
+
   dateData = dateTime;
   int year = num.parse(dateTime.split('-')[0]);
   int month = num.parse(dateTime.split('-')[1]);
@@ -175,11 +180,6 @@ Future<void> formatDietHistory(
   await dBHelperDietHistory.getDietHistory(dateData).then((val) {
     if (val != null) {
       dietHistory = val;
-      // dietHistory.year = year == null ? dietHistory.year : year;
-      // dietHistory.month = month == null ? dietHistory.month : month;
-      print("readdb");
-      print(val.year);
-      print("readdb");
     } else {
       dietHistory = null;
     }
@@ -189,7 +189,14 @@ Future<void> formatDietHistory(
     complete = val;
   });
 
+
+
   String completeString = complete == 4 ? "true" : "false";
+  if(completeString == "false"){
+    completeString = calculatekcalAchieve(dietHistory,num.parse(kcal)) >= 90 ? "true" : "false";
+  }
+
+  print("kcal archieve = ${calculatekcalAchieve(dietHistory,num.parse(kcal))}");
 
   if (dietHistory != null) {
     print("sadfasdfasd");
@@ -208,10 +215,7 @@ Future<void> formatDietHistory(
 
     await dBHelperDietHistory.updateDietHistory(dietHistory);
   } else {
-    print("123423423432");
-    print("rwriteb");
-    print(year);
-    print("rwriteb");
+
 
     dietHistory = DietHistory(
         date: dateData,
@@ -271,4 +275,104 @@ Future<int> isDateCompleted(String dateTime) async {
   print(tag);
 
   return tag;
+}
+
+num calculatekcalAchieve(DietHistory dietHistory,num existKcal) {
+  num archieve=0.0;
+
+  num totalCal = 0;
+  num car = 0;
+  num pro = 0;
+  num fat = 0;
+  if (dietHistory != null) {
+    for (var i = 0; i < 4; i++) {
+      switch (i) {
+        case 0:
+          Map breakfast = jsonDecode(dietHistory.breakFast);
+          if (breakfast != "null" && breakfast != null) {
+            if (breakfast['isItConfirm'] == "true") {
+              totalCal += num.parse(breakfast['kcal']);
+              num carRatio =
+                  num.parse(breakfast["nutri"].split(":")[0]) / 100;
+              num proRatio =
+                  num.parse(breakfast["nutri"].split(":")[1]) / 100;
+              num fatRatio =
+                  num.parse(breakfast["nutri"].split(":")[2]) / 100;
+
+              car += carRatio * num.parse(breakfast['kcal']);
+              pro += proRatio * num.parse(breakfast['kcal']);
+              fat += fatRatio * num.parse(breakfast['kcal']);
+            }
+          }
+          // print(dietConfirmConfirm);
+
+          break;
+        case 1:
+          Map lunch = jsonDecode(dietHistory.lunch);
+          if (lunch != "null" && lunch != null) {
+            if (lunch['isItConfirm'] == "true") {
+              totalCal += num.parse(lunch['kcal']);
+
+              num carRatio = num.parse(lunch["nutri"].split(":")[0]) / 100;
+              num proRatio = num.parse(lunch["nutri"].split(":")[1]) / 100;
+              num fatRatio = num.parse(lunch["nutri"].split(":")[2]) / 100;
+
+              car += carRatio * num.parse(lunch['kcal']);
+              pro += proRatio * num.parse(lunch['kcal']);
+              fat += fatRatio * num.parse(lunch['kcal']);
+            }
+          }
+
+          break;
+        case 2:
+          Map dinner = jsonDecode(dietHistory.dinner);
+          if (dinner != "null" && dinner != null) {
+            if (dinner['isItConfirm'] == "true") {
+              totalCal += num.parse(dinner['kcal']);
+
+              num carRatio = num.parse(dinner["nutri"].split(":")[0]) / 100;
+              num proRatio = num.parse(dinner["nutri"].split(":")[1]) / 100;
+              num fatRatio = num.parse(dinner["nutri"].split(":")[2]) / 100;
+
+              car += carRatio * num.parse(dinner['kcal']);
+              pro += proRatio * num.parse(dinner['kcal']);
+              fat += fatRatio * num.parse(dinner['kcal']);
+            }
+          }
+
+          break;
+        case 3:
+          Map snack = jsonDecode(dietHistory.snack);
+          if (snack != "null" && snack != null) {
+            if (snack['isItConfirm'] == "true") {
+              totalCal += num.parse(snack['kcal']);
+
+              num carRatio = num.parse(snack["nutri"].split(":")[0]) / 100;
+              num proRatio = num.parse(snack["nutri"].split(":")[1]) / 100;
+              num fatRatio = num.parse(snack["nutri"].split(":")[2]) / 100;
+
+              car += carRatio * num.parse(snack['kcal']);
+              pro += proRatio * num.parse(snack['kcal']);
+              fat += fatRatio * num.parse(snack['kcal']);
+            }
+          }
+
+          break;
+
+        default:
+      }
+    }
+
+
+    num correct =
+        (1 - ((person.metabolism - (totalCal+existKcal)) / person.metabolism).abs()) *
+            100;
+
+    archieve=correct;
+
+  } else {
+    archieve=0.0;
+  }
+// print(monthlyAchieveKcal);
+return archieve;
 }
