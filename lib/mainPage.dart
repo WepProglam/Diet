@@ -100,6 +100,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> itemList = [];
   List<Widget> itemListPast = [];
   num totalCalorie = 0;
+
+  num targetKcal;
   //이게 계속 실행됨
   void getConfirmedIndex(DietHistory myDietHistory) async {
     try {
@@ -273,6 +275,9 @@ class _MyHomePageState extends State<MyHomePage> {
     getToday();
     getInfo();
     getCompleteDate();
+    await dbHelperPerson.getLastPerson().then((value) => setState(() {
+          targetKcal = value.metabolism;
+        }));
     super.didChangeDependencies();
   }
 
@@ -758,7 +763,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 height: 6,
                               ),
                               AutoSizeText(
-                                "탄:단:지 = ${tempNutriRate[0]} : ${tempNutriRate[1]} : ${tempNutriRate[2]}",
+                                "탄 : 단 : 지 = ${tempNutriRate[0]} : ${tempNutriRate[1]} : ${tempNutriRate[2]}",
                                 style: TextStyle(
                                     color: Colors.deepOrangeAccent[700]),
                                 maxLines: 1,
@@ -1240,7 +1245,7 @@ class _MyHomePageState extends State<MyHomePage> {
   num todayFat;
   num todaykcal;
   num correct;
-  num targetKcal;
+
   void getTodayCalroie() async {
     // print("strat" * 100);
     String now = DateTime.now().toString().substring(0, 10);
@@ -1289,7 +1294,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     List<num> targetNutri = [3, 4, 3]; //디폴트(다이어트)
     if (person != null) {
-      targetKcal = person.metabolism;
       switch (person.purpose) {
         case 0:
           targetNutri = [3, 4, 3];
