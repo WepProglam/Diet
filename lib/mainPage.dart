@@ -436,7 +436,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         height: MediaQuery.of(context).size.height / 12,
                         child: ListView.builder(
                             itemCount: tempList.length,
-                            itemBuilder: (context, int index) {
+                            itemBuilder: (context, int i) {
                               return Row(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -448,17 +448,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                         MediaQuery.of(context).size.width / 3,
                                     alignment: Alignment.centerLeft,
                                     child: AutoSizeText(
-                                      tempList[index][1],
+                                      tempList[i][1],
                                       maxLines: 1,
                                     ),
                                   ),
                                   // Spacer(),
+
                                   Container(
                                       width:
                                           MediaQuery.of(context).size.width / 4,
                                       alignment: Alignment.centerRight,
                                       child: AutoSizeText(
-                                        tempList[index][2].toStringAsFixed(2) +
+                                        (tempList[i][2] *
+                                                    todayDietList[index]
+                                                        ['kcal'] /
+                                                    targetKcal)
+                                                .toStringAsFixed(2) +
                                             ' g',
                                         maxLines: 1,
                                       )),
@@ -474,8 +479,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         "탄:단:지 = ${tempNutriRate[0]} : ${tempNutriRate[1]} : ${tempNutriRate[2]}",
                         maxLines: 1,
                       ),
+
                       AutoSizeText(
-                          "총 칼로리 = ${todayDietList[index]['kcal'].toStringAsFixed(2)} kcal",
+                          "총 칼로리 = ${(todayDietList[index]['kcal']).toStringAsFixed(2)} kcal",
                           maxLines: 1),
                       SizedBox(
                         height: 10,
@@ -666,7 +672,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Container(
                     decoration: BoxDecoration(
                         // borderRadius: BorderRadius.circular(100),
-                        border: Border.all(color: listViewColor, width: 5)),
+                        border: Border.all(color: listViewColor, width: 2)),
                     child: Center(
                         child: Icon(
                       Icons.add_circle_outline,
@@ -692,53 +698,126 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Container(
                       decoration: BoxDecoration(color: Colors.black),
                       child: Center(
-                        child: Column(children: [
-                          for (var item in todayDietList[index]['foodInfo']
-                              ['foods'])
-                            //item[0] : 코드
-                            //item[1] : 음식 이름
-                            //item[2] : 음식 무게
-                            AnimatedDefaultTextStyle(
-                                duration: const Duration(milliseconds: 300),
+                        child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: MediaQuery.of(context).size.height / 12,
+                                child: ListView.builder(
+                                    itemCount: tempList.length,
+                                    itemBuilder: (context, int i) {
+                                      return Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          // Spacer(),
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                3,
+                                            alignment: Alignment.centerLeft,
+                                            child: AutoSizeText(
+                                              tempList[i][1],
+                                              style: TextStyle(
+                                                  color: Colors
+                                                      .deepOrangeAccent[700]),
+                                              maxLines: 1,
+                                            ),
+                                          ),
+                                          // Spacer(),
+                                          Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  4,
+                                              alignment: Alignment.centerRight,
+                                              child: AutoSizeText(
+                                                (tempList[i][2] *
+                                                            todayDietList[index]
+                                                                ['kcal'] /
+                                                            targetKcal)
+                                                        .toStringAsFixed(2) +
+                                                    ' g',
+                                                style: TextStyle(
+                                                    color: Colors
+                                                        .deepOrangeAccent[700]),
+                                                maxLines: 1,
+                                              )),
+                                          // Spacer(),
+                                        ],
+                                      );
+                                    }),
+                              ),
+                              SizedBox(
+                                height: 6,
+                              ),
+                              AutoSizeText(
+                                "탄:단:지 = ${tempNutriRate[0]} : ${tempNutriRate[1]} : ${tempNutriRate[2]}",
                                 style: TextStyle(
-                                  fontSize: 20.0,
-                                  color: dietConfirm[index]
-                                      ? Colors.red
-                                      : Colors.blueAccent,
-                                  fontWeight: dietConfirm[index]
-                                      ? FontWeight.w100
-                                      : FontWeight.bold,
-                                ),
-                                child: Text("${item[1]}  ${item[2]}g")),
-                          AnimatedDefaultTextStyle(
-                            duration: const Duration(milliseconds: 300),
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              color: dietConfirm[index]
-                                  ? Colors.red
-                                  : Colors.blueAccent,
-                              fontWeight: dietConfirm[index]
-                                  ? FontWeight.w100
-                                  : FontWeight.bold,
-                            ),
-                            child: Text(
-                                "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
-                          ),
-                          AnimatedDefaultTextStyle(
-                            duration: const Duration(milliseconds: 300),
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              color: dietConfirm[index]
-                                  ? Colors.red
-                                  : Colors.blueAccent,
-                              fontWeight: dietConfirm[index]
-                                  ? FontWeight.w100
-                                  : FontWeight.bold,
-                            ),
-                            child:
-                                Text("총 칼로리 : ${todayDietList[index]['kcal']}"),
-                          ),
-                        ]),
+                                    color: Colors.deepOrangeAccent[700]),
+                                maxLines: 1,
+                              ),
+
+                              AutoSizeText(
+                                  "총 칼로리 = ${todayDietList[index]['kcal'].toStringAsFixed(2)} kcal",
+                                  style: TextStyle(
+                                      color: Colors.deepOrangeAccent[700]),
+                                  maxLines: 1),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              // for (var item in todayDietList[index]['foodInfo']
+                              //     ['foods'])
+                              //   //item[0] : 코드
+                              //   //item[1] : 음식 이름
+                              //   //item[2] : 음식 무게
+                              //   AnimatedDefaultTextStyle(
+                              //       duration: const Duration(milliseconds: 300),
+                              //       style: TextStyle(
+                              //         fontSize: 20.0,
+                              //         color: dietConfirm[index]
+                              //             ? Colors.red
+                              //             : Colors.blueAccent,
+                              //         fontWeight: dietConfirm[index]
+                              //             ? FontWeight.w100
+                              //             : FontWeight.bold,
+                              //       ),
+                              //       child: Text("${item[1]}  ${item[2]}g")),
+                              // AnimatedDefaultTextStyle(
+                              //   duration: const Duration(milliseconds: 300),
+                              //   style: TextStyle(
+                              //     fontSize: 20.0,
+                              //     color: dietConfirm[index]
+                              //         ? Colors.red
+                              //         : Colors.blueAccent,
+                              //     fontWeight: dietConfirm[index]
+                              //         ? FontWeight.w100
+                              //         : FontWeight.bold,
+                              //   ),
+                              //   child: Text(
+                              //       "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
+                              // ),
+                              // AnimatedDefaultTextStyle(
+                              //   duration: const Duration(milliseconds: 300),
+                              //   style: TextStyle(
+                              //     fontSize: 20.0,
+                              //     color: dietConfirm[index]
+                              //         ? Colors.red
+                              //         : Colors.blueAccent,
+                              //     fontWeight: dietConfirm[index]
+                              //         ? FontWeight.w100
+                              //         : FontWeight.bold,
+                              //   ),
+                              //   child:
+                              //       Text("총 칼로리 : ${todayDietList[index]['kcal']}"),
+                              // ),
+                            ]),
                       ),
                     )),
                 onTap: () {
@@ -1161,6 +1240,7 @@ class _MyHomePageState extends State<MyHomePage> {
   num todayFat;
   num todaykcal;
   num correct;
+  num targetKcal;
   void getTodayCalroie() async {
     // print("strat" * 100);
     String now = DateTime.now().toString().substring(0, 10);
@@ -1209,6 +1289,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     List<num> targetNutri = [3, 4, 3]; //디폴트(다이어트)
     if (person != null) {
+      targetKcal = person.metabolism;
       switch (person.purpose) {
         case 0:
           targetNutri = [3, 4, 3];
