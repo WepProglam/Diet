@@ -1170,7 +1170,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                 child:
                                                                     Container(
                                                                   child: AutoSizeText(
-                                                                      '총 식단 열량 비율',
+                                                                      '오늘 총 식단 열량 비율',
                                                                       style:
                                                                           TextStyle(
                                                                         fontSize:
@@ -1451,7 +1451,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                       right: 20,
                                                       child: Container(
                                                         child: AutoSizeText(
-                                                            '총 식단 열량 비율',
+                                                            '오늘 총 식단 열량 비율',
                                                             style: TextStyle(
                                                               fontSize: 15,
                                                             )),
