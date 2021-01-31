@@ -20,13 +20,13 @@ int calenderWidthFlex = 35;
 Color listViewColor = Colors.deepOrangeAccent[700];
 Color iconColor = Colors.deepOrangeAccent[400];
 
-List<List<num>> allAchieveKcal = [];
-List<List<num>> allAchieveNutri = [];
+List<List<dynamic>> allAchieveKcal = [];
+List<List<dynamic>> allAchieveNutri = [];
 List<DietHistory> allDietHistory = [];
 
 List<num> sendingArchieveKcal = [];
 List<num> sendingAchieveNutri = [];
-List<String> sendingArchievedate = [];
+List<dynamic> sendingArchievedate = [];
 // final dbHelper
 
 class Archieve extends StatelessWidget {
@@ -92,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
     sendingArchievedate = [];
     sendingArchieveKcal = [];
     // print("printing");
+    print("here is archi");
 
     for (var item in allDietHistory) {
       num totalCal = 0;
@@ -199,23 +200,46 @@ class _MyHomePageState extends State<MyHomePage> {
         num correct =
             (1 - ((person.metabolism - totalCal) / person.metabolism).abs()) *
                 100;
-        allAchieveKcal.add([num.parse(item.date.split('-')[2]), correct]);
-        allAchieveNutri.add([num.parse(item.date.split('-')[2]), correctNutri]);
+        print([correctNutri, correct, item.date]);
+        allAchieveKcal.add([item.date.split('-').sublist(0, 3), correct]);
+        allAchieveNutri.add([item.date.split('-').sublist(0, 3), correctNutri]);
       } else {
-        allAchieveKcal.add([num.parse(item.date.split('-')[2]), 0]);
-        allAchieveNutri.add([num.parse(item.date.split('-')[2]), 0]);
+        allAchieveKcal.add([item.date.split('-').sublist(0, 3), 0]);
+        allAchieveNutri.add([item.date.split('-').sublist(0, 3), 0]);
       }
       // print("printing");
+
+      sendingArchieveKcal = [];
+      sendingAchieveNutri = [];
+      sendingArchievedate = [];
+
+      sortDate();
+      sortMonth();
+      sortYear();
 
       for (var i = 0; i < allAchieveKcal.length; i++) {
         sendingArchieveKcal.add(allAchieveKcal[i][1]);
         sendingAchieveNutri.add(allAchieveNutri[i][1]);
-        sendingArchievedate.add(allAchieveKcal[i][0].toString());
+        sendingArchievedate.add(allAchieveKcal[i][0]);
       }
-      // print("sendgingprint");
       // print(sendingAchieveNutri);
       // print(sendingArchieveKcal);
     }
+  }
+
+  void sortMonth() {
+    allAchieveKcal.sort((a, b) => a[0][1].compareTo(b[0][1]));
+    allAchieveNutri.sort((a, b) => a[0][1].compareTo(b[0][1]));
+  }
+
+  void sortDate() {
+    allAchieveKcal.sort((a, b) => a[0][2].compareTo(b[0][2]));
+    allAchieveNutri.sort((a, b) => a[0][2].compareTo(b[0][2]));
+  }
+
+  void sortYear() {
+    allAchieveKcal.sort((a, b) => a[0][0].compareTo(b[0][0]));
+    allAchieveNutri.sort((a, b) => a[0][0].compareTo(b[0][0]));
   }
 
   @override
@@ -406,8 +430,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget returnGraph() {
     // getInfo();
-    print("sendign");
-    print(sendingArchieveKcal);
+    // print("sendign");
+    // print(sendingArchieveKcal);
     return SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Stack(

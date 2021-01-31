@@ -9,7 +9,7 @@ final dbHelperPerson = DBHelperPerson();
 
 //성취도 함수
 
-List<String> myPersonTimeArchieveInfo = [];
+List<dynamic> myPersonTimeArchieveInfo = [];
 List<num> myKcalArchieve = [];
 List<num> myNutriArchieve = [];
 
@@ -19,7 +19,7 @@ List<num> myMaxNutriArchieve = [];
 class LineChartSample2 extends StatefulWidget {
   int index = 0;
   //성취도 함수
-  List<String> personTimeArchieveInfo = [];
+  List<dynamic> personTimeArchieveInfo = [];
   List<num> kcalArchieve = [];
   List<num> nutriArchieve = [];
 
@@ -353,20 +353,19 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
     for (var k = 0; k < myKcalArchieve.length; k++) {
       print(k);
-      myKcalArchieveSpot.add(
-          FlSpot(k.toDouble(), myKcalArchieve[k] * 8 / myMaxKcalArchieve.last));
+      myKcalArchieveSpot.add(FlSpot(k.toDouble(), myKcalArchieve[k] / 10));
       myNutriArchieveSpot.add(FlSpot(
           k.toDouble(),
-          myRounder((myNutriArchieve[k] *
-              8 /
-              myMaxNutriArchieve
-                  .last)))); //myKcalMaxArcheive.last가 최대값 => 최대값으로 나누고 *8로 해서 띄워야함
+          (myNutriArchieve[k] /
+              10))); //myKcalMaxArcheive.last가 최대값 => 최대값으로 나누고 *8로 해서 띄워야함
 
     }
-
+    print(myKcalArchieveSpot.length);
+    myMaxKcalArchieve = [];
+    myMaxNutriArchieve = [];
     // setState(() {});
     return LineChartData(
-      lineTouchData: LineTouchData(enabled: false),
+      lineTouchData: LineTouchData(enabled: true),
       gridData: FlGridData(
         show: true,
         drawHorizontalLine: true,
@@ -387,11 +386,11 @@ class _LineChartSample2State extends State<LineChartSample2> {
         show: true,
         bottomTitles: SideTitles(
           showTitles: true,
-          reservedSize: 22,
+          reservedSize: 10,
           getTextStyles: (value) => const TextStyle(
               color: Color(0xff68737d),
               fontWeight: FontWeight.bold,
-              fontSize: 16),
+              fontSize: 12),
           getTitles: (value) {
             // switch (value.toInt()) {
             //   case 2:
@@ -401,6 +400,13 @@ class _LineChartSample2State extends State<LineChartSample2> {
             //   case 8:
             //     return 'SEP';
             // }
+
+            // print(myPersonTimeArchieveInfo[value.toInt()]);
+            List title = myPersonTimeArchieveInfo[value.toInt()];
+
+            if (value % (myPersonTimeArchieveInfo.length ~/ 5) == 0) {
+              return title[1].toString() + "/" + title[2].toString();
+            }
             return '';
           },
           margin: 8,
@@ -410,18 +416,14 @@ class _LineChartSample2State extends State<LineChartSample2> {
           getTextStyles: (value) => const TextStyle(
             color: Color(0xff67727d),
             fontWeight: FontWeight.bold,
-            fontSize: 15,
+            fontSize: 12,
           ),
           getTitles: (value) {
             switch (value.toInt()) {
-              // case 1:
-              //   return '10k';
-              // case 3:
-              //   return '30k';
-              // case 5:
-              //   return '50k';
             }
-            return '';
+            print(value);
+
+            return value == 0 ? "${value.toInt()}%" : "${value.toInt()}0%";
           },
           reservedSize: 28,
           margin: 12,
@@ -431,56 +433,39 @@ class _LineChartSample2State extends State<LineChartSample2> {
           show: true,
           border: Border.all(color: const Color(0xff37434d), width: 1)),
       minX: 0,
-      maxX: myMaxKcalArchieve.length.toDouble(),
+      maxX: myKcalArchieveSpot.length.toDouble() - 1,
       minY: 0,
-      maxY: 10,
+      maxY: 12,
       lineBarsData: [
         LineChartBarData(
           spots: myKcalArchieveSpot,
-          isCurved: true,
-          colors: [
-            ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                .lerp(0.2),
-            ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                .lerp(0.2),
-          ],
+          isCurved: false,
+          colors: gradientColors,
           barWidth: 5,
           isStrokeCapRound: true,
           dotData: FlDotData(
             show: true,
           ),
-          belowBarData: BarAreaData(show: true, colors: [
-            ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                .lerp(0.2)
-                .withOpacity(0.1),
-            ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                .lerp(0.2)
-                .withOpacity(0.1),
-          ]),
+          belowBarData: BarAreaData(
+            show: true,
+            colors:
+                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+          ),
         ),
         LineChartBarData(
           spots: myNutriArchieveSpot,
-          isCurved: true,
-          colors: [
-            Colors.red
-            // ColorTween(begin: gradientColors[0], end: gradientColors[1])
-            //     .lerp(0.2),
-            // ColorTween(begin: gradientColors[0], end: gradientColors[1])
-            //     .lerp(0.2),
-          ],
+          isCurved: false,
+          colors: gradientColors,
           barWidth: 5,
           isStrokeCapRound: true,
           dotData: FlDotData(
             show: true,
           ),
-          belowBarData: BarAreaData(show: true, colors: [
-            ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                .lerp(0.2)
-                .withOpacity(0.1),
-            ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                .lerp(0.2)
-                .withOpacity(0.1),
-          ]),
+          belowBarData: BarAreaData(
+            show: true,
+            colors:
+                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+          ),
         ),
       ],
     );
