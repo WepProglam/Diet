@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
   DietHistory dietHistory;
   Person person;
 
-  List<num> nutriRatioCopy = [3, 4, 3];
+  List<int> nutriRatioCopy = [3, 4, 3];
 
   FocusScopeNode myFocusNode = FocusScopeNode();
   // ScrollController _controller = new ScrollController();
@@ -388,29 +388,29 @@ class _MyHomePageState extends State<MyHomePage> {
         List<num> nutriRatio;
         switch (person.purpose) {
           case 0: //다이어트
-            setState(() {
-              nutriRatio = [3, 4, 3];
+            // setState(() {
+            nutriRatio = [3, 4, 3];
 
-              nutriRatioCopy = nutriRatio;
-            });
+            //   nutriRatioCopy = nutriRatio;
+            // });
 
             break;
           case 1: //벌크업
 
-            setState(() {
-              nutriRatio = [4, 4, 2];
+            // setState(() {
+            nutriRatio = [4, 4, 2];
 
-              nutriRatioCopy = nutriRatio;
-            });
+            // nutriRatioCopy = nutriRatio;
+            // });
 
             break;
           case 2: //릴매스업
 
-            setState(() {
-              nutriRatio = [5, 3, 2];
+            // setState(() {
+            nutriRatio = [5, 3, 2];
 
-              nutriRatioCopy = nutriRatio;
-            });
+            //   nutriRatioCopy = nutriRatio;
+            // });
             break;
           default:
         }
@@ -1117,16 +1117,34 @@ class _MyHomePageState extends State<MyHomePage> {
                                               Spacer(flex: 2),
                                               Expanded(
                                                   flex: 13,
-                                                  child: PieChartSample2(
-                                                      carbohydrate: todayCar,
-                                                      protein: todayPro,
-                                                      fat: todayFat,
-                                                      totalCalorie: todaykcal,
-                                                      correct: correct ==
-                                                                  null ||
-                                                              (correct == 0)
-                                                          ? 0.0
-                                                          : correct.toDouble())
+                                                  child: Stack(
+                                                    children: [
+                                                      PieChartSample2(
+                                                          carbohydrate:
+                                                              todayCar,
+                                                          protein: todayPro,
+                                                          fat: todayFat,
+                                                          totalCalorie:
+                                                              todaykcal,
+                                                          correct: correct ==
+                                                                      null ||
+                                                                  (correct == 0)
+                                                              ? 0.0
+                                                              : correct
+                                                                  .toDouble()),
+                                                      Positioned(
+                                                          top: 10,
+                                                          right: 10,
+                                                          child: Container(
+                                                            child: AutoSizeText(
+                                                                '총 식단 열량 비율',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 15,
+                                                                )),
+                                                          )),
+                                                    ],
+                                                  )
                                                   // child:
                                                   ),
                                               Spacer(
@@ -1369,15 +1387,29 @@ class _MyHomePageState extends State<MyHomePage> {
                                       Expanded(flex: 4, child: Archieve()),
                                       Expanded(
                                         flex: 3,
-                                        child: PieChartSample2(
-                                            carbohydrate: todayCar,
-                                            protein: todayPro,
-                                            fat: todayFat,
-                                            totalCalorie: todaykcal,
-                                            correct: correct == null ||
-                                                    (correct == 0)
-                                                ? 0.0
-                                                : correct.toDouble()),
+                                        child: Stack(
+                                          children: [
+                                            PieChartSample2(
+                                                carbohydrate: todayCar,
+                                                protein: todayPro,
+                                                fat: todayFat,
+                                                totalCalorie: todaykcal,
+                                                correct: correct == null ||
+                                                        (correct == 0)
+                                                    ? 0.0
+                                                    : correct.toDouble()),
+                                            Positioned(
+                                                top: 20,
+                                                right: 20,
+                                                child: Container(
+                                                  child:
+                                                      AutoSizeText('총 식단 열량 비율',
+                                                          style: TextStyle(
+                                                            fontSize: 15,
+                                                          )),
+                                                )),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),

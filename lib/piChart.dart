@@ -153,14 +153,14 @@ class PieChart2State extends State {
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: AutoSizeText(
-              '식단 총 열량 비율',
-              maxLines: 1,
-              style: TextStyle(fontSize: 15),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.topCenter,
+          //   child: AutoSizeText(
+          //     '식단 총 열량 비율',
+          //     maxLines: 1,
+          //     style: TextStyle(fontSize: 15),
+          //   ),
+          // ),
         ],
       ),
     );
