@@ -583,18 +583,17 @@ class _FoodListState extends State<FoodList> {
             child: Container(
               child: Row(
                 children: [
-                  // Spacer(
-                  //   flex: 1,
-                  // ),
+                  Spacer(
+                    flex: 1,
+                  ),
                   // calculate button
                   Expanded(
-                    flex: 2,
+                    flex: 1,
                     child: IconButton(
                         splashColor: Colors.white,
-                        icon: Icon(
-                          Icons.calculate,
-                          color: iconColor,
-                        ),
+                        icon: Icon(Icons.calculate_outlined,
+                            color: Colors.yellow //iconColor,
+                            ),
                         onPressed: () async {
                           List<num> defaultFood = passDefaultFoodList();
                           List<num> servingSize = [];
@@ -616,7 +615,8 @@ class _FoodListState extends State<FoodList> {
                                 makeCsvFile(
                                         defaultFoodList: defaultFoodList,
                                         foodList:
-                                            value.sublist(defaultFood.length))
+                                            value.sublist(defaultFood.length),
+                                        hardOrSoft: true) //hard모드
                                     .then((val) {
                                   List<num> sendData = [];
                                   List<num> nutriInfo =
@@ -665,55 +665,89 @@ class _FoodListState extends State<FoodList> {
                               });
                             }
                           }
-
-                          // } else {
-                          //   if (foodList.length - changeNumOfMass() == 3) {
-                          //     //should add change calorie
-                          //
-                          //     List<int> index = getIndex();
-                          //
-                          //     calculate(foodList, defaultMass: index)
-                          //         .then((value) {
-                          //       for (var i = 0; i < 3; i++) {
-                          //         print(value[i]);
-                          //       }
-                          //       var massList = value;
-                          //       print(massList);
-                          //       for (var item in index) {
-                          //         massList.insert(
-                          //             item,
-                          //             num.parse(
-                          //                 foodMassController[item].value.text));
-                          //       }
-                          //       print(massList);
-                          //
-                          //       justCalNutri(foodList, massList).then((val) {
-                          //         print(val);
-                          //         setState(() {
-                          //           carbohydrateMass = val[0];
-                          //           proteinMass = val[1];
-                          //           fatMass = val[2];
-                          //         });
-                          //         var controllerIndex = 0;
-                          //
-                          //         for (var i = 0; i < value.length; i++) {
-                          //           if (index.contains(controllerIndex)) {
-                          //           } else {
-                          //             foodMassController[controllerIndex].text =
-                          //                 value[i].toString();
-                          //           }
-                          //           controllerIndex += 1;
-                          //         }
-                          //       });
-                          //     });
-                          //   } else {
-                          //     var snackBar = buildSnackBar(
-                          //         '빈칸이 3개일 경우에만 계산 가능합니다.\n 0인 값이 4개 이상입니다.');
-                          //     Scaffold.of(context).showSnackBar(snackBar);
-                          //   }
-                          // }
                         }),
                   ),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                        splashColor: Colors.white,
+                        icon: Icon(Icons.calculate_outlined,
+                            color: Colors.white //iconColor,
+                            ),
+                        onPressed: () async {
+                          List<num> defaultFood = passDefaultFoodList();
+                          List<num> servingSize = [];
+
+                          if (await DBHelperPerson().getLastPerson() == null) {
+                            var snackBar = buildSnackBar('신체 정보가 비어있습니다!!');
+                            Scaffold.of(context).showSnackBar(snackBar);
+                          } else {
+                            if (foodList.isNotEmpty) {
+                              await getFoodInfo(foodList).then((value) {
+                                List<Map> defaultFoodList = [];
+                                for (var i = 0; i < defaultFood.length; i++) {
+                                  defaultFoodList.add({
+                                    "food": value[i],
+                                    "mass": defaultFood[i]
+                                  });
+                                }
+
+                                makeCsvFile(
+                                        defaultFoodList: defaultFoodList,
+                                        foodList:
+                                            value.sublist(defaultFood.length),
+                                        hardOrSoft: false) //soft
+                                    .then((val) {
+                                  List<num> sendData = [];
+                                  List<num> nutriInfo =
+                                      new List(value.length * 3);
+                                  for (var i = 0; i < value.length; i++) {
+                                    servingSize.add(value[i].servingSize);
+                                    nutriInfo[i * 3] = value[i].carbohydrate;
+                                    nutriInfo[i * 3 + 1] = value[i].protein;
+                                    nutriInfo[i * 3 + 2] = value[i].fat;
+                                  }
+
+                                  sendData.addAll(nutriInfo);
+                                  sendData.addAll(val);
+
+                                  try {
+                                    List<dynamic> carProFat =
+                                        justCalculateNutri(
+                                            sendData,
+                                            foodList.length -
+                                                defaultFood.length,
+                                            defaultFood.length);
+                                    num total = carProFat[3] * 4 +
+                                        carProFat[4] * 4 +
+                                        carProFat[5] * 9;
+                                    // assert(total < 600 * 1.2 && total > 600 * 0.8); //이 칼로리 조합이 아니면 단 하나의 경우도 케이스 통과 X
+
+                                    for (var i = 0; i < foodList.length; i++) {
+                                      foodMassController[i].text =
+                                          val[i].toStringAsFixed(0);
+                                      foodServingController[i].text =
+                                          "${(val[i] / servingSize[i]).toStringAsFixed(1)}인분";
+                                    }
+
+                                    setState(() {
+                                      correct = carProFat[1];
+                                      carbohydrateMass = carProFat[3];
+                                      proteinMass = carProFat[4];
+                                      fatMass = carProFat[5];
+                                    });
+                                  } catch (e) {
+                                    var snackBar =
+                                        buildSnackBar('음식 조합이 매우 부적합합니다.');
+                                    Scaffold.of(context).showSnackBar(snackBar);
+                                  }
+                                });
+                              });
+                            }
+                          }
+                        }),
+                  ),
+
                   Expanded(
                     flex: 5,
                     child: TextField(
@@ -809,9 +843,9 @@ class _FoodListState extends State<FoodList> {
                           }
                         }),
                   ),
-                  // Spacer(
-                  //   flex: 1,
-                  // ),
+                  Spacer(
+                    flex: 1,
+                  ),
                 ],
               ),
             ),

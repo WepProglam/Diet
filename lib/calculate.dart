@@ -54,7 +54,10 @@ void getPersonKcal(
 }
 
 Future<List<num>> makeCsvFile(
-    {List<Food> foodList, List<Map> defaultFoodList}) async {
+    {List<Food> foodList,
+    List<Map> defaultFoodList,
+    bool hardOrSoft = true}) async {
+  //hard = true, soft=false
   List<List<num>> massList = [[]];
 
   // print(defaultFoodList);
@@ -94,18 +97,44 @@ Future<List<num>> makeCsvFile(
   List<num> calorie = new List(totalFoodLength);
   List<num> nutriInfo = new List(totalFoodLength * 3);
 
-  for (var i = 0; i < foodLength; i++) {
-    minMass[i] = foodList[i].servingSize / 4;
-    myFoodMassList[i] = minMass[i];
-    calorie[i] = foodList[i].carbohydrate * 4 +
-        foodList[i].fat * 9 +
-        foodList[i].protein * 4;
-    maxMass[i] = foodList[i].servingSize * 2;
+  if (hardOrSoft) {
+    //hard모드
+    for (var i = 0; i < foodLength; i++) {
+      minMass[i] =
+          targetCalorie * 0.1 / foodList[i].kcal; //최소 전체 음식 칼로리의 10% 선에서 돌림
+      //foodList[i].servingSize / 4;
+      myFoodMassList[i] = minMass[i];
+      calorie[i] = foodList[i].carbohydrate * 4 +
+          foodList[i].fat * 9 +
+          foodList[i].protein * 4;
+      maxMass[i] =
+          targetCalorie * 0.9 / foodList[i].kcal; //최대 전체 음식 칼로리의 80% 선에서 돌림
+      //foodList[i].servingSize * 2;
 
-    nutriInfo[i * 3] = foodList[i].carbohydrate;
-    nutriInfo[i * 3 + 1] = foodList[i].protein;
-    nutriInfo[i * 3 + 2] = foodList[i].fat;
+      nutriInfo[i * 3] = foodList[i].carbohydrate;
+      nutriInfo[i * 3 + 1] = foodList[i].protein;
+      nutriInfo[i * 3 + 2] = foodList[i].fat;
+    }
+  } else {
+    //soft모드
+    for (var i = 0; i < foodLength; i++) {
+      minMass[i] =
+          targetCalorie * 0.5 / foodList[i].kcal; //최소 전체 음식 칼로리의 50% 선에서 돌림
+      //foodList[i].servingSize / 4;
+      myFoodMassList[i] = minMass[i];
+      calorie[i] = foodList[i].carbohydrate * 4 +
+          foodList[i].fat * 9 +
+          foodList[i].protein * 4;
+      maxMass[i] =
+          targetCalorie * 0.8 / foodList[i].kcal; //최대 전체 음식 칼로리의 80% 선에서 돌림
+      //foodList[i].servingSize * 2;
+
+      nutriInfo[i * 3] = foodList[i].carbohydrate;
+      nutriInfo[i * 3 + 1] = foodList[i].protein;
+      nutriInfo[i * 3 + 2] = foodList[i].fat;
+    }
   }
+
   var k = 0;
   for (var i = foodLength; i < totalFoodLength; i++) {
     myFoodMassList[i] = defaultMassList[k];
