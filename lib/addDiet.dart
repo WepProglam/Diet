@@ -455,13 +455,15 @@ class _FoodListState extends State<FoodList> {
         await justCalNutri(foodList, changeList).then((val) {
           tempVal = val;
         });
+        try {
+          setState(() {
+            carbohydrateMass = tempVal[0];
+            proteinMass = tempVal[1];
+            fatMass = tempVal[2];
+            dietNameController.text = dietInfo['dietName'];
+          });
+        } catch (e) {}
 
-        setState(() {
-          carbohydrateMass = tempVal[0];
-          proteinMass = tempVal[1];
-          fatMass = tempVal[2];
-          dietNameController.text = dietInfo['dietName'];
-        });
         whereFrom = "searchDietMainPage";
         mainPageIndex = args['pre']['index'];
         dateTimeInfo = args['pre']['dateTime'];

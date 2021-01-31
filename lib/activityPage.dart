@@ -714,8 +714,8 @@ class _ActivityPageState extends State<ActivityPage> {
             await dbHelperPerson.createHelper(person);
 
             // Navigator.pop(context);
-            // Navigator.pop(context);
-            Navigator.pushReplacementNamed(context, '/mainPage');
+            Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, '/');
 
             // Navigator.popAndPushNamed(context, '/mainPage');
           }),

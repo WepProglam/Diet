@@ -70,18 +70,18 @@ class _LineChartSample2State extends State<LineChartSample2> {
   ];
 
   bool isShowingMainData;
-  List<String> personTimeInfo = [];
-  List<FlSpot> personWeightSpot = [];
-  List<FlSpot> personBmiSpot = [];
-  List<FlSpot> personMuscleSpot = [];
+  List<String> personTimeInfo = ["1"];
+  List<FlSpot> personWeightSpot = [FlSpot.nullSpot];
+  List<FlSpot> personBmiSpot = [FlSpot.nullSpot];
+  List<FlSpot> personMuscleSpot = [FlSpot.nullSpot];
 
-  List<FlSpot> personTargetWeightSpot = [];
-  List<FlSpot> personTargetBmiSpot = [];
-  List<FlSpot> personTargetMuscleSpot = [];
+  List<FlSpot> personTargetWeightSpot = [FlSpot.nullSpot];
+  List<FlSpot> personTargetBmiSpot = [FlSpot.nullSpot];
+  List<FlSpot> personTargetMuscleSpot = [FlSpot.nullSpot];
 
-  List<double> maxWeigt = [];
-  List<double> maxBmi = [];
-  List<double> maxMuscle = [];
+  List<double> maxWeigt = [1];
+  List<double> maxBmi = [1];
+  List<double> maxMuscle = [1];
 
   int personInfoLength = 0;
 
