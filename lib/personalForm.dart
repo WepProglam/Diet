@@ -89,6 +89,7 @@ class _PersonalForm extends State<PersonalForm> {
       hint1['bmiTarget'] = null;
       hint1['muscleTarget'] = null;
       hint1['sex'] = null;
+      hint1['metabolism'] = null;
     });
     return hint1;
   }
@@ -106,11 +107,14 @@ class _PersonalForm extends State<PersonalForm> {
           break;
         default:
       }
-      return metabolism;
     }
+
+    return metabolism;
   }
 
   num setMetabolism(num metabolism, int purpose) {
+    print(purpose);
+    print("hi");
     switch (purpose) {
       case 0:
         metabolism -= 500;
@@ -235,7 +239,7 @@ class _PersonalForm extends State<PersonalForm> {
                                                 if (value > 1) {
                                                   return 'Select Number 1-2';
                                                 }
-                                                // return null;
+                                                return null;
                                               },
                                               onChanged: (value) {
                                                 setState(() {
