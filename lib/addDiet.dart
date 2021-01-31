@@ -592,7 +592,7 @@ class _FoodListState extends State<FoodList> {
                     child: IconButton(
                         splashColor: Colors.white,
                         icon: Icon(Icons.calculate_outlined,
-                            color: Colors.yellow //iconColor,
+                            color: Colors.deepOrangeAccent[700] //iconColor,
                             ),
                         onPressed: () async {
                           List<num> defaultFood = passDefaultFoodList();
@@ -672,7 +672,7 @@ class _FoodListState extends State<FoodList> {
                     child: IconButton(
                         splashColor: Colors.white,
                         icon: Icon(Icons.calculate_outlined,
-                            color: Colors.white //iconColor,
+                            color: Colors.deepOrangeAccent[100] //iconColor,
                             ),
                         onPressed: () async {
                           List<num> defaultFood = passDefaultFoodList();
