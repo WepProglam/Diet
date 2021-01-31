@@ -856,6 +856,9 @@ class _FoodListState extends State<FoodList> {
         await dbHelperDiet.createHelper(diet);
         Map passingData = diet.toMap();
         passingData["rate"] = _currentSliderValue;
+        print("mainpagealert dialog");
+        print(passingData['rate']);
+        print(passingData['rate'] * person.metabolism * 0.01);
         _currentSliderValue = 0;
         Navigator.pop(context);
         Navigator.pop(context, passingData);
@@ -871,7 +874,6 @@ class _FoodListState extends State<FoodList> {
         Navigator.pop(context);
       },
     );
-
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       backgroundColor: Colors.black,
