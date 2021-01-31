@@ -14,7 +14,9 @@ import 'calculate.dart';
 Color listViewColor = Colors.deepOrangeAccent;
 Color iconColor = Colors.deepOrangeAccent[400];
 double _currentSliderValue = 0;
-int rangeSliderMaxValue = 100;
+double rangeSliderMaxValue = 100;
+Person person;
+
 final dbHelperFood = DBHelperFood();
 
 var filterColor = Colors.deepOrangeAccent[700];
@@ -98,7 +100,6 @@ class _FoodListState extends State<FoodList> {
     num todaykcal = 0.0;
     String now = DateTime.now().toString().substring(0, 10);
     Map todayDietInfo = {};
-    Person person;
     String calender_year = dateInfo.split("-")[0];
     String calender_month = dateInfo.split("-")[1];
     String calender_date = dateInfo.split("-")[2];
@@ -145,7 +146,7 @@ class _FoodListState extends State<FoodList> {
 
     // print("today kcal = $todaykcal");
 
-    rangeSliderMaxValue = ((1 - todaykcal / person.metabolism) * 100).round();
+    rangeSliderMaxValue = ((1 - todaykcal / person.metabolism) * 100);
     // print("1-${todaykcal}/ ${person.metabolism}= ${rangeSliderMaxValue / 100}");
 
     // print("this is rangeslider max value = $rangeSliderMaxValue");
@@ -887,7 +888,7 @@ class _FoodListState extends State<FoodList> {
               // maxLines: 2,
             ),
             Text(
-                "\n현재까지 ${(100 - rangeSliderMaxValue).toStringAsFixed(1)}% 선택하셨습니다."),
+                "\n오늘 총 칼로리 중 ${(100 - rangeSliderMaxValue).toStringAsFixed(1)}%를 이미 사용하셨습니다."),
             RangeSlider()
           ],
         ),
@@ -1124,8 +1125,11 @@ class RangeSliderState extends State<RangeSlider> {
       value: _currentSliderValue,
       min: 0,
       max: 100,
-      divisions: 100,
-      label: _currentSliderValue.round().toString(),
+      divisions: 1000,
+      label:
+          (_currentSliderValue * person.metabolism / 100).toStringAsFixed(1) +
+              "Kcal" +
+              " ${_currentSliderValue.toStringAsFixed(1)}%",
       onChanged: (double value) {
         if (value > rangeSliderMaxValue) {
           //몇프로 남았는지 계산해야함
