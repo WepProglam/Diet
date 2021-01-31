@@ -1316,7 +1316,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .height /
-                                                              30,
+                                                              40,
                                                     ),
 
                                                     //달력
@@ -1327,9 +1327,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           decoration:
                                                               BoxDecoration(
                                                             // color: Color(0x774E0D0D),
-                                                            border: Border.all(
-                                                                // color: Color(0xFF4E0D0D),
-                                                                width: 5),
+                                                            border: Border(
+                                                                // top: BorderSide(
+                                                                //     width: 5),
+                                                                // bottom:
+                                                                //     BorderSide(
+                                                                //         width:
+                                                                //             5),
+                                                                left:
+                                                                    BorderSide(
+                                                                        width:
+                                                                            5),
+                                                                right:
+                                                                    BorderSide(
+                                                                        width:
+                                                                            5)),
+                                                            // color: Color(0xFF4E0D0D),
                                                           ),
                                                           child: isSelected[0]
                                                               ? returnCalender()
@@ -1639,7 +1652,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget calenderMonthChange() {
     //월 이동 함수
     return Expanded(
-        flex: 2,
+        flex: 3,
         child: Container(
           child: calender(),
         ));
@@ -1680,11 +1693,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 4.0),
+                      padding: const EdgeInsets.only(top: 0.0),
                       child: InkWell(
                         child: Ink(
                             child: Icon(Icons.arrow_back_ios_outlined,
-                                size: 25, color: Colors.white60)),
+                                size: 30, color: Colors.white60)),
                         onTap: () async {
                           if (calender_month == 1) {
                             calender_year -= 1;
@@ -1701,11 +1714,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 4.0),
+                      padding: const EdgeInsets.only(top: 0.0),
                       child: InkWell(
                         child: Ink(
                             child: Icon(Icons.arrow_forward_ios_outlined,
-                                size: 25, color: Colors.white60)),
+                                size: 30, color: Colors.white60)),
                         onTap: () async {
                           if (calender_month == 12) {
                             calender_year += 1;
@@ -1727,7 +1740,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.only(left: 10.0),
                       child: AutoSizeText(
                         "$calender_year년 $calender_month월",
-                        style: TextStyle(fontSize: 25, color: Colors.white60),
+                        style: TextStyle(fontSize: 20, color: Colors.white60),
                         maxLines: 1,
                       ),
                     ),
@@ -1798,11 +1811,11 @@ class _MyHomePageState extends State<MyHomePage> {
             Icon(
               Icons.date_range,
               color: calenderIconColor,
-              size: 20,
+              size: 25,
             ),
             Icon(
               Icons.stacked_line_chart,
-              size: 20,
+              size: 25,
               color: graphIconColor,
             ),
           ],
@@ -2075,7 +2088,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: AutoSizeText(
                                 kcalArchieve != 0
                                     ? '${kcalArchieve.toStringAsFixed(1)}%'
-                                    : '', //칼로리 성취율
+                                    : '      ', //칼로리 성취율
                                 style: TextStyle(
                                   color: Colors.deepOrangeAccent[400],
                                   fontSize: 7,
@@ -2089,7 +2102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: AutoSizeText(
                                 nutriArchieve != 0
                                     ? '${nutriArchieve.toStringAsFixed(1)}%'
-                                    : '', //비율 성취율
+                                    : '      ', //비율 성취율
                                 style: TextStyle(
                                   color: Colors.deepOrangeAccent,
                                   fontSize: 7,
@@ -2113,7 +2126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         // position: currentIndexPage
                       ))
-                  : Container()
+                  : Container(),
             ],
           ),
           onTap: () async {
