@@ -117,6 +117,16 @@ class NavDrawer extends StatelessWidget {
               print(ModalRoute.of(context).settings.name);
             },
           ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('성취도 그래프'),
+            onTap: () {
+              // print(ModalRoute.of(context).settings.name);
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/archieve');
+              print(ModalRoute.of(context).settings.name);
+            },
+          ),
         ],
       ),
     );
