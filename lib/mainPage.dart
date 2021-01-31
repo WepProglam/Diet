@@ -539,8 +539,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                 print(percent);
 
-                                todayDietList[index]['foodInfo']['kcal'] *=
-                                    percent;
+                                todayDietList[index]['foodInfo']['kcal'] =
+                                    person.metabolism * percent;
 
                                 print(todayDietList[index]['foodInfo']['kcal']);
 
@@ -623,8 +623,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 double percent = todayDietList[index]["rate"] /
                                     100; //80 => 0.8
 
-                                todayDietList[index]['foodInfo']['kcal'] *=
-                                    percent;
+                                todayDietList[index]['foodInfo']['kcal'] =
+                                    person.metabolism * percent;
 
                                 todayDietList[index]["kcal"] =
                                     todayDietList[index]['foodInfo']['kcal'];
