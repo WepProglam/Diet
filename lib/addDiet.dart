@@ -749,6 +749,7 @@ class _FoodListState extends State<FoodList> {
                           }
                         }),
                   ),
+                  Spacer(),
 
                   Expanded(
                     flex: 5,
@@ -765,6 +766,7 @@ class _FoodListState extends State<FoodList> {
                     ),
                   ),
                   // add button
+                  Spacer(),
                   Expanded(
                     flex: 2,
                     child: IconButton(

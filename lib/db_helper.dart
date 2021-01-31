@@ -22,10 +22,26 @@ class DBHelperPerson {
     return _database;
   }
 
+
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, '$dBName.db');
 
+    final exist = await databaseExists(path);
+    if (exist) {
+      print("db alredy exits");
+    } else {
+      // try{
+      //   await Directory(dirname(path)).create(recursive: true);
+      // }catch(_){
+      ByteData data = await rootBundle.load(join("assets", "Person.db"));
+      List<int> bytes =
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+      print(data.lengthInBytes);
+
+      await File(path).writeAsBytes(bytes, flush: true);
+      // }
+    }
     return await openDatabase(path, version: 1, onCreate: (db, version) async {
       await db.execute('''
           CREATE TABLE $tableName(
@@ -47,6 +63,10 @@ class DBHelperPerson {
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
   }
+
+
+
+
 
   createHelper(Person person) async {
     await getAllPerson().then((value) async {

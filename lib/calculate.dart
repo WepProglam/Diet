@@ -80,12 +80,13 @@ Future<List<num>> makeCsvFile(
   num foodLength = foodList.length;
   num defaultFoodLength = defaultFoodList.length;
   num totalFoodLength = foodLength + defaultFoodLength;
+
   if (foodList.length <= 3) {
     calculateDensity *= 30;
   } else if (foodList.length <= 5) {
     calculateDensity *= 10;
   } else if (foodList.length <= 7) {
-    calculateDensity *= 5;
+    calculateDensity *= 6;
   } else {
     calculateDensity *= 3;
   }
