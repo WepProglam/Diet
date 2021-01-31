@@ -72,7 +72,7 @@ class SearchFood extends StatelessWidget {
 
 class SearchList extends StatefulWidget {
   final Stream<String> streamString;
-  SearchList({Key key, this.streamString}) : super(key: key);
+  SearchList({this.streamString});
 
   @override
   _SearchListState createState() => _SearchListState();
@@ -80,7 +80,6 @@ class SearchList extends StatefulWidget {
 
 class _SearchListState extends State<SearchList>
     with SingleTickerProviderStateMixin {
-  final key = GlobalKey<ScaffoldState>();
   final _searchQuery = TextEditingController();
   List<Food> _list;
 
@@ -390,7 +389,6 @@ class _SearchListState extends State<SearchList>
     return AppBar(
         // iconTheme: IconThemeData(color: Colors.white),
         centerTitle: true,
-        key: key,
         title: appBarTitle,
         // backgroundColor: Colors.black,
         actions: <Widget>[
@@ -613,6 +611,10 @@ class _UiitemState extends State<Uiitem> {
                     // 그 외 일반적인 경우
                     else if (args['pre'] == 'addFood') {
                       Navigator.pop(context, building.code);
+                      Navigator.pushNamed(context, '/addFood',
+                          arguments: <String, Map>{
+                            "myTempoFood": building.toMap()
+                          });
                       // print(building.code);
                     } else {
                       Navigator.pop(context);

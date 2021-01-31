@@ -280,7 +280,9 @@ class _MyHomePageState extends State<MyHomePage> {
     getCompleteDate();
     getTodayCalroie();
     await dbHelperPerson.getLastPerson().then((value) => setState(() {
-          targetKcal = value.metabolism;
+          try {
+            targetKcal = value.metabolism;
+          } catch (e) {}
           // person = value;
         }));
     super.didChangeDependencies();
