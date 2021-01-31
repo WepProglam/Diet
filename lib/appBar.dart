@@ -28,6 +28,7 @@ import 'package:flutter/material.dart';
 Widget basicAppBar(String title, BuildContext context) {
   if (title == "GOLDEN RATIO") {
     return AppBar(
+      toolbarHeight: 70,
       //color
       // backgroundColor: Colors.deepOrangeAccent,
       iconTheme: IconThemeData(color: Colors.white),

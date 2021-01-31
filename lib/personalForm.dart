@@ -180,7 +180,7 @@ class _PersonalForm extends State<PersonalForm> {
           // backgroundColor: Color(0xFFFFFEF5),
           resizeToAvoidBottomPadding: false,
           appBar: AppBar(
-              centerTitle: true, title: Text("신체 정보"), actions: <Widget>[]),
+              centerTitle: true, title: Text("INBODY"), actions: <Widget>[]),
           body: Center(
             child: Form(
               key: _formKey,

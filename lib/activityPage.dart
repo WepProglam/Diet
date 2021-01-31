@@ -263,6 +263,8 @@ class _ActivityPageState extends State<ActivityPage> {
   Widget selActivity() {
     return Center(
       child: Row(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        // crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Spacer(
             flex: 1,
@@ -629,6 +631,7 @@ class _ActivityPageState extends State<ActivityPage> {
                     flex: 1,
                   ),
                   Container(
+                      padding: EdgeInsets.only(top: 6),
                       decoration: BoxDecoration(
                           border: Border(
                               top:
@@ -641,7 +644,7 @@ class _ActivityPageState extends State<ActivityPage> {
                   // nutriRate(),
                   // Text('탄수화물, 단백질, 지방의 열량 비율을 선택해주세요'),
                   Spacer(
-                    flex: 2,
+                    flex: 1,
                   ),
                   Container(
                     // color: Colors.yellow,

@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'personalForm.dart';
-import 'initPage.dart';
+// import 'initPage.dart';
 import 'mainPage.dart';
 import 'addFood.dart';
 import 'searchDiet.dart';
@@ -53,11 +53,11 @@ void main() {
       //   ),
       // )
     ),
-    initialRoute: '/mainPage',
+    initialRoute: '/',
     routes: {
-      '/': (context) => InitPage(),
+      '/': (context) => MainPage(),
       '/personalForm': (context) => PersonalForm(),
-      '/mainPage': (context) => MainPage(),
+      // '/mainPage': (context) => MainPage(),
       '/addFood': (context) => AddFood(),
       '/searchDiet': (context) => SearchDiet(),
       '/searchFood': (context) => SearchFood(),
