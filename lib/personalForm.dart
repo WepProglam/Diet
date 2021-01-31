@@ -403,7 +403,10 @@ class _PersonalForm extends State<PersonalForm> {
                                                                   'metabolism'],
                                                               _selValue)
                                                           : null,
-                                                  activity: hint['activity'],
+                                                  activity:
+                                                      hint['activity'] != null
+                                                          ? hint['activity']
+                                                          : 1,
                                                   weightTarget: double.parse(
                                                       _weightTargetController
                                                           .value.text),

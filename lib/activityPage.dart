@@ -103,7 +103,7 @@ class _ActivityPageState extends State<ActivityPage> {
     final Map<String, Person> args = ModalRoute.of(context).settings.arguments;
     // if (args != null) {
     hint = args['person'].toMap();
-    print(hint);
+    // print(hint);
     // } else {
     //   await getHint().then((value) {
     //     hint = value;
@@ -124,13 +124,15 @@ class _ActivityPageState extends State<ActivityPage> {
         // print(hint['nutriRate']);
         print(hint['activity']);
         if (hint['metabolism'] != null) {
-          amText.text = addOrSubAm((bmr * 1.2)).toStringAsFixed(1);
+          amText.text = addOrSubAm(amTextSetting(hint['activity'], bmr))
+              .toStringAsFixed(1);
           setState(() {
             _nutriRateValue = hint['nutriRate'];
             _activityValue = hint['activity'];
           });
         } else {
-          amText.text = addOrSubAm((bmr * 1.2)).toStringAsFixed(1);
+          amText.text = addOrSubAm(amTextSetting(hint['activity'], bmr))
+              .toStringAsFixed(1);
         }
         hint['metabolism'] = num.parse(amText.value.text);
       } else {
@@ -140,7 +142,8 @@ class _ActivityPageState extends State<ActivityPage> {
             (4.7 * 22));
         bmrText.text = bmr.toStringAsFixed(1);
         if (hint['metabolism'] != null) {
-          amText.text = addOrSubAm((bmr * 1.2)).toStringAsFixed(1);
+          amText.text = addOrSubAm(amTextSetting(hint['activity'], bmr))
+              .toStringAsFixed(1);
           setState(() {
             _nutriRateValue = hint['nutriRate'];
             _activityValue = hint['activity'];
@@ -150,8 +153,8 @@ class _ActivityPageState extends State<ActivityPage> {
         }
         hint['metabolism'] = num.parse(amText.value.text);
       }
-      print(hint);
-      await savingInformation();
+      // print(hint);
+      // await savingInformation();
     } else {
       //이거 text 뭐라고 하지
       bmrText.text = '신체 정보 X';
@@ -317,6 +320,24 @@ class _ActivityPageState extends State<ActivityPage> {
         ],
       ),
     );
+  }
+
+  num amTextSetting(int i, num bmr) {
+    if (i == 1) {
+      return bmr * 1.2;
+    } else if (i == 2) {
+      return bmr * 1.375;
+    } else if (i == 3) {
+      return bmr * 1.555;
+    } else if (i == 4) {
+      return bmr * 1.725;
+    } else if (i == 5) {
+      return bmr * 1.9;
+    } else if (i == 6) {
+      return bmr * 1.2;
+    } else {
+      return bmr * 1.2;
+    }
   }
 
   num addOrSubAm(num am) {
@@ -667,33 +688,55 @@ class _ActivityPageState extends State<ActivityPage> {
           child: Icon(Icons.done),
           // backgroundColor: Color(0xFF7EE0CC),
           onPressed: () async {
-            await savingInformation();
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.popAndPushNamed(context, '/mainPage');
+            // await savingInformation();
+            String time =
+                DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
+
+            var person = Person(
+              height: hint['height'],
+              weight: hint['weight'],
+              bmi: hint['bmi'],
+              muscleMass: hint['muscleMass'],
+              purpose: hint['purpose'],
+              time: time,
+              achieve: hint['achieve'],
+              metabolism: num.parse(amText.value.text),
+              activity: _activityValue,
+              weightTarget: hint['weightTarget'],
+              bmiTarget: hint['bmiTarget'],
+              muscleTarget: hint['muscleTarget'],
+            );
+            // print(person.metabolism);
+            await dbHelperPerson.createHelper(person);
+
+            // Navigator.pop(context);
+            // Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, '/mainPage');
+
+            // Navigator.popAndPushNamed(context, '/mainPage');
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
-  void savingInformation() async {
-    String time = DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
+  // void savingInformation() async {
+  //   String time = DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
 
-    var person = Person(
-      height: hint['height'],
-      weight: hint['weight'],
-      bmi: hint['bmi'],
-      muscleMass: hint['muscleMass'],
-      purpose: hint['purpose'],
-      time: time,
-      achieve: hint['achieve'],
-      metabolism: num.parse(amText.value.text),
-      activity: _activityValue,
-      weightTarget: hint['weightTarget'],
-      bmiTarget: hint['bmiTarget'],
-      muscleTarget: hint['muscleTarget'],
-    );
-    print(person.metabolism);
-    await dbHelperPerson.createHelper(person);
-  }
+  //   var person = Person(
+  //     height: hint['height'],
+  //     weight: hint['weight'],
+  //     bmi: hint['bmi'],
+  //     muscleMass: hint['muscleMass'],
+  //     purpose: hint['purpose'],
+  //     time: time,
+  //     achieve: hint['achieve'],
+  //     metabolism: num.parse(amText.value.text),
+  //     activity: _activityValue,
+  //     weightTarget: hint['weightTarget'],
+  //     bmiTarget: hint['bmiTarget'],
+  //     muscleTarget: hint['muscleTarget'],
+  //   );
+  //   // print(person.metabolism);
+  //   await dbHelperPerson.createHelper(person);
+  // }
 }
