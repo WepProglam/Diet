@@ -1529,7 +1529,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget calenderMonthChange() {
     //월 이동 함수
-    return Expanded(flex: 2, child: calender());
+    return Expanded(
+        flex: 2,
+        child: Container(
+          child: calender(),
+        ));
   }
 
   void getCompleteDate() async {
@@ -1673,7 +1677,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Container(
       // decoration: BoxDecoration(color: Colors.yellow),
       child: Padding(
-        padding: const EdgeInsets.only(top: 3.0, right: 0),
+        padding: const EdgeInsets.only(top: 0.0, right: 0),
         child: ToggleButtons(
           // hoverColor: Colors.white,
           // highlightColor: Colors.black,
@@ -1685,11 +1689,11 @@ class _MyHomePageState extends State<MyHomePage> {
             Icon(
               Icons.date_range,
               color: calenderIconColor,
-              size: 25,
+              size: 20,
             ),
             Icon(
               Icons.stacked_line_chart,
-              size: 25,
+              size: 20,
               color: graphIconColor,
             ),
           ],
