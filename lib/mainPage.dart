@@ -440,7 +440,11 @@ class _MyHomePageState extends State<MyHomePage> {
                               widthFactor: 1,
                               heightFactor: 1,
                               child: Container(
-                                  child: Center(child: Text("식단 추가하기")),
+                                  child: Center(
+                                      child: AutoSizeText(
+                                    "새로운 식단 추가하기",
+                                    maxLines: 1,
+                                  )),
                                   decoration: BoxDecoration(
                                       // color: Colors.red,
                                       border: Border.all(
@@ -519,7 +523,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               widthFactor: 1,
                               heightFactor: 1,
                               child: Container(
-                                  child: Center(child: Text("저장된 식단 불러오기")),
+                                  child: Center(
+                                      child: AutoSizeText("저장된 식단 불러오기")),
                                   decoration: BoxDecoration(
                                       // color: Colors.red,
                                       border: Border(
@@ -1512,6 +1517,7 @@ class _MyHomePageState extends State<MyHomePage> {
       padding: const EdgeInsets.only(right: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Indicator(
             color: Colors.deepOrangeAccent[400],
@@ -1654,9 +1660,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             title,
                             // Spacer(flex: 5),
                             Container(
-                              alignment: Alignment.bottomRight,
-                              padding:
-                                  const EdgeInsets.only(top: 4.0, right: 5),
+                              alignment: Alignment.bottomCenter,
+                              padding: const EdgeInsets.only(top: 4.0),
                               child: AutoSizeText(
                                 kcalArchieve != 0
                                     ? '${kcalArchieve.toStringAsFixed(1)}%'
@@ -1669,8 +1674,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ), //성취도
                             Container(
-                              alignment: Alignment.bottomRight,
-                              padding: const EdgeInsets.only(right: 5),
+                              alignment: Alignment.bottomCenter,
+                              // padding: const EdgeInsets.only(right: 5),
                               child: AutoSizeText(
                                 nutriArchieve != 0
                                     ? '${nutriArchieve.toStringAsFixed(1)}%'

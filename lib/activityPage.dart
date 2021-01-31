@@ -37,9 +37,9 @@ class _ActivityPageState extends State<ActivityPage> {
   int _activityValue = 1;
 
   static const double barWidth = 22;
-  List<int> nutriRate;
-  int carbo;
-  int carboPro;
+  List<int> nutriRate = [5, 3, 2];
+  int carbo = 5;
+  int carboPro = 8;
 
   var hint = {};
 
@@ -113,7 +113,7 @@ class _ActivityPageState extends State<ActivityPage> {
     //조건: 성별
     getNutriRate(hint['purpose']);
     if (hint['time'] != null) {
-      if (true) {
+      if (hint['sex'] == 0) {
         bmr = (66.5 +
             (13.8 * hint['weight']) +
             (5 * hint['height']) -

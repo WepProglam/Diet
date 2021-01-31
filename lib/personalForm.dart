@@ -232,10 +232,10 @@ class _PersonalForm extends State<PersonalForm> {
                                               decoration:
                                                   InputDecoration(hintText: ""),
                                               validator: (value) {
-                                                if (value > 2) {
-                                                  return 'Select Number 1-3';
+                                                if (value > 1) {
+                                                  return 'Select Number 1-2';
                                                 }
-                                                return null;
+                                                // return null;
                                               },
                                               onChanged: (value) {
                                                 setState(() {

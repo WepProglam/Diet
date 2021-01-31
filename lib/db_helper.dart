@@ -45,12 +45,11 @@ class DBHelperPerson {
     }, onUpgrade: (db, oldVersion, newVersion) {});
   }
 
-  createHelper(Person person) {
-    getAllPerson().then((value) async {
+  createHelper(Person person) async {
+    await getAllPerson().then((value) async {
       if (value.isNotEmpty) {
         if (value.last.time == person.time) {
-          await deletePerson(value.last.time);
-          await createData(person);
+          await updatePerson(person);
         } else {
           await createData(person);
         }
