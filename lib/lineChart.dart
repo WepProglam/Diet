@@ -19,18 +19,20 @@ List<num> myMaxNutriArchieve = [];
 
 class LineChartSample2 extends StatefulWidget {
   int index = 0;
+  int secondIndex = 0;
   //성취도 함수
   List<dynamic> personTimeArchieveInfo = [];
   List<num> kcalArchieve = [];
   List<num> nutriArchieve = [];
 
-  LineChartSample2({
-    this.index,
-    this.personTimeArchieveInfo,
-    this.kcalArchieve,
-    this.nutriArchieve,
-  }) {
+  LineChartSample2(
+      {this.index,
+      this.personTimeArchieveInfo,
+      this.kcalArchieve,
+      this.nutriArchieve,
+      this.secondIndex}) {
     if (kcalArchieve != null) {
+      secondIndex = secondIndex;
       if (kcalArchieve.isNotEmpty) {
         myPersonTimeArchieveInfo = personTimeArchieveInfo;
         myKcalArchieve = kcalArchieve;
@@ -43,12 +45,14 @@ class LineChartSample2 extends StatefulWidget {
     }
   }
   @override
-  _LineChartSample2State createState() => _LineChartSample2State(index: index);
+  _LineChartSample2State createState() =>
+      _LineChartSample2State(index: index, secondIndex: secondIndex);
 }
 
 class _LineChartSample2State extends State<LineChartSample2> {
   int index = 0;
-  _LineChartSample2State({this.index});
+  int secondIndex = 100;
+  _LineChartSample2State({this.index, this.secondIndex});
 
   List<Color> gradientColorsKcal = [
     Colors.deepOrangeAccent[400],
@@ -169,9 +173,20 @@ class _LineChartSample2State extends State<LineChartSample2> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var a;
+    var b;
     try {
-      a = LineChart(archieveData());
+      a = LineChart(archieveDataKcal());
+      b = LineChart(archieveDataNutri());
     } catch (e) {}
+
+    var plotting;
+    if (index == -1 && secondIndex == 1) {
+      plotting = a;
+    } else if (index == -1 && secondIndex == 0) {
+      plotting = b;
+    } else if (index != -1) {
+      plotting = LineChart(mainData(index: index));
+    }
     print(personTargetBmiSpot);
     return Column(
       children: [
@@ -190,14 +205,9 @@ class _LineChartSample2State extends State<LineChartSample2> {
                       // color: Color(0xff232d37)
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                          right: 15, left: 15, top: 30, bottom: 0),
-                      child: index == -1
-                          ? a
-                          : personWeightSpot.isEmpty
-                              ? null
-                              : LineChart(mainData(index: index)),
-                    ),
+                        padding: const EdgeInsets.only(
+                            right: 15, left: 15, top: 30, bottom: 0),
+                        child: plotting == null ? null : plotting),
                   )),
             ),
             index == -1
@@ -231,17 +241,30 @@ class _LineChartSample2State extends State<LineChartSample2> {
                   )
           ],
         ),
-        index == -1
+        SizedBox(
+          height: MediaQuery.of(context).size.height / 25,
+        ),
+        index == -1 && secondIndex == 0
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Spacer(flex: 1),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Indicator(
+                    // color: Color(0xfff8b250),
+                    color: Colors.deepOrangeAccent[100],
+                    text: '영양성분 성취도',
+                    textColor: Colors.white,
+                    fontSize: 12,
+                    isSquare: true,
+                  ),
+                ],
+              )
+            : index == -1
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    // crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      // SizedBox(
-                      //   height: 50,
-                      // ),
+                      Spacer(flex: 1),
                       Indicator(
                         // color: Color(0xfff8b250),
                         color: Colors.deepOrangeAccent[400],
@@ -249,26 +272,10 @@ class _LineChartSample2State extends State<LineChartSample2> {
                         textColor: Colors.white,
                         fontSize: 12,
                         isSquare: true,
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Indicator(
-                        // color: Color(0xfff8b250),
-                        color: Colors.deepOrangeAccent[100],
-                        text: '영양성분 성취도',
-                        textColor: Colors.white,
-                        fontSize: 12,
-                        isSquare: true,
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
+                      )
                     ],
-                  ),
-                ],
-              )
-            : Container()
+                  )
+                : Container()
       ],
     );
   }
@@ -281,7 +288,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
   LineChartData mainData({int index}) {
     List<double> maxInfo = [];
-    print(index);
+    // print(index);
     if (index == 0) {
       maxInfo = maxWeigt;
     } else if (index == 1) {
@@ -387,34 +394,136 @@ class _LineChartSample2State extends State<LineChartSample2> {
     );
   }
 
-  LineChartData archieveData() {
+  LineChartData archieveDataKcal() {
     print("here is archie graph");
+    print(secondIndex);
     List<FlSpot> myKcalArchieveSpot = [];
-    List<FlSpot> myNutriArchieveSpot = [];
-    print("create var");
-    // print(myKcalArchieve);
-    // print(myMaxKcalArchieve);
-
-    // print(myKcalArchieve.length);
 
     for (var j = 0; j < myKcalArchieve.length; j++) {
       myMaxKcalArchieve.add(myKcalArchieve[j]);
-      myMaxNutriArchieve.add(myNutriArchieve[j]);
     }
     myMaxKcalArchieve.sort();
-    myMaxNutriArchieve.sort();
 
     for (var k = 0; k < myKcalArchieve.length; k++) {
-      print(k);
       myKcalArchieveSpot.add(FlSpot(k.toDouble(), myKcalArchieve[k] / 10));
+    }
+
+    myMaxKcalArchieve = [];
+    // setState(() {});
+    return LineChartData(
+      lineTouchData: LineTouchData(enabled: true),
+      gridData: FlGridData(
+        show: true,
+        drawHorizontalLine: true,
+        getDrawingVerticalLine: (value) {
+          return FlLine(
+            color: const Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+            color: const Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        bottomTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 10,
+          getTextStyles: (value) => const TextStyle(
+              color: Color(0xff68737d),
+              fontWeight: FontWeight.bold,
+              fontSize: 12),
+          getTitles: (value) {
+            // switch (value.toInt()) {
+            //   case 2:
+            //     return 'MAR';
+            //   case 5:
+            //     return 'JUN';
+            //   case 8:
+            //     return 'SEP';
+            // }
+
+            // print(myPersonTimeArchieveInfo[value.toInt()]);
+            List title = myPersonTimeArchieveInfo[value.toInt()];
+
+            if (value % (myPersonTimeArchieveInfo.length ~/ 5 + 1) == 0) {
+              return title[1].toString() + "/" + title[2].toString();
+            }
+            return '';
+          },
+          margin: 8,
+        ),
+        leftTitles: SideTitles(
+          showTitles: true,
+          getTextStyles: (value) => const TextStyle(
+            color: Color(0xff67727d),
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+          getTitles: (value) {
+            switch (value.toInt()) {
+            }
+            // print(value);
+
+            return value == 0
+                ? "${value.toInt()}%"
+                : value.toInt() >= 11
+                    ? ""
+                    : "${value.toInt()}0%";
+          },
+          reservedSize: 28,
+          margin: 12,
+        ),
+      ),
+      borderData: FlBorderData(
+          show: true,
+          border: Border.all(color: const Color(0xff37434d), width: 1)),
+      minX: 0,
+      maxX: (myKcalArchieveSpot.length.toDouble() - 1) * 1.1,
+      minY: 0,
+      maxY: 12,
+      lineBarsData: [
+        LineChartBarData(
+          spots: myKcalArchieveSpot,
+          isCurved: false,
+          colors: gradientColorsKcal,
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: FlDotData(
+            show: true,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            colors: gradientColorsKcal
+                .map((color) => color.withOpacity(0.3))
+                .toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  LineChartData archieveDataNutri() {
+    List<FlSpot> myNutriArchieveSpot = [];
+
+    for (var j = 0; j < myNutriArchieve.length; j++) {
+      myMaxNutriArchieve.add(myNutriArchieve[j]);
+    }
+
+    myMaxNutriArchieve.sort();
+
+    for (var k = 0; k < myNutriArchieve.length; k++) {
       myNutriArchieveSpot.add(FlSpot(
           k.toDouble(),
           (myNutriArchieve[k] /
               10))); //myKcalMaxArcheive.last가 최대값 => 최대값으로 나누고 *8로 해서 띄워야함
 
     }
-    print(myKcalArchieveSpot.length);
-    myMaxKcalArchieve = [];
+    List<Color> colorYellow = [Colors.yellow[500], Colors.yellow[500]];
     myMaxNutriArchieve = [];
     // setState(() {});
     return LineChartData(
@@ -457,7 +566,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             // print(myPersonTimeArchieveInfo[value.toInt()]);
             List title = myPersonTimeArchieveInfo[value.toInt()];
 
-            if (value % (myPersonTimeArchieveInfo.length ~/ 5) == 0) {
+            if (value % (myPersonTimeArchieveInfo.length ~/ 5 + 1) == 0) {
               return title[1].toString() + "/" + title[2].toString();
             }
             return '';
@@ -474,9 +583,13 @@ class _LineChartSample2State extends State<LineChartSample2> {
           getTitles: (value) {
             switch (value.toInt()) {
             }
-            print(value);
+            // print(value);
 
-            return value == 0 ? "${value.toInt()}%" : "${value.toInt()}0%";
+            return value == 0
+                ? "${value.toInt()}%"
+                : value.toInt() >= 11
+                    ? ""
+                    : "${value.toInt()}0%";
           },
           reservedSize: 28,
           margin: 12,
@@ -486,40 +599,22 @@ class _LineChartSample2State extends State<LineChartSample2> {
           show: true,
           border: Border.all(color: const Color(0xff37434d), width: 1)),
       minX: 0,
-      maxX: (myKcalArchieveSpot.length.toDouble() - 1) * 1.1,
+      maxX: (myNutriArchieveSpot.length.toDouble() - 1) * 1.1,
       minY: 0,
       maxY: 12,
       lineBarsData: [
         LineChartBarData(
-          spots: myKcalArchieveSpot,
-          isCurved: false,
-          colors: gradientColorsKcal,
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: true,
-          ),
-          belowBarData: BarAreaData(
-            show: false,
-            colors: gradientColorsKcal
-                .map((color) => color.withOpacity(0.3))
-                .toList(),
-          ),
-        ),
-        LineChartBarData(
           spots: myNutriArchieveSpot,
           isCurved: false,
-          colors: gradientColorsNutri,
+          colors: colorYellow,
           barWidth: 5,
           isStrokeCapRound: true,
           dotData: FlDotData(
             show: true,
           ),
           belowBarData: BarAreaData(
-            show: false,
-            colors: gradientColorsNutri
-                .map((color) => color.withOpacity(0.3))
-                .toList(),
+            show: true,
+            colors: colorYellow.map((color) => color.withOpacity(0.3)).toList(),
           ),
         ),
       ],

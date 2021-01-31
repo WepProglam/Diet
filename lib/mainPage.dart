@@ -1431,34 +1431,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Expanded(
-                                                flex: 4, child: Archieve()),
+                                                flex: 4,
+                                                child: Archieve(
+                                                  myIndex: 0,
+                                                )),
                                             Expanded(
-                                              flex: 3,
-                                              child: Stack(
-                                                children: [
-                                                  PieChartSample2(
-                                                      carbohydrate: todayCar,
-                                                      protein: todayPro,
-                                                      fat: todayFat,
-                                                      totalCalorie: todaykcal,
-                                                      correct: correct ==
-                                                                  null ||
-                                                              (correct == 0)
-                                                          ? 0.0
-                                                          : correct.toDouble()),
-                                                  Positioned(
-                                                      top: 20,
-                                                      right: 20,
-                                                      child: Container(
-                                                        child: AutoSizeText(
-                                                            '오늘 총 식단 열량 비율',
-                                                            style: TextStyle(
-                                                              fontSize: 15,
-                                                            )),
-                                                      )),
-                                                ],
-                                              ),
-                                            ),
+                                                flex: 4,
+                                                child: Archieve(
+                                                  myIndex: 1,
+                                                )),
                                           ],
                                         ),
                                       );

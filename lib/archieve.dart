@@ -30,24 +30,32 @@ List<dynamic> sendingArchievedate = [];
 // final dbHelper
 
 class Archieve extends StatelessWidget {
+  int myIndex;
+  Archieve({this.myIndex});
   @override
   Widget build(BuildContext context) {
-    return MyHomePage(title: 'Main Page');
+    return MyHomePage(
+      title: 'Main Page',
+      index: myIndex,
+    );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  int index;
+  MyHomePage({Key key, this.title, this.index}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _MyHomePageState createState() => new _MyHomePageState(index: index);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   DietHistory dietHistory;
   Person person;
+  int index;
+  _MyHomePageState({this.index});
 
   //이게 계속 실행됨
 
@@ -291,7 +299,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               // color: Color(0xFF4E0D0D),
                               width: 0),
                         ),
-                        child: Center(child: returnGraph())),
+                        child: Center(child: returnGraph(index))),
                   ),
                   Spacer(
                     flex: 1,
@@ -421,10 +429,12 @@ class _MyHomePageState extends State<MyHomePage> {
     correct = correctness(targetNutri, [todayCar, todayPro, todayFat]);
   }
 
-  Widget returnGraph() {
+  Widget returnGraph(int index) {
     // getInfo();
     // print("sendign");
     // print(sendingArchieveKcal);
+    print("%" * 100);
+    print(index);
     return Stack(
       children: [
         Column(
@@ -440,6 +450,7 @@ class _MyHomePageState extends State<MyHomePage> {
               kcalArchieve: sendingArchieveKcal,
               nutriArchieve: sendingAchieveNutri,
               personTimeArchieveInfo: sendingArchievedate,
+              secondIndex: index,
             ),
             // Spacer(
             //   flex: 2,
