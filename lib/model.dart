@@ -20,6 +20,7 @@ class Person {
   num muscleTarget;
 
   num sex; //0 남자 1 여자
+  num age;
 
   Person(
       {this.height,
@@ -34,7 +35,8 @@ class Person {
       this.weightTarget,
       this.bmiTarget,
       this.muscleTarget,
-      this.sex});
+      this.sex,
+      this.age});
 
   Map<String, dynamic> toMap() {
     return {
@@ -50,7 +52,8 @@ class Person {
       'weightTarget': weightTarget,
       'bmiTarget': bmiTarget,
       'muscleTarget': muscleTarget,
-      'sex': sex
+      'sex': sex,
+      'age': age
     };
   }
 }

@@ -178,7 +178,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
         Stack(
           children: <Widget>[
             AspectRatio(
-              aspectRatio: 1.5,
+              aspectRatio: index == -1 ? 1.3 : 1.1,
               child: FractionallySizedBox(
                   heightFactor: 1.1,
                   widthFactor: 1,

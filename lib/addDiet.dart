@@ -820,7 +820,6 @@ class _FoodListState extends State<FoodList> {
                                   .then((value) {
                                 diet = value;
                               });
-
                               mainPageAlertDialog(context, diet);
                             } else {
                               //savedDiet,다른 경로로 접근
@@ -877,28 +876,57 @@ class _FoodListState extends State<FoodList> {
     );
   }
 
+  showNoZeroDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () async {
+          Navigator.pop(context);
+        });
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Value Error"),
+      content: Text("0으로 설정할 수 없습니다."),
+      actions: [okButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   mainPageAlertDialog(BuildContext context, Diet diet) {
     // set up the button
     Widget okButton = FlatButton(
       child: Text("저장"),
       onPressed: () async {
-        String mealTime = mainPageReturnMealTime(mainPageIndex);
+        if (_currentSliderValue == 0) {
+          showNoZeroDialog(context);
+        } else {
+          String mealTime = mainPageReturnMealTime(mainPageIndex);
 
-        String dietTitle = '$dateTimeInfo-$mealTime';
+          String dietTitle = '$dateTimeInfo-$mealTime';
 
-        diet.dietName = (diet.dietName.length > 0) ? diet.dietName : dietTitle;
-        await dbHelperDiet.createHelper(diet);
-        Map passingData = diet.toMap();
-        passingData["rate"] = _currentSliderValue;
-        print("mainpagealert dialog");
-        print(passingData['rate']);
-        print(passingData['rate'] * person.metabolism * 0.01);
-        _currentSliderValue = 0;
-        Navigator.pop(context);
-        Navigator.pop(context, passingData);
-        setState(() {
+          diet.dietName =
+              (diet.dietName.length > 0) ? diet.dietName : dietTitle;
+          await dbHelperDiet.createHelper(diet);
+          Map passingData = diet.toMap();
+          passingData["rate"] = _currentSliderValue;
+          print("mainpagealert dialog");
+          print(passingData['rate']);
+          print(passingData['rate'] * person.metabolism * 0.01);
           _currentSliderValue = 0;
-        });
+          Navigator.pop(context);
+          Navigator.pop(context, passingData);
+          setState(() {
+            _currentSliderValue = 0;
+          });
+        }
       },
     );
 

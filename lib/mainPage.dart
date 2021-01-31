@@ -486,9 +486,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               );
                             }),
                       ),
-                      SizedBox(
-                        height: 6,
-                      ),
+
                       AutoSizeText(
                         "탄:단:지 = ${tempNutriRate[0]} : ${tempNutriRate[1]} : ${tempNutriRate[2]}",
                         maxLines: 1,
@@ -705,142 +703,143 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
         dietAdded[index][2] //
-            ? GestureDetector(
-                child: FractionallySizedBox(
-                    widthFactor: 1.0,
-                    heightFactor: 1.0,
-                    child: Container(
-                      decoration: BoxDecoration(color: Colors.black),
-                      child: Center(
-                        child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: MediaQuery.of(context).size.height / 12,
-                                child: ListView.builder(
-                                    itemCount: tempList.length,
-                                    itemBuilder: (context, int i) {
-                                      return Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          // Spacer(),
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
+            ? FractionallySizedBox(
+                widthFactor: 1.0,
+                heightFactor: 1.0,
+                child: Container(
+                  decoration: BoxDecoration(color: Colors.black),
+                  child: Center(
+                    child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height / 20,
+                            child: ListView.builder(
+                                itemCount: tempList.length,
+                                itemBuilder: (context, int i) {
+                                  return Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // Spacer(),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
                                                 3,
-                                            alignment: Alignment.centerLeft,
-                                            child: AutoSizeText(
-                                              tempList[i][1],
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .deepOrangeAccent[700]),
-                                              maxLines: 1,
-                                            ),
-                                          ),
-                                          // Spacer(),
-                                          Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  4,
-                                              alignment: Alignment.centerRight,
-                                              child: AutoSizeText(
-                                                (tempList[i][2] *
-                                                            todayDietList[index]
-                                                                ['kcal'] /
-                                                            targetKcal)
-                                                        .toStringAsFixed(2) +
-                                                    ' g',
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .deepOrangeAccent[700]),
-                                                maxLines: 1,
-                                              )),
-                                          // Spacer(),
-                                        ],
-                                      );
-                                    }),
-                              ),
-                              SizedBox(
-                                height: 6,
-                              ),
-                              AutoSizeText(
-                                "탄 : 단 : 지 = ${tempNutriRate[0]} : ${tempNutriRate[1]} : ${tempNutriRate[2]}",
-                                style: TextStyle(
-                                    color: Colors.deepOrangeAccent[700]),
-                                maxLines: 1,
-                              ),
+                                        alignment: Alignment.centerLeft,
+                                        child: AutoSizeText(
+                                          tempList[i][1],
+                                          style: TextStyle(
+                                              color:
+                                                  Colors.deepOrangeAccent[700]),
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                      // Spacer(),
+                                      Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              4,
+                                          alignment: Alignment.centerRight,
+                                          child: AutoSizeText(
+                                            (tempList[i][2] *
+                                                        todayDietList[index]
+                                                            ['kcal'] /
+                                                        targetKcal)
+                                                    .toStringAsFixed(2) +
+                                                ' g',
+                                            style: TextStyle(
+                                                color: Colors
+                                                    .deepOrangeAccent[700]),
+                                            maxLines: 1,
+                                          )),
 
-                              AutoSizeText(
-                                  "총 칼로리 = ${todayDietList[index]['kcal'].toStringAsFixed(2)} kcal",
-                                  style: TextStyle(
-                                      color: Colors.deepOrangeAccent[700]),
-                                  maxLines: 1),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              // for (var item in todayDietList[index]['foodInfo']
-                              //     ['foods'])
-                              //   //item[0] : 코드
-                              //   //item[1] : 음식 이름
-                              //   //item[2] : 음식 무게
-                              //   AnimatedDefaultTextStyle(
-                              //       duration: const Duration(milliseconds: 300),
-                              //       style: TextStyle(
-                              //         fontSize: 20.0,
-                              //         color: dietConfirm[index]
-                              //             ? Colors.red
-                              //             : Colors.blueAccent,
-                              //         fontWeight: dietConfirm[index]
-                              //             ? FontWeight.w100
-                              //             : FontWeight.bold,
-                              //       ),
-                              //       child: Text("${item[1]}  ${item[2]}g")),
-                              // AnimatedDefaultTextStyle(
-                              //   duration: const Duration(milliseconds: 300),
-                              //   style: TextStyle(
-                              //     fontSize: 20.0,
-                              //     color: dietConfirm[index]
-                              //         ? Colors.red
-                              //         : Colors.blueAccent,
-                              //     fontWeight: dietConfirm[index]
-                              //         ? FontWeight.w100
-                              //         : FontWeight.bold,
-                              //   ),
-                              //   child: Text(
-                              //       "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
-                              // ),
-                              // AnimatedDefaultTextStyle(
-                              //   duration: const Duration(milliseconds: 300),
-                              //   style: TextStyle(
-                              //     fontSize: 20.0,
-                              //     color: dietConfirm[index]
-                              //         ? Colors.red
-                              //         : Colors.blueAccent,
-                              //     fontWeight: dietConfirm[index]
-                              //         ? FontWeight.w100
-                              //         : FontWeight.bold,
-                              //   ),
-                              //   child:
-                              //       Text("총 칼로리 : ${todayDietList[index]['kcal']}"),
-                              // ),
-                            ]),
-                      ),
-                    )),
-                onTap: () {
-                  // print(todayDietList[index]);
-                  setState(() {
-                    dietAdded[index][3] = !dietAdded[index][3];
-                  });
-                },
-              )
+                                      // Spacer(),
+                                    ],
+                                  );
+                                }),
+                          ),
+                          RaisedButton(
+                            onPressed: () {
+                              // print(todayDietList[index]);
+                              setState(() {
+                                dietAdded[index][3] = !dietAdded[index][3];
+                              });
+                            },
+                            color: Colors.deepOrangeAccent[200],
+                            child: Text("CONFIRM"),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          AutoSizeText(
+                            "탄 : 단 : 지 = ${tempNutriRate[0]} : ${tempNutriRate[1]} : ${tempNutriRate[2]}",
+                            style:
+                                TextStyle(color: Colors.deepOrangeAccent[700]),
+                            maxLines: 1,
+                          ),
+
+                          AutoSizeText(
+                              "총 칼로리 = ${todayDietList[index]['kcal'].toStringAsFixed(2)} kcal",
+                              style: TextStyle(
+                                  color: Colors.deepOrangeAccent[700]),
+                              maxLines: 1),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          // for (var item in todayDietList[index]['foodInfo']
+                          //     ['foods'])
+                          //   //item[0] : 코드
+                          //   //item[1] : 음식 이름
+                          //   //item[2] : 음식 무게
+                          //   AnimatedDefaultTextStyle(
+                          //       duration: const Duration(milliseconds: 300),
+                          //       style: TextStyle(
+                          //         fontSize: 20.0,
+                          //         color: dietConfirm[index]
+                          //             ? Colors.red
+                          //             : Colors.blueAccent,
+                          //         fontWeight: dietConfirm[index]
+                          //             ? FontWeight.w100
+                          //             : FontWeight.bold,
+                          //       ),
+                          //       child: Text("${item[1]}  ${item[2]}g")),
+                          // AnimatedDefaultTextStyle(
+                          //   duration: const Duration(milliseconds: 300),
+                          //   style: TextStyle(
+                          //     fontSize: 20.0,
+                          //     color: dietConfirm[index]
+                          //         ? Colors.red
+                          //         : Colors.blueAccent,
+                          //     fontWeight: dietConfirm[index]
+                          //         ? FontWeight.w100
+                          //         : FontWeight.bold,
+                          //   ),
+                          //   child: Text(
+                          //       "영양성분 비율 : ${todayDietList[index]['foodInfo']['nutri']}"),
+                          // ),
+                          // AnimatedDefaultTextStyle(
+                          //   duration: const Duration(milliseconds: 300),
+                          //   style: TextStyle(
+                          //     fontSize: 20.0,
+                          //     color: dietConfirm[index]
+                          //         ? Colors.red
+                          //         : Colors.blueAccent,
+                          //     fontWeight: dietConfirm[index]
+                          //         ? FontWeight.w100
+                          //         : FontWeight.bold,
+                          //   ),
+                          //   child:
+                          //       Text("총 칼로리 : ${todayDietList[index]['kcal']}"),
+                          // ),
+                        ]),
+                  ),
+                ))
             : Container(),
         dietAdded[index][3] //dietConfirm
             ? FractionallySizedBox(
@@ -852,47 +851,73 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         Spacer(flex: 1),
                         Expanded(
-                          flex: 1,
-                          child: RaisedButton(
-                            child: Text("먹었"),
-                            onPressed: () async {
-                              print(todayDietList[index]['foodInfo']);
-                              await formatDietHistory(
-                                      dietName: todayDietList[index]
-                                          ['dietName'],
-                                      flag: index,
-                                      kcal: todayDietList[index]['foodInfo']
-                                              ['kcal']
-                                          .toString(),
-                                      nutri: todayDietList[index]['foodInfo']
-                                          ['nutri'],
-                                      dateTime: dateData,
-                                      isItConfirm: "true")
-                                  .then((diet) {});
-                              getInfo();
-                              getToday();
-                              getCompleteDate();
-                              print("wait finish");
-                              setState(() {
-                                //확정
+                            flex: 1,
+                            child: ButtonTheme(
+                              buttonColor: Color.alphaBlend(
+                                Colors.black38,
+                                Colors.deepOrangeAccent[700],
+                              ),
+                              height: 100,
+                              child: RaisedButton(
+                                child: AutoSizeText(
+                                  "COMFIRM",
+                                  style: TextStyle(fontSize: 20),
+                                  maxLines: 1,
+                                ),
+                                onPressed: () async {
+                                  print(todayDietList[index]['foodInfo']);
+                                  await formatDietHistory(
+                                          dietName: todayDietList[index]
+                                              ['dietName'],
+                                          flag: index,
+                                          kcal: todayDietList[index]['foodInfo']
+                                                  ['kcal']
+                                              .toString(),
+                                          nutri: todayDietList[index]
+                                              ['foodInfo']['nutri'],
+                                          dateTime: dateData,
+                                          isItConfirm: "true")
+                                      .then((diet) {});
+                                  getInfo();
+                                  getToday();
+                                  getCompleteDate();
+                                  print("wait finish");
+                                  setState(() {
+                                    //확정
 
-                                dietConfirm[index] = true;
-                                dietAdded[index][3] = false;
-                              });
-                              // print(todayDietList[index]);
-                            },
-                          ),
-                        ),
+                                    dietConfirm[index] = true;
+                                    dietAdded[index][3] = false;
+                                  });
+                                  // print(todayDietList[index]);
+                                },
+                              ),
+                            )),
                         Expanded(
                           flex: 1,
-                          child: RaisedButton(
-                            child: Text("안먹었"),
-                            onPressed: () {
-                              setState(() {
-                                dietConfirm[index] = false;
-                                dietAdded[index] = [true, false, false, false];
-                              });
-                            },
+                          child: ButtonTheme(
+                            height: 100,
+                            buttonColor: Color.alphaBlend(
+                              Colors.black38,
+                              Colors.deepOrangeAccent,
+                            ),
+                            child: RaisedButton(
+                              child: AutoSizeText(
+                                "RESET",
+                                style: TextStyle(fontSize: 20),
+                                maxLines: 1,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  dietConfirm[index] = false;
+                                  dietAdded[index] = [
+                                    true,
+                                    false,
+                                    false,
+                                    false
+                                  ];
+                                });
+                              },
+                            ),
                           ),
                         ),
                         Spacer(flex: 1),
@@ -921,6 +946,25 @@ class _MyHomePageState extends State<MyHomePage> {
             : Container()
       ];
     }
+  }
+
+  Color darken(Color color, [double amount = .1]) {
+    assert(amount >= 0 && amount <= 1);
+
+    final hsl = HSLColor.fromColor(color);
+    final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
+
+    return hslDark.toColor();
+  }
+
+  Color lighten(Color color, [double amount = .1]) {
+    assert(amount >= 0 && amount <= 1);
+
+    final hsl = HSLColor.fromColor(color);
+    final hslLight =
+        hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0));
+
+    return hslLight.toColor();
   }
 
   @override
@@ -1526,14 +1570,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Ink(
                             child:
                                 Icon(Icons.arrow_back_ios_outlined, size: 25)),
-                        onTap: () {
+                        onTap: () async {
                           if (calender_month == 1) {
                             calender_year -= 1;
                             calender_month = 12;
                           } else {
                             calender_month -= 1;
                           }
-                          getCompleteDate();
+                          await getInfo();
+                          await getToday();
+                          await getCompleteDate();
+
                           setState(() {});
                         },
                       ),
@@ -1546,14 +1593,16 @@ class _MyHomePageState extends State<MyHomePage> {
                           Icons.arrow_forward_ios_outlined,
                           size: 25,
                         )),
-                        onTap: () {
+                        onTap: () async {
                           if (calender_month == 12) {
                             calender_year += 1;
                             calender_month = 1;
                           } else {
                             calender_month += 1;
                           }
-                          getCompleteDate();
+                          await getInfo();
+                          await getToday();
+                          await getCompleteDate();
                           setState(() {});
                         },
                       ),
