@@ -393,6 +393,7 @@ class _MyHomePageState extends State<MyHomePage> {
         num correct =
             (1 - ((person.metabolism - totalCal) / person.metabolism).abs()) *
                 100;
+        print([correctNutri, correct, item.date]);
         monthlyAchieveKcal.add([num.parse(item.date.split('-')[2]), correct]);
         monthlyAchieveNutri
             .add([num.parse(item.date.split('-')[2]), correctNutri]);
