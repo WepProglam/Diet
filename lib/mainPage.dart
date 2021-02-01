@@ -2069,7 +2069,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: AutoSizeText(
                                 kcalArchieve != 0
                                     ? '${kcalArchieve.toStringAsFixed(1)}%'
-                                    : '      ', //칼로리 성취율
+                                    : '              ', //칼로리 성취율
                                 style: TextStyle(
                                   color: Colors.deepOrangeAccent[400],
                                   fontSize: 7,
@@ -2083,7 +2083,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: AutoSizeText(
                                 nutriArchieve != 0
                                     ? '${nutriArchieve.toStringAsFixed(1)}%'
-                                    : '      ', //비율 성취율
+                                    : '              ', //비율 성취율
                                 style: TextStyle(
                                   color: Colors.deepOrangeAccent,
                                   fontSize: 7,
