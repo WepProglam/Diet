@@ -35,6 +35,7 @@ class _ActivityPageState extends State<ActivityPage> {
   TextEditingController carbohydrateText = TextEditingController();
   int _nutriRateValue = 1;
   int _activityValue = 1;
+  var readOnlyBool = true;
 
   static const double barWidth = 22;
   List<int> nutriRate = [5, 3, 2];
@@ -124,8 +125,12 @@ class _ActivityPageState extends State<ActivityPage> {
         // print(hint['nutriRate']);
         // print(hint['activity']);
         if (hint['metabolism'] != null) {
-          amText.text = addOrSubAm(amTextSetting(hint['activity'], bmr))
-              .toStringAsFixed(1);
+          if (amTextSetting(hint['activity'], bmr) == bmr) {
+            amText.text = hint['metabolism'].toStringAsFixed(1);
+          } else {
+            amText.text = addOrSubAm(amTextSetting(hint['activity'], bmr))
+                .toStringAsFixed(1);
+          }
           setState(() {
             _nutriRateValue = hint['nutriRate'];
             _activityValue = hint['activity'];
@@ -142,8 +147,13 @@ class _ActivityPageState extends State<ActivityPage> {
             (4.7 * (hint['age'] - 1)));
         bmrText.text = bmr.toStringAsFixed(1);
         if (hint['metabolism'] != null) {
-          amText.text = addOrSubAm(amTextSetting(hint['activity'], bmr))
-              .toStringAsFixed(1);
+          if (amTextSetting(hint['activity'], bmr) == bmr) {
+            amText.text = hint['metabolism'].toStringAsFixed(1);
+          } else {
+            amText.text = addOrSubAm(amTextSetting(hint['activity'], bmr))
+                .toStringAsFixed(1);
+          }
+
           setState(() {
             _nutriRateValue = hint['nutriRate'];
             _activityValue = hint['activity'];
@@ -160,6 +170,12 @@ class _ActivityPageState extends State<ActivityPage> {
       bmrText.text = '신체 정보 X';
       amText.text = bmrText.text;
     }
+
+    if (hint['activity'] == 6) {
+      readOnlyBool = false;
+    } else {
+      readOnlyBool = true;
+    }
   }
 
   @override
@@ -174,6 +190,8 @@ class _ActivityPageState extends State<ActivityPage> {
 
   // @override
   // initState() {
+  //   getNutriRate(hint['purpose']);
+
   //   super.initState();
   // }
 
@@ -210,16 +228,17 @@ class _ActivityPageState extends State<ActivityPage> {
             maxLines: 1,
           ),
           TextFormField(
-              autofocus: focusBool,
-              controller: controller,
-              style: TextStyle(
-                color: fontColor,
-                fontSize: fontSize,
-                fontWeight: fontWeight,
-              ),
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              readOnly: (mr == 'AM' && _activityValue == 6) ? false : true),
+            autofocus: focusBool,
+            controller: controller,
+            style: TextStyle(
+              color: fontColor,
+              fontSize: fontSize,
+              fontWeight: fontWeight,
+            ),
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            readOnly: readOnlyBool,
+          ),
           AutoSizeText(
             'kcal',
             style: TextStyle(fontSize: 15),
@@ -294,6 +313,7 @@ class _ActivityPageState extends State<ActivityPage> {
                 onChanged: (value) {
                   setState(() {
                     _activityValue = value;
+                    readOnlyBool = true;
                     if (_activityValue == 1) {
                       amText.text = addOrSubAm(num.parse(bmrText.text) * 1.2)
                           .toStringAsFixed(1);
@@ -311,6 +331,9 @@ class _ActivityPageState extends State<ActivityPage> {
                           .toStringAsFixed(1);
                     } else if (_activityValue == 6) {
                       amText.text = '';
+                      setState(() {
+                        readOnlyBool = false;
+                      });
                     }
                     hint['metabolism'] = num.parse(amText.value.text);
                   });
@@ -336,9 +359,9 @@ class _ActivityPageState extends State<ActivityPage> {
     } else if (i == 5) {
       return bmr * 1.9;
     } else if (i == 6) {
-      return bmr * 1.2;
+      return bmr;
     } else {
-      return bmr * 1.2;
+      return bmr;
     }
   }
 
