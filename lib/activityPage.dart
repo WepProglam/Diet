@@ -738,7 +738,8 @@ class _ActivityPageState extends State<ActivityPage> {
 
             // Navigator.pop(context);
             Navigator.pop(context);
-            Navigator.pushReplacementNamed(context, '/');
+            Navigator.pop(context);
+            Navigator.popAndPushNamed(context, '/');
 
             // Navigator.popAndPushNamed(context, '/mainPage');
           }),
