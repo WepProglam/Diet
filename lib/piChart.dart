@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'indicator.dart';
 
 double myCarbohydrate, myProtein, myFat, myTotalCalroie = 0.0;
+double carboMass, proMass, fatMass;
 double myCorrect = 0.0;
 
 class PieChartSample2 extends StatefulWidget {
@@ -15,6 +16,9 @@ class PieChartSample2 extends StatefulWidget {
       double fat,
       double totalCalorie,
       double correct}) {
+    carboMass = carbohydrate;
+    proMass = protein;
+    fatMass = fat;
     if ((carbohydrate != 0.0 || protein != 0.0 || fat != 0.0)) {
       myCarbohydrate = carbohydrate * 100 / (carbohydrate + protein + fat);
       myProtein = protein * 100 / (carbohydrate + protein + fat);
@@ -91,7 +95,7 @@ class PieChart2State extends State {
                     Indicator(
                       // color: Color(0xff0293ee),
                       color: Colors.deepOrangeAccent[700],
-                      text: ' 탄수화물',
+                      text: ' 탄수화물\n (총 ${(carboMass).toStringAsFixed(1)}g)',
                       textColor: Colors.white,
                       fontSize: 12,
                       isSquare: true,
@@ -102,7 +106,7 @@ class PieChart2State extends State {
                     Indicator(
                       // color: Color(0xfff8b250),
                       color: Colors.deepOrangeAccent,
-                      text: ' 단백질',
+                      text: ' 단백질\n (총 ${(proMass).toStringAsFixed(1)}g)',
                       textColor: Colors.white,
                       fontSize: 12,
                       isSquare: true,
@@ -113,7 +117,7 @@ class PieChart2State extends State {
                     Indicator(
                       // color: Color(0xff845bef),
                       color: Colors.deepOrangeAccent[100],
-                      text: ' 지방',
+                      text: ' 지방\n (총 ${(fatMass).toStringAsFixed(1)}g)',
                       textColor: Colors.white,
                       isSquare: true,
                       fontSize: 12,

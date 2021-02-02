@@ -853,24 +853,40 @@ class _FoodListState extends State<FoodList> {
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(
-              left: 30,
-              right: 30,
-            ),
+
+          Stack(children: [
             // padding: EdgeInsets.only(
             //   left: 20,
             //   right: 20,
             // ),
-            child: PieChartSample2(
-              carbohydrate: carbohydrateMass * 4,
-              fat: fatMass * 9,
-              protein: proteinMass * 4,
-              totalCalorie:
-                  carbohydrateMass * 4 + fatMass * 9 + proteinMass * 4,
-              correct: correct.toDouble(),
+            Container(
+              margin: EdgeInsets.only(
+                left: 30,
+                right: 30,
+              ),
+              child: PieChartSample2(
+                carbohydrate: carbohydrateMass * 4,
+                fat: fatMass * 9,
+                protein: proteinMass * 4,
+                totalCalorie:
+                    carbohydrateMass * 4 + fatMass * 9 + proteinMass * 4,
+                correct: correct.toDouble(),
+              ),
             ),
-          ),
+
+            Positioned(
+              bottom: 1,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: AutoSizeText(
+                    '하루 총 칼로리를 기준으로 계산된 값입니다',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                ),
+              ),
+            ),
+          ]),
 
           // Spacer(
           //   flex: 1,
