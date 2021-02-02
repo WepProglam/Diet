@@ -629,8 +629,11 @@ class _ActivityPageState extends State<ActivityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: basicAppBar('Activity Page', context),
-      drawer: NavDrawer(),
+      appBar: AppBar(
+          centerTitle: true,
+          title: Text("METABOLIC RATE"),
+          actions: <Widget>[]),
+      // drawer: NavDrawer(),
       body: SingleChildScrollView(
         child: SizedBox(
             height: MediaQuery.of(context).size.height * 6 / 7,
