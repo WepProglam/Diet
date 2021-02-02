@@ -591,12 +591,14 @@ class _FoodListState extends State<FoodList> {
                   // calculate button
                   Expanded(
                     flex: 1,
-                    child: IconButton(
+                    child: InkWell(
                         splashColor: Colors.white,
-                        icon: Icon(Icons.calculate_outlined,
-                            color: Colors.deepOrangeAccent[700] //iconColor,
-                            ),
-                        onPressed: () async {
+                        child: Ink(
+                          child: Icon(Icons.calculate_outlined,
+                              color: Colors.deepOrangeAccent[700] //iconColor,
+                              ),
+                        ),
+                        onTap: () async {
                           List<num> defaultFood = passDefaultFoodList();
                           List<num> servingSize = [];
 
@@ -671,12 +673,14 @@ class _FoodListState extends State<FoodList> {
                   ),
                   Expanded(
                     flex: 1,
-                    child: IconButton(
+                    child: InkWell(
                         splashColor: Colors.white,
-                        icon: Icon(Icons.calculate_outlined,
-                            color: Colors.deepOrangeAccent[100] //iconColor,
-                            ),
-                        onPressed: () async {
+                        child: Ink(
+                          child: Icon(Icons.calculate_outlined,
+                              color: Colors.deepOrangeAccent[100] //iconColor,
+                              ),
+                        ),
+                        onTap: () async {
                           List<num> defaultFood = passDefaultFoodList();
                           List<num> servingSize = [];
 
