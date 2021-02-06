@@ -1387,7 +1387,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                                             //식단
                                                             Expanded(
-                                                              flex: 16,
+                                                              flex: 20,
                                                               child: Swiper(
                                                                 duration: 1500,
                                                                 viewportFraction:
@@ -2142,11 +2142,12 @@ class _MyHomePageState extends State<MyHomePage> {
               completedDates.contains(date)
                   ? Positioned(
                       top: -5,
-                      right: 1,
+                      right: 0,
                       child: DotsIndicator(
                         dotsCount: 1,
                         decorator: DotsDecorator(
-                          size: Size.fromRadius(0),
+                          // size: Size.fromRadius(0.0),
+                          activeSize: Size.fromRadius(3),
                           // color: Colors.black87, // Inactive color
                           activeColor: Colors.green,
                         ),
@@ -2155,11 +2156,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   : !isitDay && date <= DateTime.now().day
                       ? Positioned(
                           top: -5,
-                          right: 1,
+                          right: 0,
                           child: DotsIndicator(
                             dotsCount: 1,
                             decorator: DotsDecorator(
-                              size: Size.fromRadius(0),
+                              activeSize: Size.fromRadius(3),
                               // color: Colors.black87, // Inactive color
                               activeColor: Colors.deepOrangeAccent[700],
                             ),
