@@ -26,9 +26,9 @@ class PieChartSample2 extends StatefulWidget {
       myTotalCalroie = totalCalorie;
       myCorrect = correct;
     } else {
-      myCarbohydrate = 33;
-      myProtein = 33;
-      myFat = 34;
+      myCarbohydrate = 1;
+      myProtein = 0;
+      myFat = 0;
       myTotalCalroie = 0.0;
       myCorrect = 0.0;
     }

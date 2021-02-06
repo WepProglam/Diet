@@ -78,6 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
     [false, false, false, false]
   ];
   List<num> completedDates = [];
+  List<num> inCompletedDates = [];
   num completedMonth = 0;
 
   List<bool> dietConfirm = [false, false, false, false];
@@ -633,13 +634,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                   decoration: BoxDecoration(
                                       // color: Colors.red,
                                       border: Border(
-                                          bottom: BorderSide(
-                                              color: listViewColor, width: 3),
-                                          top: BorderSide(
-                                              color: listViewColor, width: 3),
-                                          right: BorderSide(
-                                              color: listViewColor,
-                                              width: 3)))),
+                                    top: BorderSide(
+                                        color: listViewColor, width: 3),
+                                  ))),
                             ),
                             onTap: () async {
                               await Navigator.pushNamed(context, '/searchDiet',
@@ -729,6 +726,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     _changeOpacity();
                     dietAdded[index][0] = !dietAdded[index][0];
                   });
+                  print(dietAdded[index][0]);
                 },
               ),
         dietAdded[index][2] //
@@ -955,7 +953,7 @@ class _MyHomePageState extends State<MyHomePage> {
             : Container(),
         dietAdded[index][0]
             ? Positioned(
-                left: 10,
+                left: 80,
                 child: GestureDetector(
                   child: Icon(
                     Icons.undo,
@@ -1101,207 +1099,213 @@ class _MyHomePageState extends State<MyHomePage> {
                                         itemBuilder:
                                             (BuildContext context, int index) {
                                           return index == 1
-                                              ? Column(
-                                                  children: [
-                                                    //page 1
+                                              ? Row(children: [
+                                                  Spacer(
+                                                    flex: 2,
+                                                  ),
+                                                  Expanded(
+                                                    flex: 25,
+                                                    child: Column(
+                                                      children: [
+                                                        //page 1
 
-                                                    // Expanded(
-                                                    //   flex: 13,
-                                                    // ),
-                                                    Spacer(
-                                                      flex: 2,
-                                                    ),
+                                                        // Expanded(
+                                                        //   flex: 13,
+                                                        // ),
+                                                        Spacer(
+                                                          flex: 2,
+                                                        ),
 
-                                                    Expanded(
-                                                      flex: 7,
-                                                      child: SizedBox(
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child: Swiper(
-                                                          itemBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  int index) {
-                                                            return FractionallySizedBox(
-                                                              child: Container(
-                                                                decoration: BoxDecoration(
-                                                                    border: Border(
-                                                                        top: BorderSide(
-                                                                            color:
-                                                                                Colors.white,
-                                                                            width: 3))),
-                                                                child: Center(
-                                                                    child: Text(
-                                                                        "추천 식단이 들어갈 자리")),
-                                                              ),
-                                                              widthFactor: 1,
-                                                              heightFactor: 1,
-                                                            );
-                                                          },
-                                                          itemCount: 10,
-                                                          pagination:
-                                                              new SwiperPagination(),
-                                                          // control: new SwiperControl(),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Spacer(flex: 2),
-                                                    Expanded(
-                                                        flex: 13,
-                                                        child: Stack(
-                                                          children: [
-                                                            PieChartSample2(
-                                                                carbohydrate:
-                                                                    todayCar,
-                                                                protein:
-                                                                    todayPro,
-                                                                fat: todayFat,
-                                                                totalCalorie:
-                                                                    todaykcal,
-                                                                correct: correct ==
-                                                                            null ||
-                                                                        (correct ==
-                                                                            0)
-                                                                    ? 0.0
-                                                                    : correct
-                                                                        .toDouble()),
-                                                            Positioned(
-                                                                top: 10,
-                                                                right: 10,
-                                                                child:
-                                                                    Container(
-                                                                  child: AutoSizeText(
-                                                                      '오늘 총 식단 열량 비율',
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            15,
-                                                                      )),
-                                                                )),
-                                                          ],
-                                                        )
-                                                        // child:
-                                                        ),
-                                                    Spacer(
-                                                      flex: 1,
-                                                    ),
-                                                    // diet(date.toString()),
-                                                    // dietBox(mealTime, date),
-                                                    Expanded(
-                                                        flex: 10,
-                                                        child: Row(
-                                                          children: [
-                                                            Expanded(
-                                                                flex: 1,
-                                                                child:
-                                                                    FractionallySizedBox(
-                                                                  child:
-                                                                      Container(
-                                                                    // child: Text(),
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                            border:
-                                                                                Border(top: BorderSide(color: Colors.white, width: 3))),
-                                                                    child:
-                                                                        Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: person ==
-                                                                              null
-                                                                          ? [
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText("키"),
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText("몸무게"),
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText("체지방률"),
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText("골격근량"),
-                                                                              SizedBox(height: 10),
-                                                                            ]
-                                                                          : [
-                                                                              AutoSizeText("키    ${person.height}"),
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText("몸무게    ${person.weight}"),
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText("체지방률    ${person.bmi}"),
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText("골격근량    ${person.muscleMass}"),
-                                                                              SizedBox(height: 10),
-                                                                            ],
-                                                                    ),
-                                                                    // decoration: BoxDecoration(
-                                                                    //     color: Colors.red),
-                                                                  ),
-                                                                  widthFactor:
-                                                                      1,
-                                                                  heightFactor:
-                                                                      1,
-                                                                )),
-                                                            Expanded(
-                                                                flex: 1,
-                                                                child:
-                                                                    FractionallySizedBox(
+                                                        Expanded(
+                                                          flex: 7,
+                                                          child: SizedBox(
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            child: Swiper(
+                                                              itemBuilder:
+                                                                  (BuildContext
+                                                                          context,
+                                                                      int index) {
+                                                                return FractionallySizedBox(
                                                                   child:
                                                                       Container(
                                                                     decoration:
                                                                         BoxDecoration(
                                                                             border:
                                                                                 Border(top: BorderSide(color: Colors.white, width: 3))),
-
-                                                                    child:
-                                                                        Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: person ==
-                                                                              null
-                                                                          ? [
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText("목표 몸무게"),
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText("목표 체지방률"),
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText("목표 골격근량"),
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText("목표"),
-                                                                              SizedBox(height: 10),
-                                                                            ]
-                                                                          : [
-                                                                              SizedBox(height: 10),
-                                                                              Container(
-                                                                                child: AutoSizeText("목표 몸무게   ${person.weightTarget}"),
-                                                                              ),
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText("목표 체지방률    ${person.bmiTarget}"),
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText("목표 골격근량   ${person.muscleTarget}"),
-                                                                              SizedBox(height: 10),
-                                                                              AutoSizeText(
-                                                                                "목표    ${nutriRatioCopy[0]} : ${nutriRatioCopy[1]} : ${nutriRatioCopy[2]}",
-                                                                                maxLines: 1,
-                                                                              ),
-                                                                              SizedBox(height: 10),
-                                                                            ],
-                                                                    ),
-                                                                    // decoration: BoxDecoration(
-                                                                    //     color: Colors.blue),
+                                                                    child: Center(
+                                                                        child: Text(
+                                                                            "추천 식단이 들어갈 자리")),
                                                                   ),
                                                                   widthFactor:
                                                                       1,
                                                                   heightFactor:
                                                                       1,
-                                                                ))
-                                                          ],
-                                                        )),
-                                                    Spacer(
-                                                      flex: 2,
+                                                                );
+                                                              },
+                                                              itemCount: 10,
+                                                              pagination:
+                                                                  new SwiperPagination(),
+                                                              // control: new SwiperControl(),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Spacer(flex: 2),
+                                                        Expanded(
+                                                            flex: 13,
+                                                            child: Stack(
+                                                              children: [
+                                                                PieChartSample2(
+                                                                    carbohydrate:
+                                                                        todayCar,
+                                                                    protein:
+                                                                        todayPro,
+                                                                    fat:
+                                                                        todayFat,
+                                                                    totalCalorie:
+                                                                        todaykcal,
+                                                                    correct: correct ==
+                                                                                null ||
+                                                                            (correct ==
+                                                                                0)
+                                                                        ? 0.0
+                                                                        : correct
+                                                                            .toDouble()),
+                                                                Positioned(
+                                                                    top: 10,
+                                                                    right: 10,
+                                                                    child:
+                                                                        Container(
+                                                                      child: AutoSizeText(
+                                                                          '오늘 총 식단 열량 비율',
+                                                                          style:
+                                                                              TextStyle(
+                                                                            fontSize:
+                                                                                15,
+                                                                          )),
+                                                                    )),
+                                                              ],
+                                                            )
+                                                            // child:
+                                                            ),
+                                                        Spacer(
+                                                          flex: 1,
+                                                        ),
+                                                        // diet(date.toString()),
+                                                        // dietBox(mealTime, date),
+                                                        Expanded(
+                                                            flex: 10,
+                                                            child: Row(
+                                                              children: [
+                                                                Expanded(
+                                                                    flex: 1,
+                                                                    child:
+                                                                        FractionallySizedBox(
+                                                                      child:
+                                                                          Container(
+                                                                        // child: Text(),
+                                                                        decoration:
+                                                                            BoxDecoration(border: Border(top: BorderSide(color: Colors.white, width: 3))),
+                                                                        child:
+                                                                            Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.center,
+                                                                          children: person == null
+                                                                              ? [
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText("키"),
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText("몸무게"),
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText("체지방률"),
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText("골격근량"),
+                                                                                  SizedBox(height: 10),
+                                                                                ]
+                                                                              : [
+                                                                                  AutoSizeText("키    ${person.height}"),
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText("몸무게    ${person.weight}"),
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText("체지방률    ${person.bmi}"),
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText("골격근량    ${person.muscleMass}"),
+                                                                                  SizedBox(height: 10),
+                                                                                ],
+                                                                        ),
+                                                                        // decoration: BoxDecoration(
+                                                                        //     color: Colors.red),
+                                                                      ),
+                                                                      widthFactor:
+                                                                          1,
+                                                                      heightFactor:
+                                                                          1,
+                                                                    )),
+                                                                Expanded(
+                                                                    flex: 1,
+                                                                    child:
+                                                                        FractionallySizedBox(
+                                                                      child:
+                                                                          Container(
+                                                                        decoration:
+                                                                            BoxDecoration(border: Border(top: BorderSide(color: Colors.white, width: 3))),
+
+                                                                        child:
+                                                                            Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.center,
+                                                                          children: person == null
+                                                                              ? [
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText("목표 몸무게"),
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText("목표 체지방률"),
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText("목표 골격근량"),
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText("목표"),
+                                                                                  SizedBox(height: 10),
+                                                                                ]
+                                                                              : [
+                                                                                  SizedBox(height: 10),
+                                                                                  Container(
+                                                                                    child: AutoSizeText("목표 몸무게   ${person.weightTarget}"),
+                                                                                  ),
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText("목표 체지방률    ${person.bmiTarget}"),
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText("목표 골격근량   ${person.muscleTarget}"),
+                                                                                  SizedBox(height: 10),
+                                                                                  AutoSizeText(
+                                                                                    "목표    ${nutriRatioCopy[0]} : ${nutriRatioCopy[1]} : ${nutriRatioCopy[2]}",
+                                                                                    maxLines: 1,
+                                                                                  ),
+                                                                                  SizedBox(height: 10),
+                                                                                ],
+                                                                        ),
+                                                                        // decoration: BoxDecoration(
+                                                                        //     color: Colors.blue),
+                                                                      ),
+                                                                      widthFactor:
+                                                                          1,
+                                                                      heightFactor:
+                                                                          1,
+                                                                    ))
+                                                              ],
+                                                            )),
+                                                        Spacer(
+                                                          flex: 2,
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                )
+                                                  ),
+                                                  Spacer(
+                                                    flex: 2,
+                                                  )
+                                                ])
                                               :
                                               //page 2
                                               GestureDetector(
@@ -1658,6 +1662,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void getCompleteDate() async {
     completedDates = [];
+    inCompletedDates = [];
     await dbHelperDietHistory
         .getCompleteDietHistory(month: calender_month, year: calender_year)
         .then((val) {
@@ -2113,8 +2118,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               completedDates.contains(date)
                   ? Positioned(
-                      top: 0,
-                      right: 0,
+                      top: -5,
+                      right: 5,
                       child: DotsIndicator(
                         dotsCount: 1,
                         decorator: DotsDecorator(
@@ -2124,7 +2129,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         // position: currentIndexPage
                       ))
-                  : Container(),
+                  : !isitDay && date <= DateTime.now().day
+                      ? Positioned(
+                          top: -5,
+                          right: 5,
+                          child: DotsIndicator(
+                            dotsCount: 1,
+                            decorator: DotsDecorator(
+                              size: Size.fromRadius(0),
+                              // color: Colors.black87, // Inactive color
+                              activeColor: Colors.deepOrangeAccent[700],
+                            ),
+                            // position: currentIndexPage
+                          ))
+                      : Container()
             ],
           ),
           onTap: () async {
