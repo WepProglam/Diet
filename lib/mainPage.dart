@@ -22,8 +22,9 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 final dbHelperDietHistory = DBHelperDietHistory();
 final dbHelperDiet = DBHelperDiet();
 final dbHelperPerson = DBHelperPerson();
-int calenderWidthFlex = 35;
-Color listViewColor = Colors.deepOrangeAccent[700];
+int calenderHeigthFlex = 35;
+// Color listViewColor = Colors.deepOrangeAccent[700];
+Color listViewColor = Colors.white70;
 Color iconColor = Colors.deepOrangeAccent[400];
 // final dbHelper
 
@@ -458,7 +459,8 @@ class _MyHomePageState extends State<MyHomePage> {
             heightFactor: 1.0,
             child: Container(
               decoration: BoxDecoration(
-                  border: Border.all(color: listViewColor, width: 2)),
+                  border:
+                      Border(top: BorderSide(color: Colors.white, width: 3))),
               child: Center(
                 child: Column(
                     mainAxisSize: MainAxisSize.max,
@@ -549,8 +551,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                   )),
                                   decoration: BoxDecoration(
                                       // color: Colors.red,
-                                      border: Border.all(
-                                          color: listViewColor, width: 5))),
+                                      border: Border(
+                                          top: BorderSide(
+                                              color: Colors.white, width: 3)))),
                             ),
                             onTap: () async {
                               Navigator.pushNamed(context, '/addDiet',
@@ -631,12 +634,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                       // color: Colors.red,
                                       border: Border(
                                           bottom: BorderSide(
-                                              color: listViewColor, width: 5),
+                                              color: listViewColor, width: 3),
                                           top: BorderSide(
-                                              color: listViewColor, width: 5),
+                                              color: listViewColor, width: 3),
                                           right: BorderSide(
                                               color: listViewColor,
-                                              width: 5)))),
+                                              width: 3)))),
                             ),
                             onTap: () async {
                               await Navigator.pushNamed(context, '/searchDiet',
@@ -709,7 +712,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Container(
                     decoration: BoxDecoration(
                         // borderRadius: BorderRadius.circular(100),
-                        border: Border.all(color: listViewColor, width: 2)),
+                        border: Border(
+                            top: BorderSide(color: Colors.white, width: 3))),
                     child: Center(
                         child: Icon(
                       Icons.add_circle_outline,
@@ -1058,7 +1062,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return Scaffold(
-        // backgroundColor: Color(0xFFD7FFF1),
         resizeToAvoidBottomPadding: false,
         appBar: basicAppBar("GOLDEN RATIO", context),
         drawer: NavDrawer(),
@@ -1124,11 +1127,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                                             return FractionallySizedBox(
                                                               child: Container(
                                                                 decoration: BoxDecoration(
-                                                                    border: Border.all(
-                                                                        color:
-                                                                            listViewColor,
-                                                                        width:
-                                                                            2)),
+                                                                    border: Border(
+                                                                        top: BorderSide(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            width: 3))),
                                                                 child: Center(
                                                                     child: Text(
                                                                         "추천 식단이 들어갈 자리")),
@@ -1197,12 +1200,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                   child:
                                                                       Container(
                                                                     // child: Text(),
-                                                                    decoration: BoxDecoration(
-                                                                        border: Border.all(
-                                                                            color:
-                                                                                listViewColor,
-                                                                            width:
-                                                                                2)),
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                            border:
+                                                                                Border(top: BorderSide(color: Colors.white, width: 3))),
                                                                     child:
                                                                         Column(
                                                                       mainAxisAlignment:
@@ -1246,12 +1247,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                     FractionallySizedBox(
                                                                   child:
                                                                       Container(
-                                                                    decoration: BoxDecoration(
-                                                                        border: Border.all(
-                                                                            color:
-                                                                                listViewColor,
-                                                                            width:
-                                                                                2)),
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                            border:
+                                                                                Border(top: BorderSide(color: Colors.white, width: 3))),
 
                                                                     child:
                                                                         Column(
@@ -1309,124 +1308,142 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   // onVerticalDragUpdate: (details) {
                                                   //   print(details);
                                                   // },
-                                                  child: Column(
-                                                  children: [
-                                                    SizedBox(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height /
-                                                              40,
-                                                    ),
+                                                  child: SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: Row(
+                                                    children: [
+                                                      Spacer(
+                                                        flex: 2,
+                                                      ),
+                                                      Expanded(
+                                                        flex: 25,
+                                                        child: Column(
+                                                          children: [
+                                                            SizedBox(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height /
+                                                                  40,
+                                                            ),
 
-                                                    //달력
-                                                    calenderMonthChange(),
-                                                    Expanded(
-                                                      flex: calenderWidthFlex,
-                                                      child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            // color: Color(0x774E0D0D),
-                                                            border: Border(
-                                                                // top: BorderSide(
-                                                                //     width: 5),
-                                                                // bottom:
-                                                                //     BorderSide(
-                                                                //         width:
-                                                                //             5),
-                                                                left:
-                                                                    BorderSide(
-                                                                        width:
-                                                                            5),
-                                                                right:
-                                                                    BorderSide(
-                                                                        width:
-                                                                            5)),
-                                                            // color: Color(0xFF4E0D0D),
-                                                          ),
-                                                          child: isSelected[0]
-                                                              ? returnCalender()
-                                                              : returnGraph()),
-                                                    ),
-                                                    // Spacer(
-                                                    //   flex: 1,
-                                                    // ),
+                                                            //달력
+                                                            calenderMonthChange(),
+                                                            SizedBox(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height /
+                                                                  50,
+                                                            ),
+                                                            Expanded(
+                                                              flex: 40,
+                                                              child: Container(
+                                                                  decoration: BoxDecoration(
+                                                                      color: Colors
+                                                                          .white12,
+                                                                      border: Border(
+                                                                          top: BorderSide(
+                                                                              color: Colors
+                                                                                  .white,
+                                                                              width:
+                                                                                  5))
+                                                                      // color: Color(0xFF4E0D0D),
+                                                                      ),
+                                                                  child: isSelected[
+                                                                          0]
+                                                                      ? returnCalender()
+                                                                      : returnGraph()),
+                                                            ),
+                                                            SizedBox(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height /
+                                                                  50,
+                                                            ),
+                                                            // Spacer(
+                                                            //   flex: 1,
+                                                            // ),
 
-                                                    //식단
-                                                    Expanded(
-                                                      flex: 16,
-                                                      child: SizedBox(
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child: Swiper(
-                                                          duration: 1500,
-                                                          itemBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  int listIndex) {
-                                                            makeItemList(
-                                                                listIndex);
-                                                            return Container(
-                                                              child: Column(
-                                                                children: [
-                                                                  Expanded(
-                                                                    flex: 1,
+                                                            //식단
+                                                            Expanded(
+                                                              flex: 16,
+                                                              child: Swiper(
+                                                                duration: 1500,
+                                                                viewportFraction:
+                                                                    1.3,
+                                                                itemBuilder:
+                                                                    (BuildContext
+                                                                            context,
+                                                                        int listIndex) {
+                                                                  makeItemList(
+                                                                      listIndex);
+                                                                  return Container(
                                                                     child:
-                                                                        Container(
-                                                                      // decoration:
-                                                                      //     BoxDecoration(
-                                                                      //         color: Colors
-                                                                      //             .black),
-                                                                      child: Center(
-                                                                          child: Text(
-                                                                        mealList[
-                                                                            listIndex],
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Colors.white,
-                                                                            fontWeight: FontWeight.w700),
-                                                                      )),
+                                                                        Column(
+                                                                      children: [
+                                                                        Expanded(
+                                                                          flex:
+                                                                              1,
+                                                                          child:
+                                                                              Container(
+                                                                            // decoration:
+                                                                            //     BoxDecoration(
+                                                                            //         color: Colors
+                                                                            //             .black),
+                                                                            child: Center(
+                                                                                child: Text(
+                                                                              mealList[listIndex],
+                                                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 18),
+                                                                            )),
+                                                                          ),
+                                                                        ),
+                                                                        Expanded(
+                                                                            flex:
+                                                                                5,
+                                                                            child:
+                                                                                Container(
+                                                                              child: Center(
+                                                                                  child: Stack(
+                                                                                children: itemList,
+                                                                              )),
+                                                                              // decoration:
+                                                                              //     BoxDecoration(
+                                                                              //         color: Colors
+                                                                              //             .white),
+                                                                            ))
+                                                                      ],
                                                                     ),
-                                                                  ),
-                                                                  Expanded(
-                                                                      flex: 5,
-                                                                      child:
-                                                                          Container(
-                                                                        child: Center(
-                                                                            child: Stack(
-                                                                          children:
-                                                                              itemList,
-                                                                        )),
-                                                                        // decoration:
-                                                                        //     BoxDecoration(
-                                                                        //         color: Colors
-                                                                        //             .white),
-                                                                      ))
-                                                                ],
+                                                                    // decoration: BoxDecoration(
+                                                                    //     color: Colors.white),
+                                                                  );
+                                                                },
+                                                                itemCount: 4,
+                                                                pagination:
+                                                                    new SwiperPagination(),
                                                               ),
-                                                              // decoration: BoxDecoration(
-                                                              //     color: Colors.white),
-                                                            );
-                                                          },
-                                                          itemCount: 4,
-                                                          pagination:
-                                                              new SwiperPagination(),
+                                                            ),
+                                                            // Spacer(
+                                                            //   flex: 2,
+                                                            // ),
+                                                            // Spacer(
+                                                            //   flex: 10,
+                                                            // ),
+                                                            Spacer(
+                                                              flex: 2,
+                                                            ),
+                                                            //달력
+                                                          ],
                                                         ),
                                                       ),
-                                                    ),
-                                                    // Spacer(
-                                                    //   flex: 2,
-                                                    // ),
-                                                    // Spacer(
-                                                    //   flex: 10,
-                                                    // ),
-                                                    Spacer(
-                                                      flex: 2,
-                                                    ),
-                                                    //달력
-                                                  ],
+                                                      Spacer(
+                                                        flex: 2,
+                                                      )
+                                                    ],
+                                                  ),
                                                 ));
                                         })
 
@@ -1633,7 +1650,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget calenderMonthChange() {
     //월 이동 함수
     return Expanded(
-        flex: 3,
+        flex: 2,
         child: Container(
           child: calender(),
         ));
@@ -1666,7 +1683,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 flex: 1,
               ),
               Expanded(
-                flex: calenderWidthFlex,
+                flex: calenderHeigthFlex,
                 child: Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -1678,7 +1695,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: InkWell(
                         child: Ink(
                             child: Icon(Icons.arrow_back_ios_outlined,
-                                size: 30, color: Colors.white60)),
+                                size: 20, color: Colors.white60)),
                         onTap: () async {
                           if (calender_month == 1) {
                             calender_year -= 1;
@@ -1699,7 +1716,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: InkWell(
                         child: Ink(
                             child: Icon(Icons.arrow_forward_ios_outlined,
-                                size: 30, color: Colors.white60)),
+                                size: 20, color: Colors.white60)),
                         onTap: () async {
                           if (calender_month == 12) {
                             calender_year += 1;
@@ -1744,7 +1761,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 flex: 1,
               ),
               Expanded(
-                flex: calenderWidthFlex,
+                flex: calenderHeigthFlex,
                 child: Row(
                   children: [
                     Spacer(flex: 10),
@@ -1792,11 +1809,11 @@ class _MyHomePageState extends State<MyHomePage> {
             Icon(
               Icons.date_range,
               color: calenderIconColor,
-              size: 25,
+              size: 20,
             ),
             Icon(
               Icons.stacked_line_chart,
-              size: 25,
+              size: 20,
               color: graphIconColor,
             ),
           ],

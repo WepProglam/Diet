@@ -37,7 +37,9 @@ Widget basicAppBar(String title, BuildContext context) {
       centerTitle: true,
       title: Text(title,
           style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.w900, fontSize: 25)),
+              color: Colors.deepOrangeAccent[400],
+              fontWeight: FontWeight.w900,
+              fontSize: 25)),
       //마이페이지
       actions: <Widget>[
         IconButton(
