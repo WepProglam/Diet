@@ -424,7 +424,7 @@ class _AddFoodSub extends State<AddFoodSub> {
       },
       onEditingComplete: () {
         Future.delayed(Duration.zero, () {
-          _controller.animateTo(_controller.offset - 200,
+          _controller.animateTo(_controller.offset - 500,
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeOut);
           FocusScope.of(context).unfocus();
@@ -432,7 +432,7 @@ class _AddFoodSub extends State<AddFoodSub> {
       },
       onTap: () {
         Future.delayed(Duration.zero, () {
-          _controller.animateTo(_controller.offset + 200,
+          _controller.animateTo(_controller.offset + 500,
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeOut);
         });

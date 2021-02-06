@@ -1895,13 +1895,23 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   num fontSize = 15.0;
+  int clickedDate;
 
   Widget dateText(String date) {
     var targetDay =
         new DateTime(calender_year, calender_month, int.parse(date));
     var day = DateFormat('EEEE').format(targetDay).toString();
-
-    if (date == DateTime.now().day.toString() &&
+    if (num.parse(date) == clickedDate) {
+      return AutoSizeText(
+        date,
+        style: TextStyle(
+          fontSize: fontSize,
+          color: Colors.yellow,
+          fontWeight: FontWeight.w900,
+        ),
+        maxLines: 1,
+      );
+    } else if (date == DateTime.now().day.toString() &&
         calender_month == DateTime.now().month) {
       return AutoSizeText(
         date,
@@ -2164,6 +2174,7 @@ class _MyHomePageState extends State<MyHomePage> {
               initDateInfo();
               String dateTime;
               date = int.parse(title.data);
+              clickedDate = date;
               calender_date = date;
               temp_year = calender_year;
               temp_month = calender_month;
