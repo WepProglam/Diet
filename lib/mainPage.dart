@@ -1745,7 +1745,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           await getInfo();
                           await getToday();
                           await getCompleteDate();
-                          setState(() {});
+                          setState(() {
+                            clickedDate = 0;
+                          });
                         },
                       ),
                     ),
@@ -2153,7 +2155,14 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         // position: currentIndexPage
                       ))
-                  : !isitDay && date <= DateTime.now().day
+                  : (!isitDay &&
+                              date <= DateTime.now().day &&
+                              calender_month == DateTime.now().month &&
+                              calender_year == DateTime.now().year) ||
+                          (!isitDay &&
+                              calender_year == DateTime.now().year &&
+                              calender_month < DateTime.now().month) ||
+                          (!isitDay && calender_year < DateTime.now().year)
                       ? Positioned(
                           top: -5,
                           right: 0,
