@@ -2142,7 +2142,7 @@ class _MyHomePageState extends State<MyHomePage> {
               completedDates.contains(date)
                   ? Positioned(
                       top: -5,
-                      right: 5,
+                      right: 1,
                       child: DotsIndicator(
                         dotsCount: 1,
                         decorator: DotsDecorator(
@@ -2155,7 +2155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   : !isitDay && date <= DateTime.now().day
                       ? Positioned(
                           top: -5,
-                          right: 5,
+                          right: 1,
                           child: DotsIndicator(
                             dotsCount: 1,
                             decorator: DotsDecorator(
