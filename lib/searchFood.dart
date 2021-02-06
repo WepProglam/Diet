@@ -204,6 +204,47 @@ class _SearchListState extends State<SearchList>
     super.didChangeDependencies();
   }
 
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () async {
+          Navigator.pop(context);
+          Navigator.pop(context, codeList);
+        });
+
+    Widget noButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("음식 저장"),
+      content: Text("담으시겠습니까?"),
+      actions: [okButton, noButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void handleWillPop(BuildContext context) async {
+    if (fromAddDiet) {
+      showAlertDialog(context);
+    } else {
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
@@ -214,36 +255,37 @@ class _SearchListState extends State<SearchList>
       resizeToAvoidBottomPadding: false,
       // backgroundColor: Colors.black,
       appBar: buildBar(context),
-      body: _IsSearching
-          ?
-          // Column(children: [
-          //     for (var item in foodDBNameEX) Text("${item.foodName}")
-          //   ])
-
-          GridView.builder(
-              padding: EdgeInsets.all(8),
-              itemCount: foodDBNameEX.length,
-              controller: scrollController,
-              itemBuilder: (context, index) {
-                return Center(
-                  child: Uiitem(foodDBNameEX[index]),
-                );
-              },
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: 5 / 4),
-            )
-          : GridView.builder(
-              padding: EdgeInsets.all(8),
-              itemCount: _searchList.length,
-              controller: scrollController,
-              itemBuilder: (context, index) {
-                return Center(
-                  child: Uiitem(_searchList[index]),
-                );
-              },
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: 5 / 4),
-            ),
+      body: Builder(
+          builder: (context) => WillPopScope(
+                onWillPop: () {
+                  handleWillPop(context);
+                },
+                child: _IsSearching
+                    ? GridView.builder(
+                        padding: EdgeInsets.all(8),
+                        itemCount: foodDBNameEX.length,
+                        controller: scrollController,
+                        itemBuilder: (context, index) {
+                          return Center(
+                            child: Uiitem(foodDBNameEX[index]),
+                          );
+                        },
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, childAspectRatio: 5 / 4),
+                      )
+                    : GridView.builder(
+                        padding: EdgeInsets.all(8),
+                        itemCount: _searchList.length,
+                        controller: scrollController,
+                        itemBuilder: (context, index) {
+                          return Center(
+                            child: Uiitem(_searchList[index]),
+                          );
+                        },
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, childAspectRatio: 5 / 4),
+                      ),
+              )),
 
       floatingActionButton: (args != null)
           ? ((args['pre'] == 'addDiet')
