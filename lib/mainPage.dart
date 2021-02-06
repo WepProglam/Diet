@@ -87,6 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<DietHistory> monthlyDietHistory = [];
   List<List<num>> monthlyAchieveKcal = [];
   List<List<num>> monthlyAchieveNutri = [];
+  Color blockBackgroundColor = Colors.white12;
 
   void initDateInfo() {
     dietAdded = [
@@ -460,6 +461,7 @@ class _MyHomePageState extends State<MyHomePage> {
             heightFactor: 1.0,
             child: Container(
               decoration: BoxDecoration(
+                  color: blockBackgroundColor,
                   border:
                       Border(top: BorderSide(color: Colors.white, width: 3))),
               child: Center(
@@ -552,6 +554,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   )),
                                   decoration: BoxDecoration(
                                       // color: Colors.red,
+                                      color: blockBackgroundColor,
                                       border: Border(
                                           top: BorderSide(
                                               color: Colors.white, width: 3)))),
@@ -633,10 +636,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                       child: AutoSizeText("저장된 식단 불러오기")),
                                   decoration: BoxDecoration(
                                       // color: Colors.red,
+                                      color: blockBackgroundColor,
                                       border: Border(
-                                    top: BorderSide(
-                                        color: listViewColor, width: 3),
-                                  ))),
+                                        top: BorderSide(
+                                            color: listViewColor, width: 3),
+                                      ))),
                             ),
                             onTap: () async {
                               await Navigator.pushNamed(context, '/searchDiet',
@@ -1132,10 +1136,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                 return FractionallySizedBox(
                                                                   child:
                                                                       Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                            border:
-                                                                                Border(top: BorderSide(color: Colors.white, width: 3))),
+                                                                    decoration: BoxDecoration(
+                                                                        color:
+                                                                            blockBackgroundColor,
+                                                                        border: Border(
+                                                                            top:
+                                                                                BorderSide(color: Colors.white, width: 3))),
                                                                     child: Center(
                                                                         child: Text(
                                                                             "추천 식단이 들어갈 자리")),
@@ -1179,6 +1185,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                     right: 10,
                                                                     child:
                                                                         Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                              color: blockBackgroundColor),
                                                                       child: AutoSizeText(
                                                                           '오늘 총 식단 열량 비율',
                                                                           style:
@@ -1207,8 +1216,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                       child:
                                                                           Container(
                                                                         // child: Text(),
-                                                                        decoration:
-                                                                            BoxDecoration(border: Border(top: BorderSide(color: Colors.white, width: 3))),
+                                                                        decoration: BoxDecoration(
+                                                                            border:
+                                                                                Border(top: BorderSide(color: Colors.white, width: 3)),
+                                                                            color: blockBackgroundColor),
                                                                         child:
                                                                             Column(
                                                                           mainAxisAlignment:
@@ -1250,8 +1261,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                         FractionallySizedBox(
                                                                       child:
                                                                           Container(
-                                                                        decoration:
-                                                                            BoxDecoration(border: Border(top: BorderSide(color: Colors.white, width: 3))),
+                                                                        decoration: BoxDecoration(
+                                                                            border:
+                                                                                Border(top: BorderSide(color: Colors.white, width: 3)),
+                                                                            color: blockBackgroundColor),
 
                                                                         child:
                                                                             Column(
@@ -1330,7 +1343,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                           context)
                                                                       .size
                                                                       .height /
-                                                                  40,
+                                                                  50,
                                                             ),
 
                                                             //달력
@@ -1346,8 +1359,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                                               flex: 40,
                                                               child: Container(
                                                                   decoration: BoxDecoration(
-                                                                      color: Colors
-                                                                          .white12,
+                                                                      color:
+                                                                          blockBackgroundColor,
                                                                       border: Border(
                                                                           top: BorderSide(
                                                                               color: Colors
