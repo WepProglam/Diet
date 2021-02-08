@@ -16,10 +16,11 @@ class PieChartSample2 extends StatefulWidget {
       double fat,
       double totalCalorie,
       double correct}) {
-    carboMass = (carbohydrate == num) ? carbohydrate / 4 : 0.0;
-    proMass = (protein == num) ? protein / 4 : 0.0;
-    fatMass = (fat == num) ? fat / 9 : 0.0;
-    if ((carbohydrate == num && protein == num && fat == num)) {
+    carboMass = carbohydrate / 4;
+    proMass = protein / 4;
+    fatMass = fat / 9;
+    //안바뀌는 문제 좀따 고칠거
+    if ((carbohydrate != 0.0 || protein != 0.0 || fat != 0.0)) {
       myCarbohydrate = carbohydrate * 100 / (carbohydrate + protein + fat);
       myProtein = protein * 100 / (carbohydrate + protein + fat);
       myFat = fat * 100 / (carbohydrate + protein + fat);
