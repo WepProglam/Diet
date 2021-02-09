@@ -304,58 +304,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   Spacer(
                     flex: 1,
                   ),
-
-                  // //식단
-                  // Expanded(
-                  //     flex: 16,
-                  //     child: Container(
-                  //       child: Column(
-                  //         children: [
-                  //           Expanded(
-                  //             flex: 1,
-                  //             child: Container(
-                  //               // decoration:
-                  //               //     BoxDecoration(
-                  //               //         color: Colors
-                  //               //             .black),
-                  //               child: Center(
-                  //                   child: Text(
-                  //                 "",
-                  //                 style: TextStyle(
-                  //                     color: Colors.white,
-                  //                     fontWeight: FontWeight.w700),
-                  //               )),
-                  //             ),
-                  //           ),
-                  //           Expanded(
-                  //               flex: 5,
-                  //               child: Container(
-                  //                 child: Center(
-                  //                     child: Stack(
-                  //                   children: [],
-                  //                 )),
-                  //                 // decoration:
-                  //                 //     BoxDecoration(
-                  //                 //         color: Colors
-                  //                 //             .white),
-                  //               ))
-                  //         ],
-                  //       ),
-                  //     )
-                  //     // decoration: BoxDecoration(
-                  //     //     color: Colors.white),
-
-                  //     ),
-                  // // Spacer(
-                  //   flex: 2,
-                  // ),
-                  // Spacer(
-                  //   flex: 10,
-                  // ),
-                  // Spacer(
-                  //   flex: 2,
-                  // ),
-                  //달력
                 ],
               )))
         ]);
