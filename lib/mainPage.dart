@@ -964,11 +964,11 @@ class _MyHomePageState extends State<MyHomePage> {
             : Container(),
         dietAdded[index][0]
             ? Positioned(
-                left: 80,
+                left: 70,
                 child: GestureDetector(
                   child: Icon(
-                    Icons.undo,
-                    size: 35,
+                    Icons.chevron_left,
+                    size: 40,
                   ),
                   onTap: () {
                     // print("123213123");
@@ -2207,7 +2207,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             decorator: DotsDecorator(
                               activeSize: Size.fromRadius(3),
                               // color: Colors.black87, // Inactive color
-                              activeColor: Colors.deepOrangeAccent[700],
+                              // activeColor: Colors.deepOrangeAccent[700],
+                              activeColor: Colors.white10,
                             ),
                             // position: currentIndexPage
                           ))

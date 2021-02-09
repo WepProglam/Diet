@@ -120,7 +120,7 @@ Future<List<num>> makeCsvFile(
     //soft모드
     for (var i = 0; i < foodLength; i++) {
       minMass[i] =
-          targetCalorie * 0.5 / foodList[i].kcal; //최소 전체 음식 칼로리의 50% 선에서 돌림
+          targetCalorie * 0.4 / foodList[i].kcal; //최소 전체 음식 칼로리의 40% 선에서 돌림
       //foodList[i].servingSize / 4;
       myFoodMassList[i] = minMass[i];
       calorie[i] = foodList[i].carbohydrate * 4 +

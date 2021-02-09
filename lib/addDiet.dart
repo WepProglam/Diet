@@ -262,7 +262,7 @@ class _FoodListState extends State<FoodList> {
             child: TextFormField(
               // initialValue: initialVal(food.mass),
               controller: foodServingController[index],
-              decoration: InputDecoration(hintText: '인분'),
+              decoration: InputDecoration(hintText: '회 제공량'),
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
               enabled: false,
@@ -312,7 +312,7 @@ class _FoodListState extends State<FoodList> {
                     (num.tryParse(foodMassController[index].value.text) /
                                 servingSize[index])
                             .toStringAsFixed(1) +
-                        "인분";
+                        "회 제공량";
 
                 justCalNutri(foodList, massChangeList).then((val) {
                   print(val);
@@ -546,6 +546,9 @@ class _FoodListState extends State<FoodList> {
     return Center(
       child: Column(
         children: [
+          Spacer(
+            flex: 1,
+          ),
           Expanded(
             flex: 10,
             child: Column(
@@ -680,7 +683,7 @@ class _FoodListState extends State<FoodList> {
                                       foodMassController[i].text =
                                           val[i].toStringAsFixed(0);
                                       foodServingController[i].text =
-                                          "${(val[i] / servingSize[i]).toStringAsFixed(1)}인분";
+                                          "${(val[i] / servingSize[i]).toStringAsFixed(1)}회 제공량";
                                     }
 
                                     setState(() {
@@ -762,7 +765,7 @@ class _FoodListState extends State<FoodList> {
                                       foodMassController[i].text =
                                           val[i].toStringAsFixed(0);
                                       foodServingController[i].text =
-                                          "${(val[i] / servingSize[i]).toStringAsFixed(1)}인분";
+                                          "${(val[i] / servingSize[i]).toStringAsFixed(1)}회 제공량";
                                     }
 
                                     setState(() {
