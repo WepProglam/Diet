@@ -1454,18 +1454,18 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             items: <BubbledNavigationBarItem>[
               BubbledNavigationBarItem(
-                icon: Icon(Icons.home, size: 40, color: Colors.white70),
+                icon: Icon(Icons.home, size: 30, color: Colors.white70),
                 activeIcon: Icon(Icons.home,
-                    size: 40, color: Colors.deepOrangeAccent[700]),
+                    size: 30, color: Colors.deepOrangeAccent[700]),
                 title: Text(
                   'Home',
                   style: TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),
               BubbledNavigationBarItem(
-                icon: Icon(Icons.info, size: 40, color: Colors.white70),
+                icon: Icon(Icons.info, size: 30, color: Colors.white70),
                 activeIcon: Icon(Icons.info,
-                    size: 40, color: Colors.deepOrangeAccent[700]),
+                    size: 30, color: Colors.deepOrangeAccent[700]),
                 title: Text(
                   'Daily Info',
                   style: TextStyle(color: Colors.white, fontSize: 12),
@@ -1473,18 +1473,18 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               BubbledNavigationBarItem(
                 icon:
-                    Icon(Icons.gesture_sharp, size: 40, color: Colors.white70),
+                    Icon(Icons.gesture_sharp, size: 30, color: Colors.white70),
                 activeIcon: Icon(Icons.gesture_sharp,
-                    size: 40, color: Colors.deepOrangeAccent[700]),
+                    size: 30, color: Colors.deepOrangeAccent[700]),
                 title: Text(
                   'Diet Graph',
                   style: TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),
               BubbledNavigationBarItem(
-                icon: Icon(Icons.add_circle, size: 40, color: Colors.white70),
+                icon: Icon(Icons.add_circle, size: 30, color: Colors.white70),
                 activeIcon: Icon(Icons.add_circle,
-                    size: 40, color: Colors.deepOrangeAccent[700]),
+                    size: 30, color: Colors.deepOrangeAccent[700]),
                 title: Text(
                   'Add Food',
                   style: TextStyle(color: Colors.white, fontSize: 12),
@@ -1492,9 +1492,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               BubbledNavigationBarItem(
                 icon: Icon(Icons.add_box_rounded,
-                    size: 40, color: Colors.white70),
+                    size: 30, color: Colors.white70),
                 activeIcon: Icon(Icons.add_box_rounded,
-                    size: 40, color: Colors.deepOrangeAccent[700]),
+                    size: 30, color: Colors.deepOrangeAccent[700]),
                 title: Text(
                   'Add Diet',
                   style: TextStyle(color: Colors.white, fontSize: 12),

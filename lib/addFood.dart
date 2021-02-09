@@ -101,55 +101,64 @@ class _AddFoodSub extends State<AddFoodSub> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       // appBar: AppBar(
-      //     centerTitle: true, title: Text("ADD FOOD"), actions: <Widget>[]),
-      body: Center(
-          child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          controller: _controller,
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 1.1,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Spacer(
-                  flex: 1,
-                ),
-                searchBar(),
-                Spacer(
-                  flex: 1,
-                ),
-                subBuilderQuestion("음식명", " ", controller: _foodNameController),
-                subBuilderQuestion("1회 제공량", "g",
-                    controller: _servingController),
-                subBuilderQuestion("탄수화물", "g", controller: _carboController),
-                subBuilderQuestion(
-                  "단백질",
-                  "g",
-                  controller: _proController,
-                ),
-                subBuilderQuestion("지방", "g",
-                    controller: _fatController,
-                    icon: Icon(Icons.restaurant_outlined)),
-                subBuilderQuestion(
-                  "열량",
-                  "kcal",
-                  controller: _ulController,
-                ),
-                Spacer(
-                  flex: 1,
-                ),
-                Row(
-                  children: foodList,
-                ),
-                Spacer(
-                  flex: 3,
-                ),
-              ],
-            ),
-          ),
-        ),
-      )),
+      //     centerTitle: true, title: Text("ADD FOOD"), actions: <Widget>[])
+      body: Builder(
+          builder: (context) => WillPopScope(
+                onWillPop: () async {
+                  Navigator.popAndPushNamed(context, '/');
+                  return true;
+                },
+                child: Center(
+                    child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    controller: _controller,
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 1.1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Spacer(
+                            flex: 1,
+                          ),
+                          searchBar(),
+                          Spacer(
+                            flex: 1,
+                          ),
+                          subBuilderQuestion("음식명", " ",
+                              controller: _foodNameController),
+                          subBuilderQuestion("1회 제공량", "g",
+                              controller: _servingController),
+                          subBuilderQuestion("탄수화물", "g",
+                              controller: _carboController),
+                          subBuilderQuestion(
+                            "단백질",
+                            "g",
+                            controller: _proController,
+                          ),
+                          subBuilderQuestion("지방", "g",
+                              controller: _fatController,
+                              icon: Icon(Icons.restaurant_outlined)),
+                          subBuilderQuestion(
+                            "열량",
+                            "kcal",
+                            controller: _ulController,
+                          ),
+                          Spacer(
+                            flex: 1,
+                          ),
+                          Row(
+                            children: foodList,
+                          ),
+                          Spacer(
+                            flex: 3,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )),
+              )),
       floatingActionButton: add(),
       // floatingActionButton: TransFoodFAB(
       //   stream: widget.streamMap,
