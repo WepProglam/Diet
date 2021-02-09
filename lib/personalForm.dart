@@ -166,44 +166,188 @@ class _PersonalForm extends State<PersonalForm> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () {
-          // FocusScopeNode currentFocus = FocusScope.of(context);
-          // currentFocus.unfocus();
-          // print('curIndex $curIndex');
-          if (_formKey.currentState.validate()) {
-            if (curIndex == 0) {
-              swiperController.next(animation: true);
-            }
-          }
-        },
-        child: Scaffold(
-          // backgroundColor: Color(0xFFFFFEF5),
-          resizeToAvoidBottomPadding: false,
-          appBar: AppBar(
-              centerTitle: true, title: Text("INBODY"), actions: <Widget>[]),
-          body: Center(
-            child: Form(
-              key: _formKey,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Swiper(
-                  duration: 1500,
-                  controller: swiperController,
-                  scrollDirection: Axis.vertical,
-                  onIndexChanged: (index) {
-                    curIndex = index;
-                  },
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: index == 0
+    return Scaffold(
+      // backgroundColor: Color(0xFFFFFEF5),
+      resizeToAvoidBottomPadding: false,
+      appBar:
+          AppBar(centerTitle: true, title: Text("INBODY"), actions: <Widget>[]),
+      body: Center(
+        child: Form(
+          key: _formKey,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Swiper(
+              duration: 1000,
+              controller: swiperController,
+              scrollDirection: Axis.horizontal,
+              onIndexChanged: (index) {
+                curIndex = index;
+              },
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: index == 0
+                          ? [
+                              SizedBox(
+                                height: MediaQuery.of(context).size.height / 50,
+                              ),
+                              Center(
+                                child: Text(
+                                  "${DateTime.now().year}년 ${DateTime.now().month}월 ${DateTime.now().day}일\n",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              Center(
+                                child: Text(
+                                  "신체기록\n",
+                                  style: TextStyle(fontSize: 19),
+                                ),
+                              ),
+                              subBuilderQuestion("나이", "",
+                                  controller: _ageController,
+                                  hint: hint['age']),
+                              Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                      child: Row(
+                                    children: [
+                                      Spacer(
+                                        flex: 2,
+                                      ),
+                                      spacer_question('성별'),
+                                      Expanded(
+                                        flex: 8,
+                                        child: DropdownButtonFormField(
+                                          value: _sexValue,
+                                          items: [
+                                            DropdownMenuItem(
+                                              child: Center(child: Text('남성')),
+                                              value: 0,
+                                            ),
+                                            DropdownMenuItem(
+                                              child: Center(child: Text('여성')),
+                                              value: 1,
+                                            ),
+                                          ],
+                                          decoration:
+                                              InputDecoration(hintText: ""),
+                                          validator: (value) {
+                                            if (value > 1) {
+                                              return 'Select Number 1-2';
+                                            }
+                                            return null;
+                                          },
+                                          onChanged: (value) {
+                                            setState(() {
+                                              // typeStart = true;
+                                              // purpose_index = value;
+
+                                              _sexValue = value;
+                                              print(_sexValue);
+                                            });
+                                          },
+                                          // onSaved: (value) {
+                                          //   // print(purpose_index);
+                                          // },
+                                        ),
+                                      ),
+                                      Spacer(
+                                        flex: 3,
+                                      ),
+                                    ],
+                                  ))),
+                              subBuilderQuestion("키", "cm",
+                                  controller: _heightController,
+                                  hint: hint['height']),
+                              subBuilderQuestion("몸무게", "kg",
+                                  controller: _weightController,
+                                  hint: hint['weight']),
+                              subBuilderQuestion("체지방률", "%",
+                                  controller: _bmiController,
+                                  hint: hint['bmi']),
+                              subBuilderQuestion("골격근량", "kg",
+                                  controller: _strengthController,
+                                  hint: hint['muscleMass']),
+                              Spacer(
+                                flex: 1,
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width / 3,
+                                height: MediaQuery.of(context).size.height / 10,
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(100.0),
+                                  ),
+                                  // color: Colors.deepOrangeAccent[700],
+                                  color: Colors.white,
+                                  child: InkWell(
+                                      splashColor: Colors.white,
+                                      child: Ink(
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Spacer(),
+                                            Container(
+                                              child: Icon(
+                                                Icons.arrow_right,
+                                                color: Colors.black,
+                                                size: 100,
+                                              ),
+                                            ),
+                                            // Spacer(),
+                                            // AutoSizeText(
+                                            //   "이동",
+                                            //   maxLines: 1,
+                                            // ),
+                                            Spacer(),
+                                          ],
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        if (_formKey.currentState.validate()) {
+                                          if (curIndex == 0) {
+                                            swiperController.next(
+                                                animation: true);
+                                          }
+                                        }
+                                      }),
+                                ),
+                              ),
+                              Spacer(
+                                flex: 2,
+                              ),
+                            ]
+                          : index == 1
                               ? [
-                                  subBuilderQuestion("나이", "",
-                                      controller: _ageController,
-                                      hint: hint['age']),
+                                  SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.height / 50,
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      "${DateTime.now().year}년 ${DateTime.now().month}월 ${DateTime.now().day}일\n",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      "목표\n",
+                                      style: TextStyle(fontSize: 19),
+                                    ),
+                                  ),
+                                  subBuilderQuestion("목표 몸무게", "kg",
+                                      controller: _weightTargetController,
+                                      hint: hint['weightTarget']),
+                                  subBuilderQuestion("목표 bmi", "",
+                                      controller: _bmiTargetController,
+                                      hint: hint['bmiTarget']),
+                                  subBuilderQuestion("목표 골격근량", "kg",
+                                      controller: _muscleTargetController,
+                                      hint: hint['muscleTarget']),
                                   Expanded(
                                       flex: 1,
                                       child: Center(
@@ -212,28 +356,33 @@ class _PersonalForm extends State<PersonalForm> {
                                           Spacer(
                                             flex: 2,
                                           ),
-                                          spacer_question('성별'),
+                                          spacer_question('목표'),
                                           Expanded(
                                             flex: 8,
                                             child: DropdownButtonFormField(
-                                              value: _sexValue,
+                                              value: _selValue,
                                               items: [
                                                 DropdownMenuItem(
-                                                  child:
-                                                      Center(child: Text('남성')),
+                                                  child: Center(
+                                                      child: Text('다이어트')),
                                                   value: 0,
                                                 ),
                                                 DropdownMenuItem(
-                                                  child:
-                                                      Center(child: Text('여성')),
+                                                  child: Center(
+                                                      child: Text('벌크업')),
                                                   value: 1,
+                                                ),
+                                                DropdownMenuItem(
+                                                  child: Center(
+                                                      child: Text('린매스업')),
+                                                  value: 2,
                                                 ),
                                               ],
                                               decoration:
                                                   InputDecoration(hintText: ""),
                                               validator: (value) {
-                                                if (value > 1) {
-                                                  return 'Select Number 1-2';
+                                                if (value > 2) {
+                                                  return 'Select Number 0-2';
                                                 }
                                                 return null;
                                               },
@@ -241,9 +390,8 @@ class _PersonalForm extends State<PersonalForm> {
                                                 setState(() {
                                                   // typeStart = true;
                                                   // purpose_index = value;
-
-                                                  _sexValue = value;
-                                                  print(_sexValue);
+                                                  _selValue = value;
+                                                  print(_selValue);
                                                 });
                                               },
                                               // onSaved: (value) {
@@ -256,239 +404,150 @@ class _PersonalForm extends State<PersonalForm> {
                                           ),
                                         ],
                                       ))),
-                                  subBuilderQuestion("키", "cm",
-                                      controller: _heightController,
-                                      hint: hint['height']),
-                                  subBuilderQuestion("몸무게", "kg",
-                                      controller: _weightController,
-                                      hint: hint['weight']),
-                                  subBuilderQuestion("체지방률", "%",
-                                      controller: _bmiController,
-                                      hint: hint['bmi']),
-                                  subBuilderQuestion("골격근량", "kg",
-                                      controller: _strengthController,
-                                      hint: hint['muscleMass']),
+                                  Spacer(),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 3,
+                                    height:
+                                        MediaQuery.of(context).size.height / 10,
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(100.0),
+                                      ),
+                                      color: Colors.deepOrangeAccent[700],
+                                      child: InkWell(
+                                        splashColor: Colors.white,
+                                        child: Ink(
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Spacer(),
+                                              Container(
+                                                child: Icon(Icons.save),
+                                              ),
+                                              Spacer(),
+                                              AutoSizeText("저장",
+                                                  maxLines: 1,
+                                                  style:
+                                                      TextStyle(fontSize: 20)),
+                                              Spacer(),
+                                            ],
+                                          ),
+                                        ),
+                                        onTap: () async {
+                                          if (_formKey.currentState
+                                              .validate()) {
+                                            // dbHelper.deleteAllPerson();
+                                            String time =
+                                                DateFormat('yyyy-MM-dd')
+                                                    .format(DateTime.now())
+                                                    .toString();
+
+                                            var person = Person(
+                                                height: double.parse(_heightController
+                                                    .value.text),
+                                                weight: double.parse(_weightController
+                                                    .value.text),
+                                                bmi: double.parse(
+                                                    _bmiController.value.text),
+                                                muscleMass: double.parse(
+                                                    _strengthController
+                                                        .value.text),
+                                                purpose: _selValue,
+                                                sex: _sexValue,
+                                                time: time,
+                                                achieve: 0.0,
+                                                metabolism: hint['metabolism'] != null
+                                                    ? setMetabolism(
+                                                        hint['metabolism'],
+                                                        _selValue)
+                                                    : null,
+                                                activity: hint['activity'] != null
+                                                    ? hint['activity']
+                                                    : 1,
+                                                weightTarget: double.parse(_weightTargetController.value.text),
+                                                bmiTarget: double.parse(_bmiTargetController.value.text),
+                                                muscleTarget: double.parse(_muscleTargetController.value.text),
+                                                age: double.parse(_ageController.value.text));
+
+                                            await dbHelper.createHelper(person);
+                                            Navigator.pushNamed(
+                                                context, '/activityPage',
+                                                arguments: <String, Person>{
+                                                  'person': person
+                                                });
+
+                                            // await dbHelperRecent
+                                            //     .deleteRecent();
+                                            await dbHelperRecent.updateRecent(
+                                                DateTime.now()
+                                                    .toString()
+                                                    .substring(0, 10));
+                                          }
+
+                                          //print(_heightController.text);
+                                        },
+                                      ),
+                                    ),
+                                  ),
                                   Spacer(
                                     flex: 1,
                                   ),
-                                  Spacer(
-                                    flex: 2,
-                                  ),
                                 ]
-                              : index == 1
-                                  ? [
-                                      subBuilderQuestion("목표 몸무게", "kg",
-                                          controller: _weightTargetController,
-                                          hint: hint['weightTarget']),
-                                      subBuilderQuestion("목표 bmi", "",
-                                          controller: _bmiTargetController,
-                                          hint: hint['bmiTarget']),
-                                      subBuilderQuestion("목표 골격근량", "kg",
-                                          controller: _muscleTargetController,
-                                          hint: hint['muscleTarget']),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Center(
-                                              child: Row(
-                                            children: [
-                                              Spacer(
-                                                flex: 2,
-                                              ),
-                                              spacer_question('목표'),
-                                              Expanded(
-                                                flex: 8,
-                                                child: DropdownButtonFormField(
-                                                  value: _selValue,
-                                                  items: [
-                                                    DropdownMenuItem(
-                                                      child: Center(
-                                                          child: Text('다이어트')),
-                                                      value: 0,
-                                                    ),
-                                                    DropdownMenuItem(
-                                                      child: Center(
-                                                          child: Text('벌크업')),
-                                                      value: 1,
-                                                    ),
-                                                    DropdownMenuItem(
-                                                      child: Center(
-                                                          child: Text('린매스업')),
-                                                      value: 2,
-                                                    ),
-                                                  ],
-                                                  decoration: InputDecoration(
-                                                      hintText: ""),
-                                                  validator: (value) {
-                                                    if (value > 2) {
-                                                      return 'Select Number 0-2';
-                                                    }
-                                                    return null;
-                                                  },
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      // typeStart = true;
-                                                      // purpose_index = value;
-                                                      _selValue = value;
-                                                      print(_selValue);
-                                                    });
-                                                  },
-                                                  // onSaved: (value) {
-                                                  //   // print(purpose_index);
-                                                  // },
-                                                ),
-                                              ),
-                                              Spacer(
-                                                flex: 3,
-                                              ),
-                                            ],
-                                          ))),
-                                      Spacer(),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                10,
-                                        child: Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(100.0),
-                                          ),
-                                          color: Colors.deepOrangeAccent[700],
-                                          child: InkWell(
-                                            splashColor: Colors.white,
-                                            child: Ink(
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Spacer(),
-                                                  Container(
-                                                    child: Icon(Icons.save),
-                                                  ),
-                                                  Spacer(),
-                                                  AutoSizeText("저장",
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                          fontSize: 20)),
-                                                  Spacer(),
-                                                ],
-                                              ),
-                                            ),
-                                            onTap: () async {
-                                              if (_formKey.currentState
-                                                  .validate()) {
-                                                // dbHelper.deleteAllPerson();
-                                                String time =
-                                                    DateFormat('yyyy-MM-dd')
-                                                        .format(DateTime.now())
-                                                        .toString();
+                              : [ActivityPage()]),
+                  // decoration: BoxDecoration(color: Colors.white),
+                );
+              },
+              itemCount: 2,
+              // viewportFraction: 0.8,
 
-                                                var person = Person(
-                                                    height: double.parse(
-                                                        _heightController
-                                                            .value.text),
-                                                    weight: double.parse(
-                                                        _weightController
-                                                            .value.text),
-                                                    bmi: double.parse(
-                                                        _bmiController
-                                                            .value.text),
-                                                    muscleMass: double.parse(
-                                                        _strengthController
-                                                            .value.text),
-                                                    purpose: _selValue,
-                                                    sex: _sexValue,
-                                                    time: time,
-                                                    achieve: 0.0,
-                                                    metabolism:
-                                                        hint['metabolism'] != null
-                                                            ? setMetabolism(hint['metabolism'], _selValue)
-                                                            : null,
-                                                    activity: hint['activity'] != null ? hint['activity'] : 1,
-                                                    weightTarget: double.parse(_weightTargetController.value.text),
-                                                    bmiTarget: double.parse(_bmiTargetController.value.text),
-                                                    muscleTarget: double.parse(_muscleTargetController.value.text),
-                                                    age: double.parse(_ageController.value.text));
-
-                                                await dbHelper
-                                                    .createHelper(person);
-                                                Navigator.pushNamed(
-                                                    context, '/activityPage',
-                                                    arguments: <String, Person>{
-                                                      'person': person
-                                                    });
-
-                                                // await dbHelperRecent
-                                                //     .deleteRecent();
-                                                await dbHelperRecent
-                                                    .updateRecent(DateTime.now()
-                                                        .toString()
-                                                        .substring(0, 10));
-                                              }
-
-                                              //print(_heightController.text);
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      Spacer(
-                                        flex: 1,
-                                      ),
-                                    ]
-                                  : [ActivityPage()]),
-                      // decoration: BoxDecoration(color: Colors.white),
-                    );
-                  },
-                  itemCount: 2,
-                  // viewportFraction: 0.8,
-
-                  // scale: 0.9,
-                  pagination: new SwiperPagination(),
-                  // control:
-                  //     new SwiperControl(iconNext: null, iconPrevious: null),
-                ),
-              ),
+              // scale: 0.9,
+              pagination: new SwiperPagination(),
+              // control:
+              //     new SwiperControl(iconNext: null, iconPrevious: null),
             ),
           ),
-          // floatingActionButton: FloatingActionButton(
-          //   // backgroundColor: Color(0xFF69C2B0),
-          //   // focusColor: Color(0xFF69C2B0),
-          //   child: Icon(Icons.done),
-          //   onPressed: () async {
-          //     if (_formKey.currentState.validate()) {
-          //       // dbHelper.deleteAllPerson();
-          //       String time =
-          //           DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
+        ),
+      ),
+      // floatingActionButton: FloatingActionButton(
+      //   // backgroundColor: Color(0xFF69C2B0),
+      //   // focusColor: Color(0xFF69C2B0),
+      //   child: Icon(Icons.done),
+      //   onPressed: () async {
+      //     if (_formKey.currentState.validate()) {
+      //       // dbHelper.deleteAllPerson();
+      //       String time =
+      //           DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
 
-          //       var person = Person(
-          //           height: double.parse(_heightController.value.text),
-          //           weight: double.parse(_weightController.value.text),
-          //           bmi: double.parse(_bmiController.value.text),
-          //           muscleMass: double.parse(_strengthController.value.text),
-          //           purpose: _selValue,
-          //           time: time,
-          //           achieve: 0.0,
-          //           metabolism: hint['metabolism'],
-          //           activity: hint['activity'],
-          //           nutriRate: hint['nutriRate'],
-          //           weightTarget:
-          //               double.parse(_weightTargetController.value.text),
-          //           bmiTarget: double.parse(_bmiTargetController.value.text),
-          //           muscleTarget:
-          //               double.parse(_muscleTargetController.value.text));
+      //       var person = Person(
+      //           height: double.parse(_heightController.value.text),
+      //           weight: double.parse(_weightController.value.text),
+      //           bmi: double.parse(_bmiController.value.text),
+      //           muscleMass: double.parse(_strengthController.value.text),
+      //           purpose: _selValue,
+      //           time: time,
+      //           achieve: 0.0,
+      //           metabolism: hint['metabolism'],
+      //           activity: hint['activity'],
+      //           nutriRate: hint['nutriRate'],
+      //           weightTarget:
+      //               double.parse(_weightTargetController.value.text),
+      //           bmiTarget: double.parse(_bmiTargetController.value.text),
+      //           muscleTarget:
+      //               double.parse(_muscleTargetController.value.text));
 
-          //       await dbHelper.createHelper(person);
-          //       Navigator.pushNamed(context, '/activityPage',
-          //           arguments: <String, Person>{'person': person});
-          //     }
+      //       await dbHelper.createHelper(person);
+      //       Navigator.pushNamed(context, '/activityPage',
+      //           arguments: <String, Person>{'person': person});
+      //     }
 
-          //     //print(_heightController.text);
-          //   },
-          // ),
-        ));
+      //     //print(_heightController.text);
+      //   },
+      // ),
+    );
   }
 
   Widget subBuilderQuestion(var question, var unit,
