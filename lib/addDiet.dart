@@ -546,8 +546,8 @@ class _FoodListState extends State<FoodList> {
     return Center(
       child: Column(
         children: [
-          Spacer(
-            flex: 1,
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 40,
           ),
           Expanded(
             flex: 10,
