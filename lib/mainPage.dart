@@ -569,60 +569,64 @@ class _MyHomePageState extends State<MyHomePage> {
                                           "$calender_year-$calender_month-$calender_date"
                                     }
                                   }).then((val) async {
-                                todayDietList[index] = val;
+                                if (val == null) {
+                                } else {
+                                  todayDietList[index] = val;
 
-                                todayDietList[index]['foodInfo'] = jsonDecode(
-                                    todayDietList[index]['foodInfo']);
-                                double percent = todayDietList[index]["rate"] /
-                                    100; //80 => 0.8
+                                  todayDietList[index]['foodInfo'] = jsonDecode(
+                                      todayDietList[index]['foodInfo']);
+                                  double percent = todayDietList[index]
+                                          ["rate"] /
+                                      100; //80 => 0.8
 
-                                // print(percent);
+                                  // print(percent);
 
-                                todayDietList[index]['foodInfo']['kcal'] =
-                                    person.metabolism * percent;
+                                  todayDietList[index]['foodInfo']['kcal'] =
+                                      person.metabolism * percent;
 
-                                // print(todayDietList[index]['foodInfo']['kcal']);
+                                  // print(todayDietList[index]['foodInfo']['kcal']);
 
-                                todayDietList[index]["kcal"] =
-                                    todayDietList[index]['foodInfo']['kcal'];
+                                  todayDietList[index]["kcal"] =
+                                      todayDietList[index]['foodInfo']['kcal'];
 
-                                todayDietList[index]["nutri"] =
-                                    todayDietList[index]['foodInfo']['nutri'];
-                                // print(val);
+                                  todayDietList[index]["nutri"] =
+                                      todayDietList[index]['foodInfo']['nutri'];
+                                  // print(val);
 
-                                // print((todayDietList[index]['foodInfo']
-                                //         ['kcal'] *
-                                //     percent));
+                                  // print((todayDietList[index]['foodInfo']
+                                  //         ['kcal'] *
+                                  //     percent));
 
-                                for (var i = 0;
-                                    i <
-                                        todayDietList[index]['foodInfo']
-                                                ['foods']
-                                            .length;
-                                    i++) {
-                                  todayDietList[index]['foodInfo']['foods'][i] =
-                                      todayDietList[index]['foodInfo']['foods']
-                                              [i]
-                                          .values
-                                          .toList();
+                                  for (var i = 0;
+                                      i <
+                                          todayDietList[index]['foodInfo']
+                                                  ['foods']
+                                              .length;
+                                      i++) {
+                                    todayDietList[index]['foodInfo']['foods']
+                                        [i] = todayDietList[index]['foodInfo']
+                                            ['foods'][i]
+                                        .values
+                                        .toList();
+                                  }
+
+                                  await formatDietHistory(
+                                          dietName: todayDietList[index]
+                                              ['dietName'],
+                                          flag: index,
+                                          kcal: todayDietList[index]['foodInfo']
+                                                  ['kcal']
+                                              .toString(),
+                                          nutri: todayDietList[index]
+                                              ['foodInfo']['nutri'],
+                                          dateTime: dateData,
+                                          isItConfirm: "false")
+                                      .then((diet) {});
+                                  setState(() {
+                                    dietAdded[index][2] =
+                                        val == null ? false : true;
+                                  });
                                 }
-
-                                await formatDietHistory(
-                                        dietName: todayDietList[index]
-                                            ['dietName'],
-                                        flag: index,
-                                        kcal: todayDietList[index]['foodInfo']
-                                                ['kcal']
-                                            .toString(),
-                                        nutri: todayDietList[index]['foodInfo']
-                                            ['nutri'],
-                                        dateTime: dateData,
-                                        isItConfirm: "false")
-                                    .then((diet) {});
-                                setState(() {
-                                  dietAdded[index][2] =
-                                      val == null ? false : true;
-                                });
                               });
                             })),
                     Expanded(
