@@ -738,11 +738,16 @@ class _ActivityPageState extends State<ActivityPage> {
                 sex: hint['sex']);
             // print(person.metabolism);
             await dbHelperPerson.createHelper(person);
-
+            print("123132");
             // Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.popAndPushNamed(context, '/');
+            try {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.popAndPushNamed(context, '/');
+            } catch (e) {
+              Navigator.pushNamed(context, '/');
+            }
+
             // Navigator.pushReplacementNamed(context, '/');
 
             // Navigator.popAndPushNamed(context, '/mainPage');

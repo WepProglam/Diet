@@ -12,12 +12,17 @@ import 'addDiet.dart';
 import 'calculate.dart';
 import 'activityPage.dart';
 import 'archieve.dart';
+import 'db_helper.dart';
 
-StreamController<Map> streamController = StreamController<Map>.broadcast();
-StreamController<bool> streamControllerBool =
-    StreamController<bool>.broadcast();
+final dbHelperRecent = DBHelperRecent();
 // var accColor = Colors.white;
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  bool flag;
+  await compareDatetime().then((val) {
+    flag = val;
+  });
+
   runApp(MaterialApp(
     theme: ThemeData(
       brightness: Brightness.dark,
@@ -53,7 +58,7 @@ void main() {
       //   ),
       // )
     ),
-    initialRoute: '/',
+    initialRoute: flag != null && flag == true ? '/' : '/personalForm',
     routes: {
       '/': (context) => MainPage(),
       '/personalForm': (context) => PersonalForm(),
@@ -69,16 +74,21 @@ void main() {
   ));
 }
 
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       initialRoute: '/',
-//       routes: {
-//         '/': (context) => InitPage(),
-//         '/personalForm': (context) => PersonalForm(),
-//         '/saving': (context) => Saving(),
-//       },
-//     );
-//   }
-// }
+Future<bool> compareDatetime() async {
+  bool returnValue;
+  await dbHelperRecent.getRecent().then((val) {
+    print(val);
+    print(DateTime.now().toString().substring(0, 10));
+    if (val == null) {
+      print("first");
+      returnValue = false;
+    } else if (val != DateTime.now().toString().substring(0, 10)) {
+      print("second");
+      returnValue = false;
+    } else {
+      print("third");
+      returnValue = true;
+    }
+  });
+  return returnValue;
+}

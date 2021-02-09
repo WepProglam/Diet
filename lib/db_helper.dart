@@ -6,6 +6,62 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'model.dart';
 
+class DBHelperRecent {
+  final String dBName = 'Recent';
+  final String tableName = 'Recent';
+  DBHelperRecent._();
+  static final DBHelperRecent _db = DBHelperRecent._();
+  factory DBHelperRecent() => _db;
+
+  static Database _database;
+
+  Future<Database> get database async {
+    if (_database != null) return _database;
+
+    _database = await initDB();
+    return _database;
+  }
+
+  initDB() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, "$dBName.db");
+    return await openDatabase(path, version: 1, onCreate: (db, version) async {
+      await db.execute('''
+          CREATE TABLE $tableName(
+            datetime TEXT
+            )
+        ''');
+    }, onUpgrade: (db, oldVersion, newVersion) {});
+  }
+
+  createData(RecentSubmit recentSubmit) async {
+    final db = await database;
+    await db.insert(
+      tableName,
+      recentSubmit.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> updateRecent(String datetime) async {
+    // final db = await database;
+    await deleteRecent();
+    await createData(RecentSubmit(datetime: datetime));
+  }
+
+  Future<String> getRecent() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM $tableName");
+    return res.isNotEmpty ? res.first['datetime'] : null;
+  }
+
+  deleteRecent() async {
+    final db = await database;
+    var res = db.rawDelete("DELETE FROM $tableName");
+    return res;
+  }
+}
+
 class DBHelperPerson {
   final String dBName = 'Person';
   final String tableName = 'Person';
@@ -22,7 +78,6 @@ class DBHelperPerson {
     return _database;
   }
 
-
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, '$dBName.db');
@@ -36,7 +91,7 @@ class DBHelperPerson {
       // }catch(_){
       ByteData data = await rootBundle.load(join("assets", "Person.db"));
       List<int> bytes =
-      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
       print(data.lengthInBytes);
 
       await File(path).writeAsBytes(bytes, flush: true);
@@ -63,10 +118,6 @@ class DBHelperPerson {
         ''');
     }, onUpgrade: (db, oldVersion, newVersion) {});
   }
-
-
-
-
 
   createHelper(Person person) async {
     await getAllPerson().then((value) async {

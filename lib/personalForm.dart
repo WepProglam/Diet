@@ -41,6 +41,7 @@ class _PersonalForm extends State<PersonalForm> {
   int _sexValue = 0;
   // int purpose_index = 1;
   var dbHelper = DBHelperPerson();
+  final dbHelperRecent = DBHelperRecent();
   var hint = {};
   bool typeStart = false;
   int curIndex = 0;
@@ -419,6 +420,13 @@ class _PersonalForm extends State<PersonalForm> {
                                                     arguments: <String, Person>{
                                                       'person': person
                                                     });
+
+                                                // await dbHelperRecent
+                                                //     .deleteRecent();
+                                                await dbHelperRecent
+                                                    .updateRecent(DateTime.now()
+                                                        .toString()
+                                                        .substring(0, 10));
                                               }
 
                                               //print(_heightController.text);

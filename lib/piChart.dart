@@ -16,7 +16,7 @@ class PieChartSample2 extends StatefulWidget {
       double fat,
       double totalCalorie,
       double correct}) {
-    carboMass = carboMass is double ? carbohydrate / 4 : 1.0;
+    carboMass = carbohydrate is double ? carbohydrate / 4 : 1.0;
     proMass = protein is double ? protein / 4 : 1.0;
     fatMass = fat is double ? fat / 9 : 1.0;
     //안바뀌는 문제 좀따 고칠거
