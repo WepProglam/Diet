@@ -279,12 +279,39 @@ class _FoodListState extends State<FoodList> {
 
               onChanged: (text) async {
                 massChangeList = List(foodMassController.length);
+                int length = foodMassController.length;
+                // List<int> index = getIndex();
+                // for (var item in index) {
+                //   massChangeList[item] =
+                //       num.tryParse(foodMassController[item].value.text);
+                // }
+                massChangeList[index] =
+                    num.tryParse(foodMassController[index].value.text);
+                List<num> servingSize = List(foodList.length);
 
-                List<int> index = getIndex();
-                for (var item in index) {
-                  massChangeList[item] =
-                      num.tryParse(foodMassController[item].value.text);
-                }
+                // for (var item in index) {
+                //   await dbHelperFood.getFood(foodList[item].code).then((val) {
+                //     print(val.servingSize);
+                //     servingSize[item] = (val.servingSize);
+                //   });
+                // }
+                await dbHelperFood.getFood(foodList[index].code).then((val) {
+                  print(val.servingSize);
+                  servingSize[index] = (val.servingSize);
+                });
+
+                // for (var item in index) {
+                //   foodServingController[item].text =
+                //       (num.tryParse(foodMassController[item].value.text) /
+                //               servingSize[item])
+                //           .toString();
+                // }
+
+                foodServingController[index].text =
+                    (num.tryParse(foodMassController[index].value.text) /
+                                servingSize[index])
+                            .toStringAsFixed(1) +
+                        "인분";
 
                 justCalNutri(foodList, massChangeList).then((val) {
                   setState(() {
