@@ -45,6 +45,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
   flutter_launcher_name: ^0.0.1
+  bubbled_navigation_bar: ^0.0.3
 
 
 flutter_launcher_name:

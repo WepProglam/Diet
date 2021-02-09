@@ -100,8 +100,8 @@ class _AddFoodSub extends State<AddFoodSub> {
     // getInfo();
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-          centerTitle: true, title: Text("ADD FOOD"), actions: <Widget>[]),
+      // appBar: AppBar(
+      //     centerTitle: true, title: Text("ADD FOOD"), actions: <Widget>[]),
       body: Center(
           child: Form(
         key: _formKey,
@@ -113,7 +113,7 @@ class _AddFoodSub extends State<AddFoodSub> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Spacer(
-                  flex: 2,
+                  flex: 1,
                 ),
                 searchBar(),
                 Spacer(

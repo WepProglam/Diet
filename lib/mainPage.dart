@@ -17,6 +17,9 @@ import 'calculate.dart';
 import 'db_helper.dart';
 import 'lineChart.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:bubbled_navigation_bar/bubbled_navigation_bar.dart';
+import 'addDiet.dart';
+import 'addFood.dart';
 
 //그래프 표시 버튼 위치 달력 우측 하단
 final dbHelperDietHistory = DBHelperDietHistory();
@@ -87,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<DietHistory> monthlyDietHistory = [];
   List<List<num>> monthlyAchieveKcal = [];
   List<List<num>> monthlyAchieveNutri = [];
-  Color blockBackgroundColor = Colors.white12;
+  Color blockBackgroundColor = Colors.white10;
 
   void initDateInfo() {
     dietAdded = [
@@ -1002,8 +1005,30 @@ class _MyHomePageState extends State<MyHomePage> {
     return hslLight.toColor();
   }
 
+  void handlePageChange() {
+    _menuPositionController.absolutePosition = _pageController.page;
+  }
+
+  void checkUserDragging(ScrollNotification scrollNotification) {
+    if (scrollNotification is UserScrollNotification &&
+        scrollNotification.direction != ScrollDirection.idle) {
+      userPageDragging = true;
+    } else if (scrollNotification is ScrollEndNotification) {
+      userPageDragging = false;
+    }
+    if (userPageDragging) {
+      _menuPositionController.findNearestTarget(_pageController.page);
+    }
+  }
+
   @override
   void initState() {
+    _menuPositionController = MenuPositionController(initPosition: 0);
+
+    _pageController =
+        PageController(initialPage: 0, keepPage: false, viewportFraction: 1.0);
+    _pageController.addListener(handlePageChange);
+
     temp_year = calender_year;
     temp_month = calender_month;
     temp_date = calender_date;
@@ -1359,6 +1384,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   int _selectedIndex = 1;
+  PageController _pageController;
+  MenuPositionController _menuPositionController;
+  bool userPageDragging = false;
 
   @override
   Widget build(BuildContext context) {
@@ -1397,59 +1425,112 @@ class _MyHomePageState extends State<MyHomePage> {
       return true;
     }
 
-    void _onItemTapped(int index) {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
+    // void _onItemTapped(int index) {
+    //   setState(() {
+    //     _selectedIndex = index;
+    //   });
+    // }
 
-    List<Widget> _widgetOptions = [secondPage(), firstPage(), thirdPage()];
-    print(_selectedIndex);
-
+    List<Widget> _widgetOptions = [
+      firstPage(),
+      secondPage(),
+      thirdPage(),
+      AddFood(),
+      AddDiet()
+    ];
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
+        // resizeToAvoidBottomPadding: false,
         appBar: basicAppBar("GOLDEN RATIO", context),
-        drawer: NavDrawer(),
-        bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
+        // drawer: NavDrawer(),
+        bottomNavigationBar: BubbledNavigationBar(
+            controller: _menuPositionController,
+            initialIndex: 0,
             backgroundColor: Colors.black,
-            onTap: _onItemTapped,
-            currentIndex: _selectedIndex,
-            items: [
-              new BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                title: Text('Today Info'),
+            defaultBubbleColor: Colors.white10,
+            onTap: (index) {
+              _pageController.animateToPage(index,
+                  curve: Curves.easeInOutQuad,
+                  duration: Duration(milliseconds: 700));
+            },
+            items: <BubbledNavigationBarItem>[
+              BubbledNavigationBarItem(
+                icon: Icon(Icons.home, size: 30, color: Colors.white70),
+                activeIcon: Icon(Icons.home,
+                    size: 30, color: Colors.deepOrangeAccent[700]),
+                title: Text(
+                  'Home',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
               ),
-              new BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                title: Text('Main'),
+              BubbledNavigationBarItem(
+                icon: Icon(Icons.info, size: 30, color: Colors.white70),
+                activeIcon: Icon(Icons.info,
+                    size: 30, color: Colors.deepOrangeAccent[700]),
+                title: Text(
+                  'Daily Info',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
               ),
-              new BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                title: Text('Diet Graph'),
-              )
+              BubbledNavigationBarItem(
+                icon:
+                    Icon(Icons.gesture_sharp, size: 30, color: Colors.white70),
+                activeIcon: Icon(Icons.gesture_sharp,
+                    size: 30, color: Colors.deepOrangeAccent[700]),
+                title: Text(
+                  'Diet Graph',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ),
+              BubbledNavigationBarItem(
+                icon: Icon(Icons.add, size: 30, color: Colors.white70),
+                activeIcon: Icon(Icons.add,
+                    size: 30, color: Colors.deepOrangeAccent[700]),
+                title: Text(
+                  'Add Food',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ),
+              BubbledNavigationBarItem(
+                icon: Icon(Icons.add, size: 30, color: Colors.white70),
+                activeIcon: Icon(Icons.add,
+                    size: 30, color: Colors.deepOrangeAccent[700]),
+                title: Text(
+                  'Add Diet',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ),
             ]),
-        body: Builder(
-          builder: (context) => WillPopScope(
-            onWillPop: () => handleWillPop(context),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 6.0),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  children: [
-                    // Spacer(flex: 1),
-                    Expanded(
-                        flex: 20,
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child: _widgetOptions.elementAt(_selectedIndex),
-                        )),
-                    // Spacer(
-                    //   flex: 1,
-                    // )
-                  ],
+        body: NotificationListener<ScrollNotification>(
+          onNotification: (scrollNotification) {
+            checkUserDragging(scrollNotification);
+          },
+          child: Builder(
+            builder: (context) => WillPopScope(
+              onWillPop: () => handleWillPop(context),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 0.0),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    children: [
+                      // Spacer(flex: 1),
+                      Expanded(
+                          flex: 20,
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            child: PageView(
+                              controller: _pageController,
+                              children: _widgetOptions,
+
+                              //_widgetOptions.elementAt(_selectedIndex)
+                            ),
+                          )),
+                      // Spacer(
+                      //   flex: 1,
+                      // )
+                    ],
+                  ),
                 ),
               ),
             ),

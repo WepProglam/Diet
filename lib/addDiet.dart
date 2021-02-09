@@ -28,8 +28,8 @@ class AddDiet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Color(0xFFFFFEF5),
-      appBar: AppBar(
-          centerTitle: true, title: Text("ADD DIET"), actions: <Widget>[]),
+      // appBar: AppBar(
+      //     centerTitle: true, title: Text("ADD DIET"), actions: <Widget>[]),
       body: FoodList(),
     );
   }
