@@ -1244,7 +1244,7 @@ class RangeSliderState extends State<RangeSlider> {
       value: _currentSliderValue,
       min: 0,
       max: 100,
-      divisions: 1000,
+      divisions: 100,
       label:
           (_currentSliderValue * person.metabolism / 100).toStringAsFixed(1) +
               "Kcal" +
