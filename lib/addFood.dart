@@ -118,8 +118,12 @@ class _AddFoodSub extends State<AddFoodSub> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Spacer(
-                            flex: 1,
+                          // Spacer(
+                          //   flex: 1,
+                          // ),
+
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height / 40,
                           ),
                           searchBar(),
                           Spacer(
