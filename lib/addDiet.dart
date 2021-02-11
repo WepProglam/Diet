@@ -808,8 +808,9 @@ class _FoodListState extends State<FoodList> {
                     child: IconButton(
                         splashColor: Colors.white,
                         icon: Icon(
-                          Icons.add,
+                          Icons.save_outlined,
                           color: iconColor,
+                          size: 40,
                         ),
                         onPressed: () async {
                           if (changeNumOfMass() != foodList.length) {
@@ -817,7 +818,8 @@ class _FoodListState extends State<FoodList> {
                               print(item.value.text);
                             }
 
-                            var snackBar = buildSnackBar('빈칸이 있습니다.');
+                            var snackBar =
+                                buildSnackBar('질량을 입력하거나 계산기 버튼을 눌러주세요.');
                             Scaffold.of(context).showSnackBar(snackBar);
                           } else {
                             //db에 저장

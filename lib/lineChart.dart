@@ -125,7 +125,9 @@ class _LineChartSample2State extends State<LineChartSample2> {
             maxBmi.add(item.bmiTarget);
             maxMuscle.add(item.muscleMass);
             maxMuscle.add(item.muscleTarget);
-            personTimeInfo.add(item.time.split("-").sublist(1, 2).join());
+            personTimeInfo
+                .add(item.time.split("-")[1] + '/' + item.time.split("-")[2]);
+            print(personTimeInfo);
           }
 
           maxWeigt.sort();
@@ -251,7 +253,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
                   Spacer(flex: 1),
                   Indicator(
                     // color: Color(0xfff8b250),
-                    color: Colors.deepOrangeAccent[100],
+                    // color: Colors.deepOrangeAccent[100],
+                    color: Colors.white,
                     text: '영양성분 성취도',
                     textColor: Colors.white,
                     fontSize: 12,
@@ -267,7 +270,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
                       Spacer(flex: 1),
                       Indicator(
                         // color: Color(0xfff8b250),
-                        color: Colors.deepOrangeAccent[400],
+                        // color: Colors.deepOrangeAccent[400],
+                        color: Colors.white,
                         text: '열량 성취도',
                         textColor: Colors.white,
                         fontSize: 12,
@@ -297,6 +301,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
       maxInfo = maxMuscle;
     }
     return LineChartData(
+      lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -490,7 +495,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
         LineChartBarData(
           spots: myKcalArchieveSpot,
           isCurved: false,
-          colors: gradientColorsKcal,
+          // colors: gradientColorsKcal,
+          colors: gradientColors,
           barWidth: 5,
           isStrokeCapRound: true,
           dotData: FlDotData(
@@ -498,9 +504,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
           ),
           belowBarData: BarAreaData(
             show: true,
-            colors: gradientColorsKcal
-                .map((color) => color.withOpacity(0.3))
-                .toList(),
+            colors:
+                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
           ),
         ),
       ],
@@ -606,7 +611,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
         LineChartBarData(
           spots: myNutriArchieveSpot,
           isCurved: false,
-          colors: colorYellow,
+          // colors: colorYellow,
+          colors: gradientColors,
           barWidth: 5,
           isStrokeCapRound: true,
           dotData: FlDotData(
@@ -614,7 +620,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
           ),
           belowBarData: BarAreaData(
             show: true,
-            colors: colorYellow.map((color) => color.withOpacity(0.3)).toList(),
+            colors:
+                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
           ),
         ),
       ],
